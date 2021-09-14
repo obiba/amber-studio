@@ -1,7 +1,21 @@
 import { store } from 'quasar/wrappers'
 import { createStore } from 'vuex'
+import authvuex from './store.auth';
+import account from './account';
+import admin from './admin';
 
-// import example from './module-example'
+const requireModule = require.context(
+  // The path where the service modules live
+  '../services/feathers-client',
+  // Whether to look in subfolders
+  false,
+  // Only include .js files (prevents duplicate imports`)
+  /.js$/
+);
+
+const servicePlugins = requireModule
+  .keys()
+  .map(modulePath => requireModule(modulePath).default);
 
 /*
  * If not building with SSR mode, you can
@@ -14,8 +28,10 @@ import { createStore } from 'vuex'
 
 export default store(function (/* { ssrContext } */) {
   const Store = createStore({
+    plugins: [...servicePlugins, authvuex],
     modules: {
-      // example
+      account,
+      admin
     },
 
     // enable strict mode (adds overhead!)

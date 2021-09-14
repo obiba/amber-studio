@@ -1,4 +1,7 @@
-import Vue from "vue";
-import Vuelidate from "vuelidate";
+import { boot } from 'quasar/wrappers'
+import Vuelidate from "@vuelidate/core";
 
-Vue.use(Vuelidate);
+export default boot(({ app }) => {
+    // Set instance on app
+    app.use(Vuelidate)
+  })

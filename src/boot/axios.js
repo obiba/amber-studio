@@ -1,18 +1,38 @@
 import { boot } from 'quasar/wrappers'
-import axios from 'axios'
+import axios from 'axios';
+import { LoadingBar } from 'quasar';
 
-const api = axios.create({ baseURL: 'https://api.example.com' })
+const api = axios.create({ baseURL: 'http://localhost:3030' });
 
-export default boot(({ app }) => {
-  // for use inside Vue files (Options API) through this.$axios and this.$api
+api.defaults.withCredentials = true;
 
-  app.config.globalProperties.$axios = axios
-  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
-  //       so you won't necessarily have to import axios in each vue file
+LoadingBar.setDefaults({
+  color: 'secondary',
+  size: '15px',
+  position: 'top'
+});
 
-  app.config.globalProperties.$api = api
-  // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
-  //       so you can easily perform requests against your app's API
-})
+api.interceptors.request.use(
+  function(config) {
+    LoadingBar.start();
+    return config;
+  },
+  function(error) {
+    LoadingBar.stop();
 
-export { axios, api }
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  function(response) {
+    LoadingBar.stop();
+    return response;
+  },
+  function(error) {
+    LoadingBar.stop();
+    return Promise.reject(error);
+  }
+);
+
+export { api, axios };

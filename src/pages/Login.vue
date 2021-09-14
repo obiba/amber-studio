@@ -16,13 +16,11 @@
             </div>
           </q-card-section>
           <q-card-section>
-            <q-form
-              class="q-gutter-md"
-            >
-              <q-input
+            <q-form @submit="onSubmit" class="q-gutter-md">
+                <q-input
                 filled
-                v-model="username"
-                label="Username"
+                v-model="email"
+                label="email"
                 lazy-rules
               />
 
@@ -36,7 +34,7 @@
               />
 
               <div>
-                <q-btn label="Login" to="/" type="button" color="primary"/>
+                <q-btn label="Login" type="submit" color="primary"/>
               </div>
             </q-form>
           </q-card-section>
@@ -48,16 +46,49 @@
 
 <script>
 import {defineComponent} from 'vue'
+import { mapState } from 'vuex';
 import {ref} from 'vue'
+import { Notify } from "quasar";
 
 export default defineComponent({
-  setup() {
+  data() {
     return {
-      username: ref('Pratik'),
-      password: ref('12345')
-    }
+      email: "",
+      password: ""
+    };
   },
-})
+  computed: {
+    ...mapState({
+      submitting: state => state.auth.showLoading
+    })
+  },
+  methods: {
+    onSubmit() {
+      this.$store
+        .dispatch("auth/authenticate", {
+          strategy: "local",
+          email: this.email,
+          password: this.password
+        })
+        // Just use the returned error instead of mapping it from the store.
+        .catch(err => {
+          console.log(err)
+          // Convert the error to a plain object and add a message.
+          let type = err.className;
+          err = Object.assign({}, err);
+          err.message =
+            type === "not-authenticated"
+              ? "Incorrect email or password."
+              : "An error prevented login.";
+          this.error = err;
+          Notify.create({
+            message: "Incorrect email/password combination.",
+            color: "negative"
+          });
+        });
+    }
+  }
+});
 </script>
 
 <style>

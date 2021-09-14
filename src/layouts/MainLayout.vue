@@ -11,7 +11,7 @@
           aria-label="Menu"
         />
         <q-toolbar-title>
-          Quasar App
+          Amber Studio
         </q-toolbar-title>
         <q-space/>
         <div class="q-gutter-sm row items-center no-wrap">
@@ -19,9 +19,7 @@
                  @click="$q.fullscreen.toggle()"
                  v-if="$q.screen.gt.sm">
           </q-btn>
-          <q-btn round dense flat color="white" icon="fab fa-github" type="a" href="https://github.com/pratik227/quasar-admin" target="_blank">
-          </q-btn>
-          <q-btn round dense flat icon="fas fa-heart" style="color:#9d4182 !important;" type="a" href="https://github.com/sponsors/pratik227" target="_blank">
+          <q-btn round dense flat color="white" icon="fab fa-github" type="a" href="https://github.com/obiba/amber-studio" target="_blank">
           </q-btn>
           <q-btn round dense flat color="white" icon="notifications">
             <q-badge color="red" text-color="white" floating>
@@ -122,37 +120,6 @@
               </q-item-section>
               <q-item-section>
                 <q-item-label>Maintenance</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
-        <q-expansion-item
-          icon="map"
-          label="Maps"
-        >
-          <q-list class="q-pl-lg">
-            <q-item to="/Map" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="map"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Map</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item to="/MapMarker" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="location_on"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Map Marker</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item to="/StreetView" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="streetview"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Street View</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
