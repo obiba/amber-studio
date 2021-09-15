@@ -1,5 +1,8 @@
 <template>
   <q-page class="q-pa-sm bg-white">
+    <div class="text-h6 q-ma-md">Users</div>
+    <q-separator/>
+
     <q-resize-observer @resize="onResize"/>
 
     <div class="row" v-if="!$q.screen.lt.sm">
@@ -15,7 +18,7 @@
                     </template>
                   </q-input>
                 </q-item-label>
-                <q-item-label header class="text-center">{{ contacts_list.length }} CONTACTS</q-item-label>
+                <q-item-label header class="text-center">{{ contacts_list.length }} USERS</q-item-label>
 
 
                 <span v-for="(contact, index) in contacts_list" :key="index" @click="selected_contact=contact">
@@ -244,7 +247,7 @@ const detail_list = [
 const contacts_list = [
   {
     name: 'Pratik Patel',
-    position: 'Developer',
+    position: 'Manager',
     avatar: 'https://avatars2.githubusercontent.com/u/34883558?s=400&v=4',
     email: 'pratikpatelpp802@gmail.com',
     company_email: 'pratikpatelpp802@gmail.com',
@@ -255,7 +258,7 @@ const contacts_list = [
   },
   {
     name: 'Razvan Stoenescu',
-    position: 'Developer',
+    position: 'Manager',
     avatar: 'https://cdn.quasar.dev/team/razvan_stoenescu.jpeg',
     email: 'mailto:razvan@quasar.dev',
     company_email: 'mailto:razvan@quasar.dev',
@@ -266,7 +269,7 @@ const contacts_list = [
   },
   {
     name: 'Jeff Galbraith',
-    position: 'Developer',
+    position: 'Manager',
     avatar: 'https://cdn.quasar.dev/team/jeff_galbraith.jpg',
     email: 'mailto:jeff@quasar.dev',
     company_email: 'mailto:jeff@quasar.dev',
@@ -277,7 +280,7 @@ const contacts_list = [
   },
   {
     name: 'Brunhilde Panswick',
-    position: 'Administrator',
+    position: 'Interviewer',
     avatar: 'https://cdn.quasar.dev/img/avatar2.jpg',
     email: 'test.@quasar.dev',
     company_email: 'test.@quasar.dev',
@@ -303,7 +306,7 @@ const contacts_list = [
 const favorites_list = [
   {
     name: 'Pratik Patel',
-    position: 'Developer',
+    position: 'Manager',
     avatar: 'https://avatars2.githubusercontent.com/u/34883558?s=400&v=4',
     email: 'pratikpatelpp802@gmail.com',
     company_email: 'pratikpatelpp802@gmail.com',
@@ -314,7 +317,7 @@ const favorites_list = [
   },
   {
     name: 'Razvan Stoenescu',
-    position: 'Developer',
+    position: 'Manager',
     avatar: 'https://cdn.quasar.dev/team/razvan_stoenescu.jpeg',
     email: 'mailto:razvan@quasar.dev',
     company_email: 'mailto:razvan@quasar.dev',
@@ -325,7 +328,7 @@ const favorites_list = [
   },
   {
     name: 'Jeff Galbraith',
-    position: 'Developer',
+    position: 'Manager',
     avatar: 'https://cdn.quasar.dev/team/jeff_galbraith.jpg',
     email: 'mailto:jeff@quasar.dev',
     company_email: 'mailto:jeff@quasar.dev',

@@ -1,5 +1,8 @@
 <template>
   <q-page class="q-pa-sm">
+    <div class="text-h6 q-ma-md">Studies</div>
+    <q-separator/>
+
     <div>
       <q-card class="no-border no-shadow bg-transparent">
         <q-card-section class="q-pa-sm">

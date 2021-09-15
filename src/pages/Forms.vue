@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-sm">
-    <div class="text-h6 q-ma-md">Pagination and Filters</div>
+    <div class="text-h6 q-ma-md">Forms</div>
     <q-separator/>
 
     <CardPagination></CardPagination>
