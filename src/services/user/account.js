@@ -1,5 +1,5 @@
 import feathersClient from '../../boot/feathersClient';
-import api from '../../boot/axios';
+import { api } from '../../boot/axios';
 
 export async function login(email, password) {
   return feathersClient.service('auth').post({

@@ -6,10 +6,11 @@ export default boot(async ({ router, store }) => {
     if (to.meta.requiresAuth) {
       // if requires admin
       if (store.state.auth.user) {
+        console.log(store.state.auth.user.email)
         if (to.meta.requiresAdmin) {
           if (
             store.state.auth.user.permissions &&
-            store.state.auth.user.permissions.includes('admin')
+            store.state.auth.user.permissions.includes('administrator')
           ) {
             next();
           } else {
@@ -17,25 +18,17 @@ export default boot(async ({ router, store }) => {
               message: `Your account is not authorized to see this view. If this is in error, please contact support.`,
               color: 'negative'
             });
-            next('/account');
+            next(from.path);
           }
-        } else if (
-          to.path === '/' ||
-          to.path === '/login' ||
-          to.path === '/register'
-        ) {
-          next('/account');
         } else if (!LocalStorage.getItem('feathers-jwt') && to.path !== '/') {
           next('/login');
         } else {
           next();
         }
+      } else if (to.path !== '/login') {
+        next('/login');
       } else {
-        if (to.path !== '/login') {
-          next('/login');
-        } else {
-          next();
-        }
+        next();
       }
     } else {
       next();

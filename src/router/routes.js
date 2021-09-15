@@ -3,12 +3,41 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      {path: '', component: () => import('pages/Dashboard.vue')},
-      {path: '/metrics', component: () => import('src/pages/Metrics.vue')},
-      {path: '/profile', component: () => import('pages/UserProfile.vue')},
-      {path: '/users', component: () => import('src/pages/Users.vue')},
-      {path: '/studies', component: () => import('src/pages/Studies.vue')},
-      {path: '/forms', component: () => import('src/pages/Forms.vue')},
+      {
+        path: '', 
+        component: () => import('pages/Dashboard.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/metrics',
+        component: () => import('src/pages/Metrics.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/account',
+        component: () => import('src/pages/Account.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/users', 
+        component: () => import('src/pages/Users.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: '/groups', 
+        component: () => import('src/pages/Users.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: '/studies', 
+        component: () => import('src/pages/Studies.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/forms', 
+        component: () => import('src/pages/Forms.vue'),
+        meta: { requiresAuth: true }
+      },
     ]
   },
 

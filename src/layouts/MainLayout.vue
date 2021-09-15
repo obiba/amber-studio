@@ -57,7 +57,7 @@
               size="xs"></q-icon>
               Logout
           </q-btn>
-          <q-btn round flat to="/profile">
+          <q-btn round flat to="/account">
             <q-avatar size="26px">
               <img src="https://cdn.quasar.dev/img/boy-avatar.png">
             </q-avatar>
@@ -81,14 +81,6 @@
             <q-item-label>Dashboard</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="/metrics" active-class="q-item-no-link-highlighting">
-          <q-item-section avatar>
-            <q-icon name="query_stats"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Metrics</q-item-label>
-          </q-item-section>
-        </q-item>
   
         <q-item-label header class="text-weight-bolder text-white">Content</q-item-label>
 
@@ -110,7 +102,7 @@
           </q-item-section>
         </q-item>
       
-        <q-item to="/datasets" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdministrator || isManager" to="/datasets" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="storage"/>
           </q-item-section>
@@ -119,9 +111,18 @@
           </q-item-section>
         </q-item>
 
-        <q-item-label header class="text-weight-bolder text-white">Administration</q-item-label>
+        <q-item v-if="isAdministrator || isManager" to="/metrics" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="query_stats"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Metrics</q-item-label>
+          </q-item-section>
+        </q-item>
 
-        <q-item to="/users" active-class="q-item-no-link-highlighting">
+        <q-item-label v-if="isAdministrator" header class="text-weight-bolder text-white">Administration</q-item-label>
+
+        <q-item v-if="isAdministrator" to="/users" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="person"/>
           </q-item-section>
@@ -130,7 +131,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item to="/groups" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdministrator" to="/groups" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="group"/>
           </q-item-section>
@@ -139,7 +140,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item to="/maintenance" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdministrator" to="/maintenance" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="settings"/>
           </q-item-section>
@@ -183,8 +184,22 @@ export default defineComponent({
   computed: {
     isAdministrator() {
       let user = this.$store.state.auth.user;
-      if (user && user.roles) {
-        return user.roles.includes("administrator");
+      if (user && user.permissions) {
+        return user.permissions.includes("administrator");
+      }
+      return false;
+    },
+    isManager() {
+      let user = this.$store.state.auth.user;
+      if (user && user.permissions) {
+        return user.permissions.includes("manager");
+      }
+      return false;
+    },
+    isInterviewer() {
+      let user = this.$store.state.auth.user;
+      if (user && user.permissions) {
+        return user.permissions.includes("interviewer");
       }
       return false;
     }
