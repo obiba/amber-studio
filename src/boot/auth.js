@@ -5,13 +5,10 @@ export default boot(async ({ router, store }) => {
   router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
       // if requires admin
-      if (store.state.auth.user) {
-        console.log(store.state.auth.user.email)
+      let user = store.state.auth.payload ? store.state.auth.payload.user : undefined;
+      if (user) {
         if (to.meta.requiresAdmin) {
-          if (
-            store.state.auth.user.permissions &&
-            store.state.auth.user.permissions.includes('administrator')
-          ) {
+          if (user.permissions && user.permissions.includes('administrator')) {
             next();
           } else {
             Notify.create({

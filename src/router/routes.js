@@ -10,32 +10,32 @@ const routes = [
       },
       {
         path: '/metrics',
-        component: () => import('src/pages/Metrics.vue'),
+        component: () => import('pages/Metrics.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: '/account',
-        component: () => import('src/pages/Account.vue'),
+        component: () => import('pages/Account.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: '/users', 
-        component: () => import('src/pages/Users.vue'),
+        component: () => import('pages/Users.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: '/groups', 
-        component: () => import('src/pages/Users.vue'),
+        component: () => import('pages/Users.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: '/studies', 
-        component: () => import('src/pages/Studies.vue'),
+        component: () => import('pages/Studies.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: '/forms', 
-        component: () => import('src/pages/Forms.vue'),
+        component: () => import('pages/Forms.vue'),
         meta: { requiresAuth: true }
       },
     ]

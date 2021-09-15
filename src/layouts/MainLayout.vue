@@ -147,17 +147,12 @@
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink.vue'
 import Messages from "./Messages";
 
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
 
   setup () {
     const leftDrawerOpen = ref(false)
@@ -171,21 +166,21 @@ export default defineComponent({
   },
   computed: {
     isAdministrator() {
-      let user = this.$store.state.auth.user;
+      let user = this.$store.state.auth.payload.user;
       if (user && user.permissions) {
         return user.permissions.includes("administrator");
       }
       return false;
     },
     isManager() {
-      let user = this.$store.state.auth.user;
+      let user = this.$store.state.auth.payload.user;
       if (user && user.permissions) {
         return user.permissions.includes("manager");
       }
       return false;
     },
     isInterviewer() {
-      let user = this.$store.state.auth.user;
+      let user = this.$store.state.auth.payload.user;
       if (user && user.permissions) {
         return user.permissions.includes("interviewer");
       }
