@@ -60,6 +60,10 @@ const routes = [
     component: () => import('pages/Login.vue')
   },
   {
+    path: "/register",
+    component: () => import("pages/Register.vue")
+  },
+  {
     path: '/lock',
     component: () => import('pages/LockScreen.vue')
   }

@@ -17,24 +17,29 @@
           </q-card-section>
           <q-card-section>
             <q-form @submit="onSubmit" class="q-gutter-md">
-                <q-input
+              
+              <q-input
                 filled
                 v-model="email"
-                label="email"
-                lazy-rules
-              />
+                label="Email"
+                lazy-rules/>
 
               <q-input
                 type="password"
                 filled
                 v-model="password"
                 label="Password"
-                lazy-rules
-
-              />
+                lazy-rules/>
 
               <div>
                 <q-btn label="Login" type="submit" color="primary"/>
+                <q-btn
+                  flat
+                  to="/register"
+                  stretch
+                  class="text-bold q-ml-md">
+                  Register
+                </q-btn>
               </div>
             </q-form>
           </q-card-section>

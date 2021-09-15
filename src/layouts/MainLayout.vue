@@ -23,18 +23,6 @@
           </q-btn>
           <q-btn
             v-if="!$store.state.auth.user"
-            flat
-            to="/register"
-            stretch
-            class="text-bold">
-            <q-icon
-              name="fas fa-user-plus"
-              class="q-mr-sm text-white"
-              size="xs"></q-icon>
-              Register
-          </q-btn>
-          <q-btn
-            v-if="!$store.state.auth.user"
             to="/login"
             flat
             stretch
