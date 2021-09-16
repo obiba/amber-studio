@@ -15,15 +15,20 @@
               </div>
             </div>
           </q-card-section>
-          <q-card-section>
-            <div class="row justify-center items-center content-center">
-              <div v-if="success" class="col-md-8 q-pa-lg text-center">
-                Thanks for verifying your account.
-              </div>
-              <div v-else class="col-md-8 q-pa-lg text-center">
-                Verifying account...please wait...
-              </div>
+          <q-card-section class="row justify-center items-center content-center">
+            <div class="col-md-8 q-pa-lg text-center">
+              <span v-if="success">Thanks, your account is verified.</span>
+              <span v-else-if="success === undefined">Verifying account... please wait...</span>
+              <span v-else>Verifying account failed.</span>
             </div>
+          </q-card-section>
+          <q-card-section v-if="success" class="row justify-center items-center content-center">
+            <q-btn
+              to="/login"
+              color="primary"
+              class="text-bold q-ml-md">
+              Login
+            </q-btn>
           </q-card-section>
         </q-card>
       </q-page>
@@ -38,7 +43,7 @@ import { Notify } from "quasar";
 export default {
   data() {
     return {
-      success: false
+      success: undefined
     };
   },
   mounted() {
@@ -59,15 +64,16 @@ export default {
           }
         });
       }
-      if (result && result.status === 201) {
-        this.success = true;
-        this.$router.push("/login");
+      if (result) {
+        this.success = result.status === 201;
+        //this.$router.push("/login");
       } else {
+        this.success = false
         Notify.create({
           message: "Unable to verify account. Please contact support.",
           color: "negative"
         });
-        this.$router.push("/");
+        //this.$router.push("/");
       }
     }
   }
