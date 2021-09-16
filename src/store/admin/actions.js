@@ -3,6 +3,7 @@ import { Notify } from 'quasar';
 
 export async function getUsers({ commit }, payload) {
   let result = await userService.getUsers(payload.paginationOpts).catch(err => {
+    console.error(err)
     if (err.response) {
       let errorCode = err.response.data.code;
       if (errorCode) {
@@ -13,6 +14,12 @@ export async function getUsers({ commit }, payload) {
       }
     }
   });
-  commit('setUsers', result.data);
-  commit('setUserCount', result.total);
+  if (result) {
+    commit('setUsers', result.data);
+    commit('setUserCount', result.total);
+  } else {
+    commit('setUsers', []);
+    commit('setUserCount', 0);
+  }
+  
 }

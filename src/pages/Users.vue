@@ -3,374 +3,361 @@
     <div class="text-h6 q-ma-md">Users</div>
     <q-separator/>
 
-    <q-resize-observer @resize="onResize"/>
-
-    <div class="row" v-if="!$q.screen.lt.sm">
-      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-        <q-card class="no-border no-border">
-          <q-tab-panels v-model="tab" animated class="bg-white">
-            <q-tab-panel name="all" class="q-pa-none full-height" :style="{'height':size['height']-80+'px !important'}">
-              <q-list class="">
-                <q-item-label class="text-center q-pa-sm">
-                  <q-input dense rounded outlined v-model="search">
-                    <template v-slot:append>
-                      <q-icon name="search"/>
-                    </template>
-                  </q-input>
-                </q-item-label>
-                <q-item-label header class="text-center">{{ contacts_list.length }} USERS</q-item-label>
-
-
-                <span v-for="(contact, index) in contacts_list" :key="index" @click="selected_contact=contact">
-                  <contact-item
-                    :avatar="contact.avatar" :name="contact.name" :position="contact.position"></contact-item>
-                </span>
-
-              </q-list>
-            </q-tab-panel>
-
-            <q-tab-panel name="favorites" class="q-pa-none" :style="{'height':size['height']-80+'px !important'}">
-              <q-list class="">
-
-                <q-item-label class="text-center q-pa-sm">
-                  <q-input dense rounded outlined v-model="search">
-                    <template v-slot:append>
-                      <q-icon name="search"/>
-                    </template>
-                  </q-input>
-                </q-item-label>
-                <q-item-label header class="text-center">{{ favorites_list.length }} Favorites</q-item-label>
-
-                <span v-for="(favorite, index) in favorites_list" :key="index" @click="selected_contact=favorite">
-                  <contact-item
-                    :avatar="favorite.avatar" :name="favorite.name" :position="favorite.position"></contact-item>
-                </span>
-
-              </q-list>
-            </q-tab-panel>
-
-          </q-tab-panels>
-
-          <q-tabs
-            v-model="tab"
-            dense
-            class="bg-grey-3"
-            align="justify"
+  <q-table
+      flat
+      :rows="users"
+      :columns="columns"
+      row-key="name"
+      v-model:pagination="paginationOpts"
+      @request="getTableUsers"
+    >
+      <template v-slot:body-cell-name="props">
+        <q-td :props="props">
+          {{ props.row.firstname }} {{ props.row.lastname }}
+        </q-td>
+      </template>
+      <template v-slot:body-cell-role="props">
+        <q-td class="text-capitalize">
+          {{ props.row.permissions ? props.row.permissions[0] : "" }}
+        </q-td>
+      </template>
+      <template v-slot:body-cell-action="props">
+        <q-td :props="props">
+          <q-btn
+            size="sm"
+            class="q-pa-xs q-mx-xs"
+            color="primary"
+            title="Edit User"
+            @click="updateUser(props.row)"
+            >Edit User
+          </q-btn>
+          <q-btn
+            size="sm"
+            class="q-pa-xs q-mx-xs"
+            color="purple"
+            title="Reset Password"
+            @click="resetPassword(props.row.email)"
+            >Reset Password</q-btn
           >
-            <q-tab name="all" icon="person" class="text-capitalize" label="All"></q-tab>
-            <q-tab name="favorites" icon="star" class="text-capitalize" label="Favorites"></q-tab>
-          </q-tabs>
-        </q-card>
-      </div>
-      <div class="col-lg-8 q-pl-xs col-md-8 col-sm-12 col-xs-12">
-        <q-card class="no-border no-border" :style="{'height':size['height']-24+'px !important'}">
-          <q-toolbar class="text-black ">
-            <q-btn round flat class="q-pa-sm">
-              <q-avatar size="80px">
-                <img :src="selected_contact.avatar">
-              </q-avatar>
-            </q-btn>
-
-            <q-item class="q-subtitle-1 q-pl-md">
-              <q-item-section>
-                <q-item-label lines="1">{{ selected_contact.name }}</q-item-label>
-                <q-item-label caption lines="2">
-                  <span class="text-weight-bold">{{ selected_contact.position }}</span>
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-space/>
-
-            <q-btn round flat icon="star_outline" color="yellow">
-            </q-btn>
-            <q-btn round flat icon="edit"/>
-
-          </q-toolbar>
-          <q-separator></q-separator>
-
-          <div v-for="detail, detail_index in detail_list">
-
-            <contact-detail-item :icon="detail.icon" :text_color="detail.text_color"
-                                 :value="selected_contact[detail['field']]" :label="detail.label"></contact-detail-item>
-
-            <q-separator inset="item" v-if="detail_index!=detail_list.length-1"></q-separator>
+          <q-btn
+            size="sm"
+            class="q-pa-xs q-mx-xs"
+            color="orange"
+            title="Impersonate User"
+            @click="impersonate(props.row._id)"
+            >Impersonate</q-btn
+          >
+          <q-btn
+            size="sm"
+            class="q-pa-xs q-mx-xs"
+            color="red"
+            title="Deactivate User"
+            @click="deactiveateUser(props.row)"
+            >Deactivate User</q-btn
+          >
+        </q-td>
+      </template>
+    </q-table>
+    <q-dialog v-model="showEditUser" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <div class="col-12 col-md-6">
+            <q-input
+              filled
+              v-model="profileData.firstname"
+              label="First Name"
+              label-color="accent"
+              hint="Given Name"
+              lazy-rules
+            >
+              <template v-slot:prepend>
+                <q-icon color="accent" name="fas fa-user" size="xs" />
+              </template>
+            </q-input>
           </div>
-
-        </q-card>
-      </div>
-    </div>
-
-    <div v-else>
-      <div v-if="Object.keys(selected_contact).length==0">
-        <q-tab-panels v-model="tab" animated class="bg-white">
-          <q-tab-panel name="all" class="q-pa-none full-height" :style="{'height':size['height']-100+'px !important'}">
-            <q-list class="">
-
-              <q-item-label class="text-center q-pa-sm">
-                <q-input dense rounded outlined v-model="search">
-                  <template v-slot:append>
-                    <q-icon name="search"/>
-                  </template>
-                </q-input>
-              </q-item-label>
-              <q-item-label header class="text-center">{{ contacts_list.length }} CONTACTS</q-item-label>
-
-              <span v-for="(contact, index) in contacts_list" :key="index" @click="selected_contact=contact">
-                <contact-item
-                  :avatar="contact.avatar" :name="contact.name" :position="contact.position"></contact-item>
-              </span>
-
-            </q-list>
-          </q-tab-panel>
-
-          <q-tab-panel name="favorites" class="q-pa-none" :style="{'height':size['height']-80+'px !important'}">
-            <q-list class="">
-
-              <q-item-label class="text-center q-pa-sm">
-                <q-input dense rounded outlined v-model="search">
-                  <template v-slot:append>
-                    <q-icon name="search"/>
-                  </template>
-                </q-input>
-              </q-item-label>
-              <q-item-label header class="text-center">{{ favorites_list.length }} Favorites</q-item-label>
-
-              <span v-for="(favorite, index) in favorites_list" :key="index" @click="selected_contact=favorite">
-                <contact-item
-                  :avatar="favorite.avatar" :name="favorite.name" :position="favorite.position"></contact-item>
-              </span>
-
-            </q-list>
-          </q-tab-panel>
-
-        </q-tab-panels>
-        <q-tabs
-          v-model="tab"
-          dense
-          class="bg-grey-3"
-          align="justify"
-        >
-          <q-tab name="all" icon="person" class="text-capitalize" label="All"></q-tab>
-          <q-tab name="favorites" icon="star" class="text-capitalize" label="Favorites"></q-tab>
-        </q-tabs>
-      </div>
-      <transition v-else
-                  appear
-                  enter-active-class="animated bounceInRight"
-      >
-        <q-card class="no-border no-border"
-                :style="{'height':size['height']-100+'px !important'}">
-          <q-toolbar class="text-black ">
-            <q-btn round flat class="q-pa-sm">
-              <q-avatar size="80px">
-                <img :src="selected_contact.avatar">
-              </q-avatar>
-            </q-btn>
-
-            <q-item class="q-subtitle-1 q-pl-md">
-              <q-item-section>
-                <q-item-label lines="1">{{ selected_contact.name }}</q-item-label>
-                <q-item-label caption lines="2">
-                  <span class="text-weight-bold">{{ selected_contact.position }}</span>
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-space/>
-
-            <q-btn round flat icon="star_outline" color="yellow">
-            </q-btn>
-            <q-btn round flat icon="edit"/>
-            <q-btn round flat icon="keyboard_backspace" @click="selected_contact={}"/>
-
-          </q-toolbar>
-          <q-separator></q-separator>
-
-          <div v-for="detail, detail_index in detail_list">
-            <contact-detail-item :icon="detail.icon" :text_color="detail.text_color"
-                                 :value="selected_contact[detail['field']]" :label="detail.label"></contact-detail-item>
-
-            <q-separator inset="item" v-if="detail_index!=detail_list.length-1"></q-separator>
+          <div class="col-12 col-md-6">
+            <q-input
+              filled
+              v-model="profileData.lastname"
+              label="Family Name"
+              label-color="accent"
+              hint="Surname"
+              lazy-rules
+              class="q-ma-sm"
+            >
+              <template v-slot:prepend>
+                <q-icon color="accent" name="fas fa-user" size="xs" />
+              </template>
+            </q-input>
           </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              filled
+              v-model="profileData.institution"
+              label="Institution"
+              label-color="accent"
+              lazy-rules
+              class="q-ma-sm"
+            >
+              <template v-slot:prepend>
+                <q-icon color="accent" name="fas fa-building" size="xs" />
+              </template>
+            </q-input>
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              filled
+              v-model="profileData.city"
+              label="City"
+              label-color="accent"
+              lazy-rules
+              class="q-ma-sm"
+            >
+              <template v-slot:prepend>
+                <q-icon color="accent" name="fas fa-city" size="xs" />
+              </template>
+            </q-input>
+          </div>
+        </q-card-section>
+        <q-card-section class="row items-center">
+          <div class="col-12">
+            <q-select
+              class="q-ma-sm text-capitalize"
+              filled
+              v-model="profileData.role"
+              :options="roles"
+              label="User Role"
+              popup-content-class="text-capitalize"
+              options-selected-class="primary"
+            >
+            </q-select>
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn label="Cancel" flat v-close-popup />
+          <q-btn
+            v-if="!selectedUser.isVerified"
+            @click="resendEmailVerification(selectedUser.email)"
+            label="Resend Email Verification"
+            color="secondary"
+            v-close-popup
+          />
+          <q-btn
+            @click="saveUpdatedUser"
+            :disable="disableUpdateProfile"
+            label="Update User"
+            type="submit"
+            color="positive"
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
-        </q-card>
-      </transition>
-    </div>
   </q-page>
 </template>
 
 <script>
-import {defineComponent, defineAsyncComponent} from 'vue';
-import {useQuasar} from "quasar";
-import {ref} from 'vue';
+import { mapState, mapActions } from "vuex";
+import {
+  required,
+  email,
+  minLength,
+  maxLength,
+  sameAs,
+  helpers
+} from "@vuelidate/validators";
+const alpha = helpers.regex("alpha", /^[a-zA-Z0-9 ]*$/);
+import { date } from "quasar";
 
-const detail_list = [
-  {
-    icon: 'phone',
-    label: 'Phone',
-    field: 'phone',
-    text_color: 'blue'
+export default {
+  mounted: function() {
+    this.getTableUsers();
+    this.setPagination();
   },
-  {
-    icon: 'phone_iphone',
-    label: 'Secondary Phone',
-    field: 'secondary_phone',
-    text_color: 'orange'
-  },
-  {
-    icon: 'mail',
-    label: 'Personal Email',
-    field: 'email',
-    text_color: 'grey-8'
-  },
-  {
-    icon: 'business_center',
-    label: 'Company Email',
-    field: 'company_email',
-    text_color: 'grey-8'
-  },
-  {
-    icon: 'location_on',
-    label: 'Address',
-    field: 'address',
-    text_color: 'grey-8'
-  },
-  {
-    icon: 'home_work',
-    label: 'Website',
-    field: 'website',
-    text_color: 'grey-8'
-  },
-];
-
-const contacts_list = [
-  {
-    name: 'Pratik Patel',
-    position: 'Manager',
-    avatar: 'https://avatars2.githubusercontent.com/u/34883558?s=400&v=4',
-    email: 'pratikpatelpp802@gmail.com',
-    company_email: 'pratikpatelpp802@gmail.com',
-    website: 'www.test.com',
-    phone: '+9910101010',
-    secondary_phone: '+9910101010',
-    address: 'BB 101 Om Sai Residency Palsana'
-  },
-  {
-    name: 'Razvan Stoenescu',
-    position: 'Manager',
-    avatar: 'https://cdn.quasar.dev/team/razvan_stoenescu.jpeg',
-    email: 'mailto:razvan@quasar.dev',
-    company_email: 'mailto:razvan@quasar.dev',
-    website: 'https://github.com/rstoenescu',
-    phone: '+1-004-658-0042',
-    secondary_phone: '(331) 009-4655 x3147',
-    address: '92290 Lisa Cove'
-  },
-  {
-    name: 'Jeff Galbraith',
-    position: 'Manager',
-    avatar: 'https://cdn.quasar.dev/team/jeff_galbraith.jpg',
-    email: 'mailto:jeff@quasar.dev',
-    company_email: 'mailto:jeff@quasar.dev',
-    website: 'http://jeffgalbraith.dev/',
-    phone: '175.718.4633 x878',
-    secondary_phone: '175.718.4633 x878',
-    address: 'Calgary, Canada'
-  },
-  {
-    name: 'Brunhilde Panswick',
-    position: 'Interviewer',
-    avatar: 'https://cdn.quasar.dev/img/avatar2.jpg',
-    email: 'test.@quasar.dev',
-    company_email: 'test.@quasar.dev',
-    website: 'http://test1.dev/',
-    phone: '175.718.4633 x878',
-    secondary_phone: '175.718.4633 x878',
-    address: 'Calgary, Canada'
-  },
-  {
-    name: 'Winfield Stapforth',
-    position: 'Administrator',
-    avatar: 'https://cdn.quasar.dev/img/avatar6.jpg',
-    email: 'test2.@quasar.dev',
-    company_email: 'test.@quasar.dev',
-    website: 'http://test2.dev/',
-    phone: '175.718.4633 x878',
-    secondary_phone: '175.718.4633 x878',
-    address: 'Calgary, Canada'
-  },
-
-];
-
-const favorites_list = [
-  {
-    name: 'Pratik Patel',
-    position: 'Manager',
-    avatar: 'https://avatars2.githubusercontent.com/u/34883558?s=400&v=4',
-    email: 'pratikpatelpp802@gmail.com',
-    company_email: 'pratikpatelpp802@gmail.com',
-    website: 'www.test.com',
-    phone: '+9910101010',
-    secondary_phone: '+9910101010',
-    address: 'BB 101 Om Sai Residency Palsana'
-  },
-  {
-    name: 'Razvan Stoenescu',
-    position: 'Manager',
-    avatar: 'https://cdn.quasar.dev/team/razvan_stoenescu.jpeg',
-    email: 'mailto:razvan@quasar.dev',
-    company_email: 'mailto:razvan@quasar.dev',
-    website: 'https://github.com/rstoenescu',
-    phone: '+1-004-658-0042',
-    secondary_phone: '(331) 009-4655 x3147',
-    address: '92290 Lisa Cove'
-  },
-  {
-    name: 'Jeff Galbraith',
-    position: 'Manager',
-    avatar: 'https://cdn.quasar.dev/team/jeff_galbraith.jpg',
-    email: 'mailto:jeff@quasar.dev',
-    company_email: 'mailto:jeff@quasar.dev',
-    website: 'http://jeffgalbraith.dev/',
-    phone: '175.718.4633 x878',
-    secondary_phone: '175.718.4633 x878',
-    address: 'Calgary, Canada'
-  },
-];
-
-export default defineComponent({
-  name: "Contact",
-  components: {
-    ContactDetailItem: defineAsyncComponent(() => import('components/ContactDetailItem')),
-    ContactItem: defineAsyncComponent(() => import('components/ContactItem'))
-  },
-  setup() {
-
-    const $q = useQuasar()
-    const size = ref({ width: '200px', height: '200px' });
-
+  data() {
     return {
-      tab: ref('all'),
-      search: ref(''),
-      size,
-      contacts_list,
-      favorites_list,
-      selected_contact: ref({}),
-      detail_list,
-
-      onResize(size_dynamic) {
-        size.value = size_dynamic;
+      roles: ["guest", "interviewer", "manager", "administrator", "inactive"],
+      selectedUser: {},
+      showEditUser: false,
+      paginationOpts: {
+        sortBy: "lastLoggedIn",
+        descending: false,
+        page: 1,
+        rowsPerPage: 5,
+        rowsNumber: 10
       },
-
+      profileData: {
+        firstname: "",
+        lastname: "",
+        institution: "",
+        city: "",
+        role: ""
+      },
+      columns: [
+        {
+          name: "name",
+          required: true,
+          label: "Name",
+          align: "left"
+        },
+        {
+          name: "email",
+          align: "center",
+          label: "Email",
+          field: "email",
+          sortable: true
+        },
+        {
+          name: "institution",
+          align: "center",
+          label: "Institution",
+          field: "institution",
+          sortable: true
+        },
+        {
+          name: "status",
+          align: "center",
+          label: "Status",
+          field: "isVerified",
+          format: val => {
+            if (val) {
+              return `Confirmed`;
+            } else return `Pending`;
+          },
+          sortable: false
+        },
+        {
+          name: "role",
+          align: "center",
+          label: "Role",
+          field: "permissions",
+          sortable: false
+        },
+        {
+          name: "lastLoggedIn",
+          align: "center",
+          label: "Last Seen",
+          field: "lastLoggedIn",
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, "DD MMM YY HH:mm A") : "Unknown"}`
+        },
+        {
+          name: "action",
+          align: "center",
+          label: "Action"
+        }
+      ]
+    };
+  },
+  validations: {
+    profileData: {
+      firstname: {
+        alpha,
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      lastname: {
+        alpha,
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      institution: {
+        alpha,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      city: {
+        alpha,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      role: {
+        required
+      }
     }
   },
-  mounted() {
-    if (!this.$q.screen.lt.sm) {
-      this.selected_contact = this.contacts_list[0];
+  computed: {
+    ...mapState({
+      users: state => state.admin.users
+    }),
+    disableUpdateProfile() {
+      return false//this.$v.profileData.$invalid;
+    }
+  },
+  methods: {
+    setPagination() {
+      this.paginationOpts = this.$store.state.admin.userPaginationOpts;
+    },
+    async getTableUsers(requestProp) {
+      if (requestProp) {
+        this.paginationOpts = requestProp.pagination;
+        this.$store.commit("admin/setUserPagination", {
+          userPaginationOpts: requestProp.pagination
+        });
+        await this.getUsers({ paginationOpts: requestProp.pagination });
+      } else {
+        await this.getUsers({ paginationOpts: this.paginationOpts });
+      }
+      this.paginationOpts.rowsNumber = this.$store.state.admin.userPaginationOpts.rowsNumber;
+    },
+    ...mapActions({
+      getUsers: "admin/getUsers"
+    }),
+    updateUser(user) {
+      this.profileData.firstname = user.firstname;
+      this.profileData.lastname = user.lastname;
+      this.profileData.city = user.city;
+      this.profileData.institution = user.institution;
+      this.profileData.role = user.permissions ? user.permissions[0] : "";
+      this.showEditUser = true;
+      this.selectedUser = user;
+    },
+    resendEmailVerification(email) {
+      this.$store.dispatch("account/resendVerification", {
+        email: email
+      });
+    },
+    async saveUpdatedUser() {
+      this.profileData.permissions = [this.profileData.role];
+      let userData = { ...this.profileData };
+      delete userData.role;
+      this.$store.dispatch("account/updateUser", {
+        user: userData,
+        id: this.selectedUser._id,
+        paginationOpts: this.paginationOpts
+      });
+    },
+    impersonate(id) {},
+    resetPassword(email) {
+      this.$store
+        .dispatch("account/forgotPassword", {
+          emailAddress: email
+        });
+    },
+    async deactiveateUser(user) {
+      this.profileData.firstname = user.firstname;
+      this.profileData.lastname = user.lastname;
+      this.profileData.city = user.city;
+      this.profileData.institution = user.institution;
+      this.profileData.permissions = ["inactive"];
+      let userData = { ...this.profileData };
+      delete userData.role;
+      this.$store.dispatch("account/updateUser", {
+        user: userData,
+        id: user._id,
+        paginationOpts: this.paginationOpts
+      });
     }
   }
-})
+};
 </script>
 
 <style scoped>

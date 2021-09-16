@@ -8,7 +8,6 @@ export default defineComponent({
   name: 'App',
   watch: {
     currentUser(newUser, oldUser) {
-      console.log(newUser)
       if (newUser === null) {
         this.$router.push('/login');
       } else {

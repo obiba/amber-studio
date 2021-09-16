@@ -1,4 +1,4 @@
-import feathersClient from '../../boot/feathersClient';
+import { feathersClient } from '../../boot/feathersClient';
 import { api } from '../../boot/axios';
 
 export async function login(email, password) {
