@@ -76,6 +76,10 @@ const routes = [
     component: () => import("pages/ResetPassword.vue")
   },
   {
+    path: "/verify",
+    component: () => import("pages/Verify.vue")
+  },
+  {
     path: '/lock',
     component: () => import('pages/LockScreen.vue')
   }
