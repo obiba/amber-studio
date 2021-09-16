@@ -42,6 +42,14 @@
                 </q-btn>
               </div>
             </q-form>
+            <q-btn
+              flat
+              to="/forgot-password"
+              dense
+              no-caps
+              class="text-bold q-mt-md">
+              Forgot passsword?
+            </q-btn>
           </q-card-section>
         </q-card>
       </q-page>

@@ -41,7 +41,7 @@
               </template>
             </q-input>
 
-<q-input
+            <q-input
               filled
               v-model="formData.email"
               label-color="accent"
@@ -53,7 +53,8 @@
                 <q-icon color="accent" name="fas fa-envelope" size="xs" />
               </template>
             </q-input>
-<q-input
+            
+            <q-input
               filled
               v-model="formData.password"
               label-color="accent"

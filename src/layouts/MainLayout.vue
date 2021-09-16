@@ -21,35 +21,26 @@
           </q-btn>
           <q-btn round dense flat color="white" icon="fab fa-github" type="a" href="https://github.com/obiba/amber-studio" target="_blank">
           </q-btn>
-          <q-btn
-            v-if="!$store.state.auth.user"
-            to="/login"
-            flat
-            stretch
-            class="text-bold">
-            <q-icon
-              name="fas fa-sign-in-alt"
-              class="q-mr-sm text-white"
-              size="xs"></q-icon>
-            Login
-          </q-btn>
-          <q-btn
-            v-if="$store.state.auth.user"
-            @click="logout"
-            flat
-            stretch
-            class="text-bold">
-            <q-icon
-              name="fas fa-sign-out-alt"
-              class="q-mr-sm text-white"
-              size="xs"></q-icon>
-              Logout
-          </q-btn>
-          <q-btn round flat to="/account">
-            <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-            </q-avatar>
-          </q-btn>
+          <q-btn-dropdown color="primary" icon="person" no-caps>
+            <template v-slot:label>
+              <div class="text-center q-pl-sm">
+                {{userName}}
+              </div>
+            </template>
+            <q-list>
+              <q-item v-close-popup to="/account">
+                <q-item-section>
+                  <q-item-label>Profile</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item clickable v-close-popup @click="onLogout">
+                <q-item-section>
+                  <q-item-label>Logout</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
         </div>
       </q-toolbar>
     </q-header>
@@ -165,30 +156,39 @@ export default defineComponent({
     }
   },
   computed: {
+    user() {
+      return this.$store.state.auth.payload.user
+    },
+    userName() {
+      return this.userEmail.split('@')[0]
+    },
+    userEmail() {
+      if (this.user) {
+        return this.user.email;
+      }
+      return '?';
+    },
     isAdministrator() {
-      let user = this.$store.state.auth.payload.user;
-      if (user && user.permissions) {
-        return user.permissions.includes("administrator");
+      if (this.user) {
+        return this.user.permissions && this.user.permissions.includes("administrator");
       }
       return false;
     },
     isManager() {
-      let user = this.$store.state.auth.payload.user;
-      if (user && user.permissions) {
-        return user.permissions.includes("manager");
+      if (this.user) {
+        return this.user.permissions && this.user.permissions.includes("manager");
       }
       return false;
     },
     isInterviewer() {
-      let user = this.$store.state.auth.payload.user;
-      if (user && user.permissions) {
-        return user.permissions.includes("interviewer");
+      if (this.user) {
+        return this.user.permissions && this.user.permissions.includes("interviewer");
       }
       return false;
     }
   },
   methods: {
-    logout() {
+    onLogout() {
       this.$store.dispatch("auth/logout");
     }
   }

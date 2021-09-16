@@ -68,8 +68,8 @@ export async function forgotPassword(context, payload) {
     })
     .catch(err => {
       Notify.create({
-        message:
-          'There was an error processing your request. If this problem persists, contact support.',
+        message: err.response.data.message,
+          //'There was an error processing your request. If this problem persists, contact support.',
         color: 'negative'
       });
     });

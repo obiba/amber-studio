@@ -25,7 +25,7 @@ const routes = [
       },
       {
         path: '/groups', 
-        component: () => import('pages/Users.vue'),
+        component: () => import('pages/Groups.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
@@ -38,9 +38,13 @@ const routes = [
         component: () => import('pages/Forms.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/datasets',
+        component: () => import('pages/Datasets.vue'),
+        meta: { requiresAuth: true }
+      },
     ]
   },
-
   // Always leave this as last one,
   // but you can also remove it
   {
@@ -62,6 +66,14 @@ const routes = [
   {
     path: "/register",
     component: () => import("pages/Register.vue")
+  },
+  {
+    path: "/forgot-password",
+    component: () => import("pages/ForgotPassword.vue")
+  },
+  {
+    path: "/reset-password",
+    component: () => import("pages/ResetPassword.vue")
   },
   {
     path: '/lock',
