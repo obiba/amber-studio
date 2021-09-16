@@ -109,6 +109,7 @@ export default {
           color: "positive",
           icon: "fas fa-check"
         });
+        this.$router.push("/");
       }
     }
   }

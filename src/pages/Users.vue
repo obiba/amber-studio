@@ -29,7 +29,7 @@
             color="primary"
             title="Edit User"
             @click="updateUser(props.row)"
-            >Edit User
+            >Edit
           </q-btn>
           <q-btn
             size="sm"
@@ -40,20 +40,13 @@
             >Reset Password</q-btn
           >
           <q-btn
-            size="sm"
-            class="q-pa-xs q-mx-xs"
-            color="orange"
-            title="Impersonate User"
-            @click="impersonate(props.row._id)"
-            >Impersonate</q-btn
-          >
-          <q-btn
+            disable = "props.row.permissions.includes('inactive')"
             size="sm"
             class="q-pa-xs q-mx-xs"
             color="red"
             title="Deactivate User"
             @click="deactiveateUser(props.row)"
-            >Deactivate User</q-btn
+            >Deactivate</q-btn
           >
         </q-td>
       </template>
@@ -335,7 +328,6 @@ export default {
         paginationOpts: this.paginationOpts
       });
     },
-    impersonate(id) {},
     resetPassword(email) {
       this.$store
         .dispatch("account/forgotPassword", {
