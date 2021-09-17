@@ -22,14 +22,22 @@
                 filled
                 v-model="email"
                 label="Email"
-                lazy-rules/>
+                lazy-rules>
+              <template v-slot:prepend>
+                <q-icon name="fas fa-envelope" size="xs" />
+              </template>
+              </q-input>
 
               <q-input
                 type="password"
                 filled
                 v-model="password"
                 label="Password"
-                lazy-rules/>
+                lazy-rules>
+                <template v-slot:prepend>
+                <q-icon name="fas fa-lock" size="xs" />
+              </template>
+            </q-input>
 
               <div>
                 <q-btn label="Login" type="submit" color="primary"/>
