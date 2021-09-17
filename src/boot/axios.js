@@ -2,7 +2,7 @@ import { boot } from 'quasar/wrappers'
 import axios from 'axios';
 import { LoadingBar } from 'quasar';
 
-const api = axios.create({ baseURL: 'http://localhost:3030' });
+const api = axios.create({ baseURL: process.env.API });
 
 api.defaults.withCredentials = true;
 

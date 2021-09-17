@@ -7,7 +7,7 @@ import { axios } from './axios';
 import Vuex from 'vuex';
 import feathersVuex from '@feathersjs/vuex';
 
-const restClient = rest('http://localhost:3030');
+const restClient = rest(process.env.API);
 
 const feathersClient = feathers()
   .configure(restClient.axios(axios))
