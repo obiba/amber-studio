@@ -82,7 +82,7 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
-      port: 8080,
+      port: 3080,
       open: true // opens browser window automatically
     },
 
@@ -123,9 +123,9 @@ module.exports = configure(function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `Quasar App`,
-        short_name: `Quasar App`,
-        description: `A Quasar Framework app`,
+        name: `Amber Studio App`,
+        short_name: `Amber Studio`,
+        description: `Amber Studio for managing Amber server`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
