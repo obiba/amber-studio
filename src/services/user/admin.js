@@ -1,9 +1,9 @@
 import { feathersClient } from '../../boot/feathersClient';
 
-export async function getUsers(opts) {
+export async function getUsers(opts, filter) {
   let pagination = { query: { $sort: { descending: 1 } } };
   if (opts) {
-    // qtable pagination's All sets limit to 0
+    // qtable pagination's 'All' sets limit to 0
     pagination.query.$limit = opts.rowsPerPage === 0 ? 1000 : opts.rowsPerPage;
     pagination.query.$skip = (opts.page - 1) * opts.rowsPerPage;
     if (opts.sortBy) {
@@ -12,5 +12,6 @@ export async function getUsers(opts) {
   } else {
     pagination.query.$limit = 5;
   }
+  // TODO use filter
   return feathersClient.service('user').find(pagination);
 }
