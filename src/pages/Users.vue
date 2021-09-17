@@ -13,7 +13,7 @@
       @request='getTableUsers'
     >
       <template v-slot:top-right>
-        <q-input  filled borderless dense debounce="300" v-model="filter" placeholder="Search">
+        <q-input filled borderless dense debounce="300" v-model="filter" placeholder="Search">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -36,8 +36,8 @@
             class='q-pa-xs q-mx-xs'
             color='primary'
             title='Edit User'
-            @click='updateUser(props.row)'
-            >Edit
+            icon='edit'
+            @click='updateUser(props.row)'>
           </q-btn>
           <q-btn
             v-if='!props.row.isVerified'
@@ -45,8 +45,8 @@
             class='q-pa-xs q-mx-xs'
             title='Resend Email Verification'
             color='secondary'
-            @click='resendEmailVerification(props.row.email)'
-          >Verify
+            icon='send'
+            @click='resendEmailVerification(props.row.email)'>
           </q-btn>
           <q-btn
             v-if='props.row.isVerified'
@@ -54,18 +54,35 @@
             class='q-pa-xs q-mx-xs'
             color='purple'
             title='Reset Password'
-            @click='resetPassword(props.row.email)'
-            >Reset</q-btn
-          >
+            icon='replay'
+            @click='resetPassword(props.row.email)'>
+          </q-btn>
           <q-btn
             v-if='props.row.permissions.includes("inactive")'
             size='sm'
             class='q-pa-xs q-mx-xs'
-            color='red'
+            color='green'
+            title='Activate User'
+            icon='do_not_disturb_off'
+            @click='activeateUser(props.row)'>
+          </q-btn>
+          <q-btn
+            v-if='!props.row.permissions.includes("inactive")'
+            size='sm'
+            class='q-pa-xs q-mx-xs'
+            color='orange'
             title='Deactivate User'
-            @click='deactiveateUser(props.row)'
-            >Deactivate</q-btn
-          >
+            icon='do_not_disturb_on'
+            @click='deactiveateUser(props.row)'>
+          </q-btn>
+          <q-btn
+            size='sm'
+            class='q-pa-xs q-mx-xs'
+            color='red'
+            title='Delete User'
+            icon='delete_outline'
+            @click='deactiveateUser(props.row)'>
+          </q-btn>
         </q-td>
       </template>
     </q-table>
@@ -127,6 +144,34 @@
             >
               <template v-slot:prepend>
                 <q-icon color='accent' name='fas fa-city' size='xs' />
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='profileData.title'
+              label='Title'
+              label-color='accent'
+              lazy-rules
+              class='q-ma-sm'
+            >
+              <template v-slot:prepend>
+                <q-icon color='accent' name='fas fa-user-tie' size='xs' />
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='profileData.phone'
+              label='Phone'
+              label-color='accent'
+              lazy-rules
+              class='q-ma-sm'
+            >
+              <template v-slot:prepend>
+                <q-icon color='accent' name='fas fa-phone' size='xs' />
               </template>
             </q-input>
           </div>
@@ -260,6 +305,8 @@ export default {
         lastname: '',
         institution: '',
         city: '',
+        title:'',
+        phone: '',
         role: ''
       }
     };
@@ -328,6 +375,8 @@ export default {
       this.profileData.lastname = user.lastname;
       this.profileData.city = user.city;
       this.profileData.institution = user.institution;
+      this.profileData.title = user.title;
+      this.profileData.phone = user.phone;
       this.profileData.role = user.permissions ? user.permissions[0] : '';
       this.showEditUser = true;
       this.selectedUser = user;
@@ -353,11 +402,29 @@ export default {
           emailAddress: email
         });
     },
+    async activeateUser(user) {
+      this.profileData.firstname = user.firstname;
+      this.profileData.lastname = user.lastname;
+      this.profileData.city = user.city;
+      this.profileData.institution = user.institution;
+      this.profileData.title = user.title;
+      this.profileData.phone = user.phone;
+      this.profileData.permissions = ['guest'];
+      let userData = { ...this.profileData };
+      delete userData.role;
+      this.$store.dispatch('account/updateUser', {
+        user: userData,
+        id: user._id,
+        paginationOpts: this.paginationOpts
+      });
+    },
     async deactiveateUser(user) {
       this.profileData.firstname = user.firstname;
       this.profileData.lastname = user.lastname;
       this.profileData.city = user.city;
       this.profileData.institution = user.institution;
+      this.profileData.title = user.title;
+      this.profileData.phone = user.phone;
       this.profileData.permissions = ['inactive'];
       let userData = { ...this.profileData };
       delete userData.role;
