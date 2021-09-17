@@ -11,6 +11,7 @@ COPY . .
 
 # build stage
 FROM develop-stage as build-stage
+ARG AMBER_URL
 RUN yarn
 RUN quasar build
 
