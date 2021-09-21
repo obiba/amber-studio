@@ -25,6 +25,7 @@ module.exports = configure(function (ctx) {
       'feathersClient',
       'i18n',
       'vuelidate',
+      'recaptcha',
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -51,9 +52,8 @@ module.exports = configure(function (ctx) {
       vueRouterMode: 'history', // available values: 'hash', 'history'
 
       env: {
-        API: ctx.dev
-          ? 'http://localhost:3030'
-          : process.env.AMBER_URL
+        API: ctx.dev ? 'http://localhost:3030' : process.env.AMBER_URL,
+        RECAPTCHA_SITE_KEY: ctx.dev ? '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u' : process.env.RECAPTCHA_SITE_KEY
       },
 
       // transpile: false,

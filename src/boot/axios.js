@@ -1,4 +1,3 @@
-import { boot } from 'quasar/wrappers'
 import axios from 'axios';
 import { LoadingBar } from 'quasar';
 

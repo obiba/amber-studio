@@ -9,12 +9,13 @@ export async function login(email, password) {
   });
 }
 
-export async function signup(firstname, lastname, email, password) {
+export async function register(firstname, lastname, email, password, token) {
   return api.post('/user', {
     firstname: firstname,
     lastname: lastname,
     email: email,
-    password: password
+    password: password,
+    token: token
   });
 }
 

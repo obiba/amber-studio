@@ -3,11 +3,12 @@ import { Notify } from 'quasar';
 
 export async function registerUser(context, payload) {
   let result = await userService
-    .signup(
+    .register(
       payload.formData.firstname,
       payload.formData.lastname,
       payload.formData.email,
-      payload.formData.password
+      payload.formData.password,
+      payload.formData.token
     )
     .catch(err => {
       if (err.response) {
