@@ -71,6 +71,10 @@ export async function updateUser(user, id) {
   return feathersClient.service('user').patch(id, user);
 }
 
+export async function deleteUser(id) {
+  return feathersClient.service('user').remove(id);
+}
+
 export async function resendVerification(email) {
   return api.post('/authManagement', {
     action: 'resendVerifySignup',

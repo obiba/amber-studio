@@ -81,7 +81,7 @@
             color='red'
             title='Delete User'
             icon='delete_outline'
-            @click='deactiveateUser(props.row)'>
+            @click='confirmDeleteUser(props.row)'>
           </q-btn>
         </q-td>
       </template>
@@ -95,7 +95,6 @@
               v-model='profileData.firstname'
               label='First Name'
               label-color='accent'
-              hint='Given Name'
               lazy-rules
               class='q-ma-sm'
             >
@@ -110,7 +109,6 @@
               v-model='profileData.lastname'
               label='Family Name'
               label-color='accent'
-              hint='Surname'
               lazy-rules
               class='q-ma-sm'
             >
@@ -194,6 +192,33 @@
             @click='saveUpdatedUser'
             :disable='disableUpdateProfile'
             label='Update User'
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model='showConfirmDeleteUser' persistent>
+      <q-card>
+        <q-card-section>
+          <div>
+          Please confirm that you want to remove user:
+          </div>
+          <div class="text-weight-bold text-center q-mt-md">
+            {{selectedUser.email}}
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn label='Cancel' flat v-close-popup />
+          <q-btn
+            @click='deleteUser'
+            label='Delete User'
             type='submit'
             color='positive'
             v-close-popup
@@ -293,6 +318,7 @@ export default {
       roles: ['guest', 'interviewer', 'manager', 'administrator', 'inactive'],
       selectedUser: {},
       showEditUser: false,
+      showConfirmDeleteUser: false,
       paginationOpts: {
         sortBy: 'lastLoggedIn',
         descending: false,
@@ -381,6 +407,10 @@ export default {
       this.showEditUser = true;
       this.selectedUser = user;
     },
+    confirmDeleteUser(user) {
+      this.showConfirmDeleteUser = true;
+      this.selectedUser = user;
+    },
     resendEmailVerification(email) {
       this.$store.dispatch('account/resendVerification', {
         email: email
@@ -401,6 +431,12 @@ export default {
         .dispatch('account/forgotPassword', {
           emailAddress: email
         });
+    },
+    deleteUser() {
+      this.$store.dispatch('account/deleteUser', {
+        id: this.selectedUser._id,
+        paginationOpts: this.paginationOpts
+      });
     },
     async activeateUser(user) {
       this.profileData.firstname = user.firstname;

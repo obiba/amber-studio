@@ -182,3 +182,30 @@ export async function updateUser({ dispatch }, payload) {
     { root: true }
   );
 }
+
+export async function deleteUser({ dispatch }, payload) {
+  let result = await userService
+    .deleteUser(payload.id)
+    .catch(err => {
+      Notify.create({
+        message:
+          'There was an error processing this request. If this problem persists, contact support.' +
+          err,
+        color: 'negative'
+      });
+    });
+  if (result) {
+    Notify.create({
+      message: 'User successfully deleted.',
+      color: 'positive',
+      icon: 'fas fa-check'
+    });
+  }
+  dispatch(
+    'admin/getUsers',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  );
+}
