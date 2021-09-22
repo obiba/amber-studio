@@ -209,3 +209,30 @@ export async function deleteUser({ dispatch }, payload) {
     { root: true }
   );
 }
+
+export async function deleteUsers({ dispatch }, payload) {
+  let result = await userService
+    .deleteUsers(payload.ids)
+    .catch(err => {
+      Notify.create({
+        message:
+          'There was an error processing this request. If this problem persists, contact support.' +
+          err,
+        color: 'negative'
+      });
+    });
+  if (result) {
+    Notify.create({
+      message: 'Users successfully deleted.',
+      color: 'positive',
+      icon: 'fas fa-check'
+    });
+  }
+  dispatch(
+    'admin/getUsers',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  );
+}

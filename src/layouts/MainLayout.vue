@@ -88,7 +88,7 @@
             <q-icon name="person"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Users</q-item-label>
+            <q-item-label>Users & Groups</q-item-label>
           </q-item-section>
         </q-item>
 

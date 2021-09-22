@@ -1,91 +1,121 @@
 <template>
   <q-page class='q-pa-sm bg-white'>
-    <div class='text-h6 q-ma-md'>Users</div>
+    <div class='text-h6 q-ma-md'>Users & Groups</div>
     <q-separator/>
 
-  <q-table
-      flat
-      :rows='users'
-      :columns='columns'
-      :filter='filter'
-      row-key='name'
-      v-model:pagination='paginationOpts'
-      @request='getTableUsers'
+    <q-tabs
+      v-model="tab"
+      dense
+      class="text-grey"
+      active-color="primary"
+      indicator-color="primary"
+      align="justify"
+      narrow-indicator
     >
-      <template v-slot:top-right>
-        <q-input filled borderless dense debounce="300" v-model="filter" placeholder="Search">
-          <template v-slot:append>
-            <q-icon name="search"/>
+      <q-tab name="users" label="Users" />
+      <q-tab name="groups" label="Groups" />
+    </q-tabs>
+
+    <q-separator />
+
+    <q-tab-panels v-model="tab" animated>
+      <q-tab-panel name="users">
+
+        <q-table
+            flat
+            :rows='users'
+            :columns='columns'
+            :filter='filter'
+            row-key='email'
+            selection="multiple"
+            v-model:selected="selected"
+            v-model:pagination='paginationOpts'
+            @request='getTableUsers'
+          >
+           <template v-slot:top>
+            <q-btn color="primary" :disable="selected.length === 0" label="Delete Users" @click="confirmDeleteUsers()" />
+            <q-space />
+            <q-input filled borderless dense debounce="300" v-model="filter" placeholder="Search">
+              <template v-slot:append>
+                <q-icon name="search"/>
+              </template>
+            </q-input>
           </template>
-        </q-input>
-      </template>
-      <template v-slot:body-cell-name='props'>
-        <q-td :props='props'>
-          {{ props.row.firstname }} {{ props.row.lastname }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-role='props'>
-        <q-td class='text-capitalize'>
-          {{ props.row.permissions ? props.row.permissions[0] : '' }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-action='props'>
-        <q-td :props='props'>
-          <q-btn
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='primary'
-            title='Edit User'
-            icon='edit'
-            @click='updateUser(props.row)'>
-          </q-btn>
-          <q-btn
-            v-if='!props.row.isVerified'
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            title='Resend Email Verification'
-            color='secondary'
-            icon='send'
-            @click='resendEmailVerification(props.row.email)'>
-          </q-btn>
-          <q-btn
-            v-if='props.row.isVerified'
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='purple'
-            title='Reset Password'
-            icon='replay'
-            @click='resetPassword(props.row.email)'>
-          </q-btn>
-          <q-btn
-            v-if='props.row.permissions.includes("inactive")'
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='green'
-            title='Activate User'
-            icon='do_not_disturb_off'
-            @click='activeateUser(props.row)'>
-          </q-btn>
-          <q-btn
-            v-if='!props.row.permissions.includes("inactive")'
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='orange'
-            title='Deactivate User'
-            icon='do_not_disturb_on'
-            @click='deactiveateUser(props.row)'>
-          </q-btn>
-          <q-btn
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='red'
-            title='Delete User'
-            icon='delete_outline'
-            @click='confirmDeleteUser(props.row)'>
-          </q-btn>
-        </q-td>
-      </template>
-    </q-table>
+          <template v-slot:body-cell-name='props'>
+            <q-td :props='props'>
+              {{ props.row.firstname }} {{ props.row.lastname }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-role='props'>
+            <q-td class='text-capitalize'>
+              {{ props.row.permissions ? props.row.permissions[0] : '' }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-action='props'>
+            <q-td :props='props'>
+              <q-btn
+                size='sm'
+                class='q-pa-xs q-mx-xs'
+                color='primary'
+                title='Edit User'
+                icon='edit'
+                @click='updateUser(props.row)'>
+              </q-btn>
+              <q-btn
+                v-if='!props.row.isVerified'
+                size='sm'
+                class='q-pa-xs q-mx-xs'
+                title='Resend Email Verification'
+                color='secondary'
+                icon='send'
+                @click='resendEmailVerification(props.row.email)'>
+              </q-btn>
+              <q-btn
+                v-if='props.row.isVerified'
+                size='sm'
+                class='q-pa-xs q-mx-xs'
+                color='purple'
+                title='Reset Password'
+                icon='replay'
+                @click='resetPassword(props.row.email)'>
+              </q-btn>
+              <q-btn
+                v-if='props.row.permissions.includes("inactive")'
+                size='sm'
+                class='q-pa-xs q-mx-xs'
+                color='green'
+                title='Activate User'
+                icon='do_not_disturb_off'
+                @click='activeateUser(props.row)'>
+              </q-btn>
+              <q-btn
+                v-if='!props.row.permissions.includes("inactive")'
+                size='sm'
+                class='q-pa-xs q-mx-xs'
+                color='orange'
+                title='Deactivate User'
+                icon='do_not_disturb_on'
+                @click='deactiveateUser(props.row)'>
+              </q-btn>
+              <q-btn
+                size='sm'
+                class='q-pa-xs q-mx-xs'
+                color='red'
+                title='Delete User'
+                icon='delete_outline'
+                @click='confirmDeleteUser(props.row)'>
+              </q-btn>
+            </q-td>
+          </template>
+        </q-table>       
+      </q-tab-panel>
+
+      <q-tab-panel name="groups">
+        <div class="text-h6">Alarms</div>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      </q-tab-panel>
+    </q-tab-panels>
+
     <q-dialog v-model='showEditUser' persistent>
       <q-card>
         <q-card-section class='row items-center'>
@@ -231,6 +261,33 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model='showConfirmDeleteUsers' persistent>
+      <q-card>
+        <q-card-section>
+          <div>
+          Please confirm that you want to remove all the selected users:
+          </div>
+          <div class="text-weight-bold text-center q-mt-md">
+            {{selected.map(u => u.email).join(', ')}}
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn label='Cancel' flat v-close-popup />
+          <q-btn
+            @click='deleteUsers'
+            label='Delete Users'
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </q-page>
 </template>
 
@@ -255,6 +312,8 @@ export default {
   },
   setup() {
     return {
+      selected: ref([]),
+      tab: ref('users'),
       filter: ref(''),
       columns: [
         {
@@ -319,6 +378,7 @@ export default {
       selectedUser: {},
       showEditUser: false,
       showConfirmDeleteUser: false,
+      showConfirmDeleteUsers: false,
       paginationOpts: {
         sortBy: 'lastLoggedIn',
         descending: false,
@@ -378,9 +438,6 @@ export default {
     setPagination() {
       this.paginationOpts = this.$store.state.admin.userPaginationOpts;
     },
-    filterRows(rows, terms) {
-      return rows.filter(row => row.email.toLowerCase().includes(terms.toLowerCase()))
-    },
     async getTableUsers(requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination;
@@ -411,6 +468,11 @@ export default {
       this.showConfirmDeleteUser = true;
       this.selectedUser = user;
     },
+    confirmDeleteUsers() {
+      if (this.selected.length>0) {
+        this.showConfirmDeleteUsers = true;
+      }
+    },
     resendEmailVerification(email) {
       this.$store.dispatch('account/resendVerification', {
         email: email
@@ -437,6 +499,14 @@ export default {
         id: this.selectedUser._id,
         paginationOpts: this.paginationOpts
       });
+    },
+    deleteUsers() {
+      const ids = this.selected.map(u => u._id);
+      this.$store.dispatch('account/deleteUsers', {
+        ids: ids,
+        paginationOpts: this.paginationOpts
+      });
+      this.selected = [];
     },
     async activeateUser(user) {
       this.profileData.firstname = user.firstname;
