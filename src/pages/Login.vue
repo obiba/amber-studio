@@ -93,7 +93,6 @@ export default defineComponent({
         })
         // Just use the returned error instead of mapping it from the store.
         .catch(err => {
-          console.log(err)
           // Convert the error to a plain object and add a message.
           let type = err.className;
           err = Object.assign({}, err);

@@ -47,23 +47,15 @@ export default boot(({ app, router, store }) => {
   // reauthenticate on page refresh
   if (localStorage.getItem('feathers-jwt')) {
     let token = jwt_decode(localStorage.getItem('feathers-jwt'))
-    console.log(token)
     const expiresAt = token.exp
     if (Math.round(new Date().getTime() / 1000) < expiresAt) {
       feathersClient.reAuthenticate().then((response) => {
         // show application page
-        //dispatch('responseHandler', response);
-        //store.state.auth.payload = response
-        store.commit('auth/setAccessToken', response.accessToken)
-        store.commit('auth/setPayload', response)
-        let user = response[store.state.auth.responseEntityField]
-        if (user) {
-          store.commit('auth/setUser', user)
-        }
+        store.dispatch('auth/responseHandler', response)
         //console.log(JSON.parse(JSON.stringify(store.state)))
         router.push('/')
       }).catch((err) => {
-        // remove expired token
+        // remove expired/unusable token
         localStorage.removeItem('feathers-jwt')
       });
     }

@@ -165,7 +165,6 @@ export default {
       this.recaptcha().then((token) => {
           let data = this.formData;
           data.token = token;
-          console.log(data);
           this.$store.dispatch("account/registerUser", { formData: data });
       });
       
