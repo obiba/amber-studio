@@ -9,11 +9,6 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
-        path: '/metrics',
-        component: () => import('pages/Metrics.vue'),
-        meta: { requiresAuth: true }
-      },
-      {
         path: '/account',
         component: () => import('pages/Account.vue'),
         meta: { requiresAuth: true }
@@ -24,18 +19,8 @@ const routes = [
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
-        path: '/groups', 
-        component: () => import('pages/Groups.vue'),
-        meta: { requiresAuth: true, requiresAdmin: true }
-      },
-      {
         path: '/studies', 
         component: () => import('pages/Studies.vue'),
-        meta: { requiresAuth: true }
-      },
-      {
-        path: '/forms', 
-        component: () => import('pages/Forms.vue'),
         meta: { requiresAuth: true }
       },
       {
@@ -44,16 +29,6 @@ const routes = [
         meta: { requiresAuth: true }
       },
     ]
-  },
-  // Always leave this as last one,
-  // but you can also remove it
-  {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/Error404.vue')
-  },
-  {
-    path: '/mail',
-    component: () => import('layouts/Mail.vue')
   },
   {
     path: '/maintenance',
@@ -82,6 +57,12 @@ const routes = [
   {
     path: '/lock',
     component: () => import('pages/LockScreen.vue')
+  },
+  // Always leave this as last one,
+  // but you can also remove it
+  {
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/Error404.vue')
   }
 ]
 

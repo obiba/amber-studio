@@ -22,6 +22,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "feathers-hooks-common": "^5.0.6",
+    "jwt-decode": "^3.1.2",
     "quasar": "^2.0.4",
     "vue-i18n": "^9.1.7",
     "vue-recaptcha-v3": "^2.0.1",

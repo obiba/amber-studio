@@ -5,7 +5,7 @@ export default boot(async ({ router, store }) => {
   router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
       // if requires admin
-      let user = store.state.auth.payload ? store.state.auth.payload.user : undefined;
+      let user = store.state.auth.user ? store.state.auth.user : undefined;
       if (user) {
         if (to.meta.requiresAdmin) {
           if (user.permissions && user.permissions.includes('administrator')) {

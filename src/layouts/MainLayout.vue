@@ -71,15 +71,6 @@
             <q-item-label>Studies</q-item-label>
           </q-item-section>
         </q-item>
-        
-        <q-item to="/forms" active-class="q-item-no-link-highlighting">
-          <q-item-section avatar>
-            <q-icon name="dynamic_form"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Forms</q-item-label>
-          </q-item-section>
-        </q-item>
       
         <q-item v-if="isAdministrator || isManager" to="/datasets" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
@@ -87,15 +78,6 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>Datasets</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item v-if="isAdministrator || isManager" to="/metrics" active-class="q-item-no-link-highlighting">
-          <q-item-section avatar>
-            <q-icon name="query_stats"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Metrics</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -107,15 +89,6 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>Users</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item v-if="isAdministrator" to="/groups" active-class="q-item-no-link-highlighting">
-          <q-item-section avatar>
-            <q-icon name="group"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Groups</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -138,8 +111,6 @@
 </template>
 
 <script>
-import Messages from "./Messages";
-
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
