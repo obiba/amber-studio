@@ -8,7 +8,7 @@ export default boot(async ({ router, store }) => {
       let user = store.state.auth.payload && store.state.auth.payload.user ? store.state.auth.payload.user : undefined;
       if (user) {
         if (to.meta.requiresAdmin) {
-          if (user.permissions && user.permissions.includes('administrator')) {
+          if (user.role && user.role === 'administrator') {
             next();
           } else {
             Notify.create({

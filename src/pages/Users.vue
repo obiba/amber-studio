@@ -33,7 +33,8 @@
             @request='getTableUsers'
           >
            <template v-slot:top>
-            <q-btn color="primary" :disable="selected.length === 0" label="Delete Users" @click="confirmDeleteUsers()" />
+            <q-btn color="primary" label="Add User" title="Add a new user" @click="updateUser()" class="q-mr-md" />
+            <q-btn color="primary" :disable="selected.length === 0" label="Delete Users" title="Delete selected users" @click="confirmDeleteUsers()" />
             <q-space />
             <q-input filled borderless dense debounce="300" v-model="filter" placeholder="Search">
               <template v-slot:append>
@@ -48,7 +49,7 @@
           </template>
           <template v-slot:body-cell-role='props'>
             <q-td class='text-capitalize'>
-              {{ props.row.permissions ? props.row.permissions[0] : '' }}
+              {{ props.row.role }}
             </q-td>
           </template>
           <template v-slot:body-cell-action='props'>
@@ -80,7 +81,7 @@
                 @click='resetPassword(props.row.email)'>
               </q-btn>
               <q-btn
-                v-if='props.row.permissions.includes("inactive")'
+                v-if='props.row.role === "inactive"'
                 size='sm'
                 class='q-pa-xs q-mx-xs'
                 color='green'
@@ -89,7 +90,7 @@
                 @click='activeateUser(props.row)'>
               </q-btn>
               <q-btn
-                v-if='!props.row.permissions.includes("inactive")'
+                v-if='!(props.row.role === "inactive")'
                 size='sm'
                 class='q-pa-xs q-mx-xs'
                 color='orange'
@@ -144,6 +145,37 @@
             >
               <template v-slot:prepend>
                 <q-icon color='accent' name='fas fa-user' size='xs' />
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='profileData.email'
+              label='Email'
+              label-color='accent'
+              lazy-rules
+              class='q-ma-sm'
+              v-if='!selectedUser'
+            >
+              <template v-slot:prepend>
+                <q-icon color='accent' name='fas fa-envelope' size='xs' />
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='profileData.password'
+              label='Password'
+              label-color='accent'
+              lazy-rules
+              class='q-ma-sm'
+              type='password'
+              v-if='!selectedUser'
+            >
+              <template v-slot:prepend>
+                <q-icon color='accent' name='fas fa-lock' size='xs' />
               </template>
             </q-input>
           </div>
@@ -219,17 +251,32 @@
         <q-card-actions align='right'>
           <q-btn label='Cancel' flat v-close-popup />
           <q-btn
-            @click='saveUpdatedUser'
+            @click='saveUser'
             :disable='disableUpdateProfile'
             label='Update User'
             type='submit'
             color='positive'
             v-close-popup
+            v-if='selectedUser'
           >
             <template v-slot:loading>
               <q-spinner-facebook />
             </template>
           </q-btn>
+
+          <q-btn
+            @click='saveUser'
+            label='Add User'
+            type='submit'
+            color='positive'
+            v-close-popup
+            v-if='!selectedUser'
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -352,7 +399,7 @@ export default {
           name: 'role',
           align: 'left',
           label: 'Role',
-          field: 'permissions',
+          field: 'role',
           sortable: false
         },
         {
@@ -454,13 +501,15 @@ export default {
       getUsers: 'admin/getUsers'
     }),
     updateUser(user) {
-      this.profileData.firstname = user.firstname;
-      this.profileData.lastname = user.lastname;
-      this.profileData.city = user.city;
-      this.profileData.institution = user.institution;
-      this.profileData.title = user.title;
-      this.profileData.phone = user.phone;
-      this.profileData.role = user.permissions ? user.permissions[0] : '';
+      this.profileData.firstname = user ? user.firstname : undefined;
+      this.profileData.lastname = user ? user.lastname : undefined;
+      this.profileData.city = user ? user.city : undefined;
+      this.profileData.institution = user ? user.institution : undefined;
+      this.profileData.title = user ? user.title : undefined;
+      this.profileData.phone = user ? user.phone : undefined;
+      this.profileData.role = user ? user.role : 'guest';
+      this.profileData.email = undefined;
+      this.profileData.password = undefined;
       this.showEditUser = true;
       this.selectedUser = user;
     },
@@ -478,15 +527,22 @@ export default {
         email: email
       });
     },
-    async saveUpdatedUser() {
-      this.profileData.permissions = [this.profileData.role];
+    async saveUser() {
       let userData = { ...this.profileData };
-      delete userData.role;
-      this.$store.dispatch('account/updateUser', {
-        user: userData,
-        id: this.selectedUser._id,
-        paginationOpts: this.paginationOpts
-      });
+      if (this.selectedUser) {
+        // update
+        this.$store.dispatch('account/updateUser', {
+          user: userData,
+          id: this.selectedUser._id,
+          paginationOpts: this.paginationOpts
+        });
+      } else {
+        // create
+        this.$store.dispatch('account/createUser', {
+          user: userData,
+          paginationOpts: this.paginationOpts
+        });
+      }
     },
     resetPassword(email) {
       this.$store
@@ -515,9 +571,8 @@ export default {
       this.profileData.institution = user.institution;
       this.profileData.title = user.title;
       this.profileData.phone = user.phone;
-      this.profileData.permissions = ['guest'];
+      this.profileData.role = 'guest';
       let userData = { ...this.profileData };
-      delete userData.role;
       this.$store.dispatch('account/updateUser', {
         user: userData,
         id: user._id,
@@ -531,9 +586,8 @@ export default {
       this.profileData.institution = user.institution;
       this.profileData.title = user.title;
       this.profileData.phone = user.phone;
-      this.profileData.permissions = ['inactive'];
+      this.profileData.role = 'inactive';
       let userData = { ...this.profileData };
-      delete userData.role;
       this.$store.dispatch('account/updateUser', {
         user: userData,
         id: user._id,

@@ -37,6 +37,7 @@
 
 <script>
 import {defineComponent, defineAsyncComponent} from 'vue';
+import * as echarts from 'echarts';
 
 export default defineComponent({
   name: 'CardCharts',

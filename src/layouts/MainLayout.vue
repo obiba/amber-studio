@@ -141,19 +141,19 @@ export default defineComponent({
     },
     isAdministrator() {
       if (this.user) {
-        return this.user.permissions && this.user.permissions.includes("administrator");
+        return this.user.role === "administrator";
       }
       return false;
     },
     isManager() {
       if (this.user) {
-        return this.user.permissions && this.user.permissions.includes("manager");
+        return this.user.role === "manager";
       }
       return false;
     },
     isInterviewer() {
       if (this.user) {
-        return this.user.permissions && this.user.permissions.includes("interviewer");
+        return this.user.role === "interviewer";
       }
       return false;
     }

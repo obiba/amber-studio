@@ -156,13 +156,40 @@ export async function resendVerification(context, payload) {
   }
 }
 
+export async function createUser({ dispatch }, payload) {
+  let result = await userService
+    .createUser(payload.user)
+    .catch(err => {
+      Notify.create({
+        message:
+          'There was an error processing this request. If this problem persists, contact support. ' +
+          err,
+        color: 'negative'
+      });
+    });
+  if (result) {
+    Notify.create({
+      message: 'User successfully added.',
+      color: 'positive',
+      icon: 'fas fa-check'
+    });
+  }
+  dispatch(
+    'admin/getUsers',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  );
+}
+
 export async function updateUser({ dispatch }, payload) {
   let result = await userService
     .updateUser(payload.user, payload.id)
     .catch(err => {
       Notify.create({
         message:
-          'There was an error processing this request. If this problem persists, contact support.' +
+          'There was an error processing this request. If this problem persists, contact support. ' +
           err,
         color: 'negative'
       });
@@ -189,7 +216,7 @@ export async function deleteUser({ dispatch }, payload) {
     .catch(err => {
       Notify.create({
         message:
-          'There was an error processing this request. If this problem persists, contact support.' +
+          'There was an error processing this request. If this problem persists, contact support. ' +
           err,
         color: 'negative'
       });
@@ -216,7 +243,7 @@ export async function deleteUsers({ dispatch }, payload) {
     .catch(err => {
       Notify.create({
         message:
-          'There was an error processing this request. If this problem persists, contact support.' +
+          'There was an error processing this request. If this problem persists, contact support. ' +
           err,
         color: 'negative'
       });

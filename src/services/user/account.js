@@ -67,6 +67,10 @@ export async function verifyAccount(token) {
   });
 }
 
+export async function createUser(user) {
+  return feathersClient.service('user').create(user);
+}
+
 export async function updateUser(user, id) {
   return feathersClient.service('user').patch(id, user);
 }

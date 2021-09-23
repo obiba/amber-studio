@@ -18,6 +18,7 @@
 <script>
 import {defineComponent} from 'vue';
 import {ref} from 'vue';
+import * as echarts from 'echarts';
 
 export default defineComponent({
   name: "BarChart",
