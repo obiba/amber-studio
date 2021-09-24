@@ -13,7 +13,7 @@ export async function getUsers(opts, filter, roles) {
     formData.query.$limit = 5;
   }
   // use filter
-  let filterQuery;
+  let filterQuery = undefined;
   if (filter && filter.length>1) {
     filterQuery = { $or: [
       { email: { $search: filter } },
@@ -21,14 +21,16 @@ export async function getUsers(opts, filter, roles) {
       { lastname: { $search: filter } }
     ]};
   }
-  let rolesQuery;
-  if (roles) {
+  let rolesQuery = undefined;
+  if (roles && roles.length>0) {
     rolesQuery = {
       role: {
         $in: roles
       }
     };
   }
+  console.log(filterQuery);
+  console.log(rolesQuery);
   if (filterQuery && rolesQuery) {
     formData.query.$and = [filterQuery, rolesQuery];
   } else if (filterQuery) {

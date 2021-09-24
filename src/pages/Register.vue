@@ -21,10 +21,16 @@
                 filled
                 v-model="formData.firstname"
                 label="First Name"
-                label-color="accent"
+                @blur="v$.formData.firstname.$touch"
+                :error="v$.formData.firstname.$error"
                 lazy-rules>
                 <template v-slot:prepend>
-                  <q-icon color="accent" name="fas fa-user" size="xs" />
+                  <q-icon name="fas fa-user" size="xs" />
+                </template>
+                <template v-slot:error>
+                  <div v-for="error in v$.formData.firstname.$errors">
+                    {{error.$message}}
+                  </div>
                 </template>
               </q-input>
 
@@ -32,41 +38,63 @@
                 filled
                 v-model="formData.lastname"
                 label="Family Name"
-                label-color="accent"
+                @blur="v$.formData.lastname.$touch"
+                :error="v$.formData.lastname.$error"
                 lazy-rules>
                 <template v-slot:prepend>
-                  <q-icon color="accent" name="fas fa-user" size="xs" />
+                  <q-icon name="fas fa-user" size="xs" />
+                </template>
+                <template v-slot:error>
+                  <div v-for="error in v$.formData.lastname.$errors">
+                    {{error.$message}}
+                  </div>
                 </template>
               </q-input>
 
               <q-input
                 filled
                 v-model="formData.email"
-                label-color="accent"
                 label="Email"
                 type="email"
+                @blur="v$.formData.email.$touch"
+                :error="v$.formData.email.$error"
                 hint="Verifiable Email Address"
                 lazy-rules>
                 <template v-slot:prepend>
-                  <q-icon color="accent" name="fas fa-envelope" size="xs" />
+                  <q-icon name="fas fa-envelope" size="xs" />
+                </template>
+                <template v-slot:error>
+                  <div v-for="error in v$.formData.email.$errors">
+                    {{error.$message}}
+                  </div>
                 </template>
               </q-input>
               
               <q-input
                 filled
                 v-model="formData.password"
-                label-color="accent"
                 label="Password"
                 type="password"
                 lazy-rules
+                @blur="v$.formData.password.$touch"
+                :error="v$.formData.password.$error"
                 hint="Create a password. 8 character minimum.">
                 <template v-slot:prepend>
-                  <q-icon color="accent" name="fas fa-lock" size="xs" />
+                  <q-icon name="fas fa-lock" size="xs" />
+                </template>
+                <template v-slot:error>
+                  <div v-for="error in v$.formData.password.$errors">
+                    {{error.$message}}
+                  </div>
                 </template>
               </q-input>
               
               <div>
-                <q-btn label="Register" type="submit" color="primary"/>
+                <q-btn 
+                  label="Register"
+                  type="submit"
+                  color="primary"
+                  :disable='disableSubmit'/>
                 <q-btn
                   flat
                   to="/login"
@@ -98,7 +126,8 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { required, email, minLength, sameAs } from "@vuelidate/validators";
+import useVuelidate from '@vuelidate/core';
+import { required, email, minLength } from "@vuelidate/validators";
 import { useReCaptcha } from "vue-recaptcha-v3";
 
 export default {
@@ -117,6 +146,7 @@ export default {
     }
 
     return {
+      v$: useVuelidate(),
       recaptcha
     }
   },
@@ -156,7 +186,7 @@ export default {
       registrationComplete: state => state.auth.registrationComplete
     }),
     disableSubmit() {
-      return false;
+      return this.v$.formData.$invalid;
     }
   },
   methods: {

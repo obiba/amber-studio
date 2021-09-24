@@ -33,7 +33,7 @@
             @request='getTableUsers'
           >
            <template v-slot:top>
-            <q-btn color="primary" label="Add User" title="Add a new user" @click="updateUser()" class="q-mr-md" />
+            <q-btn color="primary" label="Add User" title="Add a new user" @click="createUser()" class="q-mr-md" />
             <q-btn color="primary" :disable="selected.length === 0" label="Delete Users" title="Delete selected users" @click="confirmDeleteUsers()" />
             <q-space />
             <q-select
@@ -134,17 +134,25 @@
     <q-dialog v-model='showEditUser' persistent>
       <q-card>
         <q-card-section class='row items-center'>
+           
           <div class='col-12 col-md-6'>
             <q-input
               filled
               v-model='profileData.firstname'
               label='First Name'
-              label-color='accent'
               lazy-rules
               class='q-ma-sm'
+              @blur="v$.profileData.firstname.$touch"
+              :error="v$.profileData.firstname.$error"
+              hint="Required"
             >
               <template v-slot:prepend>
-                <q-icon color='accent' name='fas fa-user' size='xs' />
+                <q-icon name='fas fa-user' size='xs' />
+              </template>
+              <template v-slot:error>
+                <div v-for="error in v$.profileData.firstname.$errors">
+                  {{error.$message}}
+                </div>
               </template>
             </q-input>
           </div>
@@ -153,43 +161,19 @@
               filled
               v-model='profileData.lastname'
               label='Family Name'
-              label-color='accent'
               lazy-rules
               class='q-ma-sm'
+              @blur="v$.profileData.lastname.$touch"
+              :error="v$.profileData.lastname.$error"
+              hint="Required"
             >
               <template v-slot:prepend>
-                <q-icon color='accent' name='fas fa-user' size='xs' />
+                <q-icon name='fas fa-user' size='xs' />
               </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.email'
-              label='Email'
-              label-color='accent'
-              lazy-rules
-              class='q-ma-sm'
-              v-if='!selectedUser'
-            >
-              <template v-slot:prepend>
-                <q-icon color='accent' name='fas fa-envelope' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.password'
-              label='Password'
-              label-color='accent'
-              lazy-rules
-              class='q-ma-sm'
-              type='password'
-              v-if='!selectedUser'
-            >
-              <template v-slot:prepend>
-                <q-icon color='accent' name='fas fa-lock' size='xs' />
+              <template v-slot:error>
+                <div v-for="error in v$.profileData.lastname.$errors">
+                  {{error.$message}}
+                </div>
               </template>
             </q-input>
           </div>
@@ -198,12 +182,11 @@
               filled
               v-model='profileData.institution'
               label='Institution'
-              label-color='accent'
               lazy-rules
               class='q-ma-sm'
             >
               <template v-slot:prepend>
-                <q-icon color='accent' name='fas fa-building' size='xs' />
+                <q-icon name='fas fa-building' size='xs' />
               </template>
             </q-input>
           </div>
@@ -212,12 +195,11 @@
               filled
               v-model='profileData.city'
               label='City'
-              label-color='accent'
               lazy-rules
               class='q-ma-sm'
             >
               <template v-slot:prepend>
-                <q-icon color='accent' name='fas fa-city' size='xs' />
+                <q-icon name='fas fa-city' size='xs' />
               </template>
             </q-input>
           </div>
@@ -226,12 +208,11 @@
               filled
               v-model='profileData.title'
               label='Title'
-              label-color='accent'
               lazy-rules
               class='q-ma-sm'
             >
               <template v-slot:prepend>
-                <q-icon color='accent' name='fas fa-user-tie' size='xs' />
+                <q-icon name='fas fa-user-tie' size='xs' />
               </template>
             </q-input>
           </div>
@@ -240,12 +221,11 @@
               filled
               v-model='profileData.phone'
               label='Phone'
-              label-color='accent'
               lazy-rules
               class='q-ma-sm'
             >
               <template v-slot:prepend>
-                <q-icon color='accent' name='fas fa-phone' size='xs' />
+                <q-icon name='fas fa-phone' size='xs' />
               </template>
             </q-input>
           </div>
@@ -271,26 +251,185 @@
             type='submit'
             color='positive'
             v-close-popup
-            v-if='selectedUser'
           >
             <template v-slot:loading>
               <q-spinner-facebook />
             </template>
           </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
+    <q-dialog v-model='showCreateUser' persistent>
+      <q-card>
+        <q-card-section class='row items-center'>
+           
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='newProfileData.firstname'
+              label='First Name'
+              lazy-rules
+              class='q-ma-sm'
+              @blur="v$.newProfileData.firstname.$touch"
+              :error="v$.newProfileData.firstname.$error"
+              hint="Required"
+            >
+              <template v-slot:prepend>
+                <q-icon name='fas fa-user' size='xs' />
+              </template>
+              <template v-slot:error>
+                <div v-for="error in v$.newProfileData.firstname.$errors">
+                  {{error.$message}}
+                </div>
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='newProfileData.lastname'
+              label='Family Name'
+              lazy-rules
+              class='q-ma-sm'
+              @blur="v$.newProfileData.lastname.$touch"
+              :error="v$.newProfileData.lastname.$error"
+              hint="Required"
+            >
+              <template v-slot:prepend>
+                <q-icon name='fas fa-user' size='xs' />
+              </template>
+              <template v-slot:error>
+                <div v-for="error in v$.newProfileData.lastname.$errors">
+                  {{error.$message}}
+                </div>
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='newProfileData.email'
+              label='Email'
+              lazy-rules
+              class='q-ma-sm'
+              v-if='!selectedUser'
+              @blur="v$.newProfileData.email.$touch"
+              :error="v$.newProfileData.email.$error"
+              hint="Required"
+            >
+              <template v-slot:prepend>
+                <q-icon name='fas fa-envelope' size='xs' />
+              </template>
+              <template v-slot:error>
+                <div v-for="error in v$.newProfileData.email.$errors">
+                  {{error.$message}}
+                </div>
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='newProfileData.password'
+              label='Password'
+              lazy-rules
+              class='q-ma-sm'
+              type='password'
+              v-if='!selectedUser'
+              @blur="v$.newProfileData.password.$touch"
+              :error="v$.newProfileData.password.$error"
+              hint="Required"
+            >
+              <template v-slot:prepend>
+                <q-icon name='fas fa-lock' size='xs' />
+              </template>
+              <template v-slot:error>
+                <div v-for="error in v$.newProfileData.password.$errors">
+                  {{error.$message}}
+                </div>
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='newProfileData.institution'
+              label='Institution'
+              lazy-rules
+              class='q-ma-sm'
+            >
+              <template v-slot:prepend>
+                <q-icon name='fas fa-building' size='xs' />
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='newProfileData.city'
+              label='City'
+              lazy-rules
+              class='q-ma-sm'
+            >
+              <template v-slot:prepend>
+                <q-icon name='fas fa-city' size='xs' />
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='newProfileData.title'
+              label='Title'
+              lazy-rules
+              class='q-ma-sm'
+            >
+              <template v-slot:prepend>
+                <q-icon name='fas fa-user-tie' size='xs' />
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12 col-md-6'>
+            <q-input
+              filled
+              v-model='newProfileData.phone'
+              label='Phone'
+              lazy-rules
+              class='q-ma-sm'
+            >
+              <template v-slot:prepend>
+                <q-icon name='fas fa-phone' size='xs' />
+              </template>
+            </q-input>
+          </div>
+          <div class='col-12'>
+            <q-select
+              class='q-ma-sm text-capitalize'
+              filled
+              v-model='newProfileData.role'
+              :options='roles'
+              label='User Role'
+              popup-content-class='text-capitalize'
+              options-selected-class='primary'
+            >
+            </q-select>
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn label='Cancel' flat v-close-popup />
           <q-btn
             @click='saveUser'
+            :disable='disableCreateProfile'
             label='Add User'
             type='submit'
             color='positive'
             v-close-popup
-            v-if='!selectedUser'
           >
            <template v-slot:loading>
               <q-spinner-facebook />
             </template>
           </q-btn>
-
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -355,12 +494,12 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import {ref} from 'vue';
+import useVuelidate from '@vuelidate/core';
 import {
   required,
   email,
   minLength,
   maxLength,
-  sameAs,
   helpers
 } from '@vuelidate/validators';
 const alpha = helpers.regex('alpha', /^[a-zA-Z0-9 ]*$/);
@@ -373,6 +512,7 @@ export default {
   },
   setup() {
     return {
+      v$: useVuelidate(),
       selected: ref([]),
       tab: ref('users'),
       filter: ref(''),
@@ -445,6 +585,7 @@ export default {
         {label: 'Inactive', value: 'inactive'}],
       selectedUser: {},
       showEditUser: false,
+      showCreateUser: false,
       showConfirmDeleteUser: false,
       showConfirmDeleteUsers: false,
       paginationOpts: {
@@ -455,6 +596,15 @@ export default {
         rowsNumber: 10
       },
       profileData: {
+        firstname: '',
+        lastname: '',
+        institution: '',
+        city: '',
+        title:'',
+        phone: '',
+        role: ''
+      },
+      newProfileData: {
         firstname: '',
         lastname: '',
         institution: '',
@@ -473,24 +623,59 @@ export default {
   validations: {
     profileData: {
       firstname: {
-        alpha,
+        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       lastname: {
-        alpha,
+        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       institution: {
-        alpha,
+        //alpha,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       city: {
-        alpha,
+        //alpha,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      role: {
+        required
+      }
+    },
+    newProfileData: {
+      firstname: {
+        //alpha,
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      lastname: {
+        //alpha,
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      email: {
+        email,
+        required
+      },
+      password: {
+        required,
+        minLength: minLength(8)
+      },
+      institution: {
+        //alpha,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      city: {
+        //alpha,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
@@ -504,7 +689,10 @@ export default {
       users: state => state.admin.users
     }),
     disableUpdateProfile() {
-      return false//this.$v.profileData.$invalid;
+      return this.v$.profileData.$invalid;
+    },
+    disableCreateProfile() {
+      return this.v$.newProfileData.$invalid;
     }
   },
   methods: {
@@ -526,16 +714,21 @@ export default {
     ...mapActions({
       getUsers: 'admin/getUsers'
     }),
+    createUser() {
+      this.newProfileData = {
+        role : 'guest'
+      };
+      this.showCreateUser = true;
+      this.selectedUser = undefined;
+    },
     updateUser(user) {
-      this.profileData.firstname = user ? user.firstname : undefined;
-      this.profileData.lastname = user ? user.lastname : undefined;
-      this.profileData.city = user ? user.city : undefined;
-      this.profileData.institution = user ? user.institution : undefined;
-      this.profileData.title = user ? user.title : undefined;
-      this.profileData.phone = user ? user.phone : undefined;
-      this.profileData.role = user ? user.role : 'guest';
-      this.profileData.email = undefined;
-      this.profileData.password = undefined;
+      this.profileData.firstname = user.firstname;
+      this.profileData.lastname = user.lastname;
+      this.profileData.city = user.city;
+      this.profileData.institution = user.institution;
+      this.profileData.title = user.title;
+      this.profileData.phone = user.phone;
+      this.profileData.role = user.role;
       this.showEditUser = true;
       this.selectedUser = user;
     },
@@ -554,9 +747,10 @@ export default {
       });
     },
     async saveUser() {
-      let userData = { ...this.profileData };
+      this.v$.$reset();
       if (this.selectedUser) {
         // update
+        let userData = { ...this.profileData };
         this.$store.dispatch('account/updateUser', {
           user: userData,
           id: this.selectedUser._id,
@@ -564,6 +758,7 @@ export default {
         });
       } else {
         // create
+        let userData = { ...this.newProfileData };
         this.$store.dispatch('account/createUser', {
           user: userData,
           paginationOpts: this.paginationOpts
