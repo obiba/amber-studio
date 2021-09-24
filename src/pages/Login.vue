@@ -40,7 +40,12 @@
             </q-input>
 
               <div>
-                <q-btn label="Login" type="submit" color="primary"/>
+                <q-btn 
+                  label="Login" 
+                  type="submit" 
+                  color="primary"
+                  :disable="disableSubmit"
+                  />
                 <q-btn
                   flat
                   to="/register"
@@ -81,7 +86,10 @@ export default defineComponent({
   computed: {
     ...mapState({
       submitting: state => state.auth.showLoading
-    })
+    }),
+    disableSubmit() {
+      return this.email.length === 0 || this.password.length === 0;
+    }
   },
   methods: {
     onSubmit() {
