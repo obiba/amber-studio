@@ -11,7 +11,7 @@
           <q-card-section>
             <div class="text-center q-pt-lg">
               <div class="col text-h6 ellipsis">
-                Forgot password
+                {{$t('forgot_password.title')}}
               </div>
             </div>
           </q-card-section>
@@ -21,10 +21,9 @@
               <q-input
                 filled
                 v-model="resetEmail"
-                label-color="accent"
-                label="Email"
+                :label="$t('email')"
                 type="email"
-                hint="Enter email account to reset password."
+                :hint="$t('forgot_password.hint')"
                 lazy-rules>
                 <template v-slot:prepend>
                   <q-icon color="accent" name="fas fa-envelope" size="xs" />
@@ -32,7 +31,10 @@
               </q-input>
           
               <div class="q-mt-md">
-                <q-btn label="Reset" type="submit" color="primary"/>
+                <q-btn 
+                  :label="$t('forgot_password.submit')"
+                  type="submit"
+                  color="primary"/>
               </div>
             </q-form>
           </q-card-section>

@@ -15,6 +15,11 @@ export default {
     success: 'Registration complete! Please check your email to confirm your registration.',
     google_policy: 'This site is protected by reCAPTCHA and the Google <a class="text-grey" href="https://policies.google.com/privacy">Privacy Policy</a> and <a class="text-grey" href="https://policies.google.com/terms">Terms of Service</a> apply.'
   },
+  forgot_password: {
+    title: 'Reset password',
+    hint: 'Enter email account to reset password.',
+    submit: 'Reset'
+  },
   email: 'Email',
   email_hint: 'Verifiable email address.',
   password: 'Password',
