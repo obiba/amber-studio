@@ -1,6 +1,6 @@
 import { feathersClient } from '../../boot/feathersClient';
 
-export async function getUsers(opts, filter) {
+export async function getUsers(opts, filter, roles) {
   let formData = { query: { $sort: { descending: 1 } } };
   if (opts) {
     // qtable pagination's 'All' sets limit to 0
@@ -13,12 +13,29 @@ export async function getUsers(opts, filter) {
     formData.query.$limit = 5;
   }
   // use filter
-  if (filter) {
-    formData.query.$or = [
+  let filterQuery;
+  if (filter && filter.length>1) {
+    filterQuery = { $or: [
       { email: { $search: filter } },
       { firstname: { $search: filter } },
       { lastname: { $search: filter } }
-    ];
+    ]};
   }
+  let rolesQuery;
+  if (roles) {
+    rolesQuery = {
+      role: {
+        $in: roles
+      }
+    };
+  }
+  if (filterQuery && rolesQuery) {
+    formData.query.$and = [filterQuery, rolesQuery];
+  } else if (filterQuery) {
+    formData.query = filterQuery;
+  } else if (rolesQuery) {
+    formData.query = rolesQuery;
+  }
+  
   return feathersClient.service('user').find(formData);
 }

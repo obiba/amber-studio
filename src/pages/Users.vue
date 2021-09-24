@@ -36,6 +36,20 @@
             <q-btn color="primary" label="Add User" title="Add a new user" @click="updateUser()" class="q-mr-md" />
             <q-btn color="primary" :disable="selected.length === 0" label="Delete Users" title="Delete selected users" @click="confirmDeleteUsers()" />
             <q-space />
+            <q-select
+              flat
+              dense
+              v-model="rolesFilter"
+              multiple
+              emit-value
+              :options="rolesOptions"
+              use-chips
+              clearable
+              label="Roles"
+              style="min-width: 250px"
+              class="q-mr-md"
+              @change="getTableUsers"
+            />
             <q-input filled borderless dense debounce="300" v-model="filter" placeholder="Search">
               <template v-slot:append>
                 <q-icon name="search"/>
@@ -362,6 +376,7 @@ export default {
       selected: ref([]),
       tab: ref('users'),
       filter: ref(''),
+      rolesFilter: ref([]),
       columns: [
         {
           name: 'name',
@@ -422,6 +437,12 @@ export default {
   data() {
     return {
       roles: ['guest', 'interviewer', 'manager', 'administrator', 'inactive'],
+      rolesOptions: [
+        {label: 'Guest', value: 'guest'}, 
+        {label: 'Interviewer', value: 'interviewer'}, 
+        {label: 'Manager', value: 'manager'}, 
+        {label: 'Administrator', value: 'administrator'}, 
+        {label: 'Inactive', value: 'inactive'}],
       selectedUser: {},
       showEditUser: false,
       showConfirmDeleteUser: false,
@@ -443,6 +464,11 @@ export default {
         role: ''
       }
     };
+  },
+  watch: {
+    rolesFilter: function(newFilter, oldFilter) {
+      this.getTableUsers();
+    }
   },
   validations: {
     profileData: {
@@ -491,9 +517,9 @@ export default {
         this.$store.commit('admin/setUserPagination', {
           userPaginationOpts: requestProp.pagination
         });
-        await this.getUsers({ paginationOpts: requestProp.pagination, filter: requestProp.filter });
+        await this.getUsers({ paginationOpts: requestProp.pagination, filter: requestProp.filter, roles: this.rolesFilter });
       } else {
-        await this.getUsers({ paginationOpts: this.paginationOpts });
+        await this.getUsers({ paginationOpts: this.paginationOpts, filter: this.filter, roles: this.rolesFilter });
       }
       this.paginationOpts.rowsNumber = this.$store.state.admin.userPaginationOpts.rowsNumber;
     },
