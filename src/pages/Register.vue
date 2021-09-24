@@ -11,7 +11,7 @@
           <q-card-section>
             <div class="text-center q-pt-lg">
               <div class="col text-h6 ellipsis">
-                Register 
+                {{$t('register.title')}} 
               </div>
             </div>
           </q-card-section>
@@ -20,7 +20,7 @@
               <q-input
                 filled
                 v-model="formData.firstname"
-                label="First Name"
+                :label="$t('firstname')"
                 @blur="v$.formData.firstname.$touch"
                 :error="v$.formData.firstname.$error"
                 lazy-rules>
@@ -37,7 +37,7 @@
               <q-input
                 filled
                 v-model="formData.lastname"
-                label="Family Name"
+                :label="$t('lastname')"
                 @blur="v$.formData.lastname.$touch"
                 :error="v$.formData.lastname.$error"
                 lazy-rules>
@@ -54,11 +54,11 @@
               <q-input
                 filled
                 v-model="formData.email"
-                label="Email"
+                :label="$t('email')"
+                :hint="$t('email_hint')"
                 type="email"
                 @blur="v$.formData.email.$touch"
                 :error="v$.formData.email.$error"
-                hint="Verifiable Email Address"
                 lazy-rules>
                 <template v-slot:prepend>
                   <q-icon name="fas fa-envelope" size="xs" />
@@ -73,12 +73,12 @@
               <q-input
                 filled
                 v-model="formData.password"
-                label="Password"
+                :label="$t('password')"
+                :hint="$t('password_hint')"
                 type="password"
                 lazy-rules
                 @blur="v$.formData.password.$touch"
-                :error="v$.formData.password.$error"
-                hint="Create a password. 8 character minimum.">
+                :error="v$.formData.password.$error">
                 <template v-slot:prepend>
                   <q-icon name="fas fa-lock" size="xs" />
                 </template>
@@ -91,30 +91,28 @@
               
               <div>
                 <q-btn 
-                  label="Register"
+                  :label="$t('register.submit')"
                   type="submit"
                   color="primary"
                   :disable='disableSubmit'/>
                 <q-btn
+                  :label="$t('register.login')"
                   flat
                   to="/login"
                   stretch
-                  class="text-bold q-ml-md">
-                  Login
-                </q-btn>
+                  class="text-bold q-ml-md"/>
               </div>
             </q-form>
           </q-card-section>
           <q-card-section v-if="!registrationComplete">
-            <span class="text-caption text-grey">This site is protected by reCAPTCHA and the Google 
-              <a class="text-grey" href="https://policies.google.com/privacy">Privacy Policy</a> and
-              <a class="text-grey" href="https://policies.google.com/terms">Terms of Service</a> apply.
+            <span class="text-caption text-grey" v-html="$t('register.google_policy')">
+              
             </span>
           </q-card-section>
           <q-card-section v-if="registrationComplete">
             <div class="text-center q-pt-lg">
               <div class="col text-h6 ellipsis">
-                Registration complete! Please check your email to confirm your registration.
+                {{$t('register.success')}}
               </div>
             </div>
           </q-card-section>
@@ -127,7 +125,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import useVuelidate from '@vuelidate/core';
-import { required, email, minLength } from "@vuelidate/validators";
+import { required, email, minLength, createI18nMessage } from "@vuelidate/validators";
 import { useReCaptcha } from "vue-recaptcha-v3";
 
 export default {
