@@ -10,7 +10,7 @@
           </q-card-section>
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">
+              <div class="col text-subtitle ellipsis">
                 {{$t('login.title')}}
               </div>
             </div>
@@ -83,7 +83,7 @@ export default defineComponent({
   },
   computed: {
     ...mapState({
-      submitting: state => state.auth.showLoading
+      submitting: state => state.auth.isAuthenticatePending
     }),
     disableSubmit() {
       return this.email.length === 0 || this.password.length === 0;

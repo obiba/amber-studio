@@ -29,8 +29,6 @@ export async function getUsers(opts, filter, roles) {
       }
     };
   }
-  console.log(filterQuery);
-  console.log(rolesQuery);
   if (filterQuery && rolesQuery) {
     formData.query.$and = [filterQuery, rolesQuery];
   } else if (filterQuery) {

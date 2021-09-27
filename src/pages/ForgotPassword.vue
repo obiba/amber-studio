@@ -10,7 +10,7 @@
           </q-card-section>
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">
+              <div class="col text-subtitle ellipsis">
                 {{$t('forgot_password.title')}}
               </div>
             </div>
@@ -26,7 +26,7 @@
                 :hint="$t('forgot_password.hint')"
                 lazy-rules>
                 <template v-slot:prepend>
-                  <q-icon color="accent" name="fas fa-envelope" size="xs" />
+                  <q-icon name="fas fa-envelope" size="xs" />
                 </template>
               </q-input>
           

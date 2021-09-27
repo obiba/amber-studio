@@ -2,7 +2,8 @@
   <router-view />
 </template>
 <script>
-import { defineComponent, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'App',
@@ -11,20 +12,16 @@ export default defineComponent({
       if (newUser === null) {
         this.$router.push('/login');
       } else {
+        this.locale = this.$store.state.auth.payload.user.language;
         this.$router.push('/');
       }
     }
   },
   setup() {
-    // Attempt jwt auth when the app mounts.
-    onMounted(() => {
-      // FIXME this is undefined
-      /*this.$store.dispatch('auth/authenticate').catch(error => {
-        if (!error.message.includes('Could not find stored JWT')) {
-          console.error(error);
-        }
-      });*/
-    })
+    const { locale } = useI18n({ useScope: 'global' });
+    return {
+      locale
+    };
   },
   computed: {
     currentUser() {

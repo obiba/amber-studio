@@ -10,7 +10,7 @@
           </q-card-section>
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">
+              <div class="col text-subtitle ellipsis">
                 {{$t('register.title')}} 
               </div>
             </div>
@@ -50,6 +50,21 @@
                   </div>
                 </template>
               </q-input>
+
+              <q-select
+                v-model="locale"
+                :options="localeOptions"
+                :label="$t('preferred_language')"
+                filled
+                emit-value
+                map-options
+                options-dense
+                style="min-width: 150px"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="fas fa-language" size="xs" />
+                </template>
+              </q-select>
 
               <q-input
                 filled
@@ -123,6 +138,7 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
 import { mapState, mapActions } from "vuex";
 import useVuelidate from '@vuelidate/core';
 import { required, email, minLength, createI18nMessage } from "@vuelidate/validators";
@@ -130,6 +146,7 @@ import { useReCaptcha } from "vue-recaptcha-v3";
 
 export default {
   setup() {
+    const { locale } = useI18n({ useScope: 'global' })
     const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
 
     const recaptcha = async () => {
@@ -144,6 +161,11 @@ export default {
     }
 
     return {
+      locale,
+      localeOptions: [
+        { value: 'en', label: 'English' },
+        { value: 'fr', label: 'Français' }
+      ],
       v$: useVuelidate(),
       recaptcha
     }
@@ -153,6 +175,7 @@ export default {
       formData: {
         firstname: "",
         lastname: "",
+        language: "",
         email: "",
         password: ""
       }
@@ -192,6 +215,7 @@ export default {
       // Execute reCAPTCHA with action "login".
       this.recaptcha().then((token) => {
           let data = this.formData;
+          data.language = this.locale;
           data.token = token;
           this.$store.dispatch("account/registerUser", { formData: data });
       });

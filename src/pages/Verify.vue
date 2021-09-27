@@ -10,7 +10,7 @@
           </q-card-section>
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">
+              <div class="col text-subtitle ellipsis">
                 Verify email
               </div>
             </div>

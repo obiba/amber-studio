@@ -11,7 +11,7 @@
           aria-label="Menu"
         />
         <q-toolbar-title>
-          Amber Studio
+          {{$t('main.brand')}}
         </q-toolbar-title>
         <q-space/>
         <div class="q-gutter-sm row items-center no-wrap">
@@ -21,6 +21,15 @@
           </q-btn>
           <q-btn round dense flat color="white" icon="fab fa-github" type="a" href="https://github.com/obiba/amber-studio" target="_blank">
           </q-btn>
+          <q-btn-dropdown color="primary" :label="locale">
+            <q-list>
+              <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions">
+                <q-item-section>
+                  <q-item-label class="text-uppercase">{{localeOpt.value}}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
           <q-btn-dropdown color="primary" icon="person" no-caps>
             <template v-slot:label>
               <div class="text-center q-pl-sm">
@@ -30,13 +39,13 @@
             <q-list>
               <q-item v-close-popup to="/account">
                 <q-item-section>
-                  <q-item-label>Profile</q-item-label>
+                  <q-item-label>{{$t('main.profile')}}</q-item-label>
                 </q-item-section>
               </q-item>
               <q-separator />
               <q-item clickable v-close-popup @click="onLogout">
                 <q-item-section>
-                  <q-item-label>Logout</q-item-label>
+                  <q-item-label>{{$t('main.logout')}}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -57,7 +66,7 @@
             <q-icon name="dashboard"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Dashboard</q-item-label>
+            <q-item-label>{{$t('main.dashboard')}}</q-item-label>
           </q-item-section>
         </q-item>
   
@@ -68,7 +77,7 @@
             <q-icon name="inventory_2"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Studies</q-item-label>
+            <q-item-label>{{$t('main.studies')}}</q-item-label>
           </q-item-section>
         </q-item>
       
@@ -77,7 +86,7 @@
             <q-icon name="storage"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Datasets</q-item-label>
+            <q-item-label>{{$t('main.datasets')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -88,7 +97,7 @@
             <q-icon name="person"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Users & Groups</q-item-label>
+            <q-item-label>{{$t('main.users_groups')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -97,7 +106,7 @@
             <q-icon name="settings"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Settings</q-item-label>
+            <q-item-label>{{$t('main.settings')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -111,15 +120,22 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { useI18n } from 'vue-i18n';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'MainLayout',
 
   setup () {
+    const { locale } = useI18n({ useScope: 'global' })
     const leftDrawerOpen = ref(false)
 
     return {
+      locale,
+      localeOptions: [
+        { value: 'en', label: 'English' },
+        { value: 'fr', label: 'Français' }
+      ],
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
@@ -128,7 +144,7 @@ export default defineComponent({
   },
   computed: {
     user() {
-      return this.$store.state.auth.payload.user
+      return this.$store.state.auth.payload ? this.$store.state.auth.payload.user : undefined;
     },
     userName() {
       return this.userEmail.split('@')[0]
@@ -159,6 +175,9 @@ export default defineComponent({
     }
   },
   methods: {
+    onLocaleSelection(opt) {
+      this.locale = opt.value;
+    },
     onLogout() {
       this.$store.dispatch("auth/logout");
     }

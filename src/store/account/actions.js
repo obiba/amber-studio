@@ -6,6 +6,7 @@ export async function registerUser(context, payload) {
     .register(
       payload.formData.firstname,
       payload.formData.lastname,
+      payload.formData.language,
       payload.formData.email,
       payload.formData.password,
       payload.formData.token
