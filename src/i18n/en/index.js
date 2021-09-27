@@ -33,6 +33,24 @@ export default {
     success: 'Thanks, your eamil address is verified.',
     pending: 'Verifying account... please wait...'
   },
+  users: {
+    title: 'Users & Groups',
+    users: 'Users',
+    groups: 'Groups',
+    edit_user_hint: 'Edit user',
+    resend_email_hint: 'Resend verification email',
+    reset_password_hint: 'Reset password',
+    activate_user_hint: 'Activate user',
+    deactivate_user_hint: 'Deactivate user',
+    add_user: 'Add User',
+    add_user_hint: 'Add a new user',
+    delete_users: 'Delete Users',
+    delete_users_hint: 'Delete selected users',
+    delete_users_confirm: 'Please confirm that you want to remove all the selected users:',
+    delete_user_hint: 'Delete user',
+    delete_user_confirm: 'Please confirm that you want to remove user:',
+    last_seen: 'Last Seen'
+  },
   main: {
     brand: 'Amber Studio',
     profile: 'Profile',
@@ -40,7 +58,6 @@ export default {
     dashboard: 'Dashboard',
     studies: 'Studies',
     datasets: 'Datasets',
-    users_groups: 'Users & Groups',
     settings: 'Settings'
   },
   validations: {
@@ -49,6 +66,17 @@ export default {
     maxLength: 'The maximum length allowed is {max}',
     email: 'Value is not a valid email address'
   },
+  add: 'Add',
+  update: 'Update',
+  delete: 'Delete',
+  cancel: 'Cancel',
+  search: 'Search',
+  role: 'Role',
+  roles: 'Roles',
+  institution: 'Institution',
+  city: 'City',
+  title: 'Title',
+  phone: 'Phone',
   email: 'Email',
   email_hint: 'Verifiable email address.',
   password: 'Password',
@@ -56,6 +84,10 @@ export default {
   firstname: 'First Name',
   lastname: 'Last Name',
   preferred_language: 'Preferred Language',
+  name: 'Name',
+  status: 'Status',
+  action: 'Action',
+  required: 'Required',
   failed: 'Action failed',
   success: 'Action was successful'
 }

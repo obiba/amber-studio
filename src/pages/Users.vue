@@ -1,6 +1,6 @@
 <template>
   <q-page class='q-pa-sm bg-white'>
-    <div class='text-h6 q-ma-md'>Users & Groups</div>
+    <div class='text-h6 q-ma-md'>{{$t('users.title')}}</div>
     <q-separator/>
 
     <q-tabs
@@ -12,8 +12,8 @@
       align="justify"
       narrow-indicator
     >
-      <q-tab name="users" label="Users" />
-      <q-tab name="groups" label="Groups" />
+      <q-tab name="users" :label="$t('users.users')" />
+      <q-tab name="groups" :label="$t('users.groups')" />
     </q-tabs>
 
     <q-separator />
@@ -33,8 +33,8 @@
             @request='getTableUsers'
           >
            <template v-slot:top>
-            <q-btn color="primary" label="Add User" title="Add a new user" @click="createUser()" class="q-mr-md" />
-            <q-btn color="primary" :disable="selected.length === 0" label="Delete Users" title="Delete selected users" @click="confirmDeleteUsers()" />
+            <q-btn color="primary" :label="$t('users.add_user')" :title="$t('users.add_user_hint')" @click="createUser()" class="q-mr-md" />
+            <q-btn color="primary" :disable="selected.length === 0" :label="$t('users.delete_users')" :title="$t('users.delete_users_hint')" @click="confirmDeleteUsers()" />
             <q-space />
             <q-select
               flat
@@ -45,12 +45,12 @@
               :options="rolesOptions"
               use-chips
               clearable
-              label="Roles"
+              :label="$t('roles')"
               style="min-width: 250px"
               class="q-mr-md"
               @change="getTableUsers"
             />
-            <q-input filled borderless dense debounce="300" v-model="filter" placeholder="Search">
+            <q-input filled borderless dense debounce="300" v-model="filter" :placeholder="$t('search')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -72,7 +72,7 @@
                 size='sm'
                 class='q-pa-xs q-mx-xs'
                 color='primary'
-                title='Edit User'
+                :title="$t('users.edit_user_hint')"
                 icon='edit'
                 @click='updateUser(props.row)'>
               </q-btn>
@@ -80,7 +80,7 @@
                 v-if='!props.row.isVerified'
                 size='sm'
                 class='q-pa-xs q-mx-xs'
-                title='Resend Email Verification'
+                :title="$t('users.resend_email_hint')"
                 color='secondary'
                 icon='send'
                 @click='resendEmailVerification(props.row.email)'>
@@ -90,7 +90,7 @@
                 size='sm'
                 class='q-pa-xs q-mx-xs'
                 color='purple'
-                title='Reset Password'
+                :title="$t('users.reset_password_hint')"
                 icon='replay'
                 @click='resetPassword(props.row.email)'>
               </q-btn>
@@ -99,7 +99,7 @@
                 size='sm'
                 class='q-pa-xs q-mx-xs'
                 color='green'
-                title='Activate User'
+                :title="$t('users.activate_user_hint')"
                 icon='do_not_disturb_off'
                 @click='activeateUser(props.row)'>
               </q-btn>
@@ -108,7 +108,7 @@
                 size='sm'
                 class='q-pa-xs q-mx-xs'
                 color='orange'
-                title='Deactivate User'
+                :title="$t('users.deactivate_user_hint')"
                 icon='do_not_disturb_on'
                 @click='deactiveateUser(props.row)'>
               </q-btn>
@@ -116,7 +116,7 @@
                 size='sm'
                 class='q-pa-xs q-mx-xs'
                 color='red'
-                title='Delete User'
+                :title="$t('users.delete_user_hint')"
                 icon='delete_outline'
                 @click='confirmDeleteUser(props.row)'>
               </q-btn>
@@ -139,12 +139,12 @@
             <q-input
               filled
               v-model='profileData.firstname'
-              label='First Name'
+              :label="$t('firstname')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.profileData.firstname.$touch"
               :error="v$.profileData.firstname.$error"
-              hint="Required"
+              :hint="$t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
@@ -160,12 +160,12 @@
             <q-input
               filled
               v-model='profileData.lastname'
-              label='Family Name'
+              :label="$t('lastname')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.profileData.lastname.$touch"
               :error="v$.profileData.lastname.$error"
-              hint="Required"
+              :hint="$t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
@@ -181,7 +181,7 @@
             <q-input
               filled
               v-model='profileData.institution'
-              label='Institution'
+              :label="$t('institution')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -194,7 +194,7 @@
             <q-input
               filled
               v-model='profileData.city'
-              label='City'
+              :label="$t('city')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -207,7 +207,7 @@
             <q-input
               filled
               v-model='profileData.title'
-              label='Title'
+              :label="$t('title')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -220,7 +220,7 @@
             <q-input
               filled
               v-model='profileData.phone'
-              label='Phone'
+              :label="$t('phone')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -235,7 +235,7 @@
               filled
               v-model='profileData.role'
               :options='roles'
-              label='User Role'
+              :label="$t('role')"
               popup-content-class='text-capitalize'
               options-selected-class='primary'
             >
@@ -243,11 +243,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn label='Cancel' flat v-close-popup />
+          <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveUser'
             :disable='disableUpdateProfile'
-            label='Update User'
+            :label="$t('update')"
             type='submit'
             color='positive'
             v-close-popup
@@ -268,12 +268,12 @@
             <q-input
               filled
               v-model='newProfileData.firstname'
-              label='First Name'
+              :label="$t('firstname')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.newProfileData.firstname.$touch"
               :error="v$.newProfileData.firstname.$error"
-              hint="Required"
+              :hint="$t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
@@ -289,12 +289,12 @@
             <q-input
               filled
               v-model='newProfileData.lastname'
-              label='Family Name'
+              :label="$t('lastname')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.newProfileData.lastname.$touch"
               :error="v$.newProfileData.lastname.$error"
-              hint="Required"
+              :hint="$t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
@@ -310,13 +310,13 @@
             <q-input
               filled
               v-model='newProfileData.email'
-              label='Email'
+              :label="$t('email')"
               lazy-rules
               class='q-ma-sm'
               v-if='!selectedUser'
               @blur="v$.newProfileData.email.$touch"
               :error="v$.newProfileData.email.$error"
-              hint="Required"
+              :hint="$t('email_hint')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-envelope' size='xs' />
@@ -332,14 +332,14 @@
             <q-input
               filled
               v-model='newProfileData.password'
-              label='Password'
+              :label="$t('password')"
               lazy-rules
               class='q-ma-sm'
               type='password'
               v-if='!selectedUser'
               @blur="v$.newProfileData.password.$touch"
               :error="v$.newProfileData.password.$error"
-              hint="Required"
+              :hint="$t('password_hint')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-lock' size='xs' />
@@ -355,7 +355,7 @@
             <q-input
               filled
               v-model='newProfileData.institution'
-              label='Institution'
+              :label="$t('institution')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -368,7 +368,7 @@
             <q-input
               filled
               v-model='newProfileData.city'
-              label='City'
+              :label="$t('city')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -381,7 +381,7 @@
             <q-input
               filled
               v-model='newProfileData.title'
-              label='Title'
+              :label="$t('title')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -394,7 +394,7 @@
             <q-input
               filled
               v-model='newProfileData.phone'
-              label='Phone'
+              :label="$t('phone')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -409,7 +409,7 @@
               filled
               v-model='newProfileData.role'
               :options='roles'
-              label='User Role'
+              :label="$t('role')"
               popup-content-class='text-capitalize'
               options-selected-class='primary'
             >
@@ -417,11 +417,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn label='Cancel' flat v-close-popup />
+          <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveUser'
             :disable='disableCreateProfile'
-            label='Add User'
+            :label="$t('add')"
             type='submit'
             color='positive'
             v-close-popup
@@ -438,17 +438,17 @@
       <q-card>
         <q-card-section>
           <div>
-          Please confirm that you want to remove user:
+            {{$t('users.delete_user_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedUser.email}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn label='Cancel' flat v-close-popup />
+          <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteUser'
-            label='Delete User'
+            :label="$t('delete')"
             type='submit'
             color='positive'
             v-close-popup
@@ -465,17 +465,17 @@
       <q-card>
         <q-card-section>
           <div>
-          Please confirm that you want to remove all the selected users:
+            {{$t('users.delete_users_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(u => u.email).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn label='Cancel' flat v-close-popup />
+          <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteUsers'
-            label='Delete Users'
+            :label="$t('delete')"
             type='submit'
             color='positive'
             v-close-popup
@@ -496,6 +496,7 @@ import { mapState, mapActions } from 'vuex';
 import {ref} from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required, minLength, maxLength, email } from '../boot/vuelidate';
+import { t } from '../boot/i18n';
 import { date } from 'quasar';
 
 export default {
@@ -509,62 +510,7 @@ export default {
       selected: ref([]),
       tab: ref('users'),
       filter: ref(''),
-      rolesFilter: ref([]),
-      columns: [
-        {
-          name: 'name',
-          required: true,
-          label: 'Name',
-          align: 'left'
-        },
-        {
-          name: 'email',
-          align: 'left',
-          label: 'Email',
-          field: 'email',
-          sortable: true
-        },
-        {
-          name: 'institution',
-          align: 'left',
-          label: 'Institution',
-          field: 'institution',
-          sortable: true
-        },
-        {
-          name: 'status',
-          align: 'left',
-          label: 'Status',
-          field: 'isVerified',
-          format: val => {
-            if (val) {
-              return `Confirmed`;
-            } else return `Pending`;
-          },
-          sortable: false
-        },
-        {
-          name: 'role',
-          align: 'left',
-          label: 'Role',
-          field: 'role',
-          sortable: false
-        },
-        {
-          name: 'lastLoggedIn',
-          align: 'left',
-          label: 'Last Seen',
-          field: 'lastLoggedIn',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'DD MMM YY HH:mm A') : 'Unknown'}`
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: 'Action'
-        }
-      ]
+      rolesFilter: ref([])
     }
   },
   data() {
@@ -576,6 +522,61 @@ export default {
         {label: 'Manager', value: 'manager'}, 
         {label: 'Administrator', value: 'administrator'}, 
         {label: 'Inactive', value: 'inactive'}],
+      columns: [
+        {
+          name: 'name',
+          required: true,
+          label: this.$t('name'),
+          align: 'left'
+        },
+        {
+          name: 'email',
+          align: 'left',
+          label: this.$t('email'),
+          field: 'email',
+          sortable: true
+        },
+        {
+          name: 'institution',
+          align: 'left',
+          label: this.$t('institution'),
+          field: 'institution',
+          sortable: true
+        },
+        {
+          name: 'status',
+          align: 'left',
+          label: this.$t('status'),
+          field: 'isVerified',
+          format: val => {
+            if (val) {
+              return `Confirmed`;
+            } else return `Pending`;
+          },
+          sortable: false
+        },
+        {
+          name: 'role',
+          align: 'left',
+          label: this.$t('role'),
+          field: 'role',
+          sortable: false
+        },
+        {
+          name: 'lastLoggedIn',
+          align: 'left',
+          label: this.$t('users.last_seen'),
+          field: 'lastLoggedIn',
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, 'DD MMM YY HH:mm A') : 'Unknown'}`
+        },
+        {
+          name: 'action',
+          align: 'left',
+          label: this.$t('action'),
+        }
+      ],
       selectedUser: {},
       showEditUser: false,
       showCreateUser: false,

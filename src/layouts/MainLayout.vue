@@ -97,7 +97,7 @@
             <q-icon name="person"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('main.users_groups')}}</q-item-label>
+            <q-item-label>{{$t('users.title')}}</q-item-label>
           </q-item-section>
         </q-item>
 
