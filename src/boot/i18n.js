@@ -7,10 +7,11 @@ const i18n = createI18n({
   fallbackLocale: 'en',
   messages
 })
+const t = i18n.global.t;
 
 export default boot(({ app }) => {
   // Set instance on app
   app.use(i18n)
 })
 
-export { i18n }
+export { i18n, t }

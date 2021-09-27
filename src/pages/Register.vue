@@ -141,8 +141,8 @@
 import { useI18n } from 'vue-i18n';
 import { mapState, mapActions } from "vuex";
 import useVuelidate from '@vuelidate/core';
-import { required, email, minLength, createI18nMessage } from "@vuelidate/validators";
 import { useReCaptcha } from "vue-recaptcha-v3";
+import { required, minLength, email } from '../boot/vuelidate';
 
 export default {
   setup() {

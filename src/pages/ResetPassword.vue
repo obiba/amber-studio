@@ -11,27 +11,28 @@
           <q-card-section>
             <div class="text-center q-pt-lg">
               <div class="col text-h6 ellipsis">
-                Reset password
+                {{$t('rest.title')}}
               </div>
             </div>
           </q-card-section>
           <q-card-section>
             <q-form @submit="resetPassword" class="q-gutter-md">
-              
               <q-input
                 type="password"
                 filled
                 v-model="formData.password"
-                label="Password"
+                :label="$t('password')"
                 lazy-rules
-                hint="Create a password. 8 character minimum.">
+                :hint="$t('password_hint')">
                 <template v-slot:prepend>
                   <q-icon color="accent" name="fas fa-lock" size="xs" />
                 </template>
               </q-input>
-
               <div>
-                <q-btn label="Reset" type="submit" color="primary"/>
+                <q-btn 
+                  :label="$t('reset.submit')"
+                  type="submit"
+                  color="primary"/>
               </div>
             </q-form>
           </q-card-section>
@@ -42,8 +43,8 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import { required, minLength, email, sameAs } from "@vuelidate/validators";
+import { mapState } from "vuex";
+import { required, minLength} from '../boot/vuelidate';
 import userService from "../services/user";
 import { Notify } from "quasar";
 
@@ -53,8 +54,7 @@ export default {
       valid: false,
       success: false,
       formData: {
-        password: "",
-        confirmPassword: ""
+        password: ""
       }
     };
   },
@@ -63,11 +63,6 @@ export default {
       password: {
         required,
         minLength: minLength(8)
-      },
-      confirmPassword: {
-        sameAsPassword: sameAs(formData => {
-          return formData.password;
-        })
       }
     }
   },
@@ -88,24 +83,23 @@ export default {
           .resetPassword(token, this.formData.password)
           .catch(err => {
             if (err.response) {
-              let code = err.response.data.code;
               Notify.create({
-                message: "Unable to verify account. Please contact support.",
-                color: "negative"
+                message: this.$t('reset.failure'),
+                color: "negative",
+                icon: "fas fa-times"
               });
             }
           });
       } else {
         Notify.create({
-          message:
-            "Unable to reset password. Please check your email for the password reset link and try again.",
+          message: this.$t('reset.bad_link'),
           color: "negative",
-          icon: "fas fa-cross"
+          icon: "fas fa-times"
         });
       }
       if (result && result.status === 201) {
         Notify.create({
-          message: "Password successfully changed.",
+          message: this.$t('reset.success'),
           color: "positive",
           icon: "fas fa-check"
         });

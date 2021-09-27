@@ -1,6 +1,3 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
   login: {
     title: 'Identifiez vous pour commencer une session',
@@ -18,7 +15,23 @@ export default {
   forgot_password: {
     title: 'Réinitialiser le mot de passe',
     hint: 'Entrer le courriel du compte pour réinitialiser le mot de passe.',
-    submit: 'Réinitialiser'
+    submit: 'Réinitialiser',
+    login: 'Connexion'
+  },
+  reset: {
+    title: 'Réinitialisation du mot de passe',
+    submit: 'Réinitialiser',
+    bad_link: 'Ce lien de réinitialisation n\'est pas valide. Veuillez vérifier votre courriel et essayer de nouveau.',
+    failure: 'Le changement de mot a échoué. Veuillez contacter le support.',
+    success: 'Mot de passe changé avec succés.'
+  },
+  verify: {
+    title: 'Vérification du courriel',
+    login: 'Connexion',
+    bad_link: 'Ce lien de vérification n\'est pas valide. Veuillez vérifier ce lien et essayer de nouveau.',
+    failure: 'La vérification du courriel a échoué. Veuillez contacter le support.',
+    success: 'Merci, votre adresse courriel est vérifiée.',
+    pending: 'Vérification en cours... merci de patienter...'
   },
   main: {
     brand: 'Amber Studio',
@@ -29,6 +42,12 @@ export default {
     datasets: 'Datasets',
     users_groups: 'Utilisateurs & Groupes',
     settings: 'Paramètres'
+  },
+  validations: {
+    required: 'Une valeur est requise',
+    minLength: 'Ce champ doit faire au moins {min} charactères',
+    maxLength: 'Ce champ peut faire au maximum {max} charactères',
+    email: 'Adresse courriel non valide'
   },
   email: 'Courriel',
   email_hint: 'Adresse courriel vérifiable.',

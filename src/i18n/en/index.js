@@ -1,6 +1,3 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
   login: {
     title: 'Sign in to start your session',
@@ -18,7 +15,23 @@ export default {
   forgot_password: {
     title: 'Reset password',
     hint: 'Enter account\'s email to reset password.',
-    submit: 'Reset'
+    submit: 'Reset',
+    login: 'Sign in'
+  },
+  reset: {
+    title: 'Reset password',
+    submit: 'Reset',
+    bad_link: 'Not a valid password reset link. Please check your email for the password reset link and try again.',
+    failure: 'Unable to reset password. Please contact support.',
+    success: 'Password successfully changed.'
+  },
+  verify: {
+    title: 'Verify email',
+    login: 'Sign in',
+    bad_link: 'Not a valid email verification link. Please check your email for the verification link and try again.',
+    failure: 'Unable to verify email. Please contact support.',
+    success: 'Thanks, your eamil address is verified.',
+    pending: 'Verifying account... please wait...'
   },
   main: {
     brand: 'Amber Studio',
@@ -29,6 +42,12 @@ export default {
     datasets: 'Datasets',
     users_groups: 'Users & Groups',
     settings: 'Settings'
+  },
+  validations: {
+    required: 'Value is required',
+    minLength: 'The minimum length required is {min}',
+    maxLength: 'The maximum length allowed is {max}',
+    email: 'Value is not a valid email address'
   },
   email: 'Email',
   email_hint: 'Verifiable email address.',

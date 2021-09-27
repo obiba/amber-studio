@@ -24,17 +24,30 @@
                 :label="$t('email')"
                 type="email"
                 :hint="$t('forgot_password.hint')"
+                @blur="v$.resetEmail.$touch"
+                :error="v$.resetEmail.$error"
                 lazy-rules>
                 <template v-slot:prepend>
                   <q-icon name="fas fa-envelope" size="xs" />
                 </template>
+                <template v-slot:error>
+                  <div v-for="error in v$.resetEmail.$errors">
+                    {{error.$message}}
+                  </div>
+                </template>
               </q-input>
           
-              <div class="q-mt-md">
+              <div class="q-mt-lg">
                 <q-btn 
                   :label="$t('forgot_password.submit')"
                   type="submit"
                   color="primary"/>
+                <q-btn
+                  :label="$t('forgot_password.login')"
+                  flat
+                  to="/login"
+                  stretch
+                  class="text-bold q-ml-md"/>
               </div>
             </q-form>
           </q-card-section>
@@ -45,13 +58,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import { required, minLength, email } from "@vuelidate/validators";
+import { mapState } from "vuex";
+import { required,  email } from '../boot/vuelidate';
+import useVuelidate from '@vuelidate/core';
 
 export default {
   data() {
     return {
-      valid: false,
+      v$: useVuelidate(),
       resetEmail: ""
     };
   },
@@ -65,8 +79,8 @@ export default {
     ...mapState({
       submitting: state => state.auth.showLoading
     }),
-    resetValid() {
-      return true//this.$v.resetEmail.$invalid;
+    disableSubmit() {
+      return this.v$.formData.$invalid;
     }
   },
   methods: {

@@ -53,14 +53,26 @@
                   class="text-bold q-ml-md"/>
               </div>
             </q-form>
+          </q-card-section>
+          <q-card-section>
             <q-btn
               flat
               to="/forgot-password"
               dense
               no-caps
-              class="text-bold q-mt-md">
+              class="text-bold">
               {{$t('login.forgot_password')}}
             </q-btn>
+            <q-btn-dropdown flat :label="locale" class="float-right">
+            <q-list>
+              <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions">
+                <q-item-section>
+                  <q-item-label class="text-uppercase">{{localeOpt.value}}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+          
           </q-card-section>
         </q-card>
       </q-page>
@@ -69,12 +81,22 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
 import {defineComponent} from 'vue'
 import { mapState } from 'vuex';
-import {ref} from 'vue'
 import { Notify } from "quasar";
 
 export default defineComponent({
+  setup() {
+    const { locale } = useI18n({ useScope: 'global' })
+    return { 
+      locale: locale,
+      localeOptions: [
+        { value: 'en', label: 'English' },
+        { value: 'fr', label: 'Français' }
+      ]
+    }
+  },
   data() {
     return {
       email: "",
@@ -90,6 +112,9 @@ export default defineComponent({
     }
   },
   methods: {
+    onLocaleSelection(opt) {
+      this.locale = opt.value;
+    },
     onSubmit() {
       this.$store
         .dispatch("auth/authenticate", {

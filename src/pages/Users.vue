@@ -495,14 +495,7 @@
 import { mapState, mapActions } from 'vuex';
 import {ref} from 'vue';
 import useVuelidate from '@vuelidate/core';
-import {
-  required,
-  email,
-  minLength,
-  maxLength,
-  helpers
-} from '@vuelidate/validators';
-const alpha = helpers.regex('alpha', /^[a-zA-Z0-9 ]*$/);
+import { required, minLength, maxLength, email } from '../boot/vuelidate';
 import { date } from 'quasar';
 
 export default {
