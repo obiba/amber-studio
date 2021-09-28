@@ -49,7 +49,8 @@ export default {
     delete_users_confirm: 'Veuillez confirmer la suppression des utilisateurs sélectionnés :',
     delete_user_hint: 'Supprimer l\'utilisateur',
     delete_user_confirm: 'Veuillez confirmer la suppression de l\'utilisateur :',
-    last_seen: 'Dernière conn.'
+    last_seen: 'Dernière conn.',
+    roles_filter: 'Rôles'
   },
   main: {
     brand: 'Amber Studio',
@@ -66,13 +67,19 @@ export default {
     maxLength: 'Ce champ peut faire au maximum {max} charactères',
     email: 'Adresse courriel non valide'
   },
+  roles: {
+    guest: 'Invité',
+    interviewer: 'Interviewer',
+    manager: 'Gestionnaire',
+    administrator: 'Administrateur',
+    inactive: 'Inactif'
+  },
   add: 'Ajouter',
   update: 'Appliquer',
   delete: 'Supprimer',
   cancel: 'Annuler',
   search: 'Chercher',
   role: 'Rôle',
-  roles: 'Rôles',
   institution: 'Institution',
   city: 'Ville',
   title: 'Titre',
@@ -88,6 +95,9 @@ export default {
   status: 'Statuts',
   action: 'Action',
   required: 'Requis',
+  confirmed: 'Confirmé',
+  pending: 'En attente',
+  unknown: 'Inconnue',
   failed: 'L\'action a échoué',
   success: 'L\'action a réussi'
 }

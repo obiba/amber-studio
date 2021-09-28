@@ -45,7 +45,7 @@
               :options="rolesOptions"
               use-chips
               clearable
-              :label="$t('roles')"
+              :label="$t('users.roles_filter')"
               style="min-width: 250px"
               class="q-mr-md"
               @change="getTableUsers"
@@ -62,8 +62,8 @@
             </q-td>
           </template>
           <template v-slot:body-cell-role='props'>
-            <q-td class='text-capitalize'>
-              {{ props.row.role }}
+            <q-td>
+              {{ $t('roles.' + props.row.role) }}
             </q-td>
           </template>
           <template v-slot:body-cell-action='props'>
@@ -229,15 +229,33 @@
               </template>
             </q-input>
           </div>
-          <div class='col-12'>
+          <div class="col-12 col-md-6">
+              <q-select
+                class='q-ma-sm'
+                v-show="hasLocales"
+                v-model="profileData.language"
+                :options="localeOptions"
+                :label="$t('preferred_language')"
+                filled
+                emit-value
+                map-options
+                options-dense
+              >
+                <template v-slot:prepend>
+                  <q-icon name="fas fa-language" size="xs" />
+                </template>
+              </q-select>
+          </div>
+          <div class='col-12 col-md-6'>
             <q-select
               class='q-ma-sm text-capitalize'
-              filled
               v-model='profileData.role'
-              :options='roles'
+              :options='rolesOptions'
               :label="$t('role')"
-              popup-content-class='text-capitalize'
-              options-selected-class='primary'
+              filled
+              emit-value
+              map-options
+              options-dense
             >
             </q-select>
           </div>
@@ -403,15 +421,33 @@
               </template>
             </q-input>
           </div>
-          <div class='col-12'>
+          <div class="col-12 col-md-6">
+              <q-select
+                class='q-ma-sm'
+                v-show="hasLocales"
+                v-model="newProfileData.language"
+                :options="localeOptions"
+                :label="$t('preferred_language')"
+                filled
+                emit-value
+                map-options
+                options-dense
+              >
+                <template v-slot:prepend>
+                  <q-icon name="fas fa-language" size="xs" />
+                </template>
+              </q-select>
+          </div>
+          <div class='col-12 col-md-6'>
             <q-select
-              class='q-ma-sm text-capitalize'
-              filled
+              class='q-ma-sm'
               v-model='newProfileData.role'
-              :options='roles'
+              :options='rolesOptions'
               :label="$t('role')"
-              popup-content-class='text-capitalize'
-              options-selected-class='primary'
+              filled
+              emit-value
+              map-options
+              options-dense
             >
             </q-select>
           </div>
@@ -496,8 +532,8 @@ import { mapState, mapActions } from 'vuex';
 import {ref} from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required, minLength, maxLength, email } from '../boot/vuelidate';
-import { t } from '../boot/i18n';
 import { date } from 'quasar';
+import { locales } from '../boot/i18n';
 
 export default {
   mounted: function() {
@@ -516,12 +552,6 @@ export default {
   data() {
     return {
       roles: ['guest', 'interviewer', 'manager', 'administrator', 'inactive'],
-      rolesOptions: [
-        {label: 'Guest', value: 'guest'}, 
-        {label: 'Interviewer', value: 'interviewer'}, 
-        {label: 'Manager', value: 'manager'}, 
-        {label: 'Administrator', value: 'administrator'}, 
-        {label: 'Inactive', value: 'inactive'}],
       columns: [
         {
           name: 'name',
@@ -550,8 +580,8 @@ export default {
           field: 'isVerified',
           format: val => {
             if (val) {
-              return `Confirmed`;
-            } else return `Pending`;
+              return this.$t('confirmed');
+            } else return this.$t('pending');
           },
           sortable: false
         },
@@ -569,7 +599,7 @@ export default {
           field: 'lastLoggedIn',
           sortable: true,
           format: val =>
-            `${val ? date.formatDate(val, 'DD MMM YY HH:mm A') : 'Unknown'}`
+            `${val ? date.formatDate(val, 'DD MMM YY HH:mm A') : this.$t('unknown')}`
         },
         {
           name: 'action',
@@ -596,6 +626,7 @@ export default {
         city: '',
         title:'',
         phone: '',
+        language: '',
         role: ''
       },
       newProfileData: {
@@ -605,6 +636,7 @@ export default {
         city: '',
         title:'',
         phone: '',
+        language: '',
         role: ''
       }
     };
@@ -637,6 +669,9 @@ export default {
         //alpha,
         minLength: minLength(2),
         maxLength: maxLength(30)
+      },
+      language: {
+        required
       },
       role: {
         required
@@ -673,6 +708,9 @@ export default {
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
+      language: {
+        required
+      },
       role: {
         required
       }
@@ -687,6 +725,25 @@ export default {
     },
     disableCreateProfile() {
       return this.v$.newProfileData.$invalid;
+    },
+    localeOptions() {
+      return locales.map(loc => {
+        return {
+          value: loc,
+          label: this.$t('locales.' + loc)
+        }
+      });
+    },
+    hasLocales() {
+      return locales.length>1;
+    },
+    rolesOptions() {
+      return this.roles.map(rl => {
+        return {
+          value: rl,
+          label: this.$t('roles.' + rl)
+        }
+      });
     }
   },
   methods: {
@@ -710,7 +767,8 @@ export default {
     }),
     createUser() {
       this.newProfileData = {
-        role : 'guest'
+        language: locales[0],
+        role: 'guest'
       };
       this.showCreateUser = true;
       this.selectedUser = undefined;
@@ -722,6 +780,7 @@ export default {
       this.profileData.institution = user.institution;
       this.profileData.title = user.title;
       this.profileData.phone = user.phone;
+      this.profileData.language = user.language;
       this.profileData.role = user.role;
       this.showEditUser = true;
       this.selectedUser = user;
@@ -786,6 +845,7 @@ export default {
       this.profileData.institution = user.institution;
       this.profileData.title = user.title;
       this.profileData.phone = user.phone;
+      this.profileData.language = user.language;
       this.profileData.role = 'guest';
       let userData = { ...this.profileData };
       this.$store.dispatch('account/updateUser', {
@@ -801,6 +861,7 @@ export default {
       this.profileData.institution = user.institution;
       this.profileData.title = user.title;
       this.profileData.phone = user.phone;
+      this.profileData.language = user.language;
       this.profileData.role = 'inactive';
       let userData = { ...this.profileData };
       this.$store.dispatch('account/updateUser', {

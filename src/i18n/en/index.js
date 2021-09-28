@@ -49,7 +49,8 @@ export default {
     delete_users_confirm: 'Please confirm that you want to remove all the selected users:',
     delete_user_hint: 'Delete user',
     delete_user_confirm: 'Please confirm that you want to remove user:',
-    last_seen: 'Last Seen'
+    last_seen: 'Last Seen',
+    roles_filter: 'Roles'
   },
   main: {
     brand: 'Amber Studio',
@@ -70,13 +71,19 @@ export default {
     en: 'English',
     fr: 'français'
   },
+  roles: {
+    guest: 'Gest',
+    interviewer: 'Interviewer',
+    manager: 'Manager',
+    administrator: 'Administrator',
+    inactive: 'Inactive'
+  },
   add: 'Add',
   update: 'Update',
   delete: 'Delete',
   cancel: 'Cancel',
   search: 'Search',
   role: 'Role',
-  roles: 'Roles',
   institution: 'Institution',
   city: 'City',
   title: 'Title',
@@ -92,6 +99,9 @@ export default {
   status: 'Status',
   action: 'Action',
   required: 'Required',
+  confirmed: 'Confirmed',
+  pending: 'Pending',
+  unknown: 'Unknown',
   failed: 'Action failed',
   success: 'Action was successful'
 }
