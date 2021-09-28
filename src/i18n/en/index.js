@@ -66,6 +66,10 @@ export default {
     maxLength: 'The maximum length allowed is {max}',
     email: 'Value is not a valid email address'
   },
+  locales: {
+    en: 'English',
+    fr: 'français'
+  },
   add: 'Add',
   update: 'Update',
   delete: 'Delete',

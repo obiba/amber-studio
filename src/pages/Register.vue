@@ -17,54 +17,6 @@
           </q-card-section>
           <q-card-section v-if="!registrationComplete">
             <q-form @submit="onSubmit" class="q-gutter-md">
-              <q-input
-                filled
-                v-model="formData.firstname"
-                :label="$t('firstname')"
-                @blur="v$.formData.firstname.$touch"
-                :error="v$.formData.firstname.$error"
-                lazy-rules>
-                <template v-slot:prepend>
-                  <q-icon name="fas fa-user" size="xs" />
-                </template>
-                <template v-slot:error>
-                  <div v-for="error in v$.formData.firstname.$errors">
-                    {{error.$message}}
-                  </div>
-                </template>
-              </q-input>
-
-              <q-input
-                filled
-                v-model="formData.lastname"
-                :label="$t('lastname')"
-                @blur="v$.formData.lastname.$touch"
-                :error="v$.formData.lastname.$error"
-                lazy-rules>
-                <template v-slot:prepend>
-                  <q-icon name="fas fa-user" size="xs" />
-                </template>
-                <template v-slot:error>
-                  <div v-for="error in v$.formData.lastname.$errors">
-                    {{error.$message}}
-                  </div>
-                </template>
-              </q-input>
-
-              <q-select
-                v-model="locale"
-                :options="localeOptions"
-                :label="$t('preferred_language')"
-                filled
-                emit-value
-                map-options
-                options-dense
-                style="min-width: 150px"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="fas fa-language" size="xs" />
-                </template>
-              </q-select>
 
               <q-input
                 filled
@@ -103,6 +55,58 @@
                   </div>
                 </template>
               </q-input>
+
+              <q-input
+                filled
+                v-model="formData.firstname"
+                :label="$t('firstname')"
+                :hint="$t('required')"
+                @blur="v$.formData.firstname.$touch"
+                :error="v$.formData.firstname.$error"
+                lazy-rules>
+                <template v-slot:prepend>
+                  <q-icon name="fas fa-user" size="xs" />
+                </template>
+                <template v-slot:error>
+                  <div v-for="error in v$.formData.firstname.$errors">
+                    {{error.$message}}
+                  </div>
+                </template>
+              </q-input>
+
+              <q-input
+                filled
+                v-model="formData.lastname"
+                :label="$t('lastname')"
+                :hint="$t('required')"
+                @blur="v$.formData.lastname.$touch"
+                :error="v$.formData.lastname.$error"
+                lazy-rules>
+                <template v-slot:prepend>
+                  <q-icon name="fas fa-user" size="xs" />
+                </template>
+                <template v-slot:error>
+                  <div v-for="error in v$.formData.lastname.$errors">
+                    {{error.$message}}
+                  </div>
+                </template>
+              </q-input>
+
+              <q-select
+                v-show="hasLocales"
+                v-model="locale"
+                :options="localeOptions"
+                :label="$t('preferred_language')"
+                filled
+                emit-value
+                map-options
+                options-dense
+                style="min-width: 150px"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="fas fa-language" size="xs" />
+                </template>
+              </q-select>
               
               <div>
                 <q-btn 
@@ -143,6 +147,7 @@ import { mapState, mapActions } from "vuex";
 import useVuelidate from '@vuelidate/core';
 import { useReCaptcha } from "vue-recaptcha-v3";
 import { required, minLength, email } from '../boot/vuelidate';
+import { locales } from '../boot/i18n';
 
 export default {
   setup() {
@@ -162,10 +167,6 @@ export default {
 
     return {
       locale,
-      localeOptions: [
-        { value: 'en', label: 'English' },
-        { value: 'fr', label: 'Français' }
-      ],
       v$: useVuelidate(),
       recaptcha
     }
@@ -208,6 +209,17 @@ export default {
     }),
     disableSubmit() {
       return this.v$.formData.$invalid;
+    },
+    localeOptions() {
+      return locales.map(loc => {
+        return {
+          value: loc,
+          label: this.$t('locales.' + loc)
+        }
+      });
+    },
+    hasLocales() {
+      return locales.length>1;
     }
   },
   methods: {

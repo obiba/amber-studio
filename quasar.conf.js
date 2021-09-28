@@ -53,7 +53,8 @@ module.exports = configure(function (ctx) {
 
       env: {
         API: ctx.dev ? 'http://localhost:3030' : process.env.AMBER_URL,
-        RECAPTCHA_SITE_KEY: ctx.dev ? '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u' : process.env.RECAPTCHA_SITE_KEY
+        RECAPTCHA_SITE_KEY: ctx.dev ? '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u' : process.env.RECAPTCHA_SITE_KEY,
+        LOCALES: ctx.dev ? 'en,fr' : (process.env.LOCALES ? process.env.LOCALES : 'en,fr')
       },
 
       // transpile: false,

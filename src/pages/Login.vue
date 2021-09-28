@@ -63,7 +63,11 @@
               class="text-bold">
               {{$t('login.forgot_password')}}
             </q-btn>
-            <q-btn-dropdown flat :label="locale" class="float-right">
+            <q-btn-dropdown 
+              v-show="hasLocales"
+              flat
+              :label="locale"
+              class="float-right">
             <q-list>
               <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions">
                 <q-item-section>
@@ -84,17 +88,14 @@
 import { useI18n } from 'vue-i18n';
 import {defineComponent} from 'vue'
 import { mapState } from 'vuex';
-import { Notify } from "quasar";
+import { Notify } from 'quasar';
+import { locales } from '../boot/i18n';
 
 export default defineComponent({
   setup() {
     const { locale } = useI18n({ useScope: 'global' })
     return { 
-      locale: locale,
-      localeOptions: [
-        { value: 'en', label: 'English' },
-        { value: 'fr', label: 'Français' }
-      ]
+      locale: locale
     }
   },
   data() {
@@ -109,6 +110,17 @@ export default defineComponent({
     }),
     disableSubmit() {
       return this.email.length === 0 || this.password.length === 0;
+    },
+    localeOptions() {
+      return locales.map(loc => {
+        return {
+          value: loc,
+          label: this.$t('locales.' + loc)
+        }
+      });
+    },
+    hasLocales() {
+      return locales.length>1;
     }
   },
   methods: {

@@ -21,7 +21,10 @@
           </q-btn>
           <q-btn round dense flat color="white" icon="fab fa-github" type="a" href="https://github.com/obiba/amber-studio" target="_blank">
           </q-btn>
-          <q-btn-dropdown color="primary" :label="locale">
+          <q-btn-dropdown
+            v-show="hasLocales" 
+            color="primary"
+            :label="locale">
             <q-list>
               <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions">
                 <q-item-section>
@@ -122,6 +125,7 @@
 <script>
 import { useI18n } from 'vue-i18n';
 import { defineComponent, ref } from 'vue';
+import { locales } from '../boot/i18n'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -132,10 +136,6 @@ export default defineComponent({
 
     return {
       locale,
-      localeOptions: [
-        { value: 'en', label: 'English' },
-        { value: 'fr', label: 'Français' }
-      ],
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
@@ -143,6 +143,17 @@ export default defineComponent({
     }
   },
   computed: {
+    localeOptions() {
+      return locales.map(loc => {
+        return {
+          value: loc,
+          label: this.$t('locales.' + loc)
+        }
+      });
+    },
+    hasLocales() {
+      return locales.length>1;
+    },
     user() {
       return this.$store.state.auth.payload ? this.$store.state.auth.payload.user : undefined;
     },
