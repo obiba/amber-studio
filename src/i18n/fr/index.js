@@ -34,9 +34,7 @@ export default {
     pending: 'Vérification en cours... merci de patienter...'
   },
   users: {
-    title: 'Utilisateurs & Groupes',
-    users: 'Utilisateurs',
-    groups: 'Groupes',
+    title: 'Utilisateurs',
     edit_user_hint: 'Éditer l\'utilisateur',
     resend_email_hint: 'Renvoyer le courriel de vérification',
     reset_password_hint: 'Réinitialiser le mot de passe',
@@ -50,14 +48,29 @@ export default {
     delete_user_hint: 'Supprimer l\'utilisateur',
     delete_user_confirm: 'Veuillez confirmer la suppression de l\'utilisateur :',
     last_seen: 'Dernière conn.',
-    roles_filter: 'Rôles'
+    roles_filter: 'Rôles',
+    search_hint: 'Chercher par nom ou courriel'
+  },
+  groups: {
+    title: 'Groupes',
+    edit_group_hint: 'Éditer le groupe',
+    add_group: 'Ajouter',
+    add_group_hint: 'Ajouter un nouveau groupe',
+    delete_groups: 'Supprimer',
+    delete_groups_hint: 'Supprimer les groupes sélectionnés',
+    delete_groups_confirm: 'Veuillez confirmer la suppression des groupes sélectionnés (les utilisateurs ne seront pas affectés) :',
+    delete_group_hint: 'Supprimer le groupe',
+    delete_group_confirm: 'Veuillez confirmer la suppression du groupe (les utilisateurs ne seront pas affectés) :',
+    search_hint: 'Chercher par nom ou description'
+  },
+  studies: {
+    title: 'Études',
   },
   main: {
     brand: 'Amber Studio',
     profile: 'Profile',
     logout: 'Déconnexion',
     dashboard: 'Tableau de bord',
-    studies: 'Études',
     datasets: 'Datasets',
     settings: 'Paramètres'
   },
@@ -92,6 +105,7 @@ export default {
   lastname: 'Nom de famille',
   preferred_language: 'Langue préférée',
   name: 'Nom',
+  description: 'Description',
   status: 'Statuts',
   action: 'Action',
   required: 'Requis',

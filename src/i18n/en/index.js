@@ -34,9 +34,7 @@ export default {
     pending: 'Verifying account... please wait...'
   },
   users: {
-    title: 'Users & Groups',
-    users: 'Users',
-    groups: 'Groups',
+    title: 'Users',
     edit_user_hint: 'Edit user',
     resend_email_hint: 'Resend verification email',
     reset_password_hint: 'Reset password',
@@ -48,16 +46,31 @@ export default {
     delete_users_hint: 'Delete selected users',
     delete_users_confirm: 'Please confirm that you want to remove all the selected users:',
     delete_user_hint: 'Delete user',
-    delete_user_confirm: 'Please confirm that you want to remove user:',
+    delete_user_confirm: 'Please confirm that you want to remove the user:',
     last_seen: 'Last Seen',
-    roles_filter: 'Roles'
+    roles_filter: 'Roles',
+    search_hint: 'Search by name or email'
+  },
+  groups: {
+    title: 'Groups',
+    edit_group_hint: 'Edit group',
+    add_group: 'Add Group',
+    add_group_hint: 'Add a new group',
+    delete_groups: 'Delete Groups',
+    delete_groups_hint: 'Delete selected groups',
+    delete_groups_confirm: 'Please confirm that you want to remove all the selected groups (users will not be affected):',
+    delete_group_hint: 'Delete group',
+    delete_group_confirm: 'Please confirm that you want to remove the group (users will not be affected):',
+    search_hint: 'Search by name or description'
+  },
+  studies: {
+    title: 'Studies',
   },
   main: {
     brand: 'Amber Studio',
     profile: 'Profile',
     logout: 'Sign out',
     dashboard: 'Dashboard',
-    studies: 'Studies',
     datasets: 'Datasets',
     settings: 'Settings'
   },
@@ -96,6 +109,7 @@ export default {
   lastname: 'Last Name',
   preferred_language: 'Preferred Language',
   name: 'Name',
+  description: 'Description',
   status: 'Status',
   action: 'Action',
   required: 'Required',

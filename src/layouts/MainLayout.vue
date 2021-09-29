@@ -80,7 +80,7 @@
             <q-icon name="inventory_2"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('main.studies')}}</q-item-label>
+            <q-item-label>{{$t('studies.title')}}</q-item-label>
           </q-item-section>
         </q-item>
       
@@ -101,6 +101,15 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>{{$t('users.title')}}</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item v-if="isAdministrator" to="/groups" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="groups"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('groups.title')}}</q-item-label>
           </q-item-section>
         </q-item>
 

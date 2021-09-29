@@ -19,6 +19,11 @@ const routes = [
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
+        path: '/groups', 
+        component: () => import('pages/Groups.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
         path: '/studies', 
         component: () => import('pages/Studies.vue'),
         meta: { requiresAuth: true }
