@@ -15,8 +15,19 @@
         @request='getTableGroups'
       >
       <template v-slot:top>
-        <q-btn color="primary" :label="$t('groups.add_group')" :title="$t('groups.add_group_hint')" @click="createGroup()" class="q-mr-md" />
-        <q-btn color="primary" :disable="selected.length === 0" :label="$t('groups.delete_groups')" :title="$t('groups.delete_groups_hint')" @click="confirmDeleteGroups()" />
+        <q-btn
+          color="primary"
+          icon="add"
+          :label="$t('groups.add_group')"
+          :title="$t('groups.add_group_hint')"
+          @click="createGroup()"
+          class="q-mr-md" />
+        <q-btn
+          color="red"
+          icon="delete_outline"
+          :disable="selected.length === 0"
+          :title="$t('groups.delete_groups_hint')"
+          @click="confirmDeleteGroups()" />
         <q-space />
         <q-input 
           filled 
@@ -36,6 +47,14 @@
           <div style="white-space: normal">
             {{ props.row.description }}
           </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-members='props'>
+        <q-td :props='props'>
+          <q-badge v-if="props.row.users.length>0" color="info">
+            {{ props.row.users.length }}
+          </q-badge>
+          <span v-else>0</span>
         </q-td>
       </template>
       <template v-slot:body-cell-action='props'>
@@ -252,6 +271,16 @@ export default {
           label: this.$t('description'),
           field: 'description',
           sortable: true
+        },
+        {
+          name: 'members',
+          align: 'left',
+          label: this.$t('members'),
+          field: 'users',
+          format: val => {
+            return val ? val.length : 0;
+          },
+          sortable: false
         },
         {
           name: 'action',

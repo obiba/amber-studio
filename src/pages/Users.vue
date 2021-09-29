@@ -15,8 +15,19 @@
         @request='getTableUsers'
       >
         <template v-slot:top>
-        <q-btn color="primary" :label="$t('users.add_user')" :title="$t('users.add_user_hint')" @click="createUser()" class="q-mr-md" />
-        <q-btn color="primary" :disable="selected.length === 0" :label="$t('users.delete_users')" :title="$t('users.delete_users_hint')" @click="confirmDeleteUsers()" />
+        <q-btn
+          color="primary"
+          icon="add"
+          :label="$t('users.add_user')"
+          :title="$t('users.add_user_hint')"
+          @click="createUser()"
+          class="q-mr-md" />
+        <q-btn
+          color="red"
+          icon="delete_outline"
+          :disable="selected.length === 0"
+          :title="$t('users.delete_users_hint')"
+          @click="confirmDeleteUsers()" />
         <q-space />
         <q-select
           flat
