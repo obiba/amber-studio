@@ -63,6 +63,11 @@ export default {
     delete_group_confirm: 'Please confirm that you want to remove the group (users will not be affected):',
     search_hint: 'Search by name or description'
   },
+  group: {
+    title: 'Group',
+    search_users: 'Search',
+    search_users_hint: 'Search users to add by email or name'
+  },
   studies: {
     title: 'Studies',
   },
@@ -117,6 +122,7 @@ export default {
   confirmed: 'Confirmed',
   pending: 'Pending',
   unknown: 'Unknown',
+  no_results: 'No results',
   failed: 'Action failed',
   success: 'Action was successful'
 }

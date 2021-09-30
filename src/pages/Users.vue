@@ -74,55 +74,67 @@
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
           <q-btn
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='primary'
+            class="gt-xs text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('users.edit_user_hint')"
             icon='edit'
             @click='updateUser(props.row)'>
           </q-btn>
           <q-btn
             v-if='!props.row.isVerified'
-            size='sm'
-            class='q-pa-xs q-mx-xs'
+            class="gt-xs text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('users.resend_email_hint')"
-            color='secondary'
             icon='send'
             @click='resendEmailVerification(props.row.email)'>
           </q-btn>
           <q-btn
             v-if='props.row.isVerified'
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='purple'
+            class="gt-xs text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('users.reset_password_hint')"
             icon='replay'
             @click='resetPassword(props.row.email)'>
           </q-btn>
           <q-btn
             v-if='props.row.role === "inactive"'
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='green'
+            class="gt-xs text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('users.activate_user_hint')"
             icon='do_not_disturb_off'
             @click='activeateUser(props.row)'>
           </q-btn>
           <q-btn
             v-if='!(props.row.role === "inactive")'
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='orange'
+            class="gt-xs text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('users.deactivate_user_hint')"
             icon='do_not_disturb_on'
             @click='deactiveateUser(props.row)'>
           </q-btn>
           <q-btn
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='red'
+            class="gt-xs text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('users.delete_user_hint')"
-            icon='delete_outline'
+            icon='delete'
             @click='confirmDeleteUser(props.row)'>
           </q-btn>
         </q-td>

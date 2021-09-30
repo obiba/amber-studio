@@ -63,6 +63,11 @@ export default {
     delete_group_confirm: 'Veuillez confirmer la suppression du groupe (les utilisateurs ne seront pas affectés) :',
     search_hint: 'Chercher par nom ou description'
   },
+  group: {
+    title: 'Groupe',
+    search_users: 'Chercher',
+    search_users_hint: 'Chercher les utilisateurs à ajouter par email ou nom'
+  },
   studies: {
     title: 'Études',
   },
@@ -113,6 +118,7 @@ export default {
   confirmed: 'Confirmé',
   pending: 'En attente',
   unknown: 'Inconnue',
+  no_results: 'Pas de resultats',
   failed: 'L\'action a échoué',
   success: 'L\'action a réussi'
 }

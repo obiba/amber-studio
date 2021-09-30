@@ -46,6 +46,52 @@ export async function getGroups({ commit }, payload) {
   }
 }
 
+export async function getGroup({ commit }, payload) {
+  let result = await groupService.getGroup(payload.id).catch(err => {
+    console.error(err)
+    if (err.response) {
+      let errorCode = err.response.data.code;
+      if (errorCode) {
+        Notify.create({
+          message: `There was an error retrieving the group.`,
+          color: 'negative'
+        });
+      }
+    }
+  });
+  if (result) {
+    commit('setGroup', result);
+    commit('setGroupUsers', []);
+  } else {
+    commit('setGroup', { _id: payload.id });
+    commit('setGroupUsers', []);
+  }
+}
+
+export async function getGroupUsers({ commit }, payload) {
+  if (payload.group.users && payload.group.users.length>0) {
+    let result = await userService.getUsersByIds(payload.group.users).catch(err => {
+      console.error(err)
+      if (err.response) {
+        let errorCode = err.response.data.code;
+        if (errorCode) {
+          Notify.create({
+            message: `There was an error retrieving the users of the group.`,
+            color: 'negative'
+          });
+        }
+      }
+    });
+    if (result) {
+      commit('setGroupUsers', result.data);
+    } else {
+      commit('setGroupUsers', []);
+    }
+  } else {
+    commit('setGroupUsers', []);  
+  }
+}
+
 export async function createGroup({ dispatch }, payload) {
   let result = await groupService
     .createGroup(payload.group)
@@ -73,9 +119,9 @@ export async function createGroup({ dispatch }, payload) {
   );
 }
 
-export async function updateGroup({ dispatch }, payload) {
+export async function updateGroup({ commit, dispatch }, payload) {
   let result = await groupService
-    .updateGroup(payload.group, payload.id)
+    .updateGroup(payload.group, payload.id ? payload.id : payload.group._id)
     .catch(err => {
       Notify.create({
         message:
@@ -90,14 +136,17 @@ export async function updateGroup({ dispatch }, payload) {
       color: 'positive',
       icon: 'fas fa-check'
     });
+    commit('setGroup', result);
   }
-  dispatch(
-    'admin/getGroups',
-    {
-      paginationOpts: payload.paginationOpts
-    },
-    { root: true }
-  );
+  if (payload.paginationOpts) {
+    dispatch(
+      'admin/getGroups',
+      {
+        paginationOpts: payload.paginationOpts
+      },
+      { root: true }
+    );
+  }
 }
 
 export async function deleteGroup({ dispatch }, payload) {

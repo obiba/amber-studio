@@ -42,10 +42,15 @@
           </template>
         </q-input>
       </template>
+      <template v-slot:body-cell-name='props'>
+        <q-td :props='props'>
+          <router-link :to="'/group/' + props.row._id">{{ props.row.name }}</router-link>
+        </q-td>
+      </template>
       <template v-slot:body-cell-description='props'>
         <q-td :props='props'>
           <div style="white-space: normal">
-            {{ props.row.description }}
+            {{ makeEllipsis(props.row.description, 100) }}
           </div>
         </q-td>
       </template>
@@ -60,74 +65,28 @@
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
           <q-btn
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='primary'
+            class="gt-xs text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('groups.edit_group_hint')"
             icon='edit'
-            @click='updateGroup(props.row)'>
+            :to="'/group/' + props.row._id">
           </q-btn>
           <q-btn
-            size='sm'
-            class='q-pa-xs q-mx-xs'
-            color='red'
+            class="gt-xs text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('groups.delete_group_hint')"
-            icon='delete_outline'
+            icon='delete'
             @click='confirmDeleteGroup(props.row)'>
           </q-btn>
         </q-td>
       </template>
     </q-table>
-
-    <q-dialog v-model='showEditGroup' persistent>
-      <q-card>
-        <q-card-section class='row items-center'>
-          <div class='col-12'>
-            <q-input
-              filled
-              v-model='groupData.name'
-              :label="$t('name')"
-              lazy-rules
-              class='q-ma-sm'
-              @blur="v$.groupData.name.$touch"
-              :error="v$.groupData.name.$error"
-              :hint="$t('required')"
-            >
-              <template v-slot:error>
-                <div v-for="error in v$.groupData.name.$errors">
-                  {{error.$message}}
-                </div>
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12'>
-            <q-input
-              filled
-              v-model='groupData.description'
-              :label="$t('description')"
-              autogrow
-              lazy-rules
-              class='q-ma-sm'
-            />
-          </div>
-        </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
-          <q-btn
-            @click='saveGroup'
-            :disable='disableUpdateGroup'
-            :label="$t('update')"
-            type='submit'
-            color='positive'
-            v-close-popup
-          >
-            <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
 
     <q-dialog v-model='showCreateGroup' persistent>
       <q-card>
@@ -289,7 +248,6 @@ export default {
         }
       ],
       selectedGroup: {},
-      showEditGroup: false,
       showCreateGroup: false,
       showConfirmDeleteGroup: false,
       showConfirmDeleteGroups: false,
@@ -311,19 +269,6 @@ export default {
     };
   },
   validations: {
-    groupData: {
-      name: {
-        //alpha,
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      description: {
-        //alpha,
-        minLength: minLength(2),
-        maxLength: maxLength(500)
-      }
-    },
     newGroupData: {
       name: {
         //alpha,
@@ -342,14 +287,17 @@ export default {
     ...mapState({
       groups: state => state.admin.groups
     }),
-    disableUpdateGroup() {
-      return this.v$.groupData.$invalid;
-    },
     disableCreateGroup() {
       return this.v$.newGroupData.$invalid;
     }
   },
   methods: {
+    makeEllipsis(text, length) {
+      if (text && text.length>length) {
+        return text.substring(0, length) + ' ...';
+      }
+      return text;
+    },
     setPagination() {
       this.paginationOpts = this.$store.state.admin.groupPaginationOpts;
     },
@@ -373,12 +321,6 @@ export default {
       this.showCreateGroup = true;
       this.selectedGroup = undefined;
     },
-    updateGroup(group) {
-      this.groupData.name = group.name;
-      this.groupData.description = group.description;
-      this.showEditGroup = true;
-      this.selectedGroup = group;
-    },
     confirmDeleteGroup(group) {
       this.showConfirmDeleteGroup = true;
       this.selectedGroup = group;
@@ -390,22 +332,12 @@ export default {
     },
     async saveGroup() {
       this.v$.$reset();
-      if (this.selectedGroup) {
-        // update
-        let updatedData = { ...this.groupData };
-        this.$store.dispatch('admin/updateGroup', {
-          group: updatedData,
-          id: this.selectedGroup._id,
-          paginationOpts: this.paginationOpts
-        });
-      } else {
-        // create
-        let createdData = { ...this.newGroupData };
-        this.$store.dispatch('admin/createGroup', {
-          group: createdData,
-          paginationOpts: this.paginationOpts
-        });
-      }
+      // create
+      let createdData = { ...this.newGroupData };
+      this.$store.dispatch('admin/createGroup', {
+        group: createdData,
+        paginationOpts: this.paginationOpts
+      });
     },
     deleteGroup() {
       this.$store.dispatch('admin/deleteGroup', {

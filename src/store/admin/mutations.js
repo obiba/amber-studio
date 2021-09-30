@@ -10,6 +10,14 @@ export function setUserCount(state, count) {
   state.userPaginationOpts.rowsNumber = count;
 }
 
+export function setGroup(state, group) {
+  state.group = group;
+}
+
+export function setGroupUsers(state, users) {
+  state.groupUsers = [...users];
+}
+
 export function setGroups(state, groups) {
   state.groups = [...groups];
 }

@@ -23,6 +23,10 @@ export async function getGroups(opts, filter) {
   return feathersClient.service('group').find(formData);
 }
 
+export async function getGroup(id) {
+  return feathersClient.service('group').get(id);
+}
+
 export async function createGroup(group) {
   return feathersClient.service('group').create(group);
 }

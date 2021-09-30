@@ -39,3 +39,17 @@ export async function getUsers(opts, filter, roles) {
   
   return feathersClient.service('user').find(formData);
 }
+
+export async function getUsersByIds(ids) {
+  return feathersClient.service('user').find({
+    query: {
+      $limit: 100,
+      $sort: {
+        email: 1
+      },
+      _id: {
+        $in: ids
+      }
+    }
+  });
+}
