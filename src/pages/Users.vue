@@ -526,7 +526,7 @@
               class='q-ma-sm'
               v-model='selectedGroup'
               :options='groupsOptions'
-              :label="$t('group')"
+              :label="$t('group.title')"
               :hint="$t('users.group_add_hint')"
               filled
               use-input
