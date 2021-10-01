@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pa-sm">
-    <div class="text-h6 q-ma-md">{{$t('studies.title')}}</div>
+  <q-page>
+    <div class="text-h6 text-white bg-info q-pa-md">{{$t('studies.title')}}</div>
     <q-separator/>
 
     <div>

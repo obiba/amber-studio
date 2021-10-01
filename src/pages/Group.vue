@@ -1,15 +1,10 @@
 <template>
-  <q-page class="q-pa-sm bg-white">
-   <q-button
-        to="/groups"
-        icon="chevron_left"
-        label="back"
-      />
-    <div class="text-h6 q-ma-md">
+  <q-page>
+    <div class="text-h6 text-white bg-info q-pa-md">
       <q-btn 
         to="/groups"
         color="white"
-        text-color="black"
+        text-color="white"
         flat
         :title="$t('groups.title')"
         icon="arrow_back_ios"/>
@@ -61,6 +56,7 @@
           :label="$t('group.search_users')"
           :hint="$t('group.search_users_hint')"
           :options="userOptions"
+          :loading="userOptionsLoading"
           v-model="selectedUserOptions"
           @filter="filterUserOptions"
           @update:model-value="addUserOption"
@@ -141,7 +137,8 @@ export default defineComponent({
         description: '',
         users: []
       },
-      selectedUserOptions: ''
+      selectedUserOptions: '',
+      userOptionsLoading: false
     }
   },
   validations: {
@@ -197,6 +194,7 @@ export default defineComponent({
         });
         return
       }
+      this.userOptionsLoading = true;
       this.getUsers({
         paginationOpts: {
           sortBy :'email',
@@ -213,7 +211,8 @@ export default defineComponent({
               value: u._id,
               object: u 
             }
-          })
+          });
+          this.userOptionsLoading = false;
         })
       });
     },

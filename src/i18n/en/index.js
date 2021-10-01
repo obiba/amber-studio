@@ -40,9 +40,9 @@ export default {
     reset_password_hint: 'Reset password',
     activate_user_hint: 'Activate user',
     deactivate_user_hint: 'Deactivate user',
-    add_user: 'Add User',
     add_user_hint: 'Add a new user',
-    delete_users: 'Delete Users',
+    group_users_hint: 'Group selected users',
+    group_add_hint: 'Group in which the users will be added',
     delete_users_hint: 'Delete selected users',
     delete_users_confirm: 'Please confirm that you want to remove all the selected users:',
     delete_user_hint: 'Delete user',
@@ -54,7 +54,6 @@ export default {
   groups: {
     title: 'Groups',
     edit_group_hint: 'Edit group',
-    add_group: 'Add Group',
     add_group_hint: 'Add a new group',
     delete_groups: 'Delete Groups',
     delete_groups_hint: 'Delete selected groups',
@@ -73,11 +72,15 @@ export default {
   },
   main: {
     brand: 'Amber Studio',
+    organisation: 'OBiBa',
     profile: 'Profile',
     logout: 'Sign out',
     dashboard: 'Dashboard',
     datasets: 'Datasets',
-    settings: 'Settings'
+    settings: 'Settings',
+    copyright: 'Copyright',
+    all_rights_reserved: 'All rights reserved',
+    powered_by: 'Powered by'
   },
   validations: {
     required: 'Value is required',
@@ -116,6 +119,7 @@ export default {
   name: 'Name',
   description: 'Description',
   status: 'Status',
+  group: 'Group',
   members: 'Members',
   action: 'Action',
   required: 'Required',

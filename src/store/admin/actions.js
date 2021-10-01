@@ -105,7 +105,7 @@ export async function createGroup({ dispatch }, payload) {
     });
   if (result) {
     Notify.create({
-      message: 'Group successfully added.',
+      message: 'Group successfully added. Edit to add members.',
       color: 'positive',
       icon: 'fas fa-check'
     });

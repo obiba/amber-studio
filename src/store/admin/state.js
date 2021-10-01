@@ -5,7 +5,7 @@ export default function() {
       sortBy: "lastLoggedIn",
       descending: false,
       page: 1,
-      rowsPerPage: 5,
+      rowsPerPage: 10,
       rowsNumber: 0
     },
     groups: [],
@@ -13,7 +13,7 @@ export default function() {
       sortBy: "name",
       descending: true,
       page: 1,
-      rowsPerPage: 5,
+      rowsPerPage: 10,
       rowsNumber: 0
     },
     group: {},

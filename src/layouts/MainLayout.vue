@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
+      <q-toolbar class="bg-white text-grey-8">
         <q-btn
           flat
           dense
@@ -15,15 +15,15 @@
         </q-toolbar-title>
         <q-space/>
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn round dense flat color="white" :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+          <q-btn round dense flat :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
                  @click="$q.fullscreen.toggle()"
                  v-if="$q.screen.gt.sm">
           </q-btn>
-          <q-btn round dense flat color="white" icon="fab fa-github" type="a" href="https://github.com/obiba/amber-studio" target="_blank">
+          <q-btn round dense flat icon="fab fa-github" type="a" href="https://github.com/obiba/amber-studio" target="_blank">
           </q-btn>
           <q-btn-dropdown
             v-show="hasLocales" 
-            color="primary"
+            flat
             :label="locale">
             <q-list>
               <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions">
@@ -33,7 +33,7 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <q-btn-dropdown color="primary" icon="person" no-caps>
+          <q-btn-dropdown flat icon="person" no-caps>
             <template v-slot:label>
               <div class="text-center q-pl-sm">
                 {{userName}}
@@ -61,7 +61,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      class="bg-primary text-white"
+      class="bg-grey-9 text-grey-4"
     >
       <q-list>
         <q-item to="/" active-class="q-item-no-link-highlighting">
@@ -125,9 +125,20 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container class="bg-grey-2">
+    <q-page-container class="bg-white">
       <router-view />
     </q-page-container>
+
+    <q-footer bordered class="bg-grey-2 text-grey-8">
+      <q-toolbar>
+        <small>{{$t('main.powered_by')}} <a href="https://www.obiba.org">OBiBa Amber</a></small>
+        <q-space />
+        <div>
+          {{$t('main.copyright')}} © 2021 <a href="/">{{$t('main.organisation')}}</a>. {{$t('main.all_rights_reserved')}}.
+        </div>
+        
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 

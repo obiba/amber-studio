@@ -1,6 +1,6 @@
 <template>
-  <q-page class='q-pa-sm bg-white'>
-    <div class='text-h6 q-ma-md'>{{$t('users.title')}}</div>
+  <q-page>
+    <div class="text-h6 text-white bg-info q-pa-md">{{$t('users.title')}}</div>
     <q-separator/>
      
     <q-table
@@ -18,11 +18,22 @@
         <q-btn
           color="primary"
           icon="add"
-          :label="$t('users.add_user')"
           :title="$t('users.add_user_hint')"
           @click="createUser()"
           class="q-mr-md" />
         <q-btn
+          class="gt-xs q-mr-md"
+          flat
+          round
+          color="black"
+          icon="groups"
+          :disable="selected.length === 0"
+          :title="$t('users.group_users_hint')"
+          @click="confirmGroupUsers()" />
+        <q-btn
+          class="gt-xs q-mr-md"
+          flat
+          round
           color="red"
           icon="delete_outline"
           :disable="selected.length === 0"
@@ -507,6 +518,44 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model='showConfirmGroupUsers' persistent>
+      <q-card>
+        <q-card-section>
+          <div>
+            <q-select
+              class='q-ma-sm'
+              v-model='selectedGroup'
+              :options='groupsOptions'
+              :label="$t('group')"
+              :hint="$t('users.group_add_hint')"
+              filled
+              use-input
+              map-options
+              options-dense
+              @filter="filterGroupsOptions"
+              style="min-width: 350px"
+            >
+            </q-select>
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='groupUsers'
+            :label="$t('apply')"
+            :disable='disableGroupUsers'
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
     <q-dialog v-model='showConfirmDeleteUsers' persistent>
       <q-card>
         <q-card-section>
@@ -549,18 +598,22 @@ export default {
   mounted: function() {
     this.getTableUsers();
     this.setPagination();
+    this.initGroups();
   },
   setup() {
     return {
       v$: useVuelidate(),
       selected: ref([]),
       filter: ref(''),
-      rolesFilter: ref([])
+      rolesFilter: ref([]),
+      selectedGroup: ref(null),
     }
   },
   data() {
     return {
       roles: ['guest', 'interviewer', 'manager', 'administrator', 'inactive'],
+      allGroupsOptions: [],
+      groupsOptions: [],
       columns: [
         {
           name: 'name',
@@ -621,11 +674,12 @@ export default {
       showCreateUser: false,
       showConfirmDeleteUser: false,
       showConfirmDeleteUsers: false,
+      showConfirmGroupUsers: false,
       paginationOpts: {
         sortBy: 'lastLoggedIn',
         descending: false,
         page: 1,
-        rowsPerPage: 5,
+        rowsPerPage: 10,
         rowsNumber: 10
       },
       profileData: {
@@ -727,13 +781,17 @@ export default {
   },
   computed: {
     ...mapState({
-      users: state => state.admin.users
+      users: state => state.admin.users,
+      groups: state => state.admin.groups
     }),
     disableUpdateProfile() {
       return this.v$.profileData.$invalid;
     },
     disableCreateProfile() {
       return this.v$.newProfileData.$invalid;
+    },
+    disableGroupUsers() {
+      return this.selectedGroup === null;
     },
     localeOptions() {
       return locales.map(loc => {
@@ -756,6 +814,22 @@ export default {
     }
   },
   methods: {
+    async initGroups() {
+      await this.getGroups({paginationOpts: {
+        rowsPerPage: 0,
+        page: 1,
+        sortBy: 'name',
+        descending: -1
+      }});
+      this.allGroupsOptions = this.groups ? this.groups.map(g => {
+        return {
+          value: g._id,
+          label: g.name,
+          object: g
+        }
+      }) : [];
+      this.groupsOptions = this.allGroupsOptions;
+    },
     setPagination() {
       this.paginationOpts = this.$store.state.admin.userPaginationOpts;
     },
@@ -772,7 +846,9 @@ export default {
       this.paginationOpts.rowsNumber = this.$store.state.admin.userPaginationOpts.rowsNumber;
     },
     ...mapActions({
-      getUsers: 'admin/getUsers'
+      getUsers: 'admin/getUsers',
+      getGroups: 'admin/getGroups',
+      updateGroup: 'admin/updateGroup'
     }),
     createUser() {
       this.newProfileData = {
@@ -801,6 +877,12 @@ export default {
     confirmDeleteUsers() {
       if (this.selected.length>0) {
         this.showConfirmDeleteUsers = true;
+      }
+    },
+    confirmGroupUsers() {
+      this.selectedGroup = null;
+      if (this.selected.length>0) {
+        this.showConfirmGroupUsers = true;
       }
     },
     resendEmailVerification(email) {
@@ -847,6 +929,18 @@ export default {
       });
       this.selected = [];
     },
+    groupUsers() {
+      const toSave = {...this.selectedGroup.object};
+      toSave.users = [...this.selectedGroup.object.users];
+      if (!toSave.users || toSave.users.length === 0) {
+        toSave.users = this.selected.map(u => u._id);
+      } else {
+        this.selected.filter(u => !toSave.users.includes(u._id)).forEach(u => toSave.users.push(u._id));
+      }
+      this.updateGroup({
+        group: toSave
+      });
+    },
     async activeateUser(user) {
       this.profileData.firstname = user.firstname;
       this.profileData.lastname = user.lastname;
@@ -878,6 +972,19 @@ export default {
         id: user._id,
         paginationOpts: this.paginationOpts
       });
+    },
+    filterGroupsOptions (val, update) {
+      update(() => {
+        if (val === '') {
+          this.groupsOptions = this.allGroupsOptions;
+        }
+        else {
+          const needle = val.toLowerCase()
+          this.groupsOptions = this.allGroupsOptions.filter(
+            g => g.label.toLowerCase().indexOf(needle) > -1
+          )
+        }
+      })
     }
   }
 };

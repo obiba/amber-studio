@@ -1,6 +1,6 @@
 <template>
-  <q-page class='q-pa-sm bg-white'>
-    <div class='text-h6 q-ma-md'>{{$t('groups.title')}}</div>
+  <q-page>
+    <div class="text-h6 text-white bg-info q-pa-md">{{$t('groups.title')}}</div>
     <q-separator/>
      
     <q-table
@@ -18,11 +18,13 @@
         <q-btn
           color="primary"
           icon="add"
-          :label="$t('groups.add_group')"
           :title="$t('groups.add_group_hint')"
           @click="createGroup()"
           class="q-mr-md" />
         <q-btn
+          class="gt-xs q-mr-md"
+          flat
+          round
           color="red"
           icon="delete_outline"
           :disable="selected.length === 0"
@@ -255,7 +257,7 @@ export default {
         sortBy: 'name',
         descending: true,
         page: 1,
-        rowsPerPage: 5,
+        rowsPerPage: 10,
         rowsNumber: 10
       },
       groupData: {

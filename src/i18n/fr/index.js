@@ -42,7 +42,8 @@ export default {
     deactivate_user_hint: 'Désactiver l\'utilisateur',
     add_user: 'Ajouter',
     add_user_hint: 'Ajouter un nouvel utilisateur',
-    delete_users: 'Supprimer',
+    group_users_hint: 'Grouper les utilisateurs sélectionnés',
+    group_add_hint: 'Groupe dans lequel les utilisateurs seront ajoutés',
     delete_users_hint: 'Supprimer les utilisateurs sélectionnés',
     delete_users_confirm: 'Veuillez confirmer la suppression des utilisateurs sélectionnés :',
     delete_user_hint: 'Supprimer l\'utilisateur',
@@ -73,11 +74,15 @@ export default {
   },
   main: {
     brand: 'Amber Studio',
+    organisation: 'OBiBa',
     profile: 'Profile',
     logout: 'Déconnexion',
     dashboard: 'Tableau de bord',
     datasets: 'Datasets',
-    settings: 'Paramètres'
+    settings: 'Paramètres',
+    copyright: 'Droits de reproduction',
+    all_rights_reserved: 'Tous droits réservés',
+    powered_by: 'Propulsé par'
   },
   validations: {
     required: 'Une valeur est requise',
@@ -112,6 +117,7 @@ export default {
   name: 'Nom',
   description: 'Description',
   status: 'Statuts',
+  group: 'Groupe',
   members: 'Membres',
   action: 'Action',
   required: 'Requis',

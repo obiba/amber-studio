@@ -10,7 +10,7 @@ export async function getUsers(opts, filter, roles) {
       formData.query.$sort[opts.sortBy] = opts.descending ? 1 : -1;
     }
   } else {
-    formData.query.$limit = 5;
+    formData.query.$limit = 10;
   }
   // use filter
   let filterQuery = undefined;
