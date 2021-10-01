@@ -117,7 +117,6 @@ export default {
   name: 'Nom',
   description: 'Description',
   status: 'Statuts',
-  group: 'Groupe',
   members: 'Membres',
   action: 'Action',
   required: 'Requis',

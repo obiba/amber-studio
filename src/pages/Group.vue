@@ -65,15 +65,8 @@
           use-input
           class="q-mb-sm"
         >
-          <template v-slot:no-option>
-            <q-item>
-              <q-item-section class="text-grey">
-                {{$t('no_results')}}
-              </q-item-section>
-            </q-item>
-          </template>
         </q-select>
-        <q-list v-if="groupData.users && groupData.users.length>0" bordered separator class="q-mb-sm">
+        <q-list v-if="groupData.users && groupData.users.length>0" bordered separator class="q-mb-sm q-mt-md">
           <q-item clickable v-ripple :key="user.email" v-for="user in groupData.users">
             <q-item-section>
               <q-item-label>{{user.email}}</q-item-label>
