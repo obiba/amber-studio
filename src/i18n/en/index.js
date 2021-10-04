@@ -99,6 +99,33 @@ export default {
     administrator: 'Administrator',
     inactive: 'Inactive'
   },
+  error: {
+    general: 'There was an error processing this request. If this problem persists, contact support.',
+    account_already_exists: 'This account already exists. Try resetting your password or contact support.',
+    create_account: 'There was an error creating your account. If this issue persists, contact support.',
+    update_account: 'There was an error updating your profile. If this persists, contact support.',
+    get_users: 'There was an error retrieving users.',
+    get_groups: 'There was an error retrieving groups.',
+    get_group: 'There was an error retrieving the group.',
+    get_group_users: 'There was an error retrieving the users of the group.',
+  },
+  success: {
+    create_account: 'Account successfully created. Please check your email to verify your account.',
+    update_account: 'Account successfully updated.',
+    send_reset_password: 'Password reset sent.',
+    reset_password: 'Password reset successful.',
+    update_password: 'Password update successful.',
+    send_verify_email: 'Email verification sent. Verify new email to update your email address.',
+    resend_verify_email: 'Email verification resent.',
+    create_user: 'User successfully added.',
+    update_user: 'User successfully updated.',
+    delete_user: 'User successfully deleted.',
+    delete_users: 'Users successfully deleted.',
+    create_group: 'Group successfully added. Edit to add members.',
+    update_group: 'Group successfully updated.',
+    delete_group: 'Group successfully deleted.',
+    delete_groups: 'Groups successfully deleted.',
+  },
   add: 'Add',
   update: 'Update',
   delete: 'Delete',
@@ -125,7 +152,5 @@ export default {
   confirmed: 'Confirmed',
   pending: 'Pending',
   unknown: 'Unknown',
-  no_results: 'No results',
-  failed: 'Action failed',
-  success: 'Action was successful'
+  no_results: 'No results'
 }

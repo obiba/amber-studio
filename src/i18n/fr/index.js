@@ -97,6 +97,33 @@ export default {
     administrator: 'Administrateur',
     inactive: 'Inactif'
   },
+  error: {
+    general: 'Erreur dans le traitement de la requète. Si ce problème persiste, contacter le support.',
+    account_already_exists: 'Ce compte existe déjà. Essayez de réinitialiser votre mot de passe ou contactez le support.',
+    create_account: 'Erreur à la creation du compte. Si ce problème persiste, contacter le support.',
+    update_account: 'Erreur à la mise à jour du compte. Si ce problème persiste, contacter le support.',
+    get_users: 'Erreur à la récupération des utilisateurs.',
+    get_groups: 'Erreur à la récupération des groupes.',
+    get_group: 'Erreur à la récupération du groupe.',
+    get_group_users: 'Erreur à la récupération des utilisateurs du groupe.',
+  },
+  success: {
+    create_account: 'Compte créé avec succès. Un courriel de vérification d\'adresse a été envoyé.',
+    update_account: 'Compte mise à jour avec succès.',
+    send_reset_password: 'Demande de réinitialisation de mot de passe envoyée.',
+    reset_password: 'Mot de passe réinitialisé avec succès.',
+    update_password: 'Mot de passe mis à jour avec succès.',
+    send_verify_email: 'Courriel de vérification pour la nouvelle adresse envoyé.',
+    resend_verify_email: 'Courriel de vérification envoyé.',
+    create_user: 'Utilisateur ajouté avec succès.',
+    update_user: 'Utilisateur mis à jour avec succès.',
+    delete_user: 'Utilisateur supprimé avec succès.',
+    delete_users: 'Utilisateurs supprimés avec succès.',
+    create_group: 'Groupe ajouté avec succès. Editer pour ajouter des membres.',
+    update_group: 'Groupe mis à jour avec succès.',
+    delete_group: 'Groupe supprimé avec succès.',
+    delete_groups: 'Groupes supprimés avec succès.',
+  },
   add: 'Ajouter',
   update: 'Appliquer',
   delete: 'Supprimer',
@@ -123,7 +150,5 @@ export default {
   confirmed: 'Confirmé',
   pending: 'En attente',
   unknown: 'Inconnue',
-  no_results: 'Pas de resultats',
-  failed: 'L\'action a échoué',
-  success: 'L\'action a réussi'
+  no_results: 'Pas de resultats'
 }

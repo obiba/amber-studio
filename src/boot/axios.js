@@ -18,7 +18,6 @@ api.interceptors.request.use(
   },
   function(error) {
     LoadingBar.stop();
-
     return Promise.reject(error);
   }
 );

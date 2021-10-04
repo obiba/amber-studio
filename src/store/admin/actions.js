@@ -1,18 +1,17 @@
 import userService from '../../services/user';
 import groupService from '../../services/group';
+import { t } from '../../boot/i18n';
 import { Notify } from 'quasar';
 
 export async function getUsers({ commit }, payload) {
   let result = await userService.getUsers(payload.paginationOpts, payload.filter, payload.roles).catch(err => {
     console.error(err)
-    if (err.response) {
-      let errorCode = err.response.data.code;
-      if (errorCode) {
-        Notify.create({
-          message: `There was an error retrieving users.`,
-          color: 'negative'
-        });
-      }
+    let errorCode = err.code;
+    if (errorCode) {
+      Notify.create({
+        message: t('error.get_users'),
+        color: 'negative'
+      });
     }
   });
   if (result) {
@@ -27,14 +26,12 @@ export async function getUsers({ commit }, payload) {
 export async function getGroups({ commit }, payload) {
   let result = await groupService.getGroups(payload.paginationOpts, payload.filter).catch(err => {
     console.error(err)
-    if (err.response) {
-      let errorCode = err.response.data.code;
-      if (errorCode) {
-        Notify.create({
-          message: `There was an error retrieving groups.`,
-          color: 'negative'
-        });
-      }
+    let errorCode = err.code;
+    if (errorCode) {
+      Notify.create({
+        message: t('error.get_groups'),
+        color: 'negative'
+      });
     }
   });
   if (result) {
@@ -49,14 +46,12 @@ export async function getGroups({ commit }, payload) {
 export async function getGroup({ commit }, payload) {
   let result = await groupService.getGroup(payload.id).catch(err => {
     console.error(err)
-    if (err.response) {
-      let errorCode = err.response.data.code;
-      if (errorCode) {
-        Notify.create({
-          message: `There was an error retrieving the group.`,
-          color: 'negative'
-        });
-      }
+    let errorCode = err.code;
+    if (errorCode) {
+      Notify.create({
+        message: t('error.get_group'),
+        color: 'negative'
+      });
     }
   });
   if (result) {
@@ -72,14 +67,12 @@ export async function getGroupUsers({ commit }, payload) {
   if (payload.group.users && payload.group.users.length>0) {
     let result = await userService.getUsersByIds(payload.group.users).catch(err => {
       console.error(err)
-      if (err.response) {
-        let errorCode = err.response.data.code;
-        if (errorCode) {
-          Notify.create({
-            message: `There was an error retrieving the users of the group.`,
-            color: 'negative'
-          });
-        }
+      let errorCode = err.code;
+      if (errorCode) {
+        Notify.create({
+          message: t('error.get_group_users'),
+          color: 'negative'
+        });
       }
     });
     if (result) {
@@ -97,15 +90,13 @@ export async function createGroup({ dispatch }, payload) {
     .createGroup(payload.group)
     .catch(err => {
       Notify.create({
-        message:
-          'There was an error processing this request. If this problem persists, contact support. ' +
-          err,
+        message: t('error.general'),
         color: 'negative'
       });
     });
   if (result) {
     Notify.create({
-      message: 'Group successfully added. Edit to add members.',
+      message: t('success.create_group'),
       color: 'positive',
       icon: 'fas fa-check'
     });
@@ -124,15 +115,13 @@ export async function updateGroup({ commit, dispatch }, payload) {
     .updateGroup(payload.group, payload.id ? payload.id : payload.group._id)
     .catch(err => {
       Notify.create({
-        message:
-          'There was an error processing this request. If this problem persists, contact support. ' +
-          err,
+        message: t('error.general'),
         color: 'negative'
       });
     });
   if (result) {
     Notify.create({
-      message: 'Group successfully updated.',
+      message: t('success.update_group'),
       color: 'positive',
       icon: 'fas fa-check'
     });
@@ -154,15 +143,13 @@ export async function deleteGroup({ dispatch }, payload) {
     .deleteGroup(payload.id)
     .catch(err => {
       Notify.create({
-        message:
-          'There was an error processing this request. If this problem persists, contact support. ' +
-          err,
+        message: t('error.general'),
         color: 'negative'
       });
     });
   if (result) {
     Notify.create({
-      message: 'Group successfully deleted.',
+      message: t('success.delete_group'),
       color: 'positive',
       icon: 'fas fa-check'
     });
@@ -181,15 +168,13 @@ export async function deleteGroups({ dispatch }, payload) {
     .deleteGroups(payload.ids)
     .catch(err => {
       Notify.create({
-        message:
-          'There was an error processing this request. If this problem persists, contact support. ' +
-          err,
+        message: t('error.general'),
         color: 'negative'
       });
     });
   if (result) {
     Notify.create({
-      message: 'Groups successfully deleted.',
+      message: t('success.delete_groups'),
       color: 'positive',
       icon: 'fas fa-check'
     });

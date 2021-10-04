@@ -21,7 +21,12 @@ const feathersClient = feathers()
           discard('__id', '__isTemp')
         )
       ]
-    }
+    },
+    /*after: {
+      all: [
+        context => console.log(context)
+      ]
+    }*/
   });
 
 
