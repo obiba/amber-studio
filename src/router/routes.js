@@ -34,6 +34,11 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/study/:id', 
+        component: () => import('pages/Study.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/datasets',
         component: () => import('pages/Datasets.vue'),
         meta: { requiresAuth: true }

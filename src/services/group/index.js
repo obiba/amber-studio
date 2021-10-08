@@ -1,3 +1,3 @@
-import * as admin from "./admin.js";
+import * as group from "./group.js";
 
-export default Object.assign({}, admin);
+export default Object.assign({}, group);

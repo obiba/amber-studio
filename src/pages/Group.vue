@@ -109,12 +109,11 @@
 import { mapState, mapActions } from 'vuex';
 import { defineComponent, ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength, email } from '../boot/vuelidate';
-
+import { required, minLength, maxLength } from '../boot/vuelidate';
 
 export default defineComponent({
   mounted: function() {
-    this.initGoupData()
+    this.initStudyData()
   },
   setup() {
     const userOptions = ref([]);
@@ -164,7 +163,7 @@ export default defineComponent({
       getGroupUsers: 'admin/getGroupUsers',
       updateGroup: 'admin/updateGroup'
     }),
-    async initGoupData() {
+    async initStudyData() {
       await this.getGroup({ id: this.$route.params.id });
       this.groupData = {...this.group};
       await this.getGroupUsers({ group: this.group });

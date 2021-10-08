@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 import authvuex from './store.auth';
 import account from './account';
 import admin from './admin';
+import study from './study';
 
 const requireModule = require.context(
   // The path where the service modules live
@@ -31,7 +32,8 @@ export default store(function (/* { ssrContext } */) {
     plugins: [...servicePlugins, authvuex],
     modules: {
       account,
-      admin
+      admin,
+      study
     },
 
     // enable strict mode (adds overhead!)

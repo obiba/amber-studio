@@ -89,7 +89,7 @@
             <q-icon name="storage"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('main.datasets')}}</q-item-label>
+            <q-item-label>{{$t('datasets.title')}}</q-item-label>
           </q-item-section>
         </q-item>
 

@@ -69,6 +69,20 @@ export default {
   },
   studies: {
     title: 'Studies',
+    edit_study_hint: 'Edit study',
+    add_study_hint: 'Add a new study',
+    delete_studies: 'Delete Studies',
+    delete_studies_hint: 'Delete selected studies',
+    delete_studies_confirm: 'Please confirm that you want to remove all the selected studies:',
+    delete_study_hint: 'Delete study',
+    delete_study_confirm: 'Please confirm that you want to remove the study:',
+    search_hint: 'Search by name or description'
+  },
+  study: {
+    title: 'Study'
+  },
+  datasets: {
+    title: 'Datasets',
   },
   main: {
     brand: 'Amber Studio',
@@ -76,7 +90,6 @@ export default {
     profile: 'Profile',
     logout: 'Sign out',
     dashboard: 'Dashboard',
-    datasets: 'Datasets',
     settings: 'Settings',
     copyright: 'Copyright',
     all_rights_reserved: 'All rights reserved',
@@ -125,11 +138,16 @@ export default {
     update_group: 'Group successfully updated.',
     delete_group: 'Group successfully deleted.',
     delete_groups: 'Groups successfully deleted.',
+    create_study: 'Study successfully added. Edit to add populations and forms.',
+    update_study: 'Study successfully updated.',
+    delete_study: 'Study successfully deleted.',
+    delete_studies: 'Studies successfully deleted.',
   },
   add: 'Add',
   update: 'Update',
   delete: 'Delete',
   cancel: 'Cancel',
+  save: 'Save',
   search: 'Search',
   role: 'Role',
   institution: 'Institution',
