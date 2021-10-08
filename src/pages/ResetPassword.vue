@@ -1,42 +1,46 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-page class="flex bg-image flex-center">
-        <q-card v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
-          <q-card-section>
-            <q-avatar size="103px" class="absolute-center shadow-10">
-              <img src="profile.svg">
-            </q-avatar>
-          </q-card-section>
-          <q-card-section>
-            <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">
-                {{$t('rest.title')}}
-              </div>
+      <q-page class="flex bg-sign flex-center">
+        <div class="column"  v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
+          <div class="col">
+            <div class="text-center text-h4 text-grey-8 q-pb-lg">
+              {{$t('main.brand')}}
             </div>
-          </q-card-section>
-          <q-card-section>
-            <q-form @submit="resetPassword" class="q-gutter-md">
-              <q-input
-                type="password"
-                filled
-                v-model="formData.password"
-                :label="$t('password')"
-                lazy-rules
-                :hint="$t('password_hint')">
-                <template v-slot:prepend>
-                  <q-icon color="accent" name="fas fa-lock" size="xs" />
-                </template>
-              </q-input>
-              <div>
-                <q-btn 
-                  :label="$t('reset.submit')"
-                  type="submit"
-                  color="primary"/>
-              </div>
-            </q-form>
-          </q-card-section>
-        </q-card>
+          </div>
+          <div class="col">
+            <q-card>
+              <q-card-section>
+                <div class="text-center q-pt-sm">
+                  <div class="col text-subtitle text-grey-7">
+                    {{$t('reset.title')}}
+                  </div>
+                </div>
+              </q-card-section>
+              <q-card-section>
+                <q-form @submit="resetPassword" class="q-gutter-md">
+                  <q-input
+                    type="password"
+                    filled
+                    v-model="formData.password"
+                    :label="$t('password')"
+                    lazy-rules
+                    :hint="$t('password_hint')">
+                    <template v-slot:prepend>
+                      <q-icon name="fas fa-lock" size="xs" />
+                    </template>
+                  </q-input>
+                  <div>
+                    <q-btn 
+                      :label="$t('reset.submit')"
+                      type="submit"
+                      color="primary"/>
+                  </div>
+                </q-form>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -109,10 +113,3 @@ export default {
   }
 };
 </script>
-
-<style>
-
-.bg-image {
-  background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);
-}
-</style>

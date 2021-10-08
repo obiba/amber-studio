@@ -1,84 +1,87 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-page class="flex bg-image flex-center">
-        <q-card v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
-          <q-card-section>
-            <q-avatar size="103px" class="absolute-center shadow-10">
-              <img src="profile.svg">
-            </q-avatar>
-          </q-card-section>
-          <q-card-section>
-            <div class="text-center q-pt-lg">
-              <div class="col text-subtitle ellipsis">
-                {{$t('login.title')}}
-              </div>
+      <q-page class="flex bg-sign flex-center">
+        <div class="column"  v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
+          <div class="col">
+            <div class="text-center text-h4 text-grey-8 q-pb-lg">
+              {{$t('main.brand')}}
             </div>
-          </q-card-section>
-          <q-card-section>
-            <q-form @submit="onSubmit" class="q-gutter-md">
-              
-              <q-input
-                filled
-                v-model="email"
-                :label="$t('email')"
-                lazy-rules>
-              <template v-slot:prepend>
-                <q-icon name="fas fa-envelope" size="xs" />
-              </template>
-              </q-input>
+          </div>
+          <div class="col">
+            <q-card>
+              <q-card-section>
+                <div class="text-center q-pt-sm">
+                  <div class="col text-subtitle text-grey-7">
+                    {{$t('login.title')}}
+                  </div>
+                </div>
+              </q-card-section>
+              <q-card-section>
+                <q-form @submit="onSubmit" class="q-gutter-md">
+                  <q-input
+                    filled
+                    v-model="email"
+                    :label="$t('email')"
+                    lazy-rules>
+                  <template v-slot:prepend>
+                    <q-icon name="fas fa-envelope" size="xs" />
+                  </template>
+                  </q-input>
 
-              <q-input
-                type="password"
-                filled
-                v-model="password"
-                :label="$t('password')"
-                lazy-rules>
-                <template v-slot:prepend>
-                <q-icon name="fas fa-lock" size="xs" />
-              </template>
-            </q-input>
+                  <q-input
+                    type="password"
+                    filled
+                    v-model="password"
+                    :label="$t('password')"
+                    lazy-rules>
+                    <template v-slot:prepend>
+                    <q-icon name="fas fa-lock" size="xs" />
+                  </template>
+                </q-input>
 
-              <div>
-                <q-btn 
-                  :label="$t('login.submit')" 
-                  type="submit" 
-                  color="primary"
-                  :disable="disableSubmit"/>
+                  <div>
+                    <q-btn 
+                      :label="$t('login.submit')" 
+                      type="submit" 
+                      color="primary"
+                      :disable="disableSubmit"/>
+                    <q-btn
+                      :label="$t('login.register')"
+                      flat
+                      to="/register"
+                      stretch
+                      class="text-bold q-ml-md"/>
+                  </div>
+                </q-form>
+              </q-card-section>
+              <q-card-section>
                 <q-btn
-                  :label="$t('login.register')"
                   flat
-                  to="/register"
-                  stretch
-                  class="text-bold q-ml-md"/>
-              </div>
-            </q-form>
-          </q-card-section>
-          <q-card-section>
-            <q-btn
-              flat
-              to="/forgot-password"
-              dense
-              no-caps
-              class="text-bold">
-              {{$t('login.forgot_password')}}
-            </q-btn>
-            <q-btn-dropdown 
-              v-show="hasLocales"
-              flat
-              :label="locale"
-              class="float-right">
-            <q-list>
-              <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions">
-                <q-item-section>
-                  <q-item-label class="text-uppercase">{{localeOpt.value}}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
-          
-          </q-card-section>
-        </q-card>
+                  to="/forgot-password"
+                  dense
+                  no-caps
+                  class="text-bold">
+                  {{$t('login.forgot_password')}}
+                </q-btn>
+                <q-btn-dropdown 
+                  v-show="hasLocales"
+                  flat
+                  :label="locale"
+                  class="float-right">
+                <q-list>
+                  <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions">
+                    <q-item-section>
+                      <q-item-label class="text-uppercase">{{localeOpt.value}}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
+              
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -153,10 +156,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style>
-
-.bg-image {
-  background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);
-}
-</style>

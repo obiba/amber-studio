@@ -1,35 +1,39 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-page class="flex bg-image flex-center">
-        <q-card v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
-          <q-card-section>
-            <q-avatar size="103px" class="absolute-center shadow-10">
-              <img src="profile.svg">
-            </q-avatar>
-          </q-card-section>
-          <q-card-section>
-            <div class="text-center q-pt-lg">
-              <div class="col text-subtitle ellipsis">
-                {{$t('verify.title')}}
-              </div>
+      <q-page class="flex bg-sign flex-center">
+        <div class="column"  v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
+          <div class="col">
+            <div class="text-center text-h4 text-grey-8 q-pb-lg">
+              {{$t('main.brand')}}
             </div>
-          </q-card-section>
-          <q-card-section class="row justify-center items-center content-center">
-            <div class="col-md-8 q-pa-lg text-center">
-              <span v-if="success">{{$t('verify.success')}}</span>
-              <span v-else-if="success === undefined">{{$t('verify.pending')}}</span>
-              <span v-else>{{$t('verify.failure')}}</span>
-            </div>
-          </q-card-section>
-          <q-card-section v-if="success !== undefined" class="row justify-center items-center content-center">
-            <q-btn
-              :label="$t('verify.login')"
-              to="/login"
-              color="primary"
-              class="text-bold"/>
-          </q-card-section>
-        </q-card>
+          </div>
+          <div class="col">
+            <q-card>
+              <q-card-section>
+                <div class="text-center q-pt-sm text-grey-7">
+                  <div class="col text-subtitle ellipsis">
+                    {{$t('verify.title')}}
+                  </div>
+                </div>
+              </q-card-section>
+              <q-card-section class="row justify-center items-center content-center">
+                <div class="col-md-8 q-pa-lg text-center">
+                  <span v-if="success">{{$t('verify.success')}}</span>
+                  <span v-else-if="success === undefined">{{$t('verify.pending')}}</span>
+                  <span v-else>{{$t('verify.failure')}}</span>
+                </div>
+              </q-card-section>
+              <q-card-section v-if="success !== undefined" class="row justify-center items-center content-center">
+                <q-btn
+                  :label="$t('verify.login')"
+                  to="/login"
+                  color="primary"
+                  class="text-bold"/>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -87,9 +91,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.bg-image {
-  background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);
-}
-</style>
