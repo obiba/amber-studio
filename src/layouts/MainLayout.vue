@@ -129,14 +129,15 @@
       <router-view />
     </q-page-container>
 
-    <q-footer bordered class="bg-grey-2 text-grey-8">
+    <q-footer bordered reveal class="bg-grey-2 text-grey-8 text-caption">
       <q-toolbar>
-        <small>{{$t('main.powered_by')}} <a href="https://www.obiba.org">OBiBa Amber</a></small>
+        <div>
+          {{$t('main.powered_by')}} <a href="https://www.obiba.org">OBiBa Amber</a>
+        </div>
         <q-space />
         <div>
           {{$t('main.copyright')}} © 2021 <a href="/">{{$t('main.organisation')}}</a>. {{$t('main.all_rights_reserved')}}.
         </div>
-        
       </q-toolbar>
     </q-footer>
   </q-layout>
