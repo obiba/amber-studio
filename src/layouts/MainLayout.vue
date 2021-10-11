@@ -113,7 +113,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="isAdministrator" to="/maintenance" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdministrator" to="/loading" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="settings"/>
           </q-item-section>
@@ -122,24 +122,21 @@
           </q-item-section>
         </q-item>
 
+        <q-item class="fixed-bottom text-caption">
+          <div>
+            {{$t('main.powered_by')}} <a class="text-weight-bold" href="https://www.obiba.org">OBiBa Amber</a>
+          </div>
+        </q-item>
+
       </q-list>
+
+
     </q-drawer>
 
     <q-page-container class="bg-white">
       <router-view />
     </q-page-container>
 
-    <q-footer bordered reveal class="bg-grey-2 text-grey-8 text-caption">
-      <q-toolbar>
-        <div>
-          {{$t('main.powered_by')}} <a href="https://www.obiba.org">OBiBa Amber</a>
-        </div>
-        <q-space />
-        <div>
-          {{$t('main.copyright')}} © 2021 <a href="/">{{$t('main.organisation')}}</a>. {{$t('main.all_rights_reserved')}}.
-        </div>
-      </q-toolbar>
-    </q-footer>
   </q-layout>
 </template>
 

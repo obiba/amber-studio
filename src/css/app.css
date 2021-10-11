@@ -5,7 +5,43 @@ a {
     background-color: transparent;
 }
 
-.bg-sign {
+.q-drawer .fixed-bottom a {
+  color: #e9ecef;
+}
+
+.bg-base {
   background: #e9ecef;
   /*background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);*/
+}
+
+.note {
+  background-color: #f5f5f5;
+  border-color: #eee;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 0 5px;
+  font-size: 1em;
+  letter-spacing: .5px;
+  line-height: 1.35em;
+  margin: 16px 0;
+  padding: 16px 24px;
+}
+
+.note-info {
+  background-color: #ffedcc;
+  border-color: #f0b37e;
+}
+
+.note-tip {
+  background-color: #daf8e1;
+  border-color: #9cedaf;
+}
+
+.note>p, .note>ul {
+  margin-bottom: 0;
+}
+
+.note-title {
+  font-weight: 500;
+  padding-bottom: 8px;
 }

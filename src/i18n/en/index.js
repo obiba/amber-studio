@@ -79,7 +79,10 @@ export default {
     search_hint: 'Search by name or description'
   },
   study: {
-    title: 'Study'
+    title: 'Study',
+    definition: 'Definition',
+    forms: 'Forms',
+    events: 'Events'
   },
   datasets: {
     title: 'Datasets',
@@ -94,6 +97,10 @@ export default {
     copyright: 'Copyright',
     all_rights_reserved: 'All rights reserved',
     powered_by: 'Powered by'
+  },
+  loading: {
+    title: 'Loading',
+    caption: 'Please wait...'
   },
   validations: {
     required: 'Value is required',

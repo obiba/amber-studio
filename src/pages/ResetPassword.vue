@@ -1,7 +1,7 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-page class="flex bg-sign flex-center">
+      <q-page class="flex bg-base flex-center">
         <div class="column"  v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
           <div class="col">
             <div class="text-center text-h4 text-grey-8 q-pb-lg">

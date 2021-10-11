@@ -50,6 +50,10 @@ const routes = [
     component: () => import('pages/Maintenance.vue')
   },
   {
+    path: '/loading',
+    component: () => import('pages/Loading.vue')
+  },
+  {
     path: '/login',
     component: () => import('pages/Login.vue')
   },

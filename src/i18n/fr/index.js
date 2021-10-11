@@ -81,7 +81,10 @@ export default {
     search_hint: 'Chercher par nom ou description'
   },
   study: {
-    title: 'Étude'
+    title: 'Étude',
+    definition: 'Definition',
+    forms: 'Formulaires',
+    events: 'Évènements'
   },
   datasets: {
     title: 'Données',
@@ -96,6 +99,10 @@ export default {
     copyright: 'Droits de reproduction',
     all_rights_reserved: 'Tous droits réservés',
     powered_by: 'Propulsé par'
+  },
+  loading: {
+    title: 'Chargement',
+    caption: 'Veuillez patienter...'
   },
   validations: {
     required: 'Une valeur est requise',
