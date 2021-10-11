@@ -113,7 +113,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="isAdministrator" to="/loading" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdministrator" to="/settings" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="settings"/>
           </q-item-section>
