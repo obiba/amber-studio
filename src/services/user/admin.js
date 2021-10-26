@@ -53,3 +53,15 @@ export async function getUsersByIds(ids) {
     }
   });
 }
+
+export async function getUser(id) {
+  return feathersClient.service('user').get(id);
+}
+
+export async function updateUser(user, id) {
+  return feathersClient.service('user').patch(id, user);
+}
+
+export async function deleteUser(id) {
+  return feathersClient.service('user').remove(id);
+}

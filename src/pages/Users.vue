@@ -74,7 +74,7 @@
       </template>
       <template v-slot:body-cell-email='props'>
         <q-td :props='props'>
-          <a :href="'mailto:' + props.row.email" target="_blank">{{ props.row.email }}</a>
+          <router-link :to="'/user/' + props.row._id">{{ props.row.email }}</router-link>
         </q-td>
       </template>
       <template v-slot:body-cell-role='props'>
@@ -92,7 +92,7 @@
             round
             :title="$t('users.edit_user_hint')"
             icon='edit'
-            @click='updateUser(props.row)'>
+            :to="'/user/' + props.row._id">
           </q-btn>
           <q-btn
             v-if='!props.row.isVerified'
@@ -151,153 +151,6 @@
         </q-td>
       </template>
     </q-table>
-
-    <q-dialog v-model='showEditUser' persistent>
-      <q-card>
-        <q-card-section class='row items-center'>
-           
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.firstname'
-              :label="$t('firstname')"
-              lazy-rules
-              class='q-ma-sm'
-              @blur="v$.profileData.firstname.$touch"
-              :error="v$.profileData.firstname.$error"
-              :hint="$t('required')"
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user' size='xs' />
-              </template>
-              <template v-slot:error>
-                <div v-for="error in v$.profileData.firstname.$errors">
-                  {{error.$message}}
-                </div>
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.lastname'
-              :label="$t('lastname')"
-              lazy-rules
-              class='q-ma-sm'
-              @blur="v$.profileData.lastname.$touch"
-              :error="v$.profileData.lastname.$error"
-              :hint="$t('required')"
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user' size='xs' />
-              </template>
-              <template v-slot:error>
-                <div v-for="error in v$.profileData.lastname.$errors">
-                  {{error.$message}}
-                </div>
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.institution'
-              :label="$t('institution')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-building' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.city'
-              :label="$t('city')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-city' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.title'
-              :label="$t('title')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user-tie' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.phone'
-              :label="$t('phone')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-phone' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class="col-12 col-md-6">
-              <q-select
-                class='q-ma-sm'
-                v-show="hasLocales"
-                v-model="profileData.language"
-                :options="localeOptions"
-                :label="$t('preferred_language')"
-                filled
-                emit-value
-                map-options
-                options-dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="fas fa-language" size="xs" />
-                </template>
-              </q-select>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-select
-              class='q-ma-sm text-capitalize'
-              v-model='profileData.role'
-              :options='rolesOptions'
-              :label="$t('role')"
-              filled
-              emit-value
-              map-options
-              options-dense
-            >
-            </q-select>
-          </div>
-        </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
-          <q-btn
-            @click='saveUser'
-            :disable='disableUpdateProfile'
-            :label="$t('update')"
-            type='submit'
-            color='positive'
-            v-close-popup
-          >
-            <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
 
     <q-dialog v-model='showCreateUser' persistent>
       <q-card>
@@ -682,16 +535,6 @@ export default {
         rowsPerPage: 10,
         rowsNumber: 10
       },
-      profileData: {
-        firstname: '',
-        lastname: '',
-        institution: '',
-        city: '',
-        title:'',
-        phone: '',
-        language: '',
-        role: ''
-      },
       newProfileData: {
         firstname: '',
         lastname: '',
@@ -710,36 +553,6 @@ export default {
     }
   },
   validations: {
-    profileData: {
-      firstname: {
-        //alpha,
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      lastname: {
-        //alpha,
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      institution: {
-        //alpha,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      city: {
-        //alpha,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      language: {
-        required
-      },
-      role: {
-        required
-      }
-    },
     newProfileData: {
       firstname: {
         //alpha,
@@ -784,9 +597,6 @@ export default {
       users: state => state.admin.users,
       groups: state => state.admin.groups
     }),
-    disableUpdateProfile() {
-      return this.v$.profileData.$invalid;
-    },
     disableCreateProfile() {
       return this.v$.newProfileData.$invalid;
     },
@@ -858,18 +668,6 @@ export default {
       this.showCreateUser = true;
       this.selectedUser = undefined;
     },
-    updateUser(user) {
-      this.profileData.firstname = user.firstname;
-      this.profileData.lastname = user.lastname;
-      this.profileData.city = user.city;
-      this.profileData.institution = user.institution;
-      this.profileData.title = user.title;
-      this.profileData.phone = user.phone;
-      this.profileData.language = user.language;
-      this.profileData.role = user.role;
-      this.showEditUser = true;
-      this.selectedUser = user;
-    },
     confirmDeleteUser(user) {
       this.showConfirmDeleteUser = true;
       this.selectedUser = user;
@@ -892,22 +690,12 @@ export default {
     },
     async saveUser() {
       this.v$.$reset();
-      if (this.selectedUser) {
-        // update
-        let userData = { ...this.profileData };
-        this.$store.dispatch('account/updateUser', {
-          user: userData,
-          id: this.selectedUser._id,
-          paginationOpts: this.paginationOpts
-        });
-      } else {
-        // create
-        let userData = { ...this.newProfileData };
-        this.$store.dispatch('account/createUser', {
-          user: userData,
-          paginationOpts: this.paginationOpts
-        });
-      }
+      // create
+      let userData = { ...this.newProfileData };
+      this.$store.dispatch('account/createUser', {
+        user: userData,
+        paginationOpts: this.paginationOpts
+      });
     },
     resetPassword(email) {
       this.$store
@@ -941,34 +729,32 @@ export default {
         group: toSave
       });
     },
+    copyUserProfile(user) {
+      return {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        city: user.city,
+        institution: user.institution,
+        title: user.title,
+        phone: user.phone,
+        language: user.language,
+        role: user.role
+      };
+    },
     async activeateUser(user) {
-      this.profileData.firstname = user.firstname;
-      this.profileData.lastname = user.lastname;
-      this.profileData.city = user.city;
-      this.profileData.institution = user.institution;
-      this.profileData.title = user.title;
-      this.profileData.phone = user.phone;
-      this.profileData.language = user.language;
-      this.profileData.role = 'guest';
-      let userData = { ...this.profileData };
-      this.$store.dispatch('account/updateUser', {
-        user: userData,
+      const profileData = this.copyUserProfile(user);
+      profileData.role = 'guest';
+      this.$store.dispatch('admin/updateUser', {
+        user: profileData,
         id: user._id,
         paginationOpts: this.paginationOpts
       });
     },
     async deactiveateUser(user) {
-      this.profileData.firstname = user.firstname;
-      this.profileData.lastname = user.lastname;
-      this.profileData.city = user.city;
-      this.profileData.institution = user.institution;
-      this.profileData.title = user.title;
-      this.profileData.phone = user.phone;
-      this.profileData.language = user.language;
-      this.profileData.role = 'inactive';
-      let userData = { ...this.profileData };
-      this.$store.dispatch('account/updateUser', {
-        user: userData,
+      const profileData = this.copyUserProfile(user);
+      profileData.role = 'inactive';
+      this.$store.dispatch('admin/updateUser', {
+        user: profileData,
         id: user._id,
         paginationOpts: this.paginationOpts
       });

@@ -125,6 +125,7 @@ export default {
     create_account: 'There was an error creating your account. If this issue persists, contact support.',
     update_account: 'There was an error updating your profile. If this persists, contact support.',
     get_users: 'There was an error retrieving users.',
+    get_user: 'There was an error retrieving the user.',
     get_groups: 'There was an error retrieving groups.',
     get_group: 'There was an error retrieving the group.',
     get_group_users: 'There was an error retrieving the users of the group.',

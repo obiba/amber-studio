@@ -123,6 +123,7 @@ export default {
     create_account: 'Erreur à la creation du compte. Si ce problème persiste, contacter le support.',
     update_account: 'Erreur à la mise à jour du compte. Si ce problème persiste, contacter le support.',
     get_users: 'Erreur à la récupération des utilisateurs.',
+    get_user: 'Erreur à la récupération de l\'utilisateur.',
     get_groups: 'Erreur à la récupération des groupes.',
     get_group: 'Erreur à la récupération du groupe.',
     get_group_users: 'Erreur à la récupération des utilisateurs du groupe.',

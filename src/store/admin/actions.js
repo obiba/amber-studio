@@ -23,6 +23,53 @@ export async function getUsers({ commit }, payload) {
   }
 }
 
+export async function getUser({ commit }, payload) {
+  let result = await userService.getUser(payload.id).catch(err => {
+    console.error(err)
+    let errorCode = err.code;
+    if (errorCode) {
+      Notify.create({
+        message: t('error.get_user'),
+        color: 'negative'
+      });
+    }
+  });
+  if (result) {
+    commit('setUser', result);
+  } else {
+    commit('setUser', { _id: payload.id });
+  }
+}
+
+export async function updateUser({ commit, dispatch }, payload) {
+  let result = await userService
+    .updateUser(payload.user, payload.id ? payload.id : payload.user._id)
+    .catch(err => {
+      console.log(err)
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      });
+    });
+  if (result) {
+    Notify.create({
+      message: t('success.update_user'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    });
+    commit('setUser', result);
+  }
+  if (payload.paginationOpts) {
+    dispatch(
+      'admin/getUsers',
+      {
+        paginationOpts: payload.paginationOpts
+      },
+      { root: true }
+    );
+  }
+}
+
 export async function getGroups({ commit }, payload) {
   let result = await groupService.getGroups(payload.paginationOpts, payload.filter).catch(err => {
     console.error(err)

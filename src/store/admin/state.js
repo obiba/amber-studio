@@ -8,6 +8,7 @@ export default function() {
       rowsPerPage: 10,
       rowsNumber: 0
     },
+    user: {},
     groups: [],
     groupPaginationOpts: {
       sortBy: "name",

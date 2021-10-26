@@ -2,6 +2,10 @@ export function setUsers(state, users) {
   state.users = [...users];
 }
 
+export function setUser(state, user) {
+  state.user = user;
+}
+
 export function setUserPagination(state, payload) {
   state.userPaginationOpts = payload.userPaginationOpts;
 }

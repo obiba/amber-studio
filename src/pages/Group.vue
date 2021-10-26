@@ -113,7 +113,7 @@ import { required, minLength, maxLength } from '../boot/vuelidate';
 
 export default defineComponent({
   mounted: function() {
-    this.initStudyData()
+    this.initData()
   },
   setup() {
     const userOptions = ref([]);
@@ -163,7 +163,7 @@ export default defineComponent({
       getGroupUsers: 'admin/getGroupUsers',
       updateGroup: 'admin/updateGroup'
     }),
-    async initStudyData() {
+    async initData() {
       await this.getGroup({ id: this.$route.params.id });
       this.groupData = {...this.group};
       await this.getGroupUsers({ group: this.group });
