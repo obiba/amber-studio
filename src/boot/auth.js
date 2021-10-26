@@ -28,21 +28,23 @@ export default boot(async ({ router, store }) => {
           next();
         }
       } else if (localStorage.getItem('feathers-jwt')) {
-        let token = jwt_decode(localStorage.getItem('feathers-jwt'))
-        const expiresAt = token.exp
-        if (Math.round(new Date().getTime() / 1000) < expiresAt) {
-          //console.log("reauth...")
-          feathersClient.reAuthenticate().then((response) => {
-            // show application page
-            store.dispatch('auth/responseHandler', response)
-            //console.log(JSON.parse(JSON.stringify(store.state)))
-            router.push('/');
-          }).catch((err) => {
-            // remove expired/unusable token
-            localStorage.removeItem('feathers-jwt');
-            router.push('/login');
-          });
-        }
+        //let token = jwt_decode(localStorage.getItem('feathers-jwt'));
+        //const expiresAt = token.exp;
+        //console.log("token...")
+        //console.dir(token)
+        //console.log("token expired: " + Math.round(new Date().getTime() / 1000) < expiresAt)
+        //console.log("reauth...")
+        // could be not expired but also still not valid, then reauth
+        feathersClient.reAuthenticate().then((response) => {
+          // show application page
+          store.dispatch('auth/responseHandler', response)
+          console.log(JSON.parse(JSON.stringify(store.state)))
+          router.push('/');
+        }).catch((err) => {
+          // remove expired/unusable token
+          localStorage.removeItem('feathers-jwt');
+          router.push('/login');
+        });
         next('/loading')
       } else if (to.path !== '/login') {
         next('/login');

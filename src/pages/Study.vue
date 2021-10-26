@@ -91,7 +91,7 @@
         Lorem ipsum dolor sit amet consectetur adipisicing elit.
         <div class="note note-info">
           <p class="note-title">TIP</p>
-          <p>Also check out the published <a href="../crf" class="note-link" tag="a">Case Report Forms</a>.</p>
+          <p>Also check out the published <router-link to="/crf">Case Report Forms</router-link>.</p>
         </div>
       </q-tab-panel>
 
