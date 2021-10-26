@@ -1,4 +1,7 @@
 export default {
+  account: {
+    title: 'Compte utilisateur'
+  },
   login: {
     title: 'Identifiez vous pour commencer une session',
     submit: 'Connexion',

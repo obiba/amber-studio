@@ -1,148 +1,247 @@
 <template>
-  <q-page class="q-pa-sm">
-    <div class="row q-col-gutter-sm">
-      <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12">
-        <q-card class="card-bg text-white">
-          <q-card-section class="text-h6 ">
-            <div class="text-h6">Edit Profile</div>
-            <div class="text-subtitle2">Complete your profile</div>
-          </q-card-section>
-          <q-card-section class="q-pa-sm">
-            <q-list class="row">
-              <q-item class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <q-item-section side>
-                  <q-avatar size="100px">
-                    <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-                  </q-avatar>
-                </q-item-section>
-                <q-item-section>
-                  <q-btn label="Add Photo" class="text-capitalize" rounded color="info"
-                         style="max-width: 120px"></q-btn>
-                </q-item-section>
-              </q-item>
+  <q-page>
+    <div class="text-h6 text-white bg-info q-pa-md">{{$t('account.title')}} [{{$t('roles.' + user.role)}}]</div>
+    <q-separator/>
 
-              <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <q-item-section>
-                  <q-input dark color="white" dense v-model="user_details.user_name" label="User Name"/>
-                </q-item-section>
-              </q-item>
-              <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <q-item-section>
-                  <q-input dark color="white" dense v-model="user_details.email" label="Email Address"/>
-                </q-item-section>
-              </q-item>
-              <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <q-item-section>
-                  <q-input dark color="white" dense v-model="user_details.first_name" label="First Name"/>
-                </q-item-section>
-              </q-item>
-              <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <q-item-section>
-                  <q-input dark color="white" dense v-model="user_details.last_name" label="Last Name"/>
-                </q-item-section>
-              </q-item>
-              <q-item class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <q-item-section>
-                  <q-input dark color="white" autogrow dense v-model="user_details.address" label="Address"/>
-                </q-item-section>
-              </q-item>
-              <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <q-item-section>
-                  <q-input dark color="white" dense v-model="user_details.city" label="City"/>
-                </q-item-section>
-              </q-item>
-              <q-item class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <q-item-section>
-                  <q-input dark color="white" dense v-model="user_details.post_code" label="Postal Code"/>
-                </q-item-section>
-              </q-item>
-              <q-item class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <q-item-section>
-                  <q-input dark color="white" type="textarea" dense v-model="user_details.about" label="About"/>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn class="text-capitalize bg-info text-white">Update User Info</q-btn>
-          </q-card-actions>
-        </q-card>
+    <div class="row">
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.firstname'
+          :label="$t('firstname')"
+          lazy-rules
+          class='q-ma-sm'
+          @blur="v$.profileData.firstname.$touch"
+          :error="v$.profileData.firstname.$error"
+          :hint="$t('required')"
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-user' size='xs' />
+          </template>
+          <template v-slot:error>
+            <div v-for="error in v$.profileData.firstname.$errors">
+              {{error.$message}}
+            </div>
+          </template>
+        </q-input>
       </div>
-      <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12">
-
-        <q-card class="card-bg text-white">
-          <q-card-section class="text-h6 q-pa-sm">
-            <div class="text-h6">Change Password</div>
-          </q-card-section>
-          <q-card-section class="q-pa-sm row">
-            <q-item class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-              <q-item-section>
-                Current Password
-              </q-item-section>
-            </q-item>
-            <q-item class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-              <q-item-section>
-                <q-input type="password" dark dense outlined color="white" round
-                         v-model="password_dict.current_password"
-                         label="Current Password"/>
-              </q-item-section>
-            </q-item>
-            <q-item class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-              <q-item-section>
-                New Password
-              </q-item-section>
-            </q-item>
-            <q-item class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-              <q-item-section>
-                <q-input type="password" dark dense outlined color="white" round v-model="password_dict.new_password"
-                         label="New Password"/>
-              </q-item-section>
-            </q-item>
-            <q-item class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-              <q-item-section>
-                Confirm New Password
-              </q-item-section>
-            </q-item>
-            <q-item class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-              <q-item-section>
-                <q-input type="password" dark dense outlined round color="white"
-                         v-model="password_dict.confirm_new_password"
-                         label="Confirm New Password"/>
-              </q-item-section>
-            </q-item>
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn class="text-capitalize bg-info text-white">Change Password</q-btn>
-          </q-card-actions>
-
-        </q-card>
-
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.lastname'
+          :label="$t('lastname')"
+          lazy-rules
+          class='q-ma-sm'
+          @blur="v$.profileData.lastname.$touch"
+          :error="v$.profileData.lastname.$error"
+          :hint="$t('required')"
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-user' size='xs' />
+          </template>
+          <template v-slot:error>
+            <div v-for="error in v$.profileData.lastname.$errors">
+              {{error.$message}}
+            </div>
+          </template>
+        </q-input>
       </div>
-
-      <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12">
-        
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.institution'
+          :label="$t('institution')"
+          lazy-rules
+          class='q-ma-sm'
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-building' size='xs' />
+          </template>
+        </q-input>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.city'
+          :label="$t('city')"
+          lazy-rules
+          class='q-ma-sm'
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-city' size='xs' />
+          </template>
+        </q-input>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.title'
+          :label="$t('title')"
+          lazy-rules
+          class='q-ma-sm'
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-user-tie' size='xs' />
+          </template>
+        </q-input>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.phone'
+          :label="$t('phone')"
+          lazy-rules
+          class='q-ma-sm'
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-phone' size='xs' />
+          </template>
+        </q-input>
+      </div>
+      <div class="col-12 col-md-6">
+          <q-select
+            class='q-ma-sm'
+            v-show="hasLocales"
+            v-model="profileData.language"
+            :options="localeOptions"
+            :label="$t('preferred_language')"
+            filled
+            emit-value
+            map-options
+            options-dense
+          >
+            <template v-slot:prepend>
+              <q-icon name="fas fa-language" size="xs" />
+            </template>
+          </q-select>
       </div>
     </div>
+
+    <q-btn
+      @click='saveUser'
+      :disable='disableSaveUser'
+      :label="$t('save')"
+      type='submit'
+      color='positive'
+      class="q-ml-sm q-mt-md"
+    >
+      <template v-slot:loading>
+        <q-spinner-facebook />
+      </template>
+    </q-btn>
+
   </q-page>
 </template>
 
 <script>
-import {defineComponent} from 'vue'
+import { mapState, mapActions } from 'vuex';
+import { defineComponent, ref } from 'vue';
+import useVuelidate from '@vuelidate/core';
+import { required, minLength, maxLength } from '../boot/vuelidate';
+import { locales } from '../boot/i18n';
 
 export default defineComponent({
-  name: "UserProfile",
+  mounted: function() {
+    this.initData()
+  },
   setup() {
+    const userOptions = ref([]);
     return {
-      user_details: {},
-      password_dict: {}
+      v$: useVuelidate(),
+      userOptions,
+    }
+  },
+  data() {
+    return {
+      profileData: {
+        firstname: '',
+        lastname: '',
+        institution: '',
+        city: '',
+        title:'',
+        phone: '',
+        language: ''
+      },
+    }
+  },
+  validations: {
+    profileData: {
+      firstname: {
+        //alpha,
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      lastname: {
+        //alpha,
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      institution: {
+        //alpha,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      city: {
+        //alpha,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      language: {
+        required
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      currentUser: state => state.admin.user,
+      user: state => state.auth.payload.user,
+    }),
+    disableSaveUser() {
+      return this.v$.profileData.$invalid;
+    },
+    localeOptions() {
+      return locales.map(loc => {
+        return {
+          value: loc,
+          label: this.$t('locales.' + loc)
+        }
+      });
+    },
+    hasLocales() {
+      return locales.length>1;
+    }
+  },
+  methods: {
+    ...mapActions({
+      getUser: 'admin/getUser',
+      updateProfile: 'account/updateProfile'
+    }),
+    copyUserProfile(user) {
+      return {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        city: user.city,
+        institution: user.institution,
+        title: user.title,
+        phone: user.phone,
+        language: user.language,
+        role: user.role
+      };
+    },
+    async initData() {
+      await this.getUser({ id: this.user._id });
+      this.profileData = this.copyUserProfile(this.currentUser);
+    },
+    async saveUser() {
+      this.v$.$reset();
+      const toSave = {...this.profileData};
+      this.updateProfile({
+        profileData: toSave,
+        id: this.user._id
+      });
     }
   }
 })
 </script>
-
-<style scoped>
-
-.card-bg {
-  background-color: #162b4d;
-}
-</style>

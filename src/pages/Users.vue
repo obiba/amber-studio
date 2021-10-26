@@ -692,7 +692,7 @@ export default {
       this.v$.$reset();
       // create
       let userData = { ...this.newProfileData };
-      this.$store.dispatch('account/createUser', {
+      this.$store.dispatch('admin/createUser', {
         user: userData,
         paginationOpts: this.paginationOpts
       });
@@ -704,14 +704,14 @@ export default {
         });
     },
     deleteUser() {
-      this.$store.dispatch('account/deleteUser', {
+      this.$store.dispatch('admin/deleteUser', {
         id: this.selectedUser._id,
         paginationOpts: this.paginationOpts
       });
     },
     deleteUsers() {
       const ids = this.selected.map(u => u._id);
-      this.$store.dispatch('account/deleteUsers', {
+      this.$store.dispatch('admin/deleteUsers', {
         ids: ids,
         paginationOpts: this.paginationOpts
       });

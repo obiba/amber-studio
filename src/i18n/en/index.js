@@ -1,4 +1,7 @@
 export default {
+  account: {
+    title: 'User Account'
+  },
   login: {
     title: 'Sign in to start your session',
     submit: 'Sign in',

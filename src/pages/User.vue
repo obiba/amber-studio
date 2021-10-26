@@ -13,130 +13,130 @@
     <q-separator/>
 
     <div class="row">
-         <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.firstname'
-              :label="$t('firstname')"
-              lazy-rules
-              class='q-ma-sm'
-              @blur="v$.profileData.firstname.$touch"
-              :error="v$.profileData.firstname.$error"
-              :hint="$t('required')"
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user' size='xs' />
-              </template>
-              <template v-slot:error>
-                <div v-for="error in v$.profileData.firstname.$errors">
-                  {{error.$message}}
-                </div>
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.lastname'
-              :label="$t('lastname')"
-              lazy-rules
-              class='q-ma-sm'
-              @blur="v$.profileData.lastname.$touch"
-              :error="v$.profileData.lastname.$error"
-              :hint="$t('required')"
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user' size='xs' />
-              </template>
-              <template v-slot:error>
-                <div v-for="error in v$.profileData.lastname.$errors">
-                  {{error.$message}}
-                </div>
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.institution'
-              :label="$t('institution')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-building' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.city'
-              :label="$t('city')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-city' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.title'
-              :label="$t('title')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user-tie' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              filled
-              v-model='profileData.phone'
-              :label="$t('phone')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-phone' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class="col-12 col-md-6">
-              <q-select
-                class='q-ma-sm'
-                v-show="hasLocales"
-                v-model="profileData.language"
-                :options="localeOptions"
-                :label="$t('preferred_language')"
-                filled
-                emit-value
-                map-options
-                options-dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="fas fa-language" size="xs" />
-                </template>
-              </q-select>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-select
-              class='q-ma-sm text-capitalize'
-              v-model='profileData.role'
-              :options='rolesOptions'
-              :label="$t('role')"
-              filled
-              emit-value
-              map-options
-              options-dense
-            >
-            </q-select>
-          </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.firstname'
+          :label="$t('firstname')"
+          lazy-rules
+          class='q-ma-sm'
+          @blur="v$.profileData.firstname.$touch"
+          :error="v$.profileData.firstname.$error"
+          :hint="$t('required')"
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-user' size='xs' />
+          </template>
+          <template v-slot:error>
+            <div v-for="error in v$.profileData.firstname.$errors">
+              {{error.$message}}
+            </div>
+          </template>
+        </q-input>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.lastname'
+          :label="$t('lastname')"
+          lazy-rules
+          class='q-ma-sm'
+          @blur="v$.profileData.lastname.$touch"
+          :error="v$.profileData.lastname.$error"
+          :hint="$t('required')"
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-user' size='xs' />
+          </template>
+          <template v-slot:error>
+            <div v-for="error in v$.profileData.lastname.$errors">
+              {{error.$message}}
+            </div>
+          </template>
+        </q-input>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.institution'
+          :label="$t('institution')"
+          lazy-rules
+          class='q-ma-sm'
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-building' size='xs' />
+          </template>
+        </q-input>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.city'
+          :label="$t('city')"
+          lazy-rules
+          class='q-ma-sm'
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-city' size='xs' />
+          </template>
+        </q-input>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.title'
+          :label="$t('title')"
+          lazy-rules
+          class='q-ma-sm'
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-user-tie' size='xs' />
+          </template>
+        </q-input>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-input
+          filled
+          v-model='profileData.phone'
+          :label="$t('phone')"
+          lazy-rules
+          class='q-ma-sm'
+        >
+          <template v-slot:prepend>
+            <q-icon name='fas fa-phone' size='xs' />
+          </template>
+        </q-input>
+      </div>
+      <div class="col-12 col-md-6">
+          <q-select
+            class='q-ma-sm'
+            v-show="hasLocales"
+            v-model="profileData.language"
+            :options="localeOptions"
+            :label="$t('preferred_language')"
+            filled
+            emit-value
+            map-options
+            options-dense
+          >
+            <template v-slot:prepend>
+              <q-icon name="fas fa-language" size="xs" />
+            </template>
+          </q-select>
+      </div>
+      <div class='col-12 col-md-6'>
+        <q-select
+          class='q-ma-sm text-capitalize'
+          v-model='profileData.role'
+          :options='rolesOptions'
+          :label="$t('role')"
+          filled
+          emit-value
+          map-options
+          options-dense
+        >
+        </q-select>
+      </div>
     </div>
 
     <q-btn

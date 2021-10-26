@@ -58,10 +58,24 @@ export async function getUser(id) {
   return feathersClient.service('user').get(id);
 }
 
+export async function createUser(user) {
+  return feathersClient.service('user').create(user);
+}
+
 export async function updateUser(user, id) {
   return feathersClient.service('user').patch(id, user);
 }
 
 export async function deleteUser(id) {
   return feathersClient.service('user').remove(id);
+}
+
+export async function deleteUsers(ids) {
+  return feathersClient.service('user').remove(null, {
+    query: {
+      _id: {
+        $in: ids
+      }
+    }
+  });
 }
