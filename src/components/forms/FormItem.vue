@@ -7,12 +7,10 @@
       active-color="primary"
       indicator-color="primary"
       align="justify"
-      narrow-indicator
-    >
+      narrow-indicator>
       <q-tab name="builder" :label="$t('formel.builder')" />
       <q-tab name="schema" :label="$t('formel.schema')" />
       <q-tab name="preview" :label="$t('formel.preview')" />
-      
     </q-tabs>
 
     <q-separator />
@@ -20,63 +18,61 @@
     <q-tab-panels v-model="tab">
       <q-tab-panel name="builder">
         <div class="row q-col-gutter-lg">
-            <div class="col">
+          <div class="col">
             <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('formel.definition') }}</p>
-                <q-select class="q-mb-md" v-model="schema.type" :options="typeOptions" :label="$t('formel.type')" :hint="$t('formel.type_hint')" emit-value map-options dense filled />
-                <q-input v-if="isVariable" class="q-mb-md" v-model="schema.name" :label="$t('formel.name')" :hint="$t('formel.name_hint')" dense filled />
-                <q-input class="q-mb-md" v-model="schema.label" :label="$t('formel.label')" :hint="$t('formel.label_hint')" dense filled />
-                <q-input class="q-mb-md" v-model="schema.description" type="textarea" :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
-            </div>
-            <div class="col">
-                <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('formel.logic') }}</p>
-                <q-input class="q-mb-md" v-model="schema.conditions" :label="$t('formel.conditions')" :hint="$t('formel.conditions_hint')" dense filled />
-                <q-input v-if="isVariable" class="q-mb-md" v-model="schema.rules" :label="$t('formel.rules')" :hint="$t('formel.rules_hint')" dense filled />
-                
-                <div v-if="isVariable">
-                    <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('formel.settings') }}</p>
-                    <div v-if="hasPlaceholder">
-                        <q-input class="q-mb-md" v-model="schema.placeholder" :label="$t('formel.placeholder')" :hint="$t('formel.placeholder_hint')" dense filled />
+            <q-select class="q-mb-md" v-model="schema.type" :options="typeOptions" :label="$t('formel.type')" :hint="$t('formel.type_hint')" emit-value map-options dense filled />
+            <q-input v-if="isVariable" class="q-mb-md" v-model="schema.name" :label="$t('formel.name')" :hint="$t('formel.name_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="schema.label" :label="$t('formel.label')" :hint="$t('formel.label_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="schema.description" type="textarea" autogrow :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
+            <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('formel.logic') }}</p>
+            <q-input class="q-mb-md" v-model="schema.conditions" :label="$t('formel.conditions')" :hint="$t('formel.conditions_hint')" dense filled />
+            <q-input v-if="isVariable" class="q-mb-md" v-model="schema.rules" :label="$t('formel.rules')" :hint="$t('formel.rules_hint')" dense filled />
+          </div>
+          <div class="col">
+            <div v-if="isVariable">
+              <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('formel.settings') }}</p>
+              <div v-if="hasPlaceholder">
+                <q-input class="q-mb-md" v-model="schema.placeholder" :label="$t('formel.placeholder')" :hint="$t('formel.placeholder_hint')" dense filled />
+              </div>
+              <q-input class="q-mb-md" v-model="schema.default" :label="$t('formel.default')" :hint="$t('formel.default_hint')" dense filled />
+              <div v-if="schema.type === 'slider'">
+                <q-input class="q-mb-md" v-model.number="schema.min" type="number" :label="$t('formel.min')" :hint="$t('formel.min_hint')" dense filled />
+                <q-input class="q-mb-md" v-model.number="schema.max" type="number" :label="$t('formel.max')" :hint="$t('formel.max_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="schema.format" :label="$t('formel.format')" :hint="$t('formel.format_hint')" dense filled />
+              </div>
+              <div v-if="hasOptions">
+                <p class="q-mb-sm q-mt-md">{{ $t('formel.options') }}</p>
+                <p class="text-grey">{{ $t('formel.options_hint') }}</p>
+                <div v-for="option in schema.options" :key="option.value">
+                  <div class="row q-col-gutter-lg">
+                    <div class="col-4">
+                      <q-input class="q-mb-md" v-model="option.value" :label="$t('formel.option_value')" dense filled />
                     </div>
-                    <q-input class="q-mb-md" v-model="schema.default" :label="$t('formel.default')" :hint="$t('formel.default_hint')" dense filled />
-                    <div v-if="schema.type === 'slider'">
-                        <q-input class="q-mb-md" v-model.number="schema.min" type="number" :label="$t('formel.min')" :hint="$t('formel.min_hint')" dense filled />
-                        <q-input class="q-mb-md" v-model.number="schema.max" type="number" :label="$t('formel.max')" :hint="$t('formel.max_hint')" dense filled />
-                        <q-input class="q-mb-md" v-model="schema.format" :label="$t('formel.format')" :hint="$t('formel.format_hint')" dense filled />
+                    <div class="col-6">
+                      <q-input class="q-mb-md" v-model="option.label" :label="$t('formel.option_label')" dense filled />
                     </div>
-                    <div v-if="hasOptions">
-                        <p class="q-mb-sm q-mt-md">{{ $t('formel.options') }}</p>
-                        <p class="text-grey">{{ $t('formel.options_hint') }}</p>
-                        <div v-for="option in schema.options" :key="option.value">
-                            <div class="row q-col-gutter-lg">
-                                <div class="col-4">
-                                    <q-input class="q-mb-md" v-model="option.value" :label="$t('formel.option_value')" dense filled />
-                                </div>
-                                <div class="col-6">
-                                    <q-input class="q-mb-md" v-model="option.label" :label="$t('formel.option_label')" dense filled />
-                                </div>
-                                <div class="col-2">
-                                    <q-btn
-                                        class="gt-xs q-mt-sm text-grey-8"
-                                        size="12px"
-                                        flat
-                                        dense
-                                        round
-                                        icon='delete'
-                                        @click='deleteOption(option)'>
-                                    </q-btn>
-                                </div>
-                            </div>
-                        </div>
-                        <q-btn
-                        color="primary"
-                        icon="add"
-                        :title="$t('fomerl.add_option_hint')"
-                        @click="addOption()"
-                        class="q-mr-md" />
-                    
+                    <div class="col-2">
+                      <q-btn
+                        class="gt-xs q-mt-sm text-grey-8"
+                        size="12px"
+                        flat
+                        dense
+                        round
+                        icon='delete'
+                        @click='deleteOption(option)'>
+                      </q-btn>
                     </div>
+                  </div>
                 </div>
+                <q-btn
+                color="primary"
+                icon="add"
+                :title="$t('fomerl.add_option_hint')"
+                @click="addOption()"
+                class="q-mr-md" />
+              </div>
             </div>
+          </div>
         </div>
       </q-tab-panel>
 
