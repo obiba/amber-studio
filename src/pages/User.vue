@@ -1,14 +1,10 @@
 <template>
   <q-page>
     <div class="text-h6 text-white bg-info q-pa-md">
-      <q-btn 
-        to="/users"
-        color="white"
-        text-color="white"
-        flat
-        :title="$t('users.title')"
-        icon="arrow_back_ios"/>
-       <q-icon name="person" size="md" class="q-mr-md"/> {{ user.email }}
+      <q-breadcrumbs>
+        <q-breadcrumbs-el icon="person" :title="$t('users.title')" to="/users" class="text-white"/>
+        <q-breadcrumbs-el :label="user.email" />
+      </q-breadcrumbs>
     </div>
     <q-separator/>
 

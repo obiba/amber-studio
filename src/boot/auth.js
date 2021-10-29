@@ -38,7 +38,6 @@ export default boot(async ({ router, store }) => {
         feathersClient.reAuthenticate().then((response) => {
           // show application page
           store.dispatch('auth/responseHandler', response)
-          console.log(JSON.parse(JSON.stringify(store.state)))
           router.push('/');
         }).catch((err) => {
           // remove expired/unusable token

@@ -1,14 +1,10 @@
 <template>
   <q-page>
     <div class="text-h6 text-white bg-info q-pa-md">
-      <q-btn 
-        to="/groups"
-        color="white"
-        text-color="white"
-        flat
-        :title="$t('groups.title')"
-        icon="arrow_back_ios"/>
-       <q-icon name="groups" size="md" class="q-mr-md"/> {{ group.name }}
+      <q-breadcrumbs>
+        <q-breadcrumbs-el icon="groups" :title="$t('groups.title')" to="/groups" class="text-white"/>
+        <q-breadcrumbs-el :label="group.name" />
+      </q-breadcrumbs>
     </div>
     <q-separator/>
 

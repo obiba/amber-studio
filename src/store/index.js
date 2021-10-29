@@ -4,6 +4,7 @@ import authvuex from './store.auth';
 import account from './account';
 import admin from './admin';
 import study from './study';
+import studyForm from './studyForm';
 
 const requireModule = require.context(
   // The path where the service modules live
@@ -33,7 +34,8 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       account,
       admin,
-      study
+      study,
+      studyForm
     },
 
     // enable strict mode (adds overhead!)

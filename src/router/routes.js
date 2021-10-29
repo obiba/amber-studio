@@ -44,6 +44,11 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/form/:id', 
+        component: () => import('pages/Form.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/datasets',
         component: () => import('pages/Datasets.vue'),
         meta: { requiresAuth: true }

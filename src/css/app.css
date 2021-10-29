@@ -45,3 +45,7 @@ a {
   font-weight: 500;
   padding-bottom: 8px;
 }
+
+pre {
+  margin: 0;
+}
