@@ -22,7 +22,7 @@
           @click="createUser()"
           class="q-mr-md" />
         <q-btn
-          class="gt-xs q-mr-md"
+          class="q-mr-md"
           flat
           round
           color="black"
@@ -31,7 +31,7 @@
           :title="$t('users.group_users_hint')"
           @click="confirmGroupUsers()" />
         <q-btn
-          class="gt-xs q-mr-md"
+          class="q-mr-md"
           flat
           round
           color="red"
@@ -85,7 +85,7 @@
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
           <q-btn
-            class="gt-xs text-grey-8"
+            class="text-grey-8"
             size="12px"
             flat
             dense
@@ -96,7 +96,7 @@
           </q-btn>
           <q-btn
             v-if='!props.row.isVerified'
-            class="gt-xs text-grey-8"
+            class="text-grey-8"
             size="12px"
             flat
             dense
@@ -107,7 +107,7 @@
           </q-btn>
           <q-btn
             v-if='props.row.isVerified'
-            class="gt-xs text-grey-8"
+            class="text-grey-8"
             size="12px"
             flat
             dense
@@ -118,7 +118,7 @@
           </q-btn>
           <q-btn
             v-if='props.row.role === "inactive"'
-            class="gt-xs text-grey-8"
+            class="text-grey-8"
             size="12px"
             flat
             dense
@@ -129,7 +129,7 @@
           </q-btn>
           <q-btn
             v-if='!(props.row.role === "inactive")'
-            class="gt-xs text-grey-8"
+            class="text-grey-8"
             size="12px"
             flat
             dense
@@ -139,7 +139,7 @@
             @click='deactiveateUser(props.row)'>
           </q-btn>
           <q-btn
-            class="gt-xs text-grey-8"
+            class="text-grey-8"
             size="12px"
             flat
             dense

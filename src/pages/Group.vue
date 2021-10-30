@@ -70,7 +70,7 @@
             </q-item-section>
             <q-item-section side >
                <q-btn
-                class="gt-xs text-grey-8"
+                class="text-grey-8"
                 size="12px"
                 flat
                 dense

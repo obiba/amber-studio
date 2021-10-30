@@ -22,7 +22,7 @@
           @click="createStudy()"
           class="q-mr-md" />
         <q-btn
-          class="gt-xs q-mr-md"
+          class="q-mr-md"
           flat
           round
           color="red"
@@ -59,7 +59,7 @@
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
           <q-btn
-            class="gt-xs text-grey-8"
+            class="text-grey-8"
             size="12px"
             flat
             dense
@@ -69,7 +69,7 @@
             :to="'/study/' + props.row._id">
           </q-btn>
           <q-btn
-            class="gt-xs text-grey-8"
+            class="text-grey-8"
             size="12px"
             flat
             dense

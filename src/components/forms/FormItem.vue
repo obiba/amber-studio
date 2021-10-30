@@ -18,19 +18,18 @@
     <q-tab-panels v-model="tab">
       <q-tab-panel name="builder">
         <div class="row q-col-gutter-lg">
-          <div class="col">
-            <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('formel.definition') }}</p>
+          <div class="col-md-6 col-sm-12">
+            <p class="text-weight-bold q-mb-sm">{{ $t('formel.definition') }}</p>
             <q-select class="q-mb-md" v-model="schema.type" :options="typeOptions" :label="$t('formel.type')" :hint="$t('formel.type_hint')" emit-value map-options dense filled />
             <q-input v-if="isVariable" class="q-mb-md" v-model="schema.name" :label="$t('formel.name')" :hint="$t('formel.name_hint')" dense filled />
             <q-input class="q-mb-md" v-model="schema.label" :label="$t('formel.label')" :hint="$t('formel.label_hint')" dense filled />
             <q-input class="q-mb-md" v-model="schema.description" type="textarea" autogrow :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
-            <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('formel.logic') }}</p>
             <q-input class="q-mb-md" v-model="schema.conditions" :label="$t('formel.conditions')" :hint="$t('formel.conditions_hint')" dense filled />
             <q-input v-if="isVariable" class="q-mb-md" v-model="schema.rules" :label="$t('formel.rules')" :hint="$t('formel.rules_hint')" dense filled />
           </div>
-          <div class="col">
+          <div class="col-md-6 col-sm-12">
             <div v-if="isVariable">
-              <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('formel.settings') }}</p>
+              <p class="text-weight-bold q-mb-sm">{{ $t('formel.settings') }}</p>
               <div v-if="hasPlaceholder">
                 <q-input class="q-mb-md" v-model="schema.placeholder" :label="$t('formel.placeholder')" :hint="$t('formel.placeholder_hint')" dense filled />
               </div>
@@ -53,7 +52,7 @@
                     </div>
                     <div class="col-2">
                       <q-btn
-                        class="gt-xs q-mt-sm text-grey-8"
+                        class="q-mt-sm text-grey-8"
                         size="12px"
                         flat
                         dense

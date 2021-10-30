@@ -16,7 +16,7 @@
                 <div class="row">
                   <div class="col">
                     <q-btn
-                        class="gt-xs q-mt-xs text-grey-8"
+                        class="q-mt-xs text-grey-8"
                         size="10px"
                         flat
                         dense
@@ -27,7 +27,7 @@
                   </div>
                   <div class="col">
                     <q-btn
-                        class="gt-xs q-mt-xs text-grey-8"
+                        class="q-mt-xs text-grey-8"
                         size="10px"
                         flat
                         dense
@@ -38,7 +38,7 @@
                   </div>
                   <div class="col">
                     <q-btn
-                        class="gt-xs q-mt-xs text-grey-8"
+                        class="q-mt-xs text-grey-8"
                         size="10px"
                         flat
                         dense
