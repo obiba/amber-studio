@@ -84,55 +84,96 @@
       <q-tab-panel name="preview">
         <q-card>
           <q-card-section>
-            <q-input v-if="schema.type === 'text'" 
-              v-model="model" 
-              :label="schema.label"
-              :placeholder="schema.placeholder"
-              :hint="schema.description" />
+            <div v-if="schema.type === 'text'">
+              <q-input 
+                v-model="model" 
+                :label="schema.label"
+                :placeholder="schema.placeholder"
+                :hint="schema.description" />
+            </div>
 
-            <q-input v-if="schema.type === 'textarea'" 
-              v-model="model" 
-              type="textarea"
-              :label="schema.label"
-              :placeholder="schema.placeholder"
-              :hint="schema.description" />
+            <div v-if="schema.type === 'textarea'">
+              <q-input 
+                v-model="model" 
+                type="textarea"
+                :label="schema.label"
+                :placeholder="schema.placeholder"
+                :hint="schema.description" />
+            </div>
 
-            <q-input v-if="schema.type === 'number'" 
-              v-model="model" 
-              type="number"
-              :label="schema.label"
-              :placeholder="schema.placeholder"
-              :hint="schema.description" />
+            <div v-if="schema.type === 'number'">
+              <q-input 
+                v-model="model" 
+                type="number"
+                :label="schema.label"
+                :placeholder="schema.placeholder"
+                :hint="schema.description" />
+            </div>
 
             <div v-if="schema.type === 'date'">
-              <p class="text-body1 text-grey-8">{{schema.label}}</p>
-              <q-date
-                v-model="model"
-                today-btn
-                mask="YYYY-MM-DD" />
-              <p class="q-mt-md text-grey">{{schema.description}}</p>
+              <q-input v-model="model"
+                :label="schema.label"
+                :hint="schema.description">
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
+                      <q-date v-model="model" mask="YYYY-MM-DD" minimal>
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
 
             <div v-if="schema.type === 'datetime'">
-              <p class="text-body1 text-grey-8">{{schema.label}}</p>
-              <div class="q-gutter-md row items-start">
-                <q-date 
-                  v-model="model"
-                  today-btn
-                  mask="YYYY-MM-DD HH:mm" />
-                <q-time 
-                  v-model="model"
-                  mask="YYYY-MM-DD HH:mm" />
-              </div>
-              <p class="q-mt-md text-grey">{{schema.description}}</p>
+              <q-input v-model="model"
+                :label="schema.label"
+                :hint="schema.description">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                      <q-date v-model="model" mask="YYYY-MM-DD HH:mm" minimal>
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+
+                <template v-slot:append>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                      <q-time v-model="model" mask="YYYY-MM-DD HH:mm" format24h>
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
 
             <div v-if="schema.type === 'time'">
-              <p class="text-body1 text-grey-8">{{schema.label}}</p>
-              <q-time 
-                v-model="model"
-                mask="HH:mm" />
-              <p class="q-mt-md text-grey">{{schema.description}}</p>
+              <q-input v-model="model"
+                :label="schema.label"
+                :hint="schema.description">
+                <template v-slot:append>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                      <q-time v-model="model" mask="HH:mm" format24h>
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
 
             <div v-if="schema.type === 'radiogroup'">
@@ -152,13 +193,28 @@
               <p class="q-mt-md text-grey">{{schema.description}}</p>
             </div>
 
-            <q-select v-if="schema.type === 'select'"
-              v-model="model"
-              emit-value
-              map-options
-              :options="schema.options"
-              :label="schema.label"
-              :hint="schema.description" />
+            <div v-if="schema.type === 'select'">
+              <q-select
+                v-model="model"
+                emit-value
+                map-options
+                clearable
+                :options="schema.options"
+                :label="schema.label"
+                :hint="schema.description" />
+            </div>
+
+            <div v-if="schema.type === 'multiselect'">
+              <q-select
+                v-model="model"
+                emit-value
+                map-options
+                clearable
+                multiple
+                :options="schema.options"
+                :label="schema.label"
+                :hint="schema.description" />
+            </div>
 
             <div v-if="schema.type === 'toggle'">
               <q-toggle 
@@ -174,6 +230,7 @@
                 label
                 label-always
                 markers
+                snap
                 :min="schema.min"
                 :max="schema.max" />
               <p class="q-mt-xs text-grey">{{schema.description}}</p>
@@ -213,7 +270,7 @@ export default defineComponent({
     return {
       tab: ref("builder"),
       types: [
-        'text', 'textarea','number', 'date', 'datetime', 'time', 'radiogroup', 'checkboxgroup', 'select', 'toggle', 'slider', 'static'
+        'text', 'textarea','number', 'date', 'datetime', 'time', 'radiogroup', 'checkboxgroup', 'select', 'multiselect', 'toggle', 'slider', 'static'
       ],
       model: ref(null)
     }
@@ -222,11 +279,14 @@ export default defineComponent({
       isVariable() {
         return this.schema.type !== 'static';
       },
+      isArray() {
+        return ['checkboxgroup', 'multiselect'].includes(this.schema.type);
+      },
       hasPlaceholder() {
-        return ['text', 'textarea', 'select'].includes(this.schema.type);
+        return ['text', 'textarea'].includes(this.schema.type);
       },
       hasOptions() {
-        return ['radiogroup', 'checkboxgroup', 'select'].includes(this.schema.type);
+        return ['radiogroup', 'checkboxgroup', 'select', 'multiselect'].includes(this.schema.type);
       },
       typeOptions() {
       return this.types.map(tp => {
@@ -244,12 +304,17 @@ export default defineComponent({
       }
       if (!this.isVariable) {
         delete this.schema.rules;
-        delete this.schema.default;
         delete this.schema.min;
         delete this.schema.max;
         delete this.schema.format;
+        delete this.schema.default;
       }
-      this.model = newValue === 'checkboxgroup' ? [] : null;
+      this.model = this.isArray ? [] : null;
+    },
+    'schema.default': function(newValue, oldValue) {
+      if (newValue === "")
+        delete this.schema.default;
+      this.model = this.isArray ? (this.schema.default ? [this.schema.default] : []) : this.schema.default;
     }
   },
   methods: {

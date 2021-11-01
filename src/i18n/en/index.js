@@ -196,6 +196,7 @@ export default {
       radiogroup: 'Single choice',
       checkboxgroup: 'Multiple choices',
       select: 'Dropdown', 
+      multiselect: 'Multi select dropdown', 
       toggle: 'Toggle',
       slider: 'Slider',
       static: 'Section'

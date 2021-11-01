@@ -196,6 +196,7 @@ export default {
       radiogroup: 'Choix unique',
       checkboxgroup: 'Choix multiples',
       select: 'Menu déroulant',
+      multiselect: 'Menu déroulant multiple',
       toggle: 'Bascule',
       slider: 'Glissière',
       static: 'Section'
