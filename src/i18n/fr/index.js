@@ -174,7 +174,7 @@ export default {
     delete_study_forms: 'Formulaires supprimés avec succès.',
   },
   formel: {
-    add_item_hint: 'Ajouter un item',
+    add_item_hint: 'Ajouter un élément',
     builder: 'Constructeur',
     schema: 'Schéma',
     preview: 'Prévue',
@@ -183,6 +183,7 @@ export default {
     settings: 'Paramètres',
     name: 'Nom',
     name_hint: 'Identifiant unique, requis, sera utilisé comme nom de variable.',
+    static_hint: 'Identifiant pour grouper les éléments par section.',
     type: 'Type',
     type_hint: 'Type d\'élément.',
     types: {
@@ -194,10 +195,10 @@ export default {
       time: 'Temps',
       radiogroup: 'Choix unique',
       checkboxgroup: 'Choix multiples',
-      select: 'Dropdown',
-      toggle: 'Toggle',
-      slider: 'Slider',
-      static: 'Statique'
+      select: 'Menu déroulant',
+      toggle: 'Bascule',
+      slider: 'Glissière',
+      static: 'Section'
     },
     label: 'Libellé',
     label_hint: 'Libellé de la question.',

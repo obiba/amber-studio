@@ -64,7 +64,7 @@
 
       <template v-slot:after>
         <div>
-          <form-item v-if="selectedItem" :schema="selectedItem" />
+          <form-item-builder v-if="selectedItem" :schema="selectedItem" />
         </div>
       </template>
 
@@ -81,7 +81,7 @@ export default defineComponent({
       form: Object
   },
   components: {
-    FormItem: defineAsyncComponent(() => import('components/forms/FormItem.vue')),
+    FormItemBuilder: defineAsyncComponent(() => import('src/components/forms/FormItemBuilder.vue')),
   },
   setup() {
     return {

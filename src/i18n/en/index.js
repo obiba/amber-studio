@@ -183,6 +183,7 @@ export default {
     settings: 'Settings',
     name: 'Name',
     name_hint: 'Required unique identifier, will be used as the variable name.',
+    static_hint: 'Name to group items by section.',
     type: 'Type',
     type_hint: 'Required element type.',
     types: {
@@ -197,7 +198,7 @@ export default {
       select: 'Dropdown', 
       toggle: 'Toggle',
       slider: 'Slider',
-      static: 'Static'
+      static: 'Section'
     },
     label: 'Label',
     label_hint: 'Question label. If the form is to be translated, provide the translation key.',

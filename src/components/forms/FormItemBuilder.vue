@@ -21,9 +21,9 @@
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('formel.definition') }}</p>
             <q-select class="q-mb-md" v-model="schema.type" :options="typeOptions" :label="$t('formel.type')" :hint="$t('formel.type_hint')" emit-value map-options dense filled />
-            <q-input v-if="isVariable" class="q-mb-md" v-model="schema.name" :label="$t('formel.name')" :hint="$t('formel.name_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="schema.name" :label="$t('formel.name')" :hint="$t(isVariable ? 'formel.name_hint': 'formel.static_hint')" dense filled />
             <q-input class="q-mb-md" v-model="schema.label" :label="$t('formel.label')" :hint="$t('formel.label_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="schema.description" type="textarea" autogrow :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="schema.description" :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
             <q-input class="q-mb-md" v-model="schema.conditions" :label="$t('formel.conditions')" :hint="$t('formel.conditions_hint')" dense filled />
             <q-input v-if="isVariable" class="q-mb-md" v-model="schema.rules" :label="$t('formel.rules')" :hint="$t('formel.rules_hint')" dense filled />
           </div>
@@ -82,6 +82,119 @@
       </q-tab-panel>
 
       <q-tab-panel name="preview">
+        <q-card>
+          <q-card-section>
+            <q-input v-if="schema.type === 'text'" 
+              v-model="model" 
+              :label="schema.label"
+              :placeholder="schema.placeholder"
+              :hint="schema.description" />
+
+            <q-input v-if="schema.type === 'textarea'" 
+              v-model="model" 
+              type="textarea"
+              :label="schema.label"
+              :placeholder="schema.placeholder"
+              :hint="schema.description" />
+
+            <q-input v-if="schema.type === 'number'" 
+              v-model="model" 
+              type="number"
+              :label="schema.label"
+              :placeholder="schema.placeholder"
+              :hint="schema.description" />
+
+            <div v-if="schema.type === 'date'">
+              <p class="text-body1 text-grey-8">{{schema.label}}</p>
+              <q-date
+                v-model="model"
+                today-btn
+                mask="YYYY-MM-DD" />
+              <p class="q-mt-md text-grey">{{schema.description}}</p>
+            </div>
+
+            <div v-if="schema.type === 'datetime'">
+              <p class="text-body1 text-grey-8">{{schema.label}}</p>
+              <div class="q-gutter-md row items-start">
+                <q-date 
+                  v-model="model"
+                  today-btn
+                  mask="YYYY-MM-DD HH:mm" />
+                <q-time 
+                  v-model="model"
+                  mask="YYYY-MM-DD HH:mm" />
+              </div>
+              <p class="q-mt-md text-grey">{{schema.description}}</p>
+            </div>
+
+            <div v-if="schema.type === 'time'">
+              <p class="text-body1 text-grey-8">{{schema.label}}</p>
+              <q-time 
+                v-model="model"
+                mask="HH:mm" />
+              <p class="q-mt-md text-grey">{{schema.description}}</p>
+            </div>
+
+            <div v-if="schema.type === 'radiogroup'">
+              <p class="text-body1 text-grey-8">{{schema.label}}</p>
+              <q-option-group
+                v-model="model"
+                :options="schema.options" />
+              <p class="q-mt-md text-grey">{{schema.description}}</p>
+            </div>
+
+            <div v-if="schema.type === 'checkboxgroup'">
+              <p class="text-body1 text-grey-8">{{schema.label}}</p>
+              <q-option-group
+                v-model="model"
+                :options="schema.options"
+                type="checkbox" />
+              <p class="q-mt-md text-grey">{{schema.description}}</p>
+            </div>
+
+            <q-select v-if="schema.type === 'select'"
+              v-model="model"
+              emit-value
+              map-options
+              :options="schema.options"
+              :label="schema.label"
+              :hint="schema.description" />
+
+            <div v-if="schema.type === 'toggle'">
+              <q-toggle 
+                v-model="model"
+                :label="schema.label" />
+              <p class="q-mt-xs text-grey">{{schema.description}}</p>
+            </div>
+
+            <div v-if="schema.type === 'slider'">
+              <p class="text-body1 text-grey-8">{{schema.label}}</p>
+              <q-slider 
+                v-model="model"
+                label
+                label-always
+                markers
+                :min="schema.min"
+                :max="schema.max" />
+              <p class="q-mt-xs text-grey">{{schema.description}}</p>
+            </div>
+
+            <div v-if="schema.type === 'static'">
+              <div class="text-center">
+                <h6 class="text-grey-8">{{schema.label}}</h6>
+                <p class="text-grey">{{schema.description}}</p>
+              </div>
+            </div>
+
+          </q-card-section>
+        </q-card>
+        <q-card class="q-mt-md" v-if="schema.type !== 'static'">
+          <q-card-section>
+            <div class="bg-black text-white q-pa-md">
+              <pre>{{ JSON.stringify(model, null, '  ') }}</pre>
+            </div>
+          </q-card-section>
+        </q-card>
       </q-tab-panel>
     </q-tab-panels>
   </div>
@@ -92,7 +205,7 @@ import {defineComponent} from 'vue'
 import {ref} from 'vue'
 
 export default defineComponent({
-  name: "FormItem",
+  name: "FormItemBuilder",
   props: {
       schema: Object
   },
@@ -101,7 +214,8 @@ export default defineComponent({
       tab: ref("builder"),
       types: [
         'text', 'textarea','number', 'date', 'datetime', 'time', 'radiogroup', 'checkboxgroup', 'select', 'toggle', 'slider', 'static'
-      ]
+      ],
+      model: ref(null)
     }
   },
   computed: {
@@ -135,6 +249,7 @@ export default defineComponent({
         delete this.schema.max;
         delete this.schema.format;
       }
+      this.model = newValue === 'checkboxgroup' ? [] : null;
     }
   },
   methods: {
@@ -144,8 +259,10 @@ export default defineComponent({
     addOption() {
       if (!this.schema.options)
         this.schema.options = [];
+      const val = "" + (this.schema.options.length + 1);
       this.schema.options.push({
-          value: "" + (this.schema.options.length + 1)
+          value: val,
+          label: val
       });
     }
   }
