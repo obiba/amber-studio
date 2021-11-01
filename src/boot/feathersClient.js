@@ -21,11 +21,11 @@ const feathersClient = feathers()
         )
       ]
     },
-    /*after: {
+    after: {
       all: [
-        context => console.log(context)
+        context => console.debug(context)
       ]
-    }*/
+    }
   });
 
 

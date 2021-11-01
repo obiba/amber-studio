@@ -100,7 +100,7 @@ export default defineComponent({
     return {
       tab: ref("builder"),
       types: [
-        'text', 'textarea', 'radiogroup', 'checkboxgroup', 'select', 'toggle', 'slider', 'static'
+        'text', 'textarea','number', 'date', 'datetime', 'time', 'radiogroup', 'checkboxgroup', 'select', 'toggle', 'slider', 'static'
       ]
     }
   },
