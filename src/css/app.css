@@ -49,3 +49,13 @@ a {
 pre {
   margin: 0;
 }
+
+.q-tree__node-body {
+  padding-top: 0;
+  padding-left: 24px;
+}
+
+.q-tree__node--selected {
+  background-color: #eeeeee;
+  border-radius: 0;
+}

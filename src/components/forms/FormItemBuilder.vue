@@ -243,9 +243,14 @@
               </div>
             </div>
 
+            <div v-if="schema.type === 'group'">
+              <p class="text-h6 text-grey-8 q-mb-none">{{schema.label}}</p>
+              <p class="text-subtitle2 text-grey">{{schema.description}}</p>
+            </div>
+
           </q-card-section>
         </q-card>
-        <q-card class="q-mt-md" v-if="schema.type !== 'static'">
+        <q-card class="q-mt-md" v-if="isVariable">
           <q-card-section>
             <div class="bg-black text-white q-pa-md">
               <pre>{{ JSON.stringify(model, null, '  ') }}</pre>
@@ -270,14 +275,18 @@ export default defineComponent({
     return {
       tab: ref("builder"),
       types: [
-        'text', 'textarea','number', 'date', 'datetime', 'time', 'radiogroup', 'checkboxgroup', 'select', 'multiselect', 'toggle', 'slider', 'static'
+        'text', 'textarea','number', 
+        'date', 'datetime', 'time', 
+        'radiogroup', 'checkboxgroup', 
+        'select', 'multiselect', 
+        'toggle', 'slider', 'static', 'group'
       ],
       model: ref(null)
     }
   },
   computed: {
       isVariable() {
-        return this.schema.type !== 'static';
+        return ['static', 'group'].includes(this.schema.type) !== true;
       },
       isArray() {
         return ['checkboxgroup', 'multiselect'].includes(this.schema.type);

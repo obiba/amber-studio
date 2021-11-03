@@ -199,7 +199,8 @@ export default {
       multiselect: 'Multi select dropdown', 
       toggle: 'Toggle',
       slider: 'Slider',
-      static: 'Section'
+      static: 'Section',
+      group: 'Group'
     },
     label: 'Label',
     label_hint: 'Question label. If the form is to be translated, provide the translation key.',
@@ -224,6 +225,9 @@ export default {
     option_value: 'Value',
     option_label: 'Label',
     add_option: 'Add option',
+    move_up: "Move item up",
+    move_down: "Move item down",
+    delete: "Delete item"
   },
   add: 'Add',
   update: 'Update',

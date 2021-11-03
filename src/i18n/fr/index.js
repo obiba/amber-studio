@@ -199,7 +199,8 @@ export default {
       multiselect: 'Menu déroulant multiple',
       toggle: 'Bascule',
       slider: 'Glissière',
-      static: 'Section'
+      static: 'Section',
+      group: 'Groupe'
     },
     label: 'Libellé',
     label_hint: 'Libellé de la question.',
@@ -224,6 +225,9 @@ export default {
     option_value: 'Valeur',
     option_label: 'Libellé',
     add_option: 'Ajouter une option',
+    move_up: "Monter",
+    move_down: "Descendre",
+    delete: "Supprimer"
   },
   add: 'Ajouter',
   update: 'Appliquer',

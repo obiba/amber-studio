@@ -5,53 +5,29 @@
 
       <template v-slot:before>
         <div>
-          <q-list>
-            <q-item v-for="item in form.items" :key="item.name" :active="isItemSelected(item)" active-class="bg-grey-3 text-grey-8" clickable @click="selectItem(item)">
-              <q-item-section :title="item.description ? item.description : ''">
-                <q-item-label>{{item.label}} <small class="text-grey">[{{item.name}}]</small></q-item-label>
-                <q-item-label caption lines="2">{{item.type ? $t("formel.types." + item.type) : ""}}</q-item-label>
-              </q-item-section>
+          <q-tree 
+            :nodes="items"
+            node-key="name"
+            children-key="items"
+            default-expand-all
+            selected-color="primary"
+            v-model:selected="selected"
+            @keyup.alt.up="moveUp"
+            @keyup.alt.down="moveDown">
 
-              <q-item-section side>
-                <div class="row">
-                  <div class="col">
-                    <q-btn
-                        class="q-mt-xs text-grey-8"
-                        size="10px"
-                        flat
-                        dense
-                        round
-                        icon='arrow_upward'
-                        @click='moveUpItem(item)'>
-                    </q-btn>
-                  </div>
-                  <div class="col">
-                    <q-btn
-                        class="q-mt-xs text-grey-8"
-                        size="10px"
-                        flat
-                        dense
-                        round
-                        icon='arrow_downward'
-                        @click='moveDownItem(item)'>
-                    </q-btn>
-                  </div>
-                  <div class="col">
-                    <q-btn
-                        class="q-mt-xs text-grey-8"
-                        size="10px"
-                        flat
-                        dense
-                        round
-                        icon='delete'
-                        @click='deleteItem(item)'>
-                    </q-btn>
-                  </div>
-                </div>
-              </q-item-section>
-            </q-item>
+            <template v-slot:default-header="prop">
+              <div class="row items-center">
+                <div>{{ prop.node.name }} <span class="text-caption text-grey">[{{ prop.node.type ? $t("formel.types." + prop.node.type) : "?" }}]</span></div>
+              </div>
+            </template>
 
-          </q-list>
+            <template v-slot:default-body="prop">
+              <div>
+                <span class="text-caption">{{ prop.node.label }}</span>
+              </div>
+            </template>
+
+          </q-tree>
         <q-btn
           color="primary"
           icon="add"
@@ -63,8 +39,48 @@
       </template>
 
       <template v-slot:after>
-        <div>
-          <form-item-builder v-if="selectedItem" :schema="selectedItem" />
+        <div v-if="selectedItem">
+          <div class="row">
+            <span class="float-left text-h6 q-mt-sm q-ml-md">
+              {{ selectedItem.name }}
+            </span>
+            <div class="q-mt-sm q-ml-md">
+              <q-btn
+                class="text-grey-8"
+                size="10px"
+                flat
+                dense
+                round
+                icon='arrow_upward'
+                :title="$t('formel.move_up')"
+                @click='moveUpItem(formItemSelected)'>
+              </q-btn>
+              <q-btn
+                class="text-grey-8"
+                size="10px"
+                flat
+                dense
+                round
+                icon='arrow_downward'
+                :title="$t('formel.move_down')"
+                @click='moveDownItem(formItemSelected)'>
+              </q-btn>
+              <q-btn
+                class="text-grey-8"
+                size="10px"
+                flat
+                dense
+                round
+                icon='delete'
+                :title="$t('formel.delete')"
+                @click='deleteItem(formItemSelected)'>
+              </q-btn>
+            </div>
+          </div>
+          <q-separator/>
+          <div>
+            <form-item-builder :schema="selectedItem" />
+          </div>
         </div>
       </template>
 
@@ -86,7 +102,8 @@ export default defineComponent({
   setup() {
     return {
       splitterModel: ref(30),
-      formItemSelected: ref(null)
+      formItemSelected: ref(null),
+      selected: ref(null)
     }
   },
   computed: {
@@ -98,6 +115,18 @@ export default defineComponent({
         this.formItemSelected = this.form.items[0];
       }
       return this.formItemSelected;
+    },
+    items() {
+      if (this.form)
+        return this.form.items ? this.form.items : [];
+      return [];
+    }
+  },
+  watch: {
+    selected: function(newValue, oldValue) {
+      console.log(newValue);
+      if (newValue !== null)
+        this.selectItem(this.form.items.filter(item => item.name === newValue).pop());
     }
   },
   methods: {
@@ -107,12 +136,18 @@ export default defineComponent({
     addItem() {
       this.form.items.push({ name: "item" + (this.form.items.length + 1) });
     },
+    moveUp() {
+      this.moveUpItem(this.formItemSelected);
+    },
     moveUpItem(item) {
       const idx = this.form.items.indexOf(item);
       if (idx>0) {
         this.form.items.splice(idx, 1);
         this.form.items.splice(idx-1, 0, item);
       }
+    },
+    moveDown() {
+      this.moveDownItem(this.formItemSelected);
     },
     moveDownItem(item) {
       const idx = this.form.items.indexOf(item);
