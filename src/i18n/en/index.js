@@ -33,7 +33,7 @@ export default {
     login: 'Sign in',
     bad_link: 'Not a valid email verification link. Please check your email for the verification link and try again.',
     failure: 'Unable to verify email. Please contact support.',
-    success: 'Thanks, your eamil address is verified.',
+    success: 'Thanks, your email address is verified.',
     pending: 'Verifying account... please wait...'
   },
   users: {
