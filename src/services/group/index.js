@@ -1,3 +1,3 @@
-import * as group from "./group.js";
+import * as group from './group.js'
 
-export default Object.assign({}, group);
+export default Object.assign({}, group)

@@ -6,7 +6,7 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
-const { configure } = require('quasar/wrappers');
+const { configure } = require('quasar/wrappers')
 
 module.exports = configure(function (ctx) {
   return {
@@ -25,7 +25,7 @@ module.exports = configure(function (ctx) {
       'feathersClient',
       'i18n',
       'vuelidate',
-      'recaptcha',
+      'recaptcha'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -44,7 +44,7 @@ module.exports = configure(function (ctx) {
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
       'roboto-font', // optional, you are not bound to it
-      'material-icons', // optional, you are not bound to it
+      'material-icons' // optional, you are not bound to it
     ],
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
@@ -77,7 +77,7 @@ module.exports = configure(function (ctx) {
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
       chainWebpack (/* chain */) {
         //
-      },
+      }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
@@ -103,9 +103,9 @@ module.exports = configure(function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'AppFullscreen', 
-        'Notify', 
-        'LocalStorage', 
+        'AppFullscreen',
+        'Notify',
+        'LocalStorage',
         'LoadingBar'
       ]
     },
@@ -124,9 +124,9 @@ module.exports = configure(function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `Amber Studio`,
-        short_name: `Amber Studio`,
-        description: `Amber Studio for managing Amber server`,
+        name: 'Amber Studio',
+        short_name: 'Amber Studio',
+        description: 'Amber Studio for managing Amber server',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -203,4 +203,4 @@ module.exports = configure(function (ctx) {
       }
     }
   }
-});
+})
