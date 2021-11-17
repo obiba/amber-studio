@@ -2,7 +2,7 @@
   <q-page>
     <div class="text-h6 text-white bg-info q-pa-md">{{$t('studies.title')}}</div>
     <q-separator/>
-     
+
     <q-table
         flat
         :rows='studies'
@@ -31,12 +31,12 @@
           :title="$t('studies.delete_studies_hint')"
           @click="confirmDeleteStudies()" />
         <q-space />
-        <q-input 
-          filled 
-          borderless 
-          dense 
-          debounce="300" 
-          v-model="filter" 
+        <q-input
+          filled
+          borderless
+          dense
+          debounce="300"
+          v-model="filter"
           :placeholder="$t('search')"
           :title="$t('studies.search_hint')">
           <template v-slot:append>
@@ -190,24 +190,24 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import {ref} from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength, email } from '../boot/vuelidate';
+import { mapState, mapActions } from 'vuex'
+import { ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default {
-  mounted: function() {
-    this.getTableStudies();
-    this.setPagination();
+  mounted: function () {
+    this.getTableStudies()
+    this.setPagination()
   },
-  setup() {
+  setup () {
     return {
       v$: useVuelidate(),
       selected: ref([]),
       filter: ref('')
     }
   },
-  data() {
+  data () {
     return {
       columns: [
         {
@@ -228,7 +228,7 @@ export default {
         {
           name: 'action',
           align: 'left',
-          label: this.$t('action'),
+          label: this.$t('action')
         }
       ],
       selectedStudy: {},
@@ -244,13 +244,13 @@ export default {
       },
       studyData: {
         name: '',
-        description: '',
+        description: ''
       },
       newStudyData: {
         name: '',
-        description: '',
+        description: ''
       }
-    };
+    }
   },
   validations: {
     newStudyData: {
@@ -269,74 +269,74 @@ export default {
     ...mapState({
       studies: state => state.study.studies
     }),
-    disableCreateStudy() {
-      return this.v$.newStudyData.$invalid;
+    disableCreateStudy () {
+      return this.v$.newStudyData.$invalid
     }
   },
   methods: {
-    makeEllipsis(text, length) {
-      if (text && text.length>length) {
-        return text.substring(0, length) + ' ...';
+    makeEllipsis (text, length) {
+      if (text && text.length > length) {
+        return text.substring(0, length) + ' ...'
       }
-      return text;
+      return text
     },
-    setPagination() {
-      this.paginationOpts = this.$store.state.study.studyPaginationOpts;
+    setPagination () {
+      this.paginationOpts = this.$store.state.study.studyPaginationOpts
     },
-    async getTableStudies(requestProp) {
+    async getTableStudies (requestProp) {
       if (requestProp) {
-        this.paginationOpts = requestProp.pagination;
+        this.paginationOpts = requestProp.pagination
         this.$store.commit('study/setStudyPagination', {
           studyPaginationOpts: requestProp.pagination
-        });
-        await this.getStudies({ paginationOpts: requestProp.pagination, filter: requestProp.filter });
+        })
+        await this.getStudies({ paginationOpts: requestProp.pagination, filter: requestProp.filter })
       } else {
-        await this.getStudies({ paginationOpts: this.paginationOpts, filter: this.filter });
+        await this.getStudies({ paginationOpts: this.paginationOpts, filter: this.filter })
       }
-      this.paginationOpts.rowsNumber = this.$store.state.study.studyPaginationOpts.rowsNumber;
+      this.paginationOpts.rowsNumber = this.$store.state.study.studyPaginationOpts.rowsNumber
     },
     ...mapActions({
       getStudies: 'study/getStudies'
     }),
-    createStudy() {
-      this.newStudyData = {};
-      this.showCreateStudy = true;
-      this.selectedStudy = undefined;
+    createStudy () {
+      this.newStudyData = {}
+      this.showCreateStudy = true
+      this.selectedStudy = undefined
     },
-    confirmDeleteStudy(study) {
-      this.showConfirmDeleteStudy = true;
-      this.selectedStudy = study;
+    confirmDeleteStudy (study) {
+      this.showConfirmDeleteStudy = true
+      this.selectedStudy = study
     },
-    confirmDeleteStudies() {
-      if (this.selected.length>0) {
-        this.showConfirmDeleteStudies = true;
+    confirmDeleteStudies () {
+      if (this.selected.length > 0) {
+        this.showConfirmDeleteStudies = true
       }
     },
-    async saveStudy() {
-      this.v$.$reset();
+    async saveStudy () {
+      this.v$.$reset()
       // create
-      let createdData = { ...this.newStudyData };
+      const createdData = { ...this.newStudyData }
       this.$store.dispatch('study/createStudy', {
         study: createdData,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
-    deleteStudy() {
+    deleteStudy () {
       this.$store.dispatch('study/deleteStudy', {
         id: this.selectedStudy._id,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
-    deleteStudies() {
-      const ids = this.selected.map(u => u._id);
+    deleteStudies () {
+      const ids = this.selected.map(u => u._id)
       this.$store.dispatch('study/deleteStudies', {
         ids: ids,
         paginationOpts: this.paginationOpts
-      });
-      this.selected = [];
+      })
+      this.selected = []
     }
   }
-};
+}
 </script>
 
 <style scoped>

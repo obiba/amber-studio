@@ -62,16 +62,16 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { required,  email } from '../boot/vuelidate';
-import useVuelidate from '@vuelidate/core';
+import { mapState } from 'vuex'
+import { required, email } from '../boot/vuelidate'
+import useVuelidate from '@vuelidate/core'
 
 export default {
-  data() {
+  data () {
     return {
       v$: useVuelidate(),
-      resetEmail: ""
-    };
+      resetEmail: ''
+    }
   },
   validations: {
     resetEmail: {
@@ -83,20 +83,20 @@ export default {
     ...mapState({
       submitting: state => state.auth.showLoading
     }),
-    disableSubmit() {
-      return this.v$.formData.$invalid;
+    disableSubmit () {
+      return this.v$.formData.$invalid
     }
   },
   methods: {
-    forgotPassword() {
+    forgotPassword () {
       this.$store
-        .dispatch("account/forgotPassword", {
+        .dispatch('account/forgotPassword', {
           emailAddress: this.resetEmail
         })
         .then(() => {
-          this.$router.push("/login");
-        });
+          this.$router.push('/login')
+        })
     }
   }
-};
+}
 </script>

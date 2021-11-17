@@ -32,13 +32,12 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "Maintenance"
+  name: 'Loading'
 })
 </script>
-
 
 <style>
 [v-cloak] {

@@ -2,7 +2,7 @@
   <q-page>
     <div class="text-h6 text-white bg-info q-pa-md">{{$t('groups.title')}}</div>
     <q-separator/>
-     
+
     <q-table
         flat
         :rows='groups'
@@ -31,12 +31,12 @@
           :title="$t('groups.delete_groups_hint')"
           @click="confirmDeleteGroups()" />
         <q-space />
-        <q-input 
-          filled 
-          borderless 
-          dense 
-          debounce="300" 
-          v-model="filter" 
+        <q-input
+          filled
+          borderless
+          dense
+          debounce="300"
+          v-model="filter"
           :placeholder="$t('search')"
           :title="$t('groups.search_hint')">
           <template v-slot:append>
@@ -198,24 +198,24 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import {ref} from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength, email } from '../boot/vuelidate';
+import { mapState, mapActions } from 'vuex'
+import { ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default {
-  mounted: function() {
-    this.getTableGroups();
-    this.setPagination();
+  mounted: function () {
+    this.getTableGroups()
+    this.setPagination()
   },
-  setup() {
+  setup () {
     return {
       v$: useVuelidate(),
       selected: ref([]),
       filter: ref('')
     }
   },
-  data() {
+  data () {
     return {
       columns: [
         {
@@ -239,14 +239,14 @@ export default {
           label: this.$t('members'),
           field: 'users',
           format: val => {
-            return val ? val.length : 0;
+            return val ? val.length : 0
           },
           sortable: false
         },
         {
           name: 'action',
           align: 'left',
-          label: this.$t('action'),
+          label: this.$t('action')
         }
       ],
       selectedGroup: {},
@@ -262,24 +262,22 @@ export default {
       },
       groupData: {
         name: '',
-        description: '',
+        description: ''
       },
       newGroupData: {
         name: '',
-        description: '',
+        description: ''
       }
-    };
+    }
   },
   validations: {
     newGroupData: {
       name: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       description: {
-        //alpha,
         minLength: minLength(2),
         maxLength: maxLength(500)
       }
@@ -289,76 +287,72 @@ export default {
     ...mapState({
       groups: state => state.admin.groups
     }),
-    disableCreateGroup() {
-      return this.v$.newGroupData.$invalid;
+    disableCreateGroup () {
+      return this.v$.newGroupData.$invalid
     }
   },
   methods: {
-    makeEllipsis(text, length) {
-      if (text && text.length>length) {
-        return text.substring(0, length) + ' ...';
+    makeEllipsis (text, length) {
+      if (text && text.length > length) {
+        return text.substring(0, length) + ' ...'
       }
-      return text;
+      return text
     },
-    setPagination() {
-      this.paginationOpts = this.$store.state.admin.groupPaginationOpts;
+    setPagination () {
+      this.paginationOpts = this.$store.state.admin.groupPaginationOpts
     },
-    async getTableGroups(requestProp) {
+    async getTableGroups (requestProp) {
       if (requestProp) {
-        this.paginationOpts = requestProp.pagination;
+        this.paginationOpts = requestProp.pagination
         this.$store.commit('admin/setGroupPagination', {
           groupPaginationOpts: requestProp.pagination
-        });
-        await this.getGroups({ paginationOpts: requestProp.pagination, filter: requestProp.filter });
+        })
+        await this.getGroups({ paginationOpts: requestProp.pagination, filter: requestProp.filter })
       } else {
-        await this.getGroups({ paginationOpts: this.paginationOpts, filter: this.filter });
+        await this.getGroups({ paginationOpts: this.paginationOpts, filter: this.filter })
       }
-      this.paginationOpts.rowsNumber = this.$store.state.admin.groupPaginationOpts.rowsNumber;
+      this.paginationOpts.rowsNumber = this.$store.state.admin.groupPaginationOpts.rowsNumber
     },
     ...mapActions({
       getGroups: 'admin/getGroups'
     }),
-    createGroup() {
-      this.newGroupData = {};
-      this.showCreateGroup = true;
-      this.selectedGroup = undefined;
+    createGroup () {
+      this.newGroupData = {}
+      this.showCreateGroup = true
+      this.selectedGroup = undefined
     },
-    confirmDeleteGroup(group) {
-      this.showConfirmDeleteGroup = true;
-      this.selectedGroup = group;
+    confirmDeleteGroup (group) {
+      this.showConfirmDeleteGroup = true
+      this.selectedGroup = group
     },
-    confirmDeleteGroups() {
-      if (this.selected.length>0) {
-        this.showConfirmDeleteGroups = true;
+    confirmDeleteGroups () {
+      if (this.selected.length > 0) {
+        this.showConfirmDeleteGroups = true
       }
     },
-    async saveGroup() {
-      this.v$.$reset();
+    async saveGroup () {
+      this.v$.$reset()
       // create
-      let createdData = { ...this.newGroupData };
+      const createdData = { ...this.newGroupData }
       this.$store.dispatch('admin/createGroup', {
         group: createdData,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
-    deleteGroup() {
+    deleteGroup () {
       this.$store.dispatch('admin/deleteGroup', {
         id: this.selectedGroup._id,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
-    deleteGroups() {
-      const ids = this.selected.map(u => u._id);
+    deleteGroups () {
+      const ids = this.selected.map(u => u._id)
       this.$store.dispatch('admin/deleteGroups', {
         ids: ids,
         paginationOpts: this.paginationOpts
-      });
-      this.selected = [];
+      })
+      this.selected = []
     }
   }
-};
+}
 </script>
-
-<style scoped>
-
-</style>

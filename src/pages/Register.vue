@@ -38,7 +38,7 @@
                       </div>
                     </template>
                   </q-input>
-                  
+
                   <q-input
                     filled
                     v-model="formData.password"
@@ -109,9 +109,8 @@
                       <q-icon name="fas fa-language" size="xs" />
                     </template>
                   </q-select>
-                  
                   <div>
-                    <q-btn 
+                    <q-btn
                       :label="$t('register.submit')"
                       type="submit"
                       color="primary"
@@ -127,7 +126,6 @@
               </q-card-section>
               <q-card-section v-if="!registrationComplete">
                 <span class="text-caption text-grey" v-html="$t('register.google_policy')">
-                  
                 </span>
               </q-card-section>
               <q-card-section v-if="registrationComplete">
@@ -146,15 +144,15 @@
 </template>
 
 <script>
-import { useI18n } from 'vue-i18n';
-import { mapState, mapActions } from "vuex";
-import useVuelidate from '@vuelidate/core';
-import { useReCaptcha } from "vue-recaptcha-v3";
-import { required, minLength, email } from '../boot/vuelidate';
-import { locales } from '../boot/i18n';
+import { useI18n } from 'vue-i18n'
+import { mapState } from 'vuex'
+import useVuelidate from '@vuelidate/core'
+import { useReCaptcha } from 'vue-recaptcha-v3'
+import { required, minLength, email } from '../boot/vuelidate'
+import { locales } from '../boot/i18n'
 
 export default {
-  setup() {
+  setup () {
     const { locale } = useI18n({ useScope: 'global' })
     const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
 
@@ -166,7 +164,7 @@ export default {
       const token = await executeRecaptcha('login')
 
       // Do stuff with the received token.
-      return token;
+      return token
     }
 
     return {
@@ -175,16 +173,16 @@ export default {
       recaptcha
     }
   },
-  data() {
+  data () {
     return {
       formData: {
-        firstname: "",
-        lastname: "",
-        language: "",
-        email: "",
-        password: ""
+        firstname: '',
+        lastname: '',
+        language: '',
+        email: '',
+        password: ''
       }
-    };
+    }
   },
   validations: {
     formData: {
@@ -211,32 +209,31 @@ export default {
       submitting: state => state.auth.showLoading,
       registrationComplete: state => state.auth.registrationComplete
     }),
-    disableSubmit() {
-      return this.v$.formData.$invalid;
+    disableSubmit () {
+      return this.v$.formData.$invalid
     },
-    localeOptions() {
+    localeOptions () {
       return locales.map(loc => {
         return {
           value: loc,
           label: this.$t('locales.' + loc)
         }
-      });
+      })
     },
-    hasLocales() {
-      return locales.length>1;
+    hasLocales () {
+      return locales.length > 1
     }
   },
   methods: {
-    onSubmit() {
+    onSubmit () {
       // Execute reCAPTCHA with action "login".
       this.recaptcha().then((token) => {
-          let data = this.formData;
-          data.language = this.locale;
-          data.token = token;
-          this.$store.dispatch("account/registerUser", { formData: data });
-      });
-      
+        const data = this.formData
+        data.language = this.locale
+        data.token = token
+        this.$store.dispatch('account/registerUser', { formData: data })
+      })
     }
   }
-};
+}
 </script>

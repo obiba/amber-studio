@@ -40,54 +40,53 @@
 </template>
 
 <script>
-import userService from "../services/user";
-import { Notify } from "quasar";
+import userService from '../services/user'
+import { Notify } from 'quasar'
 
 export default {
-  data() {
+  data () {
     return {
       success: undefined
-    };
+    }
   },
-  mounted() {
-    this.verifyAccount();
+  mounted () {
+    this.verifyAccount()
   },
   methods: {
-    async verifyAccount() {
-      let token = this.$route.query.token;
-      let result;
+    async verifyAccount () {
+      const token = this.$route.query.token
+      let result
       if (token) {
         result = await userService.verifyAccount(token)
-        .catch(err => {
-          if (err.response) {
-            this.success = false;
-            Notify.create({
-              message: this.$t('verify.failure'),
-              color: "negative",
-              icon: "fas fa-times"
-            });
-          }
-        });
-        this.success = result && result.status === 201;
+          .catch(err => {
+            if (err.response) {
+              this.success = false
+              Notify.create({
+                message: this.$t('verify.failure'),
+                color: 'negative',
+                icon: 'fas fa-times'
+              })
+            }
+          })
+        this.success = result && result.status === 201
         if (this.success) {
           Notify.create({
             message: this.$t('verify.success'),
-            color: "positive",
-            icon: "fas fa-check"
-          });
+            color: 'positive',
+            icon: 'fas fa-check'
+          })
         } else {
-          this.success = false;
+          this.success = false
         }
       } else {
         this.success = false
         Notify.create({
           message: this.$t('verify.bad_link'),
-          color: "negative",
-          icon: "fas fa-times"
-        });
-        //this.$router.push("/");
+          color: 'negative',
+          icon: 'fas fa-times'
+        })
       }
     }
   }
-};
+}
 </script>

@@ -26,13 +26,12 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "Maintenance"
+  name: 'Maintenance'
 })
 </script>
-
 
 <style>
 .bg-image {

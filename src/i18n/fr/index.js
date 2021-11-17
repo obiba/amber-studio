@@ -5,7 +5,7 @@ export default {
   login: {
     title: 'Identifiez vous pour commencer une session',
     submit: 'Connexion',
-    forgot_password: "Mot de passe oublié ?",
+    forgot_password: 'Mot de passe oublié ?',
     register: 'Enregistrement'
   },
   register: {
@@ -96,10 +96,10 @@ export default {
   studyForm: {
     definition: 'Définition',
     items: 'Items',
-    builder: 'Builder',
+    builder: 'Builder'
   },
   datasets: {
-    title: 'Données',
+    title: 'Données'
   },
   main: {
     brand: 'Amber Studio',
@@ -146,7 +146,7 @@ export default {
     get_studies: 'Erreur à la récupération des études.',
     get_study: 'Erreur à la récupération de l\'étude.',
     get_study_forms: 'Erreur à la récupération des formulaires de l\'étude.',
-    get_study_form: 'Erreur à la récupération du formulaire de l\'étude.',
+    get_study_form: 'Erreur à la récupération du formulaire de l\'étude.'
   },
   success: {
     create_account: 'Compte créé avec succès. Un courriel de vérification d\'adresse a été envoyé.',
@@ -171,7 +171,7 @@ export default {
     create_study_form: 'Formulaire ajouté avec succès. Éditer pour ajouter des items.',
     update_study_form: 'Formulaire mis à jour avec succès.',
     delete_study_form: 'Formulaire supprimé avec succès.',
-    delete_study_forms: 'Formulaires supprimés avec succès.',
+    delete_study_forms: 'Formulaires supprimés avec succès.'
   },
   formel: {
     add_item_hint: 'Ajouter un élément',
@@ -225,9 +225,9 @@ export default {
     option_value: 'Valeur',
     option_label: 'Libellé',
     add_option: 'Ajouter une option',
-    move_up: "Monter",
-    move_down: "Descendre",
-    delete: "Supprimer"
+    move_up: 'Monter',
+    move_down: 'Descendre',
+    delete: 'Supprimer'
   },
   add: 'Ajouter',
   update: 'Appliquer',

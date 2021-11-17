@@ -1,3 +1,3 @@
-import * as study from "./study.js";
+import * as study from './study.js'
 
-export default Object.assign({}, study);
+export default Object.assign({}, study)

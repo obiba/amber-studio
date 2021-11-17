@@ -2,7 +2,7 @@
   <q-page>
     <div class="text-h6 text-white bg-info q-pa-md">{{$t('users.title')}}</div>
     <q-separator/>
-     
+
     <q-table
         flat
         :rows='users'
@@ -155,7 +155,7 @@
     <q-dialog v-model='showCreateUser' persistent>
       <q-card>
         <q-card-section class='row items-center'>
-           
+
           <div class='col-12 col-md-6'>
             <q-input
               filled
@@ -440,29 +440,29 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import {ref} from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength, email } from '../boot/vuelidate';
-import { date } from 'quasar';
-import { locales } from '../boot/i18n';
+import { mapState, mapActions } from 'vuex'
+import { ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength, email } from '../boot/vuelidate'
+import { date } from 'quasar'
+import { locales } from '../boot/i18n'
 
 export default {
-  mounted: function() {
-    this.getTableUsers();
-    this.setPagination();
-    this.initGroups();
+  mounted: function () {
+    this.getTableUsers()
+    this.setPagination()
+    this.initGroups()
   },
-  setup() {
+  setup () {
     return {
       v$: useVuelidate(),
       selected: ref([]),
       filter: ref(''),
       rolesFilter: ref([]),
-      selectedGroup: ref(null),
+      selectedGroup: ref(null)
     }
   },
-  data() {
+  data () {
     return {
       roles: ['guest', 'interviewer', 'manager', 'administrator', 'inactive'],
       allGroupsOptions: [],
@@ -495,8 +495,8 @@ export default {
           field: 'isVerified',
           format: val => {
             if (val) {
-              return this.$t('confirmed');
-            } else return this.$t('pending');
+              return this.$t('confirmed')
+            } else return this.$t('pending')
           },
           sortable: false
         },
@@ -519,7 +519,7 @@ export default {
         {
           name: 'action',
           align: 'left',
-          label: this.$t('action'),
+          label: this.$t('action')
         }
       ],
       selectedUser: {},
@@ -540,28 +540,26 @@ export default {
         lastname: '',
         institution: '',
         city: '',
-        title:'',
+        title: '',
         phone: '',
         language: '',
         role: ''
       }
-    };
+    }
   },
   watch: {
-    rolesFilter: function(newFilter, oldFilter) {
-      this.getTableUsers();
+    rolesFilter: function (newFilter, oldFilter) {
+      this.getTableUsers()
     }
   },
   validations: {
     newProfileData: {
       firstname: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       lastname: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
@@ -575,12 +573,10 @@ export default {
         minLength: minLength(8)
       },
       institution: {
-        //alpha,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       city: {
-        //alpha,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
@@ -597,139 +593,141 @@ export default {
       users: state => state.admin.users,
       groups: state => state.admin.groups
     }),
-    disableCreateProfile() {
-      return this.v$.newProfileData.$invalid;
+    disableCreateProfile () {
+      return this.v$.newProfileData.$invalid
     },
-    disableGroupUsers() {
-      return this.selectedGroup === null;
+    disableGroupUsers () {
+      return this.selectedGroup === null
     },
-    localeOptions() {
+    localeOptions () {
       return locales.map(loc => {
         return {
           value: loc,
           label: this.$t('locales.' + loc)
         }
-      });
+      })
     },
-    hasLocales() {
-      return locales.length>1;
+    hasLocales () {
+      return locales.length > 1
     },
-    rolesOptions() {
+    rolesOptions () {
       return this.roles.map(rl => {
         return {
           value: rl,
           label: this.$t('roles.' + rl)
         }
-      });
+      })
     }
   },
   methods: {
-    async initGroups() {
-      await this.getGroups({paginationOpts: {
-        rowsPerPage: 0,
-        page: 1,
-        sortBy: 'name',
-        descending: -1
-      }});
+    async initGroups () {
+      await this.getGroups({
+        paginationOpts: {
+          rowsPerPage: 0,
+          page: 1,
+          sortBy: 'name',
+          descending: -1
+        }
+      })
       this.allGroupsOptions = this.groups ? this.groups.map(g => {
         return {
           value: g._id,
           label: g.name,
           object: g
         }
-      }) : [];
-      this.groupsOptions = this.allGroupsOptions;
+      }) : []
+      this.groupsOptions = this.allGroupsOptions
     },
-    setPagination() {
-      this.paginationOpts = this.$store.state.admin.userPaginationOpts;
+    setPagination () {
+      this.paginationOpts = this.$store.state.admin.userPaginationOpts
     },
-    async getTableUsers(requestProp) {
+    async getTableUsers (requestProp) {
       if (requestProp) {
-        this.paginationOpts = requestProp.pagination;
+        this.paginationOpts = requestProp.pagination
         this.$store.commit('admin/setUserPagination', {
           userPaginationOpts: requestProp.pagination
-        });
-        await this.getUsers({ paginationOpts: requestProp.pagination, filter: requestProp.filter, roles: this.rolesFilter });
+        })
+        await this.getUsers({ paginationOpts: requestProp.pagination, filter: requestProp.filter, roles: this.rolesFilter })
       } else {
-        await this.getUsers({ paginationOpts: this.paginationOpts, filter: this.filter, roles: this.rolesFilter });
+        await this.getUsers({ paginationOpts: this.paginationOpts, filter: this.filter, roles: this.rolesFilter })
       }
-      this.paginationOpts.rowsNumber = this.$store.state.admin.userPaginationOpts.rowsNumber;
+      this.paginationOpts.rowsNumber = this.$store.state.admin.userPaginationOpts.rowsNumber
     },
     ...mapActions({
       getUsers: 'admin/getUsers',
       getGroups: 'admin/getGroups',
       updateGroup: 'admin/updateGroup'
     }),
-    createUser() {
+    createUser () {
       this.newProfileData = {
         language: locales[0],
         role: 'guest'
-      };
-      this.showCreateUser = true;
-      this.selectedUser = undefined;
+      }
+      this.showCreateUser = true
+      this.selectedUser = undefined
     },
-    confirmDeleteUser(user) {
-      this.showConfirmDeleteUser = true;
-      this.selectedUser = user;
+    confirmDeleteUser (user) {
+      this.showConfirmDeleteUser = true
+      this.selectedUser = user
     },
-    confirmDeleteUsers() {
-      if (this.selected.length>0) {
-        this.showConfirmDeleteUsers = true;
+    confirmDeleteUsers () {
+      if (this.selected.length > 0) {
+        this.showConfirmDeleteUsers = true
       }
     },
-    confirmGroupUsers() {
-      this.selectedGroup = null;
-      if (this.selected.length>0) {
-        this.showConfirmGroupUsers = true;
+    confirmGroupUsers () {
+      this.selectedGroup = null
+      if (this.selected.length > 0) {
+        this.showConfirmGroupUsers = true
       }
     },
-    resendEmailVerification(email) {
+    resendEmailVerification (email) {
       this.$store.dispatch('account/resendVerification', {
         email: email
-      });
+      })
     },
-    async saveUser() {
-      this.v$.$reset();
+    async saveUser () {
+      this.v$.$reset()
       // create
-      let userData = { ...this.newProfileData };
+      const userData = { ...this.newProfileData }
       this.$store.dispatch('admin/createUser', {
         user: userData,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
-    resetPassword(email) {
+    resetPassword (email) {
       this.$store
         .dispatch('account/forgotPassword', {
           emailAddress: email
-        });
+        })
     },
-    deleteUser() {
+    deleteUser () {
       this.$store.dispatch('admin/deleteUser', {
         id: this.selectedUser._id,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
-    deleteUsers() {
-      const ids = this.selected.map(u => u._id);
+    deleteUsers () {
+      const ids = this.selected.map(u => u._id)
       this.$store.dispatch('admin/deleteUsers', {
         ids: ids,
         paginationOpts: this.paginationOpts
-      });
-      this.selected = [];
+      })
+      this.selected = []
     },
-    groupUsers() {
-      const toSave = {...this.selectedGroup.object};
-      toSave.users = [...this.selectedGroup.object.users];
+    groupUsers () {
+      const toSave = { ...this.selectedGroup.object }
+      toSave.users = [...this.selectedGroup.object.users]
       if (!toSave.users || toSave.users.length === 0) {
-        toSave.users = this.selected.map(u => u._id);
+        toSave.users = this.selected.map(u => u._id)
       } else {
-        this.selected.filter(u => !toSave.users.includes(u._id)).forEach(u => toSave.users.push(u._id));
+        this.selected.filter(u => !toSave.users.includes(u._id)).forEach(u => toSave.users.push(u._id))
       }
       this.updateGroup({
         group: toSave
-      });
+      })
     },
-    copyUserProfile(user) {
+    copyUserProfile (user) {
       return {
         firstname: user.firstname,
         lastname: user.lastname,
@@ -739,32 +737,31 @@ export default {
         phone: user.phone,
         language: user.language,
         role: user.role
-      };
+      }
     },
-    async activeateUser(user) {
-      const profileData = this.copyUserProfile(user);
-      profileData.role = 'guest';
+    async activeateUser (user) {
+      const profileData = this.copyUserProfile(user)
+      profileData.role = 'guest'
       this.$store.dispatch('admin/updateUser', {
         user: profileData,
         id: user._id,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
-    async deactiveateUser(user) {
-      const profileData = this.copyUserProfile(user);
-      profileData.role = 'inactive';
+    async deactiveateUser (user) {
+      const profileData = this.copyUserProfile(user)
+      profileData.role = 'inactive'
       this.$store.dispatch('admin/updateUser', {
         user: profileData,
         id: user._id,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
     filterGroupsOptions (val, update) {
       update(() => {
         if (val === '') {
-          this.groupsOptions = this.allGroupsOptions;
-        }
-        else {
+          this.groupsOptions = this.allGroupsOptions
+        } else {
           const needle = val.toLowerCase()
           this.groupsOptions = this.allGroupsOptions.filter(
             g => g.label.toLowerCase().indexOf(needle) > -1
@@ -773,7 +770,7 @@ export default {
       })
     }
   }
-};
+}
 </script>
 
 <style scoped>

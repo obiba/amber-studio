@@ -1,8 +1,8 @@
-export default function() {
+export default function () {
   return {
     users: [],
     userPaginationOpts: {
-      sortBy: "lastLoggedIn",
+      sortBy: 'lastLoggedIn',
       descending: false,
       page: 1,
       rowsPerPage: 10,
@@ -11,7 +11,7 @@ export default function() {
     user: {},
     groups: [],
     groupPaginationOpts: {
-      sortBy: "name",
+      sortBy: 'name',
       descending: true,
       page: 1,
       rowsPerPage: 10,
@@ -19,5 +19,5 @@ export default function() {
     },
     group: {},
     groupUsers: []
-  };
+  }
 }

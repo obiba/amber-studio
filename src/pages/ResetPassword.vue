@@ -31,7 +31,7 @@
                     </template>
                   </q-input>
                   <div>
-                    <q-btn 
+                    <q-btn
                       :label="$t('reset.submit')"
                       type="submit"
                       color="primary"/>
@@ -47,20 +47,20 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { required, minLength} from '../boot/vuelidate';
-import userService from "../services/user";
-import { Notify } from "quasar";
+import { mapState } from 'vuex'
+import { required, minLength } from '../boot/vuelidate'
+import userService from '../services/user'
+import { Notify } from 'quasar'
 
 export default {
-  data() {
+  data () {
     return {
       valid: false,
       success: false,
       formData: {
-        password: ""
+        password: ''
       }
-    };
+    }
   },
   validations: {
     formData: {
@@ -74,14 +74,14 @@ export default {
     ...mapState({
       submitting: state => state.auth.showLoading
     }),
-    resetValid() {
-      return this.$v.formData.$invalid;
+    resetValid () {
+      return this.$v.formData.$invalid
     }
   },
   methods: {
-    async resetPassword() {
-      let token = this.$route.query.token;
-      let result;
+    async resetPassword () {
+      const token = this.$route.query.token
+      let result
       if (token) {
         result = await userService
           .resetPassword(token, this.formData.password)
@@ -89,27 +89,27 @@ export default {
             if (err.response) {
               Notify.create({
                 message: this.$t('reset.failure'),
-                color: "negative",
-                icon: "fas fa-times"
-              });
+                color: 'negative',
+                icon: 'fas fa-times'
+              })
             }
-          });
+          })
       } else {
         Notify.create({
           message: this.$t('reset.bad_link'),
-          color: "negative",
-          icon: "fas fa-times"
-        });
+          color: 'negative',
+          icon: 'fas fa-times'
+        })
       }
       if (result && result.status === 201) {
         Notify.create({
           message: this.$t('reset.success'),
-          color: "positive",
-          icon: "fas fa-check"
-        });
-        this.$router.push("/");
+          color: 'positive',
+          icon: 'fas fa-check'
+        })
+        this.$router.push('/')
       }
     }
   }
-};
+}
 </script>

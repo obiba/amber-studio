@@ -152,24 +152,24 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import { defineComponent, ref } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength } from '../boot/vuelidate';
-import { locales } from '../boot/i18n';
+import { mapState, mapActions } from 'vuex'
+import { defineComponent, ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '../boot/vuelidate'
+import { locales } from '../boot/i18n'
 
 export default defineComponent({
-  mounted: function() {
+  mounted: function () {
     this.initData()
   },
-  setup() {
-    const userOptions = ref([]);
+  setup () {
+    const userOptions = ref([])
     return {
       v$: useVuelidate(),
-      userOptions,
+      userOptions
     }
   },
-  data() {
+  data () {
     return {
       roles: ['guest', 'interviewer', 'manager', 'administrator', 'inactive'],
       profileData: {
@@ -177,34 +177,30 @@ export default defineComponent({
         lastname: '',
         institution: '',
         city: '',
-        title:'',
+        title: '',
         phone: '',
         language: '',
         role: ''
-      },
+      }
     }
   },
   validations: {
     profileData: {
       firstname: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       lastname: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       institution: {
-        //alpha,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
       city: {
-        //alpha,
         minLength: minLength(2),
         maxLength: maxLength(30)
       },
@@ -218,32 +214,32 @@ export default defineComponent({
   },
   computed: {
     ...mapState({
-      user: state => state.admin.user,
+      user: state => state.admin.user
     }),
-    currentUser() {
-      return this.$store.state.admin.user;
+    currentUser () {
+      return this.$store.state.admin.user
     },
-    disableSaveUser() {
-      return this.v$.profileData.$invalid;
+    disableSaveUser () {
+      return this.v$.profileData.$invalid
     },
-    localeOptions() {
+    localeOptions () {
       return locales.map(loc => {
         return {
           value: loc,
           label: this.$t('locales.' + loc)
         }
-      });
+      })
     },
-    hasLocales() {
-      return locales.length>1;
+    hasLocales () {
+      return locales.length > 1
     },
-    rolesOptions() {
+    rolesOptions () {
       return this.roles.map(rl => {
         return {
           value: rl,
           label: this.$t('roles.' + rl)
         }
-      });
+      })
     }
   },
   methods: {
@@ -251,7 +247,7 @@ export default defineComponent({
       getUser: 'admin/getUser',
       updateUser: 'admin/updateUser'
     }),
-    copyUserProfile(user) {
+    copyUserProfile (user) {
       return {
         firstname: user.firstname,
         lastname: user.lastname,
@@ -261,19 +257,19 @@ export default defineComponent({
         phone: user.phone,
         language: user.language,
         role: user.role
-      };
+      }
     },
-    async initData() {
-      await this.getUser({ id: this.$route.params.id });
-      this.profileData = this.copyUserProfile(this.user);
+    async initData () {
+      await this.getUser({ id: this.$route.params.id })
+      this.profileData = this.copyUserProfile(this.user)
     },
-    async saveUser() {
-      this.v$.$reset();
-      const toSave = {...this.profileData};
+    async saveUser () {
+      this.v$.$reset()
+      const toSave = { ...this.profileData }
       this.updateUser({
         user: toSave,
         id: this.user._id
-      });
+      })
     }
   }
 })

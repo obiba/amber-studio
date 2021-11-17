@@ -1,3 +1,3 @@
-import { makeAuthPlugin } from '../boot/feathersClient';
+import { makeAuthPlugin } from '../boot/feathersClient'
 
-export default makeAuthPlugin({ userService: 'user' });
+export default makeAuthPlugin({ userService: 'user' })

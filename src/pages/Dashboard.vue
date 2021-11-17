@@ -8,21 +8,15 @@
 </template>
 
 <script>
-import {defineComponent,defineAsyncComponent} from 'vue'
+import { defineComponent, defineAsyncComponent } from 'vue'
 
 export default defineComponent({
   name: 'PageIndex',
   components: {
     CardSocial: defineAsyncComponent(() => import('components/cards/CardSocial')),
-    CardCharts: defineAsyncComponent(() => import('components/cards/CardCharts')),
-    // CardCharts: () => import('components/cards/CardCharts'),
-    TabSocial: defineAsyncComponent(() => import('components/tabs/TabSocial')),
-    CardWithImage: defineAsyncComponent(() => import('components/cards/CardWithImage')),
-    CardTimeLine: defineAsyncComponent(() => import('components/cards/CardTimeLine')),
-    TodoList: defineAsyncComponent(() => import('components/list/TodoList')),
-    TableVisits: defineAsyncComponent(() => import('components/tables/TableVisits')),
+    CardCharts: defineAsyncComponent(() => import('components/cards/CardCharts'))
   },
-  setup() {
+  setup () {
     return {
       mode: 'list',
       messages: [
@@ -62,9 +56,9 @@ export default defineComponent({
           avatar: 'https://cdn.quasar.dev/team/razvan_stoenescu.jpeg',
           time: '5:17 AM'
         }
-      ],
+      ]
     }
-  },
+  }
 
 })
 </script>

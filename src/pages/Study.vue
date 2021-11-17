@@ -72,24 +72,24 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import { defineComponent, defineAsyncComponent, ref } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength } from '../boot/vuelidate';
+import { mapState, mapActions } from 'vuex'
+import { defineComponent, defineAsyncComponent } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default defineComponent({
   components: {
-    StudyForms: defineAsyncComponent(() => import('components/forms/StudyForms.vue')),
+    StudyForms: defineAsyncComponent(() => import('components/forms/StudyForms.vue'))
   },
-  mounted: function() {
+  mounted: function () {
     this.initStudyData()
   },
-  setup() {
+  setup () {
     return {
-      v$: useVuelidate(),
+      v$: useVuelidate()
     }
   },
-  data() {
+  data () {
     return {
       studyData: {
         name: '',
@@ -102,7 +102,6 @@ export default defineComponent({
   validations: {
     studyData: {
       name: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
@@ -113,28 +112,28 @@ export default defineComponent({
     ...mapState({
       study: state => state.study.study
     }),
-    currentStudy() {
-      return this.$store.state.study.study;
+    currentStudy () {
+      return this.$store.state.study.study
     },
-    disableSaveStudy() {
-      return this.v$.studyData.$invalid;
+    disableSaveStudy () {
+      return this.v$.studyData.$invalid
     }
   },
   methods: {
     ...mapActions({
       getStudy: 'study/getStudy',
-      updateStudy: 'study/updateStudy',
+      updateStudy: 'study/updateStudy'
     }),
-    async initStudyData() {
-      await this.getStudy({ id: this.$route.params.id });
-      this.studyData = {...JSON.parse(JSON.stringify(this.study))};
+    async initStudyData () {
+      await this.getStudy({ id: this.$route.params.id })
+      this.studyData = { ...JSON.parse(JSON.stringify(this.study)) }
     },
-    async saveStudy() {
-      this.v$.$reset();
-      const toSave = {...this.studyData};
+    async saveStudy () {
+      this.v$.$reset()
+      const toSave = { ...this.studyData }
       this.updateStudy({
         study: toSave
-      });
+      })
     }
   }
 })

@@ -5,7 +5,7 @@ export default {
   login: {
     title: 'Sign in to start your session',
     submit: 'Sign in',
-    forgot_password: "Forgot password?",
+    forgot_password: 'Forgot password?',
     register: 'Sign up'
   },
   register: {
@@ -96,10 +96,10 @@ export default {
   studyForm: {
     definition: 'Definition',
     items: 'Items',
-    builder: 'Builder',
+    builder: 'Builder'
   },
   datasets: {
-    title: 'Datasets',
+    title: 'Datasets'
   },
   main: {
     brand: 'Amber Studio',
@@ -146,7 +146,7 @@ export default {
     get_studies: 'There was an error while retrieving studies.',
     get_study: 'There was an error while retrieving the study.',
     get_study_forms: 'There was an error while retrieving study\'s forms.',
-    get_study_form: 'There was an error while retrieving the study\'s form.',
+    get_study_form: 'There was an error while retrieving the study\'s form.'
   },
   success: {
     create_account: 'Account successfully created. Please check your email to verify your account.',
@@ -171,7 +171,7 @@ export default {
     create_study_form: 'Study\'s form successfully added. Edit to add items.',
     update_study_form: 'Study\'s form successfully updated.',
     delete_study_form: 'Study\'s form successfully deleted.',
-    delete_study_forms: 'Study\'s forms successfully deleted.',
+    delete_study_forms: 'Study\'s forms successfully deleted.'
   },
   formel: {
     add_item_hint: 'Add a form item',
@@ -195,8 +195,8 @@ export default {
       time: 'Time',
       radiogroup: 'Single choice',
       checkboxgroup: 'Multiple choices',
-      select: 'Dropdown', 
-      multiselect: 'Multi select dropdown', 
+      select: 'Dropdown',
+      multiselect: 'Multi select dropdown',
       toggle: 'Toggle',
       slider: 'Slider',
       static: 'Section',
@@ -225,9 +225,9 @@ export default {
     option_value: 'Value',
     option_label: 'Label',
     add_option: 'Add option',
-    move_up: "Move item up",
-    move_down: "Move item down",
-    delete: "Delete item"
+    move_up: 'Move item up',
+    move_down: 'Move item down',
+    delete: 'Delete item'
   },
   add: 'Add',
   update: 'Update',

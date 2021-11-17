@@ -1,24 +1,21 @@
-import  { feathersClient, makeServicePlugin, BaseModel } from '../../boot/feathersClient';
+import { feathersClient, makeServicePlugin, BaseModel } from '../../boot/feathersClient'
 
 class Group extends BaseModel {
-  constructor(data, options) {
-    super(data, options);
-  }
   // Required for $FeathersVuex plugin to work after production transpile.
-  static modelName = 'Group';
+  static modelName = 'Group'
   // Define default properties here
-  static instanceDefaults() {
+  static instanceDefaults () {
     return {
       name: ''
-    };
+    }
   }
 }
-const servicePath = 'group';
+const servicePath = 'group'
 const servicePlugin = makeServicePlugin({
   Model: Group,
   service: feathersClient.service(servicePath),
   servicePath
-});
+})
 
 // Setup the client-side Feathers hooks.
 feathersClient.service(servicePath).hooks({
@@ -49,6 +46,6 @@ feathersClient.service(servicePath).hooks({
     patch: [],
     remove: []
   }
-});
+})
 
-export default servicePlugin;
+export default servicePlugin

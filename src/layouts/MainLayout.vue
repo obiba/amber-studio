@@ -22,11 +22,11 @@
           <q-btn round dense flat icon="fab fa-github" type="a" href="https://github.com/obiba/amber-studio" target="_blank">
           </q-btn>
           <q-btn-dropdown
-            v-show="hasLocales" 
+            v-show="hasLocales"
             flat
             :label="locale">
             <q-list>
-              <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions">
+              <q-item clickable v-close-popup @click="onLocaleSelection(localeOpt)" v-for="localeOpt in localeOptions" :key="localeOpt.value">
                 <q-item-section>
                   <q-item-label class="text-uppercase">{{localeOpt.value}}</q-item-label>
                 </q-item-section>
@@ -72,7 +72,7 @@
             <q-item-label>{{$t('main.dashboard')}}</q-item-label>
           </q-item-section>
         </q-item>
-  
+
         <q-item-label header class="text-weight-bolder text-white">Content</q-item-label>
 
         <q-item to="/studies" active-class="q-item-no-link-highlighting">
@@ -83,7 +83,7 @@
             <q-item-label>{{$t('studies.title')}}</q-item-label>
           </q-item-section>
         </q-item>
-      
+
         <q-item v-if="isAdministrator || isManager" to="/datasets" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="storage"/>
@@ -130,7 +130,6 @@
 
       </q-list>
 
-
     </q-drawer>
 
     <q-page-container class="bg-white">
@@ -141,9 +140,9 @@
 </template>
 
 <script>
-import { useI18n } from 'vue-i18n';
-import { defineComponent, ref } from 'vue';
+import { useI18n } from 'vue-i18n'
 import { locales } from '../boot/i18n'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -161,54 +160,54 @@ export default defineComponent({
     }
   },
   computed: {
-    localeOptions() {
+    localeOptions () {
       return locales.map(loc => {
         return {
           value: loc,
           label: this.$t('locales.' + loc)
         }
-      });
+      })
     },
-    hasLocales() {
-      return locales.length>1;
+    hasLocales () {
+      return locales.length > 1
     },
-    user() {
-      return this.$store.state.auth.payload ? this.$store.state.auth.payload.user : undefined;
+    user () {
+      return this.$store.state.auth.payload ? this.$store.state.auth.payload.user : undefined
     },
-    userName() {
+    userName () {
       return this.userEmail.split('@')[0]
     },
-    userEmail() {
+    userEmail () {
       if (this.user) {
-        return this.user.email;
+        return this.user.email
       }
-      return '?';
+      return '?'
     },
-    isAdministrator() {
+    isAdministrator () {
       if (this.user) {
-        return this.user.role === "administrator";
+        return this.user.role === 'administrator'
       }
-      return false;
+      return false
     },
-    isManager() {
+    isManager () {
       if (this.user) {
-        return this.user.role === "manager";
+        return this.user.role === 'manager'
       }
-      return false;
+      return false
     },
-    isInterviewer() {
+    isInterviewer () {
       if (this.user) {
-        return this.user.role === "interviewer";
+        return this.user.role === 'interviewer'
       }
-      return false;
+      return false
     }
   },
   methods: {
-    onLocaleSelection(opt) {
-      this.locale = opt.value;
+    onLocaleSelection (opt) {
+      this.locale = opt.value
     },
-    onLogout() {
-      this.$store.dispatch("auth/logout");
+    onLogout () {
+      this.$store.dispatch('auth/logout')
     }
   }
 })

@@ -60,13 +60,12 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
-import {ref} from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  name: "LockScreen",
+  name: 'LockScreen',
 
-  setup() {
+  setup () {
     return {
       password: ref(''),
       isPwd: ref('password')

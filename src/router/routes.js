@@ -68,20 +68,20 @@ const routes = [
     component: () => import('pages/Login.vue')
   },
   {
-    path: "/register",
-    component: () => import("pages/Register.vue")
+    path: '/register',
+    component: () => import('pages/Register.vue')
   },
   {
-    path: "/forgot-password",
-    component: () => import("pages/ForgotPassword.vue")
+    path: '/forgot-password',
+    component: () => import('pages/ForgotPassword.vue')
   },
   {
-    path: "/reset-password",
-    component: () => import("pages/ResetPassword.vue")
+    path: '/reset-password',
+    component: () => import('pages/ResetPassword.vue')
   },
   {
-    path: "/verify",
-    component: () => import("pages/Verify.vue")
+    path: '/verify',
+    component: () => import('pages/Verify.vue')
   },
   {
     path: '/lock',

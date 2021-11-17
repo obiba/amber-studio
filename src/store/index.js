@@ -1,10 +1,10 @@
 import { store } from 'quasar/wrappers'
 import { createStore } from 'vuex'
-import authvuex from './store.auth';
-import account from './account';
-import admin from './admin';
-import study from './study';
-import studyForm from './studyForm';
+import authvuex from './store.auth'
+import account from './account'
+import admin from './admin'
+import study from './study'
+import studyForm from './studyForm'
 
 const requireModule = require.context(
   // The path where the service modules live
@@ -13,17 +13,17 @@ const requireModule = require.context(
   false,
   // Only include .js files (prevents duplicate imports`)
   /.js$/
-);
+)
 
 const servicePlugins = requireModule
   .keys()
-  .map(modulePath => requireModule(modulePath).default);
+  .map(modulePath => requireModule(modulePath).default)
 
 /*
  * If not building with SSR mode, you can
- * directly export the Store instantiation;
+ * directly export the Store instantiation
  *
- * The function below can be async too; either use
+ * The function below can be async too either use
  * async/await or return a Promise which resolves
  * with the Store instance.
  */

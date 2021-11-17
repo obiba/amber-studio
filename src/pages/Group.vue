@@ -82,7 +82,7 @@
           </q-item>
         </q-list>
       </div>
-      
+
     </div>
 
     <q-btn
@@ -102,23 +102,23 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import { defineComponent, ref } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength } from '../boot/vuelidate';
+import { mapState, mapActions } from 'vuex'
+import { defineComponent, ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default defineComponent({
-  mounted: function() {
+  mounted: function () {
     this.initData()
   },
-  setup() {
-    const userOptions = ref([]);
+  setup () {
+    const userOptions = ref([])
     return {
       v$: useVuelidate(),
-      userOptions,
+      userOptions
     }
   },
-  data() {
+  data () {
     return {
       groupData: {
         name: '',
@@ -132,7 +132,6 @@ export default defineComponent({
   validations: {
     groupData: {
       name: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
@@ -143,13 +142,13 @@ export default defineComponent({
     ...mapState({
       filteredUsers: state => state.admin.users,
       group: state => state.admin.group,
-      groupUsers: state => state.admin.groupUsers,
+      groupUsers: state => state.admin.groupUsers
     }),
-    currentGroup() {
-      return this.$store.state.admin.group;
+    currentGroup () {
+      return this.$store.state.admin.group
     },
-    disableSaveGroup() {
-      return this.v$.groupData.$invalid;
+    disableSaveGroup () {
+      return this.v$.groupData.$invalid
     }
   },
   methods: {
@@ -159,33 +158,33 @@ export default defineComponent({
       getGroupUsers: 'admin/getGroupUsers',
       updateGroup: 'admin/updateGroup'
     }),
-    async initData() {
-      await this.getGroup({ id: this.$route.params.id });
-      this.groupData = {...this.group};
-      await this.getGroupUsers({ group: this.group });
-      this.groupData.users = [...this.groupUsers];
+    async initData () {
+      await this.getGroup({ id: this.$route.params.id })
+      this.groupData = { ...this.group }
+      await this.getGroupUsers({ group: this.group })
+      this.groupData.users = [...this.groupUsers]
     },
-    async saveGroup() {
-      this.v$.$reset();
-      const toSave = {...this.groupData};
-      toSave.users = this.groupData.users.map(u => u._id);
+    async saveGroup () {
+      this.v$.$reset()
+      const toSave = { ...this.groupData }
+      toSave.users = this.groupData.users.map(u => u._id)
       this.updateGroup({
         group: toSave
-      });
+      })
     },
-    filterUserOptions(val, update, abort) {
-      const filter = val.trim();
-      if (filter.length<2) {
+    filterUserOptions (val, update, abort) {
+      const filter = val.trim()
+      if (filter.length < 2) {
         // not enough type ahead
         update(() => {
-          this.userOptions = [];
-        });
+          this.userOptions = []
+        })
         return
       }
-      this.userOptionsLoading = true;
+      this.userOptionsLoading = true
       this.getUsers({
         paginationOpts: {
-          sortBy :'email',
+          sortBy: 'email',
           rowsPerPage: 5,
           page: 1,
           descending: -1
@@ -193,27 +192,27 @@ export default defineComponent({
         filter: filter
       }).then(() => {
         update(() => {
-          this.userOptions = this.filteredUsers.map(u => { 
+          this.userOptions = this.filteredUsers.map(u => {
             return {
               label: u.email,
               value: u._id,
-              object: u 
+              object: u
             }
-          });
-          this.userOptionsLoading = false;
+          })
+          this.userOptionsLoading = false
         })
-      });
+      })
     },
-    addUserOption(value) {
+    addUserOption (value) {
       // add value if not present
       if (this.groupData.users.filter(u => u.email === value.object.email).length === 0) {
-        this.groupData.users.push(value.object);
+        this.groupData.users.push(value.object)
       }
       // FIXME: does not clear the select
-      this.selectedUserOptions = '';
+      this.selectedUserOptions = ''
     },
-    removeUser(user) {
-      this.groupData.users = this.groupData.users.filter(u => u.email !== user.email);
+    removeUser (user) {
+      this.groupData.users = this.groupData.users.filter(u => u.email !== user.email)
     }
   }
 })

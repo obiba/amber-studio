@@ -77,24 +77,24 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import { defineComponent, defineAsyncComponent, ref } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength } from '../boot/vuelidate';
+import { mapState, mapActions } from 'vuex'
+import { defineComponent, defineAsyncComponent } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default defineComponent({
   components: {
-    FormElement: defineAsyncComponent(() => import('components/forms/FormElement.vue')),
+    FormElement: defineAsyncComponent(() => import('components/forms/FormElement.vue'))
   },
-  mounted: function() {
+  mounted: function () {
     this.initStudyFormData()
   },
-  setup() {
+  setup () {
     return {
-      v$: useVuelidate(),
+      v$: useVuelidate()
     }
   },
-  data() {
+  data () {
     return {
       studyFormData: {
         name: '',
@@ -105,7 +105,6 @@ export default defineComponent({
   validations: {
     studyFormData: {
       name: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
@@ -117,27 +116,27 @@ export default defineComponent({
       study: state => state.study.study,
       studyForm: state => state.studyForm.studyForm
     }),
-    disableSave() {
-      return this.v$.studyFormData.$invalid;
+    disableSave () {
+      return this.v$.studyFormData.$invalid
     }
   },
   methods: {
     ...mapActions({
       getStudy: 'study/getStudy',
       getStudyForm: 'studyForm/getStudyForm',
-      updateStudyForm: 'studyForm/updateStudyForm',
+      updateStudyForm: 'studyForm/updateStudyForm'
     }),
-    async initStudyFormData() {
-      await this.getStudyForm({ id: this.$route.params.id });
-      this.studyFormData = JSON.parse(JSON.stringify(this.studyForm));
-      await this.getStudy({ id: this.studyForm.study }); 
+    async initStudyFormData () {
+      await this.getStudyForm({ id: this.$route.params.id })
+      this.studyFormData = JSON.parse(JSON.stringify(this.studyForm))
+      await this.getStudy({ id: this.studyForm.study })
     },
-    async save() {
-      this.v$.$reset();
-      const toSave = {...this.studyFormData};
+    async save () {
+      this.v$.$reset()
+      const toSave = { ...this.studyFormData }
       this.updateStudyForm({
-          studyForm: toSave
-      });
+        studyForm: toSave
+      })
     }
   }
 })
