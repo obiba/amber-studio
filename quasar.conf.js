@@ -84,7 +84,7 @@ module.exports = configure(function (ctx) {
     devServer: {
       https: false,
       port: 3080,
-      open: true // opens browser window automatically
+      open: false // opens browser window automatically
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
@@ -92,7 +92,7 @@ module.exports = configure(function (ctx) {
       config: {},
 
       // iconSet: 'material-icons', // Quasar icon set
-      // lang: 'en-US', // Quasar language pack
+      // lang: 'en', // Quasar language pack
 
       // For special cases outside of where the auto-import stategy can have an impact
       // (like functional components as one of the examples),
@@ -124,7 +124,7 @@ module.exports = configure(function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `Amber Studio App`,
+        name: `Amber Studio`,
         short_name: `Amber Studio`,
         description: `Amber Studio for managing Amber server`,
         display: 'standalone',

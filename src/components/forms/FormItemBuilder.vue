@@ -25,7 +25,7 @@
             <q-input class="q-mb-md" v-model="schema.label" :label="$t('formel.label')" :hint="$t('formel.label_hint')" dense filled />
             <q-input class="q-mb-md" v-model="schema.description" :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
             <q-input class="q-mb-md" v-model="schema.conditions" :label="$t('formel.conditions')" :hint="$t('formel.conditions_hint')" dense filled />
-            <q-input v-if="isVariable" class="q-mb-md" v-model="schema.rules" :label="$t('formel.rules')" :hint="$t('formel.rules_hint')" dense filled />
+            <q-input v-if="isVariable" class="q-mb-md" v-model="schema.validation" :label="$t('formel.validation')" :hint="$t('formel.validation_hint')" dense filled />
           </div>
           <div class="col-md-6 col-sm-12">
             <div v-if="isVariable">
@@ -312,7 +312,7 @@ export default defineComponent({
         delete this.schema.options;
       }
       if (!this.isVariable) {
-        delete this.schema.rules;
+        delete this.schema.validation;
         delete this.schema.min;
         delete this.schema.max;
         delete this.schema.format;

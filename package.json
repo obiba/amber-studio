@@ -17,8 +17,8 @@
     "@feathersjs/vuex-commons": "0.0.2-pre.16",
     "@quasar/cli": "^1.2.1",
     "@quasar/extras": "^1.0.0",
-    "@vuelidate/core": "^2.0.0-alpha.25",
-    "@vuelidate/validators": "^2.0.0-alpha.21",
+    "@vuelidate/core": "^2.0.0-alpha.32",
+    "@vuelidate/validators": "^2.0.0-alpha.25",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "echarts": "^5.2.1",
@@ -48,7 +48,7 @@
     "last 5 Opera versions"
   ],
   "engines": {
-    "node": ">= 10.18.1",
+    "node": ">= 12.22.1",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
   }

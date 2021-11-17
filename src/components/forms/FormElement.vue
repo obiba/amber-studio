@@ -10,7 +10,6 @@
             :nodes="items"
             node-key="name"
             children-key="items"
-            default-expand-all
             selected-color="primary"
             v-model:selected="selected"
             @keyup.alt.up="selectUpItem"
@@ -109,17 +108,20 @@ export default defineComponent({
   },
   computed: {
     selectedItem() {
-      if (!this.form.items) {
-        this.form.items = [];
+      if (!this.form.schema) {
+        this.form.schema = { items: [] };
       }
-      if (!this.formItemSelected && this.form.items.length>0) {
-        this.selected = this.form.items[0].name;
+      else if (!this.form.schema.items) {
+        this.form.schema.items = [];
+      }
+      if (!this.formItemSelected && this.form.schema.items.length>0) {
+        this.selected = this.form.schema.items[0].name;
       }
       return this.formItemSelected;
     },
     items() {
-      if (this.form)
-        return this.form.items ? this.form.items : [];
+      if (this.form && this.form.schema)
+        return this.form.schema.items ? this.form.schema.items : [];
       return [];
     }
   },
@@ -269,7 +271,7 @@ export default defineComponent({
       else
         this.selectUpItem(item);
       found.parent.items.splice(idx, 1);
-      if (this.form.items.length === 0) {
+      if (this.form.schema.items.length === 0) {
         this.selectItem(null);
       }
     },
@@ -277,7 +279,7 @@ export default defineComponent({
       return this.formItemSelected && this.formItemSelected.name === item.name;
     },
     findItemAndParent(name) {
-      return this.findItemInParent(this.form, name);
+      return this.findItemInParent(this.form.schema, name);
     },
     findItemInParent(parent, name) {
       let rval = {
