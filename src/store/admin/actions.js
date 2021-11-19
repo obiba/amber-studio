@@ -70,6 +70,56 @@ export async function updateUser ({ commit, dispatch }, payload) {
   }
 }
 
+export async function deleteUser ({ dispatch }, payload) {
+  const result = await userService
+    .deleteUser(payload.id)
+    .catch(() => {
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      })
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_user'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'admin/getUsers',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  )
+}
+
+export async function deleteUsers ({ dispatch }, payload) {
+  const result = await userService
+    .deleteUsers(payload.ids)
+    .catch(() => {
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      })
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_users'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'admin/getUsers',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  )
+}
+
 export async function getGroups ({ commit }, payload) {
   const result = await groupService.getGroups(payload.paginationOpts, payload.filter).catch(err => {
     console.error(err)
