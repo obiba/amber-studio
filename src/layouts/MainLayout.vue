@@ -84,14 +84,14 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="isAdministrator || isManager" to="/datasets" active-class="q-item-no-link-highlighting">
+        <!--q-item v-if="isAdministrator || isManager" to="/datasets" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="storage"/>
           </q-item-section>
           <q-item-section>
             <q-item-label>{{$t('datasets.title')}}</q-item-label>
           </q-item-section>
-        </q-item>
+        </q-item-->
 
         <q-item-label v-if="isAdministrator" header class="text-weight-bolder text-white">Administration</q-item-label>
 
@@ -113,18 +113,18 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="isAdministrator" to="/settings" active-class="q-item-no-link-highlighting">
+        <!--q-item v-if="isAdministrator" to="/settings" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="settings"/>
           </q-item-section>
           <q-item-section>
             <q-item-label>{{$t('main.settings')}}</q-item-label>
           </q-item-section>
-        </q-item>
+        </q-item-->
 
         <q-item class="fixed-bottom text-caption">
           <div>
-            {{$t('main.powered_by')}} <a class="text-weight-bold" href="https://www.obiba.org">OBiBa Amber</a>
+            {{$t('main.powered_by')}} <a class="text-weight-bold" href="https://www.obiba.org" target="_blank">OBiBa Amber</a>
           </div>
         </q-item>
 
@@ -143,6 +143,7 @@
 import { useI18n } from 'vue-i18n'
 import { locales } from '../boot/i18n'
 import { defineComponent, ref } from 'vue'
+import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -160,6 +161,9 @@ export default defineComponent({
     }
   },
   computed: {
+    ...mapState({
+      user: state => state.auth.payload ? state.auth.payload.user : undefined
+    }),
     localeOptions () {
       return locales.map(loc => {
         return {
@@ -170,9 +174,6 @@ export default defineComponent({
     },
     hasLocales () {
       return locales.length > 1
-    },
-    user () {
-      return this.$store.state.auth.payload ? this.$store.state.auth.payload.user : undefined
     },
     userName () {
       return this.userEmail.split('@')[0]

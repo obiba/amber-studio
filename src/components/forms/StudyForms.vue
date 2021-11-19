@@ -28,12 +28,12 @@
           :title="$t('study.delete_study_forms_hint')"
           @click="onConfirmDeleteMultiple()" />
         <q-space />
-        <q-input 
-          filled 
-          borderless 
-          dense 
-          debounce="300" 
-          v-model="filter" 
+        <q-input
+          filled
+          borderless
+          dense
+          debounce="300"
+          v-model="filter"
           :placeholder="$t('search')"
           :title="$t('study.search_study_form_hint')">
           <template v-slot:append>
@@ -180,25 +180,25 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import { defineComponent, ref } from 'vue';
-import useVuelidate from '@vuelidate/core';
-import { required, minLength, maxLength } from '../../boot/vuelidate';
+import { mapState, mapActions } from 'vuex'
+import { defineComponent, ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '../../boot/vuelidate'
 
 export default defineComponent({
-  name: "StudyForms",
-  mounted: function() {
-    this.setPagination();
+  name: 'StudyForms',
+  mounted: function () {
+    this.setPagination()
   },
-  setup() {
+  setup () {
     return {
       v$: useVuelidate(),
-      tab: ref("definition"),
+      tab: ref('definition'),
       selected: ref([]),
       filter: ref('')
     }
   },
-  data() {
+  data () {
     return {
       newStudyFormData: {
         name: '',
@@ -234,7 +234,7 @@ export default defineComponent({
         {
           name: 'action',
           align: 'left',
-          label: this.$t('action'),
+          label: this.$t('action')
         }
       ]
     }
@@ -242,7 +242,6 @@ export default defineComponent({
   validations: {
     newStudyFormData: {
       name: {
-        //alpha,
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
@@ -254,13 +253,13 @@ export default defineComponent({
       study: state => state.study.study,
       studyForms: state => state.studyForm.studyForms
     }),
-    disableCreateStudyForm() {
-      return this.v$.newStudyFormData.$invalid;
+    disableCreateStudyForm () {
+      return this.v$.newStudyFormData.$invalid
     }
   },
   watch: {
-    study: function(newValue, oldValue) {
-      this.getTableStudyForms();
+    study: function (newValue, oldValue) {
+      this.getTableStudyForms()
     }
   },
   methods: {
@@ -268,59 +267,59 @@ export default defineComponent({
       getStudyForms: 'studyForm/getStudyForms',
       createStudyForm: 'studyForm/createStudyForm'
     }),
-    onAdd() {
-      this.newStudyFormData = {};
-      this.showCreateStudyForm = true;
-      this.selectedStudyForm = undefined;
+    onAdd () {
+      this.newStudyFormData = {}
+      this.showCreateStudyForm = true
+      this.selectedStudyForm = undefined
     },
-    onConfirmDelete(studyForm) {
-      this.showConfirmDeleteStudyForm = true;
-      this.selectedStudyForm = studyForm;
+    onConfirmDelete (studyForm) {
+      this.showConfirmDeleteStudyForm = true
+      this.selectedStudyForm = studyForm
     },
-    onConfirmDeleteMultiple() {
-      if (this.selected.length>0) {
-        this.showConfirmDeleteStudyForms = true;
+    onConfirmDeleteMultiple () {
+      if (this.selected.length > 0) {
+        this.showConfirmDeleteStudyForms = true
       }
     },
-    async getTableStudyForms(requestProp) {
-      console.log(this.study);
+    async getTableStudyForms (requestProp) {
+      console.log(this.study)
       if (requestProp) {
-        this.paginationOpts = requestProp.pagination;
+        this.paginationOpts = requestProp.pagination
         this.$store.commit('studyForm/setStudyFormPagination', {
           studyFormPaginationOpts: requestProp.pagination
-        });
-        await this.getStudyForms({ paginationOpts: requestProp.pagination, study: this.study._id, filter: requestProp.filter });
+        })
+        await this.getStudyForms({ paginationOpts: requestProp.pagination, study: this.study._id, filter: requestProp.filter })
       } else {
-        await this.getStudyForms({ paginationOpts: this.paginationOpts, study: this.study._id, filter: this.filter });
+        await this.getStudyForms({ paginationOpts: this.paginationOpts, study: this.study._id, filter: this.filter })
       }
-      this.paginationOpts.rowsNumber = this.$store.state.studyForm.studyFormPaginationOpts.rowsNumber;
+      this.paginationOpts.rowsNumber = this.$store.state.studyForm.studyFormPaginationOpts.rowsNumber
     },
-    setPagination() {
-      this.paginationOpts = this.$store.state.studyForm.studyFormPaginationOpts;
+    setPagination () {
+      this.paginationOpts = this.$store.state.studyForm.studyFormPaginationOpts
     },
-    deleteStudyForm() {
+    deleteStudyForm () {
       this.$store.dispatch('studyForm/deleteStudyForm', {
         id: this.selectedStudyForm._id,
         study: this.study._id,
         paginationOpts: this.paginationOpts
-      });
+      })
     },
-    deleteStudyForms() {
-      const ids = this.selected.map(u => u._id);
+    deleteStudyForms () {
+      const ids = this.selected.map(u => u._id)
       this.$store.dispatch('studyForm/deleteStudyForms', {
         ids: ids,
         study: this.study._id,
         paginationOpts: this.paginationOpts
-      });
-      this.selected = [];
+      })
+      this.selected = []
     },
-    async saveStudyForm() {
-      this.v$.$reset();
-      const toSave = {...this.newStudyFormData};
-      toSave.study = this.study._id;
+    async saveStudyForm () {
+      this.v$.$reset()
+      const toSave = { ...this.newStudyFormData }
+      toSave.study = this.study._id
       this.createStudyForm({
         studyForm: toSave
-      });
+      })
     }
   }
 })
