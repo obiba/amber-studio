@@ -42,8 +42,6 @@ const {
 })
 
 export default boot(({ app }) => {
-  app.use(feathersClient)
-  app.use(Vuex)
   app.use(FeathersVuex)
 })
 

@@ -1,6 +1,6 @@
 import { feathersClient } from '../../boot/feathersClient'
 
-export async function getStudyForms (opts, study, filter) {
+export async function getForms (opts, study, filter) {
   const formData = { query: { $sort: { descending: -1 } } }
   if (opts) {
     // qtable pagination's 'All' sets limit to 0
@@ -32,23 +32,23 @@ export async function getStudyForms (opts, study, filter) {
   return feathersClient.service('form').find(formData)
 }
 
-export async function getStudyForm (id) {
+export async function getForm (id) {
   return feathersClient.service('form').get(id)
 }
 
-export async function createStudyForm (studyForm) {
-  return feathersClient.service('form').create(studyForm)
+export async function createForm (form) {
+  return feathersClient.service('form').create(form)
 }
 
-export async function updateStudyForm (studyForm, id) {
-  return feathersClient.service('form').patch(id, studyForm)
+export async function updateForm (form, id) {
+  return feathersClient.service('form').patch(id, form)
 }
 
-export async function deleteStudyForm (id) {
+export async function deleteForm (id) {
   return feathersClient.service('form').remove(id)
 }
 
-export async function deleteStudyForms (ids) {
+export async function deleteForms (ids) {
   return feathersClient.service('form').remove(null, {
     query: {
       _id: {

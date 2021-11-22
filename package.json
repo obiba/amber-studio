@@ -25,24 +25,26 @@
     "echarts": "^5.2.1",
     "feathers-hooks-common": "^5.0.6",
     "quasar": "^2.0.4",
+    "secure-ls": "^1.2.6",
     "vue-i18n": "^9.1.7",
     "vue-recaptcha-v3": "^2.0.1",
     "vuedraggable": "^4.0.1",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.1",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app": "^3.0.0",
     "@quasar/quasar-app-extension-qcalendar": "^4.0.0-beta.2",
     "@quasar/quasar-app-extension-qmarkdown": "^2.0.0-alpha.8",
-    "quasar-app-extension-qhierarchy": "^1.0.0-alpha.1",
     "eslint": "^7.14.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-vue": "^7.0.0",
-    "eslint-webpack-plugin": "^2.4.0"
+    "eslint-webpack-plugin": "^2.4.0",
+    "quasar-app-extension-qhierarchy": "^1.0.0-alpha.1"
   },
   "browserslist": [
     "last 10 Chrome versions",

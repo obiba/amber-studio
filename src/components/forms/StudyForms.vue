@@ -251,7 +251,7 @@ export default defineComponent({
   computed: {
     ...mapState({
       study: state => state.study.study,
-      studyForms: state => state.studyForm.studyForms
+      studyForms: state => state.form.forms
     }),
     disableCreateStudyForm () {
       return this.v$.newStudyFormData.$invalid
@@ -264,8 +264,8 @@ export default defineComponent({
   },
   methods: {
     ...mapActions({
-      getStudyForms: 'studyForm/getStudyForms',
-      createStudyForm: 'studyForm/createStudyForm'
+      getStudyForms: 'form/getForms',
+      createStudyForm: 'form/createForm'
     }),
     onAdd () {
       this.newStudyFormData = {}
@@ -285,20 +285,20 @@ export default defineComponent({
       console.log(this.study)
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('studyForm/setStudyFormPagination', {
+        this.$store.commit('form/setFormPagination', {
           studyFormPaginationOpts: requestProp.pagination
         })
         await this.getStudyForms({ paginationOpts: requestProp.pagination, study: this.study._id, filter: requestProp.filter })
       } else {
         await this.getStudyForms({ paginationOpts: this.paginationOpts, study: this.study._id, filter: this.filter })
       }
-      this.paginationOpts.rowsNumber = this.$store.state.studyForm.studyFormPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.$store.state.form.formPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.studyForm.studyFormPaginationOpts
+      this.paginationOpts = this.$store.state.form.formPaginationOpts
     },
     deleteStudyForm () {
-      this.$store.dispatch('studyForm/deleteStudyForm', {
+      this.$store.dispatch('form/deleteForm', {
         id: this.selectedStudyForm._id,
         study: this.study._id,
         paginationOpts: this.paginationOpts
@@ -306,7 +306,7 @@ export default defineComponent({
     },
     deleteStudyForms () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('studyForm/deleteStudyForms', {
+      this.$store.dispatch('form/deleteForms', {
         ids: ids,
         study: this.study._id,
         paginationOpts: this.paginationOpts

@@ -4,20 +4,33 @@ import authvuex from './store.auth'
 import account from './account'
 import admin from './admin'
 import study from './study'
-import studyForm from './studyForm'
+import form from './form'
+import createPersistedState from 'vuex-persistedstate'
+import SecureLS from 'secure-ls'
 
-const requireModule = require.context(
-  // The path where the service modules live
-  '../services/feathers-client',
-  // Whether to look in subfolders
-  false,
-  // Only include .js files (prevents duplicate imports`)
-  /.js$/
-)
+const ls = new SecureLS({ isCompression: false })
+const debug = true
+const lsVuex = debug ? createPersistedState()
+  : createPersistedState({
+    key: 'astore',
+    storage: {
+      getItem: (key) => ls.get(key),
+      setItem: (key, value) => ls.set(key, value),
+      removeItem: (key) => ls.remove(key)
+    }
+  })
 
-const servicePlugins = requireModule
-  .keys()
-  .map(modulePath => requireModule(modulePath).default)
+const logPlugin = (store) => {
+  // called when the store is initialized
+  store.subscribe((mutation, state) => {
+    // called after every mutation.
+    // The mutation comes in the format of `{ type, payload }`.
+    if (debug) {
+      console.log(mutation)
+      console.log(state)
+    }
+  })
+}
 
 /*
  * If not building with SSR mode, you can
@@ -30,12 +43,12 @@ const servicePlugins = requireModule
 
 export default store(function (/* { ssrContext } */) {
   const Store = createStore({
-    plugins: [...servicePlugins, authvuex],
+    plugins: [authvuex, lsVuex, logPlugin],
     modules: {
       account,
       admin,
       study,
-      studyForm
+      form
     },
 
     // enable strict mode (adds overhead!)

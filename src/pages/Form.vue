@@ -114,7 +114,7 @@ export default defineComponent({
   computed: {
     ...mapState({
       study: state => state.study.study,
-      studyForm: state => state.studyForm.studyForm
+      studyForm: state => state.form.form
     }),
     disableSave () {
       return this.v$.studyFormData.$invalid
@@ -123,8 +123,8 @@ export default defineComponent({
   methods: {
     ...mapActions({
       getStudy: 'study/getStudy',
-      getStudyForm: 'studyForm/getStudyForm',
-      updateStudyForm: 'studyForm/updateStudyForm'
+      getStudyForm: 'form/getForm',
+      updateStudyForm: 'form/updateForm'
     }),
     async initStudyFormData () {
       await this.getStudyForm({ id: this.$route.params.id })

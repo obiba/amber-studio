@@ -1,9 +1,9 @@
-import studyFormService from '../../services/studyForm'
+import formService from '../../services/form'
 import { t } from '../../boot/i18n'
 import { Notify } from 'quasar'
 
-export async function getStudyForms ({ commit }, payload) {
-  const result = await studyFormService.getStudyForms(payload.paginationOpts, payload.study, payload.filter).catch(err => {
+export async function getForms ({ commit }, payload) {
+  const result = await formService.getForms(payload.paginationOpts, payload.study, payload.filter).catch(err => {
     console.error(err)
     const errorCode = err.code
     if (errorCode) {
@@ -14,16 +14,16 @@ export async function getStudyForms ({ commit }, payload) {
     }
   })
   if (result) {
-    commit('setStudyForms', result.data)
-    commit('setStudyFormCount', result.total)
+    commit('setForms', result.data)
+    commit('setFormCount', result.total)
   } else {
     commit('setStudForms', [])
-    commit('setStudyFormCount', 0)
+    commit('setFormCount', 0)
   }
 }
 
-export async function getStudyForm ({ commit }, payload) {
-  const result = await studyFormService.getStudyForm(payload.id).catch(err => {
+export async function getForm ({ commit }, payload) {
+  const result = await formService.getForm(payload.id).catch(err => {
     console.error(err)
     const errorCode = err.code
     if (errorCode) {
@@ -34,16 +34,16 @@ export async function getStudyForm ({ commit }, payload) {
     }
   })
   if (result) {
-    commit('setStudyForm', result)
+    commit('setForm', result)
   } else {
-    commit('setStudyForm', { _id: payload.id })
+    commit('setForm', { _id: payload.id })
   }
 }
 
-export async function createStudyForm ({ dispatch }, payload) {
+export async function createForm ({ dispatch }, payload) {
   console.log(payload)
-  const result = await studyFormService
-    .createStudyForm(payload.studyForm)
+  const result = await formService
+    .createForm(payload.form)
     .catch(err => {
       console.error(err)
       Notify.create({
@@ -59,18 +59,18 @@ export async function createStudyForm ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'studyForm/getStudyForms',
+    'form/getForms',
     {
       paginationOpts: payload.paginationOpts,
-      study: payload.studyForm.study
+      study: payload.form.study
     },
     { root: true }
   )
 }
 
-export async function updateStudyForm ({ commit, dispatch }, payload) {
-  const result = await studyFormService
-    .updateStudyForm(payload.studyForm, payload.id ? payload.id : payload.studyForm._id)
+export async function updateForm ({ commit, dispatch }, payload) {
+  const result = await formService
+    .updateForm(payload.form, payload.id ? payload.id : payload.form._id)
     .catch(() => {
       Notify.create({
         message: t('error.general'),
@@ -83,23 +83,23 @@ export async function updateStudyForm ({ commit, dispatch }, payload) {
       color: 'positive',
       icon: 'fas fa-check'
     })
-    commit('setStudyForm', result)
+    commit('setForm', result)
   }
   if (payload.paginationOpts) {
     dispatch(
-      'study/getStudyForms',
+      'study/getForms',
       {
         paginationOpts: payload.paginationOpts,
-        study: payload.studyForm.study
+        study: payload.form.study
       },
       { root: true }
     )
   }
 }
 
-export async function deleteStudyForm ({ dispatch }, payload) {
-  const result = await studyFormService
-    .deleteStudyForm(payload.id)
+export async function deleteForm ({ dispatch }, payload) {
+  const result = await formService
+    .deleteForm(payload.id)
     .catch(() => {
       Notify.create({
         message: t('error.general'),
@@ -123,9 +123,9 @@ export async function deleteStudyForm ({ dispatch }, payload) {
   )
 }
 
-export async function deleteStudyForms ({ dispatch }, payload) {
-  const result = await studyFormService
-    .deleteStudyForms(payload.ids)
+export async function deleteForms ({ dispatch }, payload) {
+  const result = await formService
+    .deleteForms(payload.ids)
     .catch(() => {
       Notify.create({
         message: t('error.general'),
@@ -140,7 +140,7 @@ export async function deleteStudyForms ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'studyForm/getStudyForms',
+    'form/getForms',
     {
       paginationOpts: payload.paginationOpts,
       study: payload.study
