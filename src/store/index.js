@@ -27,7 +27,7 @@ const logPlugin = (store) => {
     // The mutation comes in the format of `{ type, payload }`.
     if (debug) {
       console.log(mutation)
-      console.log(state)
+      // console.log(state)
     }
   })
 }

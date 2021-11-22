@@ -56,6 +56,11 @@
           </div>
         </q-td>
       </template>
+      <template v-slot:body-cell-forms='props'>
+        <q-td :props='props'>
+          <q-badge color="primary">{{ props.row.forms.length }}</q-badge>
+        </q-td>
+      </template>
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
           <q-btn
@@ -223,6 +228,13 @@ export default {
           align: 'left',
           label: this.$t('description'),
           field: 'description',
+          sortable: true
+        },
+        {
+          name: 'forms',
+          align: 'left',
+          label: this.$t('forms'),
+          field: 'forms',
           sortable: true
         },
         {

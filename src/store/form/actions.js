@@ -41,7 +41,6 @@ export async function getForm ({ commit }, payload) {
 }
 
 export async function createForm ({ dispatch }, payload) {
-  console.log(payload)
   const result = await formService
     .createForm(payload.form)
     .catch(err => {

@@ -286,7 +286,7 @@ export default defineComponent({
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
         this.$store.commit('form/setFormPagination', {
-          studyFormPaginationOpts: requestProp.pagination
+          formPaginationOpts: requestProp.pagination
         })
         await this.getStudyForms({ paginationOpts: requestProp.pagination, study: this.study._id, filter: requestProp.filter })
       } else {
@@ -318,7 +318,7 @@ export default defineComponent({
       const toSave = { ...this.newStudyFormData }
       toSave.study = this.study._id
       this.createStudyForm({
-        studyForm: toSave
+        form: toSave
       })
     }
   }
