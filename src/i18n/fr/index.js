@@ -227,7 +227,8 @@ export default {
     add_option: 'Ajouter une option',
     move_up: 'Monter',
     move_down: 'Descendre',
-    delete: 'Supprimer'
+    delete: 'Supprimer',
+    no_item_selected: 'Aucun élément sélectionné..'
   },
   add: 'Ajouter',
   update: 'Appliquer',

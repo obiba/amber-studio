@@ -23,6 +23,7 @@ module.exports = configure(function (ctx) {
       'auth',
       'axios',
       'feathersClient',
+      'form-components',
       'i18n',
       'vuelidate',
       'recaptcha'

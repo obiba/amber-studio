@@ -10,6 +10,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@blitzar/form": "^1.0.2",
     "@feathersjs/authentication-client": "^4.5.11",
     "@feathersjs/client": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
@@ -34,6 +35,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
+    "@obiba/quasar-app-extension-amber": "^0.0.6",
     "@quasar/app": "^3.0.0",
     "@quasar/quasar-app-extension-qcalendar": "^4.0.0-beta.2",
     "@quasar/quasar-app-extension-qmarkdown": "^2.0.0-alpha.8",

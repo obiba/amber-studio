@@ -69,7 +69,7 @@
       </q-card-section>
       <q-separator />
       <div>
-        <form-element :form="studyFormData" />
+        <form-element v-model="studyFormData" />
       </div>
     </q-card>
 
@@ -135,7 +135,7 @@ export default defineComponent({
       this.v$.$reset()
       const toSave = { ...this.studyFormData }
       this.updateStudyForm({
-        studyForm: toSave
+        form: toSave
       })
     }
   }

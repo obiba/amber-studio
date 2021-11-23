@@ -5,7 +5,7 @@
 
       <template v-slot:before>
         <div>
-          <q-tree 
+          <q-tree
             v-if="items.length>0"
             :nodes="items"
             node-key="name"
@@ -79,8 +79,11 @@
           </div>
           <q-separator/>
           <div>
-            <form-item-builder :schema="selectedItem" />
+            <form-item-builder v-model="formItemSelected" />
           </div>
+        </div>
+        <div v-else class="q-ma-md text-grey-6">
+          {{$t('formel.no_item_selected')}}
         </div>
       </template>
 
@@ -89,17 +92,16 @@
 </template>
 
 <script>
-import {defineComponent, defineAsyncComponent, ref} from 'vue'
+import { defineComponent, defineAsyncComponent, ref } from 'vue'
 
 export default defineComponent({
-  name: "FormElement",
-  props: {
-      form: Object
-  },
+  name: 'FormElement',
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
   components: {
-    FormItemBuilder: defineAsyncComponent(() => import('src/components/forms/FormItemBuilder.vue')),
+    FormItemBuilder: defineAsyncComponent(() => import('src/components/forms/FormItemBuilder.vue'))
   },
-  setup() {
+  setup () {
     return {
       splitterModel: ref(30),
       formItemSelected: ref(null),
@@ -107,206 +109,226 @@ export default defineComponent({
     }
   },
   computed: {
-    selectedItem() {
-      if (!this.form.schema) {
-        this.form.schema = { items: [] };
+    value: {
+      get () {
+        return this.modelValue
+      },
+      set (value) {
+        this.$emit('update:modelValue', value)
       }
-      else if (!this.form.schema.items) {
-        this.form.schema.items = [];
-      }
-      if (!this.formItemSelected && this.form.schema.items.length>0) {
-        this.selected = this.form.schema.items[0].name;
-      }
-      return this.formItemSelected;
     },
-    items() {
-      if (this.form && this.form.schema)
-        return this.form.schema.items ? this.form.schema.items : [];
-      return [];
+    selectedItem () {
+      /* if (!this.value.schema) {
+        this.value.schema = { items: [] }
+      } else if (!this.value.schema.items) {
+        this.value.schema.items = []
+      }
+      if (!this.formItemSelected && this.value.schema.items.length > 0) {
+        this.selected = this.value.schema.items[0].name
+      } */
+      return this.formItemSelected
+    },
+    items () {
+      if (this.value && this.value.schema) {
+        return this.value.schema.items ? this.value.schema.items : []
+      }
+      return []
     }
   },
   watch: {
-    selected: function(newValue, oldValue) {
+    selected: function (newValue, oldValue) {
       if (newValue === null) {
-        this.selected = oldValue;
+        this.selected = oldValue
       } else {
-        const found = this.findItemAndParent(newValue);
-        this.selectItem(found.item);
+        const found = this.findItemAndParent(newValue)
+        this.selectItem(found.item)
       }
     }
   },
   methods: {
-    selectItem(item) {
-      this.formItemSelected = item;
+    selectItem (item) {
+      this.formItemSelected = item
     },
-    addItem() {
-      const found = this.findItemAndParent(this.selected);
-      let i = 1;
-      let test = this.findItemAndParent('ITEM' + i);
+    addItem () {
+      const found = this.findItemAndParent(this.selected)
+      let i = 1
+      let test = this.findItemAndParent('ITEM' + i)
       while (test.item !== null) {
-        i = i + 1;
-        test = this.findItemAndParent('ITEM' + i);
+        i = i + 1
+        test = this.findItemAndParent('ITEM' + i)
       }
-      const newItem = { 
+      const newItem = {
         name: 'ITEM' + i,
         type: 'static'
-      };
+      }
       if (found.item !== null && found.item.type === 'group') {
         // add last in the group
-        if (!found.item.items)
-          found.item.items = [newItem];
-        else
-          found.item.items.push(newItem);
+        if (!found.item.items) {
+          found.item.items = [newItem]
+        } else {
+          found.item.items.push(newItem)
+        }
       } else {
         // add after selected one
-        const idx = found.parent.items.indexOf(found.item);
-        found.parent.items.splice(idx+1, 0, newItem);
+        const idx = found.parent.items.indexOf(found.item)
+        found.parent.items.splice(idx + 1, 0, newItem)
       }
-      this.selected = newItem.name;
+      this.selected = newItem.name
     },
-    selectUpItem() {
-      if (this.selected === null)
-        return;
-      
-      const found = this.findItemAndParent(this.selected);
-      const idx = found.parent.items.indexOf(found.item);
-      if (idx === 0 && found.parent.type === 'group')
-        this.selected = found.parent.name; // case selected item is a group
-      else if (idx>0) {
-        const upItem = found.parent.items[idx-1];
-        if (upItem.type === 'group' && upItem.items && upItem.items.length>0)
-          this.selected = upItem.items[upItem.items.length-1].name; // case selected item is after a group with items
-        else
-          this.selected = upItem.name; // case regular up item
+    selectUpItem () {
+      if (this.selected === null) {
+        return
+      }
+      const found = this.findItemAndParent(this.selected)
+      const idx = found.parent.items.indexOf(found.item)
+      if (idx === 0 && found.parent.type === 'group') {
+        this.selected = found.parent.name // case selected item is a group
+      } else if (idx > 0) {
+        const upItem = found.parent.items[idx - 1]
+        if (upItem.type === 'group' && upItem.items && upItem.items.length > 0) {
+          this.selected = upItem.items[upItem.items.length - 1].name // case selected item is after a group with items
+        } else {
+          this.selected = upItem.name // case regular up item
+        }
       }
     },
-    moveUpItem(item) {
-      let found = this.findItemAndParent(item.name);
-      if (found.item === null)
-        return;
-      
-      let idx = found.parent.items.indexOf(item);
+    moveUpItem (item) {
+      let found = this.findItemAndParent(item.name)
+      if (found.item === null) {
+        return
+      }
+
+      let idx = found.parent.items.indexOf(item)
       if (found.parent.type === 'group') {
-        found.parent.items.splice(idx, 1);
+        found.parent.items.splice(idx, 1)
         if (idx === 0) {
           // case first in a group, move item before the group
-          found = this.findItemAndParent(found.parent.name);
-          idx = found.parent.items.indexOf(found.item);
-          found.parent.items.splice(idx, 0, item);
+          found = this.findItemAndParent(found.parent.name)
+          idx = found.parent.items.indexOf(found.item)
+          found.parent.items.splice(idx, 0, item)
         } else {
           // case move up in the group
-          found.parent.items.splice(idx-1, 0, item);
+          found.parent.items.splice(idx - 1, 0, item)
         }
-      } else if (idx>0) {
-        found.parent.items.splice(idx, 1);
-        const upItem = found.parent.items[idx-1];
+      } else if (idx > 0) {
+        found.parent.items.splice(idx, 1)
+        const upItem = found.parent.items[idx - 1]
         if (upItem.type === 'group') {
           // case up item is a group, then insert it as last item
-          if (!upItem.items)
-            upItem.items = [item];
-          else
+          if (!upItem.items) {
+            upItem.items = [item]
+          } else {
             upItem.items.push(item)
+          }
         } else {
           // regular case
-          found.parent.items.splice(idx-1, 0, item);
+          found.parent.items.splice(idx - 1, 0, item)
         }
       }
     },
-    selectDownItem() {
-      if (this.selected === null)
-        return;
+    selectDownItem () {
+      if (this.selected === null) {
+        return
+      }
 
-      let found = this.findItemAndParent(this.selected);
-      if (found.item.type === 'group' && found.item.items && found.item.items.length>0)
-        this.selected = found.item.items[0].name; // case selected item is a group with items
-      else {
-        let idx = found.parent.items.indexOf(found.item);
-        if (idx === found.parent.items.length-1 && found.parent.type === 'group') {
-          found = this.findItemAndParent(found.parent.name);
-          idx = found.parent.items.indexOf(found.item); // case selected item is last item in a group
+      let found = this.findItemAndParent(this.selected)
+      if (found.item.type === 'group' && found.item.items && found.item.items.length > 0) {
+        this.selected = found.item.items[0].name // case selected item is a group with items
+      } else {
+        let idx = found.parent.items.indexOf(found.item)
+        if (idx === found.parent.items.length - 1 && found.parent.type === 'group') {
+          found = this.findItemAndParent(found.parent.name)
+          idx = found.parent.items.indexOf(found.item) // case selected item is last item in a group
         }
-        if (idx<found.parent.items.length-1)
-          this.selected = found.parent.items[idx+1].name; // case selected is last in the group
+        if (idx < found.parent.items.length - 1) {
+          this.selected = found.parent.items[idx + 1].name // case selected is last in the group
+        }
       }
     },
-    moveDownItem(item) {
-      let found = this.findItemAndParent(item.name);
-      if (found.item === null)
-        return;
+    moveDownItem (item) {
+      let found = this.findItemAndParent(item.name)
+      if (found.item === null) {
+        return
+      }
 
-      let idx = found.parent.items.indexOf(item);
+      let idx = found.parent.items.indexOf(item)
       if (found.parent.type === 'group') {
-        found.parent.items.splice(idx, 1);
+        found.parent.items.splice(idx, 1)
         if (idx === found.parent.items.length) {
           // case it was last, move it after the parent
-          found = this.findItemAndParent(found.parent.name);
-          idx = found.parent.items.indexOf(found.item);
+          found = this.findItemAndParent(found.parent.name)
+          idx = found.parent.items.indexOf(found.item)
         }
-        found.parent.items.splice(idx+1, 0, item);
-      } else if (idx<found.parent.items.length-1) {
-        found.parent.items.splice(idx, 1);
-        const downItem = found.parent.items[idx];
+        found.parent.items.splice(idx + 1, 0, item)
+      } else if (idx < found.parent.items.length - 1) {
+        found.parent.items.splice(idx, 1)
+        const downItem = found.parent.items[idx]
         if (downItem.type === 'group') {
-          if (!downItem.items)
-            downItem.items = [item];
-          else
-            downItem.items.splice(0, 0, item);
+          if (!downItem.items) {
+            downItem.items = [item]
+          } else {
+            downItem.items.splice(0, 0, item)
+          }
         } else {
           // regular case
-          found.parent.items.splice(idx+1, 0, item);
+          found.parent.items.splice(idx + 1, 0, item)
         }
       }
     },
-    deleteItem(item) {
-      let found = this.findItemAndParent(item.name);
-      if (found.item === null)
-        return;
+    deleteItem (item) {
+      const found = this.findItemAndParent(item.name)
+      if (found.item === null) {
+        return
+      }
 
-      const idx = found.parent.items.indexOf(item);
-      if (idx === 0)
-        if (found.parent.type === 'group')
-          this.selected = found.parent.name;
-        else
-          this.selectDownItem(item);
-      else
-        this.selectUpItem(item);
-      found.parent.items.splice(idx, 1);
-      if (this.form.schema.items.length === 0) {
-        this.selectItem(null);
+      const idx = found.parent.items.indexOf(item)
+      if (idx === 0) {
+        if (found.parent.type === 'group') {
+          this.selected = found.parent.name
+        } else {
+          this.selectDownItem(item)
+        }
+      } else {
+        this.selectUpItem(item)
+      }
+      found.parent.items.splice(idx, 1)
+      if (this.value.schema.items.length === 0) {
+        this.selectItem(null)
       }
     },
-    isItemSelected(item) {
-      return this.formItemSelected && this.formItemSelected.name === item.name;
+    isItemSelected (item) {
+      return this.formItemSelected && this.formItemSelected.name === item.name
     },
-    findItemAndParent(name) {
-      return this.findItemInParent(this.form.schema, name);
+    findItemAndParent (name) {
+      return this.findItemInParent(this.value.schema, name)
     },
-    findItemInParent(parent, name) {
+    findItemInParent (parent, name) {
       let rval = {
         parent: parent,
         name: name,
         item: null
-      };
+      }
 
       if (parent.items) {
-        const item = parent.items.filter(it => it.name === name).pop();
+        const item = parent.items.filter(it => it.name === name).pop()
         if (item) {
-          rval.item = item;
-          return rval;
+          rval.item = item
+          return rval
         } else {
-          const groups = parent.items.filter(it => it.type === 'group');
+          const groups = parent.items.filter(it => it.type === 'group')
           if (groups) {
             groups.forEach(group => {
               if (rval.item === null) {
-                const grval = this.findItemInParent(group, name);
-                if (grval.item !== null)
-                  rval = grval;
+                const grval = this.findItemInParent(group, name)
+                if (grval.item !== null) {
+                  rval = grval
+                }
               }
-            });
+            })
           }
         }
       }
-      return rval;
+      return rval
     }
   }
 })

@@ -20,29 +20,29 @@
         <div class="row q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('formel.definition') }}</p>
-            <q-select class="q-mb-md" v-model="schema.type" :options="typeOptions" :label="$t('formel.type')" :hint="$t('formel.type_hint')" emit-value map-options dense filled />
-            <q-input class="q-mb-md" v-model="schema.name" :label="$t('formel.name')" :hint="$t(isVariable ? 'formel.name_hint': 'formel.static_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="schema.label" :label="$t('formel.label')" :hint="$t('formel.label_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="schema.description" :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="schema.conditions" :label="$t('formel.conditions')" :hint="$t('formel.conditions_hint')" dense filled />
-            <q-input v-if="isVariable" class="q-mb-md" v-model="schema.validation" :label="$t('formel.validation')" :hint="$t('formel.validation_hint')" dense filled />
+            <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('formel.type')" :hint="$t('formel.type_hint')" emit-value map-options dense filled />
+            <q-input class="q-mb-md" v-model="value.name" :label="$t('formel.name')" :hint="$t(isVariable ? 'formel.name_hint': 'formel.static_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.label" :label="$t('formel.label')" :hint="$t('formel.label_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.description" :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.conditions" :label="$t('formel.conditions')" :hint="$t('formel.conditions_hint')" dense filled />
+            <q-input v-if="isVariable" class="q-mb-md" v-model="value.validation" :label="$t('formel.validation')" :hint="$t('formel.validation_hint')" dense filled />
           </div>
           <div class="col-md-6 col-sm-12">
             <div v-if="isVariable">
               <p class="text-weight-bold q-mb-sm">{{ $t('formel.settings') }}</p>
               <div v-if="hasPlaceholder">
-                <q-input class="q-mb-md" v-model="schema.placeholder" :label="$t('formel.placeholder')" :hint="$t('formel.placeholder_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.placeholder" :label="$t('formel.placeholder')" :hint="$t('formel.placeholder_hint')" dense filled />
               </div>
-              <q-input class="q-mb-md" v-model="schema.default" :label="$t('formel.default')" :hint="$t('formel.default_hint')" dense filled />
-              <div v-if="schema.type === 'slider'">
-                <q-input class="q-mb-md" v-model.number="schema.min" type="number" :label="$t('formel.min')" :hint="$t('formel.min_hint')" dense filled />
-                <q-input class="q-mb-md" v-model.number="schema.max" type="number" :label="$t('formel.max')" :hint="$t('formel.max_hint')" dense filled />
-                <q-input class="q-mb-md" v-model="schema.format" :label="$t('formel.format')" :hint="$t('formel.format_hint')" dense filled />
+              <q-input class="q-mb-md" v-model="value.default" :label="$t('formel.default')" :hint="$t('formel.default_hint')" dense filled />
+              <div v-if="value.type === 'slider'">
+                <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('formel.min')" :hint="$t('formel.min_hint')" dense filled />
+                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('formel.max')" :hint="$t('formel.max_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.format" :label="$t('formel.format')" :hint="$t('formel.format_hint')" dense filled />
               </div>
               <div v-if="hasOptions">
                 <p class="q-mb-sm q-mt-md">{{ $t('formel.options') }}</p>
                 <p class="text-grey">{{ $t('formel.options_hint') }}</p>
-                <div v-for="option in schema.options" :key="option.value">
+                <div v-for="option in modelValue.options" :key="option.value">
                   <div class="row q-col-gutter-lg">
                     <div class="col-4">
                       <q-input class="q-mb-md" v-model="option.value" :label="$t('formel.option_value')" dense filled />
@@ -77,183 +77,22 @@
 
       <q-tab-panel name="schema">
         <div class="bg-black text-white q-pa-md">
-          <pre>{{ JSON.stringify(schema, null, '  ') }}</pre>
+          <pre>{{ JSON.stringify(modelValue, null, '  ') }}</pre>
         </div>
       </q-tab-panel>
 
       <q-tab-panel name="preview">
         <q-card>
           <q-card-section>
-            <div v-if="schema.type === 'text'">
-              <q-input 
-                v-model="model" 
-                :label="schema.label"
-                :placeholder="schema.placeholder"
-                :hint="schema.description" />
+            <div>
+              <BlitzForm :key='remountCounter' :schema='blitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
             </div>
-
-            <div v-if="schema.type === 'textarea'">
-              <q-input 
-                v-model="model" 
-                type="textarea"
-                :label="schema.label"
-                :placeholder="schema.placeholder"
-                :hint="schema.description" />
-            </div>
-
-            <div v-if="schema.type === 'number'">
-              <q-input 
-                v-model="model" 
-                type="number"
-                :label="schema.label"
-                :placeholder="schema.placeholder"
-                :hint="schema.description" />
-            </div>
-
-            <div v-if="schema.type === 'date'">
-              <q-input v-model="model"
-                :label="schema.label"
-                :hint="schema.description">
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                      <q-date v-model="model" mask="YYYY-MM-DD" minimal>
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-
-            <div v-if="schema.type === 'datetime'">
-              <q-input v-model="model"
-                :label="schema.label"
-                :hint="schema.description">
-                <template v-slot:prepend>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy transition-show="scale" transition-hide="scale">
-                      <q-date v-model="model" mask="YYYY-MM-DD HH:mm" minimal>
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-
-                <template v-slot:append>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy transition-show="scale" transition-hide="scale">
-                      <q-time v-model="model" mask="YYYY-MM-DD HH:mm" format24h>
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-
-            <div v-if="schema.type === 'time'">
-              <q-input v-model="model"
-                :label="schema.label"
-                :hint="schema.description">
-                <template v-slot:append>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy transition-show="scale" transition-hide="scale">
-                      <q-time v-model="model" mask="HH:mm" format24h>
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-
-            <div v-if="schema.type === 'radiogroup'">
-              <p class="text-body1 text-grey-8">{{schema.label}}</p>
-              <q-option-group
-                v-model="model"
-                :options="schema.options" />
-              <p class="q-mt-md text-grey">{{schema.description}}</p>
-            </div>
-
-            <div v-if="schema.type === 'checkboxgroup'">
-              <p class="text-body1 text-grey-8">{{schema.label}}</p>
-              <q-option-group
-                v-model="model"
-                :options="schema.options"
-                type="checkbox" />
-              <p class="q-mt-md text-grey">{{schema.description}}</p>
-            </div>
-
-            <div v-if="schema.type === 'select'">
-              <q-select
-                v-model="model"
-                emit-value
-                map-options
-                clearable
-                :options="schema.options"
-                :label="schema.label"
-                :hint="schema.description" />
-            </div>
-
-            <div v-if="schema.type === 'multiselect'">
-              <q-select
-                v-model="model"
-                emit-value
-                map-options
-                clearable
-                multiple
-                :options="schema.options"
-                :label="schema.label"
-                :hint="schema.description" />
-            </div>
-
-            <div v-if="schema.type === 'toggle'">
-              <q-toggle 
-                v-model="model"
-                :label="schema.label" />
-              <p class="q-mt-xs text-grey">{{schema.description}}</p>
-            </div>
-
-            <div v-if="schema.type === 'slider'">
-              <p class="text-body1 text-grey-8">{{schema.label}}</p>
-              <q-slider 
-                v-model="model"
-                label
-                label-always
-                markers
-                snap
-                :min="schema.min"
-                :max="schema.max" />
-              <p class="q-mt-xs text-grey">{{schema.description}}</p>
-            </div>
-
-            <div v-if="schema.type === 'static'">
-              <div class="text-center">
-                <h6 class="text-grey-8">{{schema.label}}</h6>
-                <p class="text-grey">{{schema.description}}</p>
-              </div>
-            </div>
-
-            <div v-if="schema.type === 'group'">
-              <p class="text-h6 text-grey-8 q-mb-none">{{schema.label}}</p>
-              <p class="text-subtitle2 text-grey">{{schema.description}}</p>
-            </div>
-
           </q-card-section>
         </q-card>
         <q-card class="q-mt-md" v-if="isVariable">
           <q-card-section>
             <div class="bg-black text-white q-pa-md">
-              <pre>{{ JSON.stringify(model, null, '  ') }}</pre>
+              <pre>{{ JSON.stringify(modelData, null, '  ') }}</pre>
             </div>
           </q-card-section>
         </q-card>
@@ -263,84 +102,106 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
-import {ref} from 'vue'
+import { defineComponent, ref } from 'vue'
+import { BlitzForm } from '@blitzar/form'
+import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
 
 export default defineComponent({
-  name: "FormItemBuilder",
-  props: {
-      schema: Object
-  },
-  setup() {
+  name: 'FormItemBuilder',
+  components: { BlitzForm },
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
+  setup () {
     return {
-      tab: ref("builder"),
+      remountCounter: 0,
+      tab: ref('builder'),
       types: [
-        'text', 'textarea','number', 
-        'date', 'datetime', 'time', 
-        'radiogroup', 'checkboxgroup', 
-        'select', 'multiselect', 
+        'text', 'textarea', 'number',
+        'date', 'datetime', 'time',
+        'radiogroup', 'checkboxgroup',
+        'select', 'multiselect',
         'toggle', 'slider', 'static', 'group'
       ],
-      model: ref(null)
+      modelData: ref(null)
     }
   },
   computed: {
-      isVariable() {
-        return ['static', 'group'].includes(this.schema.type) !== true;
+    value: {
+      get () {
+        return this.modelValue
       },
-      isArray() {
-        return ['checkboxgroup', 'multiselect'].includes(this.schema.type);
-      },
-      hasPlaceholder() {
-        return ['text', 'textarea'].includes(this.schema.type);
-      },
-      hasOptions() {
-        return ['radiogroup', 'checkboxgroup', 'select', 'multiselect'].includes(this.schema.type);
-      },
-      typeOptions() {
+      set (value) {
+        this.$emit('update:modelValue', value)
+      }
+    },
+    isVariable () {
+      return ['static'].includes(this.modelValue.type) !== true
+    },
+    isArray () {
+      return ['checkboxgroup', 'multiselect'].includes(this.modelValue.type)
+    },
+    hasPlaceholder () {
+      return ['text', 'textarea'].includes(this.modelValue.type)
+    },
+    hasOptions () {
+      return ['radiogroup', 'checkboxgroup', 'select', 'multiselect'].includes(this.modelValue.type)
+    },
+    typeOptions () {
       return this.types.map(tp => {
         return {
           value: tp,
           label: this.$t('formel.types.' + tp)
         }
-      });
+      })
+    },
+    blitzarSchema () {
+      return makeBlitzarQuasarSchemaForm({
+        items: [
+          this.modelValue
+        ],
+        i18n: {}
+      }, { locale: 'en' })
     }
   },
   watch: {
-    'schema.type': function(newValue, oldValue) {
+    modelValue: function (newValue, oldValue) {
+      this.$emit('update:modelValue', this.modelValue)
+    },
+    'modelValue.type': function (newValue, oldValue) {
       if (!this.hasOptions) {
-        delete this.schema.options;
+        delete this.modelValue.options
       }
       if (!this.isVariable) {
-        delete this.schema.validation;
-        delete this.schema.min;
-        delete this.schema.max;
-        delete this.schema.format;
-        delete this.schema.default;
+        delete this.modelValue.validation
+        delete this.modelValue.min
+        delete this.modelValue.max
+        delete this.modelValue.format
+        delete this.modelValue.default
       }
-      this.model = this.isArray ? [] : null;
+      this.modelData = this.isArray ? [] : null
     },
-    'schema.default': function(newValue, oldValue) {
-      if (newValue === "")
-        delete this.schema.default;
-      this.model = this.isArray ? (this.schema.default ? [this.schema.default] : []) : this.schema.default;
+    'modelValue.default': function (newValue, oldValue) {
+      if (newValue === '') {
+        delete this.modelValue.default
+      }
+      this.modelData = this.isArray ? (this.modelValue.default ? [this.modelValue.default] : []) : this.modelValue.default
     }
   },
   methods: {
-    deleteOption(option) {
-        this.schema.options = this.schema.options.filter(opt => opt.value !== option.value);
+    deleteOption (option) {
+      this.value.options = this.modelValue.options.filter(opt => opt.value !== option.value)
     },
-    addOption() {
-      if (!this.schema.options)
-        this.schema.options = [];
-      const val = "" + (this.schema.options.length + 1);
-      this.schema.options.push({
-          value: val,
-          label: val
-      });
+    addOption () {
+      if (!this.modelValue.options) {
+        this.value.options = []
+      }
+      const val = '' + (this.modelValue.options.length + 1)
+      this.value.options.push({
+        value: val,
+        label: val
+      })
     }
   }
-  
 })
 </script>
 
