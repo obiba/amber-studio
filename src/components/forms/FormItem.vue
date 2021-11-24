@@ -160,7 +160,7 @@ export default defineComponent({
         items: [
           this.modelValue
         ],
-        i18n: this.i18n
+        i18n: this.i18n ? this.i18n : {}
       }, { locale: 'en' })
     }
   },
