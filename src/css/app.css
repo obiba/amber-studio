@@ -55,7 +55,12 @@ pre {
 
 .q-tree__node-body {
   padding-top: 0;
-  padding-left: 24px;
+  padding-left: 25px;
+}
+
+
+.q-tree__children .q-tree__node-body {
+  padding-left: 4px;
 }
 
 .q-tree__node--selected {

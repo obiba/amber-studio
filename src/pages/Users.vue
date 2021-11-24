@@ -54,12 +54,12 @@
           class="q-mr-md"
           @change="getTableUsers"
         />
-        <q-input 
-          filled 
-          borderless 
-          dense 
-          debounce="300" 
-          v-model="filter" 
+        <q-input
+          filled
+          borderless
+          dense
+          debounce="300"
+          v-model="filter"
           :placeholder="$t('search')"
           :title="$t('users.search_hint')">
           <template v-slot:append>

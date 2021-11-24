@@ -1,16 +1,16 @@
 <template>
   <div>
     <q-table
-        flat
-        :rows='studyForms'
-        :columns='columns'
-        :filter='filter'
-        row-key='name'
-        selection="multiple"
-        v-model:selected="selected"
-        v-model:pagination='paginationOpts'
-        @request='getTableStudyForms'
-      >
+      flat
+      :rows="studyForms"
+      :columns="columns"
+      :filter="filter"
+      row-key="name"
+      selection="multiple"
+      v-model:selected="selected"
+      v-model:pagination='paginationOpts'
+      @request='getTableStudyForms'
+    >
       <template v-slot:top>
         <q-btn
           color="primary"
@@ -282,7 +282,6 @@ export default defineComponent({
       }
     },
     async getTableStudyForms (requestProp) {
-      console.log(this.study)
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
         this.$store.commit('form/setFormPagination', {

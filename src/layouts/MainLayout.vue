@@ -73,7 +73,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item-label header class="text-weight-bolder text-white">Content</q-item-label>
+        <q-item-label header class="text-weight-bolder text-white">{{$t('main.content')}}</q-item-label>
 
         <q-item to="/studies" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
@@ -93,7 +93,7 @@
           </q-item-section>
         </q-item-->
 
-        <q-item-label v-if="isAdministrator" header class="text-weight-bolder text-white">Administration</q-item-label>
+        <q-item-label v-if="isAdministrator" header class="text-weight-bolder text-white">{{$t('main.administration')}}</q-item-label>
 
         <q-item v-if="isAdministrator" to="/users" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>

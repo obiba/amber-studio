@@ -96,6 +96,7 @@ export default {
   studyForm: {
     definition: 'Definition',
     items: 'Items',
+    translations: 'Translations',
     builder: 'Builder'
   },
   datasets: {
@@ -107,6 +108,8 @@ export default {
     profile: 'Profile',
     logout: 'Sign out',
     dashboard: 'Dashboard',
+    content: 'Content',
+    administration: 'Administration',
     settings: 'Settings',
     copyright: 'Copyright',
     all_rights_reserved: 'All rights reserved',
@@ -173,7 +176,15 @@ export default {
     delete_study_form: 'Study\'s form successfully deleted.',
     delete_study_forms: 'Study\'s forms successfully deleted.'
   },
-  formel: {
+  form: {
+    tr_add: 'Add a translation',
+    tr_merge_items: 'Merge with items translation keys',
+    tr_clean: 'Remove translations unused in the items',
+    tr_delete_selected: 'Remove the selected translations',
+    tr_search_hint: 'Search translations',
+    tr_key: 'Key',
+    tr_value: 'Translation',
+    tr_delete_selected_confirm: 'Please confirm that you want to remove all the selected translations.',
     add_item_hint: 'Add a form item',
     builder: 'Builder',
     schema: 'Schema',

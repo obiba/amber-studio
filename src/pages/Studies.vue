@@ -5,10 +5,10 @@
 
     <q-table
         flat
-        :rows='studies'
-        :columns='columns'
-        :filter='filter'
-        row-key='name'
+        :rows="studies"
+        :columns="columns"
+        :filter="filter"
+        row-key="name"
         selection="multiple"
         v-model:selected="selected"
         v-model:pagination='paginationOpts'

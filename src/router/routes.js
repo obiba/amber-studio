@@ -4,7 +4,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '', 
+        path: '',
         component: () => import('pages/Dashboard.vue'),
         meta: { requiresAuth: true }
       },
@@ -14,37 +14,37 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
-        path: '/users', 
+        path: '/users',
         component: () => import('pages/Users.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
-        path: '/user/:id', 
+        path: '/user/:id',
         component: () => import('pages/User.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
-        path: '/groups', 
+        path: '/groups',
         component: () => import('pages/Groups.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
-        path: '/group/:id', 
+        path: '/group/:id',
         component: () => import('pages/Group.vue'),
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
-        path: '/studies', 
+        path: '/studies',
         component: () => import('pages/Studies.vue'),
         meta: { requiresAuth: true }
       },
       {
-        path: '/study/:id', 
+        path: '/study/:id',
         component: () => import('pages/Study.vue'),
         meta: { requiresAuth: true }
       },
       {
-        path: '/form/:id', 
+        path: '/form/:id',
         component: () => import('pages/Form.vue'),
         meta: { requiresAuth: true }
       },
@@ -52,7 +52,7 @@ const routes = [
         path: '/datasets',
         component: () => import('pages/Datasets.vue'),
         meta: { requiresAuth: true }
-      },
+      }
     ]
   },
   {

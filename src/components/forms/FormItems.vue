@@ -1,5 +1,5 @@
 <template>
-    <div>
+  <div>
     <q-splitter
       v-model="splitterModel">
 
@@ -17,7 +17,7 @@
 
             <template v-slot:default-header="prop">
               <div class="row items-center">
-                <div>{{ prop.node.name }} <span class="text-caption text-grey">[{{ prop.node.type ? $t("formel.types." + prop.node.type) : "?" }}]</span></div>
+                <div>{{ prop.node.name }} <span class="text-caption text-grey">[{{ prop.node.type ? $t('form.types.' + prop.node.type) : '?' }}]</span></div>
               </div>
             </template>
 
@@ -31,7 +31,7 @@
         <q-btn
           color="primary"
           icon="add"
-          :title="$t('formel.add_item_hint')"
+          :title="$t('form.add_item_hint')"
           :label="$t('add')"
           @click="addItem()"
           class="q-ma-md" />
@@ -52,7 +52,7 @@
                 dense
                 round
                 icon='arrow_upward'
-                :title="$t('formel.move_up')"
+                :title="$t('form.move_up')"
                 @click='moveUpItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -62,7 +62,7 @@
                 dense
                 round
                 icon='arrow_downward'
-                :title="$t('formel.move_down')"
+                :title="$t('form.move_down')"
                 @click='moveDownItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -72,18 +72,18 @@
                 dense
                 round
                 icon='delete'
-                :title="$t('formel.delete')"
+                :title="$t('form.delete')"
                 @click='deleteItem(formItemSelected)'>
               </q-btn>
             </div>
           </div>
           <q-separator/>
           <div>
-            <form-item-builder v-model="formItemSelected" />
+            <form-item v-model="formItemSelected" :i18n="i18n" />
           </div>
         </div>
         <div v-else class="q-ma-md text-grey-6">
-          {{$t('formel.no_item_selected')}}
+          {{$t('form.no_item_selected')}}
         </div>
       </template>
 
@@ -95,11 +95,11 @@
 import { defineComponent, defineAsyncComponent, ref } from 'vue'
 
 export default defineComponent({
-  name: 'FormElement',
+  name: 'FormItems',
   props: ['modelValue'],
   emits: ['update:modelValue'],
   components: {
-    FormItemBuilder: defineAsyncComponent(() => import('src/components/forms/FormItemBuilder.vue'))
+    FormItem: defineAsyncComponent(() => import('src/components/forms/FormItem.vue'))
   },
   setup () {
     return {
@@ -116,6 +116,9 @@ export default defineComponent({
       set (value) {
         this.$emit('update:modelValue', value)
       }
+    },
+    i18n () {
+      return this.modelValue.schema.i18n
     },
     selectedItem () {
       /* if (!this.value.schema) {

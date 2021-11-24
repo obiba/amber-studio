@@ -69,7 +69,17 @@
       </q-card-section>
       <q-separator />
       <div>
-        <form-element v-model="studyFormData" />
+        <form-items v-model="studyFormData" />
+      </div>
+    </q-card>
+
+    <q-card class="q-ma-md">
+      <q-card-section>
+        <div class="text-h6">{{$t('studyForm.translations')}}</div>
+      </q-card-section>
+      <q-separator />
+      <div>
+        <form-translations v-model="studyFormData" />
       </div>
     </q-card>
 
@@ -84,7 +94,8 @@ import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default defineComponent({
   components: {
-    FormElement: defineAsyncComponent(() => import('components/forms/FormElement.vue'))
+    FormItems: defineAsyncComponent(() => import('src/components/forms/FormItems.vue')),
+    FormTranslations: defineAsyncComponent(() => import('src/components/forms/FormTranslations.vue'))
   },
   mounted: function () {
     this.initStudyFormData()

@@ -4,7 +4,6 @@ import rest from '@feathersjs/rest-client'
 import auth from '@feathersjs/authentication-client'
 import { iff, discard } from 'feathers-hooks-common'
 import { axios } from './axios'
-import Vuex from 'vuex'
 import feathersVuex from '@feathersjs/vuex'
 
 const restClient = rest(process.env.API)

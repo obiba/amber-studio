@@ -96,6 +96,7 @@ export default {
   studyForm: {
     definition: 'Définition',
     items: 'Items',
+    translations: 'Traductions',
     builder: 'Builder'
   },
   datasets: {
@@ -107,6 +108,8 @@ export default {
     profile: 'Profile',
     logout: 'Déconnexion',
     dashboard: 'Tableau de bord',
+    content: 'Contenu',
+    administration: 'Administration',
     settings: 'Paramètres',
     copyright: 'Droits de reproduction',
     all_rights_reserved: 'Tous droits réservés',
@@ -173,7 +176,15 @@ export default {
     delete_study_form: 'Formulaire supprimé avec succès.',
     delete_study_forms: 'Formulaires supprimés avec succès.'
   },
-  formel: {
+  form: {
+    tr_add: 'Ajouter une traduction',
+    tr_merge_items: 'Ajouter les clés de traduction des items',
+    tr_clean: 'Supprimer les traductions non utilisées dans les items',
+    tr_delete_selected: 'Supprimer les traductions sélectionnées',
+    tr_search_hint: 'Chercher des traductions',
+    tr_key: 'Clé',
+    tr_value: 'Traduction',
+    tr_delete_selected_confirm: 'Veuillez confirmer la suppression des traductions sélectionnées.',
     add_item_hint: 'Ajouter un élément',
     builder: 'Constructeur',
     schema: 'Schéma',

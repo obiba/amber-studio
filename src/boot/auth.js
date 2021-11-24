@@ -24,6 +24,7 @@ export default boot(async ({ router, store }) => {
           next()
         }
       } else if (LocalStorage.getItem('feathers-jwt')) {
+        next('/loading')
         // could be not expired but also still not valid, then reauth
         feathersClient.reAuthenticate().then((response) => {
           // show application page
@@ -34,7 +35,6 @@ export default boot(async ({ router, store }) => {
           LocalStorage.remove('feathers-jwt')
           router.push('/login')
         })
-        next('/loading')
       } else if (to.path !== '/login') {
         next('/login')
       } else {

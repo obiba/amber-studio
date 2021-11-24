@@ -8,9 +8,9 @@
       indicator-color="primary"
       align="justify"
       narrow-indicator>
-      <q-tab name="builder" :label="$t('formel.builder')" />
-      <q-tab name="schema" :label="$t('formel.schema')" />
-      <q-tab name="preview" :label="$t('formel.preview')" />
+      <q-tab name="builder" :label="$t('form.builder')" />
+      <q-tab name="schema" :label="$t('form.schema')" />
+      <q-tab name="preview" :label="$t('form.preview')" />
     </q-tabs>
 
     <q-separator />
@@ -19,36 +19,36 @@
       <q-tab-panel name="builder">
         <div class="row q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
-            <p class="text-weight-bold q-mb-sm">{{ $t('formel.definition') }}</p>
-            <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('formel.type')" :hint="$t('formel.type_hint')" emit-value map-options dense filled />
-            <q-input class="q-mb-md" v-model="value.name" :label="$t('formel.name')" :hint="$t(isVariable ? 'formel.name_hint': 'formel.static_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="value.label" :label="$t('formel.label')" :hint="$t('formel.label_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="value.description" :label="$t('formel.description')" :hint="$t('formel.description_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="value.conditions" :label="$t('formel.conditions')" :hint="$t('formel.conditions_hint')" dense filled />
-            <q-input v-if="isVariable" class="q-mb-md" v-model="value.validation" :label="$t('formel.validation')" :hint="$t('formel.validation_hint')" dense filled />
+            <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
+            <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('form.type')" :hint="$t('form.type_hint')" emit-value map-options dense filled />
+            <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.static_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.conditions" :label="$t('form.conditions')" :hint="$t('form.conditions_hint')" dense filled />
+            <q-input v-if="isVariable" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" dense filled />
           </div>
           <div class="col-md-6 col-sm-12">
             <div v-if="isVariable">
-              <p class="text-weight-bold q-mb-sm">{{ $t('formel.settings') }}</p>
+              <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
               <div v-if="hasPlaceholder">
-                <q-input class="q-mb-md" v-model="value.placeholder" :label="$t('formel.placeholder')" :hint="$t('formel.placeholder_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.placeholder" :label="$t('form.placeholder')" :hint="$t('form.placeholder_hint')" dense filled />
               </div>
-              <q-input class="q-mb-md" v-model="value.default" :label="$t('formel.default')" :hint="$t('formel.default_hint')" dense filled />
+              <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" dense filled />
               <div v-if="value.type === 'slider'">
-                <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('formel.min')" :hint="$t('formel.min_hint')" dense filled />
-                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('formel.max')" :hint="$t('formel.max_hint')" dense filled />
-                <q-input class="q-mb-md" v-model="value.format" :label="$t('formel.format')" :hint="$t('formel.format_hint')" dense filled />
+                <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('form.min')" :hint="$t('form.min_hint')" dense filled />
+                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.format" :label="$t('form.format')" :hint="$t('form.format_hint')" dense filled />
               </div>
               <div v-if="hasOptions">
-                <p class="q-mb-sm q-mt-md">{{ $t('formel.options') }}</p>
-                <p class="text-grey">{{ $t('formel.options_hint') }}</p>
+                <p class="q-mb-sm q-mt-md">{{ $t('form.options') }}</p>
+                <p class="text-grey">{{ $t('form.options_hint') }}</p>
                 <div v-for="option in modelValue.options" :key="option.value">
                   <div class="row q-col-gutter-lg">
                     <div class="col-4">
-                      <q-input class="q-mb-md" v-model="option.value" :label="$t('formel.option_value')" dense filled />
+                      <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" dense filled />
                     </div>
                     <div class="col-6">
-                      <q-input class="q-mb-md" v-model="option.label" :label="$t('formel.option_label')" dense filled />
+                      <q-input class="q-mb-md" v-model="option.label" :label="$t('form.option_label')" dense filled />
                     </div>
                     <div class="col-2">
                       <q-btn
@@ -107,9 +107,9 @@ import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
 
 export default defineComponent({
-  name: 'FormItemBuilder',
+  name: 'FormItem',
   components: { BlitzForm },
-  props: ['modelValue'],
+  props: ['modelValue', 'i18n'],
   emits: ['update:modelValue'],
   setup () {
     return {
@@ -150,16 +150,17 @@ export default defineComponent({
       return this.types.map(tp => {
         return {
           value: tp,
-          label: this.$t('formel.types.' + tp)
+          label: this.$t('form.types.' + tp)
         }
       })
     },
     blitzarSchema () {
+      console.log(this.i18n)
       return makeBlitzarQuasarSchemaForm({
         items: [
           this.modelValue
         ],
-        i18n: {}
+        i18n: this.i18n
       }, { locale: 'en' })
     }
   },
@@ -204,7 +205,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style scoped>
-
-</style>
