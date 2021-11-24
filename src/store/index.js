@@ -5,11 +5,12 @@ import account from './account'
 import admin from './admin'
 import study from './study'
 import form from './form'
+
+const debug = false
+/*
 import createPersistedState from 'vuex-persistedstate'
 import SecureLS from 'secure-ls'
-
 const ls = new SecureLS({ isCompression: false })
-const debug = false
 const lsVuex = debug ? createPersistedState()
   : createPersistedState({
     key: 'astore',
@@ -19,6 +20,7 @@ const lsVuex = debug ? createPersistedState()
       removeItem: (key) => ls.remove(key)
     }
   })
+*/
 
 const logPlugin = (store) => {
   // called when the store is initialized
@@ -43,7 +45,7 @@ const logPlugin = (store) => {
 
 export default store(function (/* { ssrContext } */) {
   const Store = createStore({
-    plugins: [authvuex, lsVuex, logPlugin],
+    plugins: [authvuex, logPlugin],
     modules: {
       account,
       admin,

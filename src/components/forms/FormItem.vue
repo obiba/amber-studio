@@ -122,7 +122,7 @@ export default defineComponent({
         'select', 'multiselect',
         'toggle', 'slider', 'static', 'group'
       ],
-      modelData: ref(null)
+      modelData: ref({})
     }
   },
   computed: {
@@ -155,13 +155,13 @@ export default defineComponent({
       })
     },
     blitzarSchema () {
-      console.log(this.i18n)
-      return makeBlitzarQuasarSchemaForm({
+      const schema = {
         items: [
           this.modelValue
         ],
         i18n: this.i18n ? this.i18n : {}
-      }, { locale: 'en' })
+      }
+      return makeBlitzarQuasarSchemaForm(schema, { locale: 'en' })
     }
   },
   watch: {
@@ -179,7 +179,7 @@ export default defineComponent({
         delete this.modelValue.format
         delete this.modelValue.default
       }
-      this.modelData = this.isArray ? [] : null
+      this.modelData = this.isArray ? [] : {}
     },
     'modelValue.default': function (newValue, oldValue) {
       if (newValue === '') {
