@@ -24,7 +24,7 @@
             <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.static_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="value.conditions" :label="$t('form.conditions')" :hint="$t('form.conditions_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" dense filled />
             <q-input v-if="isVariable" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" dense filled />
           </div>
           <div class="col-md-6 col-sm-12">
@@ -33,11 +33,20 @@
               <div v-if="hasPlaceholder">
                 <q-input class="q-mb-md" v-model="value.placeholder" :label="$t('form.placeholder')" :hint="$t('form.placeholder_hint')" dense filled />
               </div>
+              <div v-if="hasHint">
+                <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" dense filled />
+              </div>
               <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" dense filled />
               <div v-if="value.type === 'slider'">
                 <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('form.min')" :hint="$t('form.min_hint')" dense filled />
                 <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" dense filled />
                 <q-input class="q-mb-md" v-model="value.format" :label="$t('form.format')" :hint="$t('form.format_hint')" dense filled />
+              </div>
+              <div v-if="value.type === 'rating'">
+                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.icon" :label="$t('form.icon')" :hint="$t('form.icon_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" dense filled />
               </div>
               <div v-if="hasOptions">
                 <p class="q-mb-sm q-mt-md">{{ $t('form.options') }}</p>
@@ -120,7 +129,9 @@ export default defineComponent({
         'date', 'datetime', 'time',
         'radiogroup', 'checkboxgroup',
         'select', 'multiselect',
-        'toggle', 'slider', 'static', 'group'
+        'slider', 'rating',
+        'toggle',
+        'static', 'group'
       ],
       modelData: ref({})
     }
@@ -143,6 +154,9 @@ export default defineComponent({
     hasPlaceholder () {
       return ['text', 'textarea'].includes(this.modelValue.type)
     },
+    hasHint () {
+      return ['text', 'textarea', 'number', 'date', 'datetime', 'time', 'select', 'multiselect'].includes(this.modelValue.type)
+    },
     hasOptions () {
       return ['radiogroup', 'checkboxgroup', 'select', 'multiselect'].includes(this.modelValue.type)
     },
@@ -157,7 +171,7 @@ export default defineComponent({
     blitzarSchema () {
       const schema = {
         items: [
-          this.modelValue
+          this.value
         ],
         i18n: this.i18n ? this.i18n : {}
       }

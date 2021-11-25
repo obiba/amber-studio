@@ -21,7 +21,6 @@ export default defineComponent({
     }
   },
   mounted () {
-    console.log('dashboard mounted')
     metricsService.getMetrics().then((result) => {
       this.counts = result.counts ? result.counts : {}
     })
