@@ -67,3 +67,8 @@ pre {
   background-color: #eeeeee;
   border-radius: 0;
 }
+
+.blitz-field__error {
+  display: none;
+}
+    

@@ -214,7 +214,7 @@ export default defineComponent({
       }
       if (items) {
         items.forEach(item => {
-          ['label', 'description', 'placeholder', 'hint'].forEach(field => addObsKey(item[field]))
+          ['label', 'description', 'placeholder', 'hint', 'validationMessage'].forEach(field => addObsKey(item[field]))
           if (item.type === 'group') {
             obsKeys = this.appendObservedKeys(item.items, obsKeys)
           } else if (item.options) {

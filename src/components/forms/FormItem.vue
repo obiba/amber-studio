@@ -26,6 +26,7 @@
             <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" dense filled />
             <q-input v-if="isVariable" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" dense filled />
+            <q-input v-if="isVariable" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" dense filled />
           </div>
           <div class="col-md-6 col-sm-12">
             <div v-if="isVariable">
