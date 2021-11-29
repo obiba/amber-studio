@@ -198,7 +198,7 @@ export default defineComponent({
         } else if (this.value.schema.i18n && this.value.schema.i18n.en) {
           obsKeys = Object.keys(this.value.schema.i18n.en)
         }
-        this.appendObservedKeys(this.value.schema.items, obsKeys)
+        this.appendObservedKeys([this.value.schema], obsKeys)
       }
       this.onRowEdit()
     },
@@ -215,7 +215,7 @@ export default defineComponent({
       if (items) {
         items.forEach(item => {
           ['label', 'description', 'placeholder', 'hint', 'validationMessage'].forEach(field => addObsKey(item[field]))
-          if (item.type === 'group') {
+          if (!item.type || item.type === 'group') {
             obsKeys = this.appendObservedKeys(item.items, obsKeys)
           } else if (item.options) {
             item.options.forEach(option => addObsKey(option.label))

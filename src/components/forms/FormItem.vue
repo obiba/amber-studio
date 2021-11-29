@@ -17,13 +17,20 @@
 
     <q-tab-panels v-model="tab">
       <q-tab-panel name="builder">
-        <div class="row q-col-gutter-lg">
+        <div v-if="isRoot" class="row q-col-gutter-lg">
+          <div class="col-md-6 col-sm-12">
+            <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
+            <q-input class="q-mb-md" v-model="value.label" :label="$t('form.title')" :hint="$t('form.form_title_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.form_description_hint')" dense filled autogrow />
+          </div>
+        </div>
+        <div v-else class="row q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
             <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('form.type')" :hint="$t('form.type_hint')" emit-value map-options dense filled />
             <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.static_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" dense filled />
-            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" dense filled autogrow />
             <q-input class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" dense filled />
             <q-input v-if="isVariable" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" dense filled />
             <q-input v-if="isVariable" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" dense filled />
@@ -87,12 +94,17 @@
 
       <q-tab-panel name="schema">
         <div class="bg-black text-white q-pa-md">
-          <pre>{{ JSON.stringify(modelValue, null, '  ') }}</pre>
+          <pre>{{ schemaStr }}</pre>
         </div>
       </q-tab-panel>
 
       <q-tab-panel name="preview">
         <q-card>
+          <q-card-section v-if="isRoot">
+            <div class="text-h6">{{ modelValue.label }}</div>
+            <div class="text-subtitle2">{{ modelValue.description }}</div>
+          </q-card-section>
+          <q-separator v-if="isRoot" />
           <q-card-section>
             <div>
               <BlitzForm :key='remountCounter' :schema='blitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
@@ -101,8 +113,13 @@
         </q-card>
         <q-card class="q-mt-md" v-if="isVariable">
           <q-card-section>
+            <q-btn
+              icon="backspace"
+              :label="$t('form.preview_data_clear')"
+              @click="clearModelData()"
+              class="q-mb-md" />
             <div class="bg-black text-white q-pa-md">
-              <pre>{{ JSON.stringify(modelData, null, '  ') }}</pre>
+              <pre>{{ modelDataStr }}</pre>
             </div>
           </q-card-section>
         </q-card>
@@ -146,6 +163,17 @@ export default defineComponent({
         this.$emit('update:modelValue', value)
       }
     },
+    schemaStr () {
+      const valueToShow = { ...this.modelValue }
+      delete valueToShow._id
+      return JSON.stringify(valueToShow, null, '  ')
+    },
+    modelDataStr () {
+      return JSON.stringify(this.modelData, null, '  ')
+    },
+    isRoot () {
+      return this.modelValue.name === '__root'
+    },
     isVariable () {
       return ['static'].includes(this.modelValue.type) !== true
     },
@@ -170,10 +198,9 @@ export default defineComponent({
       })
     },
     blitzarSchema () {
+      const items = this.isRoot ? this.value.items : [this.value]
       const schema = {
-        items: [
-          this.value
-        ],
+        items: items,
         i18n: this.i18n ? this.i18n : {}
       }
       return makeBlitzarQuasarSchemaForm(schema, { locale: 'en' })
@@ -194,7 +221,6 @@ export default defineComponent({
         delete this.modelValue.format
         delete this.modelValue.default
       }
-      this.modelData = this.isArray ? [] : {}
     },
     'modelValue.default': function (newValue, oldValue) {
       if (newValue === '') {
@@ -216,6 +242,10 @@ export default defineComponent({
         value: val,
         label: val
       })
+    },
+    clearModelData () {
+      this.modelData = {}
+      this.remountCounter++
     }
   }
 })

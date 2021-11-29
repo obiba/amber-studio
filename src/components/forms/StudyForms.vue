@@ -316,6 +316,10 @@ export default defineComponent({
       this.v$.$reset()
       const toSave = { ...this.newStudyFormData }
       toSave.study = this.study._id
+      toSave.schema = {
+        label: toSave.name,
+        description: toSave.description
+      }
       this.createStudyForm({
         form: toSave
       })

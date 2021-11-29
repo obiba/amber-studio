@@ -189,6 +189,7 @@ export default {
     builder: 'Builder',
     schema: 'Schema',
     preview: 'Preview',
+    preview_data_clear: 'Clear',
     definition: 'Definition',
     logic: 'Logic',
     settings: 'Settings',
@@ -198,6 +199,7 @@ export default {
     type: 'Type',
     type_hint: 'Required element type.',
     types: {
+      form: 'Form',
       text: 'Short answer',
       textarea: 'Paragraph',
       number: 'Number',
@@ -214,6 +216,9 @@ export default {
       group: 'Group',
       rating: 'Rating'
     },
+    title: 'Title',
+    form_title_hint: 'Published form title',
+    form_description_hint: 'Published description of the form.',
     label: 'Label',
     label_hint: 'Field label or title.',
     description: 'Description',

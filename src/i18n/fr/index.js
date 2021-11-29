@@ -189,6 +189,7 @@ export default {
     builder: 'Constructeur',
     schema: 'Schéma',
     preview: 'Prévue',
+    preview_data_clear: 'Effacer',
     definition: 'Définition',
     logic: 'Logique',
     settings: 'Paramètres',
@@ -198,6 +199,7 @@ export default {
     type: 'Type',
     type_hint: 'Type d\'élément.',
     types: {
+      form: 'Formulaire',
       text: 'Réponse courte',
       textarea: 'Paragraphe',
       number: 'Number',
@@ -214,6 +216,9 @@ export default {
       group: 'Groupe',
       rating: 'Échelle'
     },
+    title: 'Titre',
+    form_title_hint: 'Titre du formulaire publié',
+    form_description_hint: 'Description du formulaire publié.',
     label: 'Libellé',
     label_hint: 'Libellé ou titre du champ.',
     description: 'Description',

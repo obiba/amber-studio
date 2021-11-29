@@ -12,12 +12,13 @@
             children-key="items"
             selected-color="primary"
             v-model:selected="selected"
+            default-expand-all
             @keyup.alt.up="selectUpItem"
             @keyup.alt.down="selectDownItem">
 
             <template v-slot:default-header="prop">
               <div class="row items-center">
-                <div>{{ prop.node.name }} <span class="text-caption text-grey">[{{ prop.node.type ? $t('form.types.' + prop.node.type) : '?' }}]</span></div>
+                <div>{{ prop.node.name }} <span class="text-caption text-grey">[{{ $t('form.types.' + (prop.node.type ? prop.node.type : 'form')) }}]</span></div>
               </div>
             </template>
 
@@ -44,7 +45,7 @@
             <span class="float-left text-h6 q-mt-sm q-ml-md">
               {{ selectedItem.name }}
             </span>
-            <div class="q-mt-sm q-ml-md">
+            <div v-if="!isRootSelected" class="q-mt-sm q-ml-md">
               <q-btn
                 class="text-grey-8"
                 size="10px"
@@ -121,19 +122,14 @@ export default defineComponent({
       return this.modelValue.schema.i18n
     },
     selectedItem () {
-      /* if (!this.value.schema) {
-        this.value.schema = { items: [] }
-      } else if (!this.value.schema.items) {
-        this.value.schema.items = []
-      }
-      if (!this.formItemSelected && this.value.schema.items.length > 0) {
-        this.selected = this.value.schema.items[0].name
-      } */
       return this.formItemSelected
+    },
+    isRootSelected () {
+      return this.formItemSelected && this.formItemSelected.name === '__root'
     },
     items () {
       if (this.value && this.value.schema) {
-        return this.value.schema.items ? this.value.schema.items : []
+        return [this.value.schema]
       }
       return []
     }
@@ -296,13 +292,20 @@ export default defineComponent({
       }
       found.parent.items.splice(idx, 1)
       if (this.value.schema.items.length === 0) {
-        this.selectItem(null)
+        this.selectItem(this.value.schema)
       }
     },
     isItemSelected (item) {
       return this.formItemSelected && this.formItemSelected.name === item.name
     },
     findItemAndParent (name) {
+      if (name === '__root') {
+        return {
+          parent: null,
+          name: name,
+          item: this.value.schema
+        }
+      }
       return this.findItemInParent(this.value.schema, name)
     },
     findItemInParent (parent, name) {
