@@ -195,7 +195,7 @@ export default {
     settings: 'Paramètres',
     name: 'Nom',
     name_hint: 'Identifiant unique, requis, sera utilisé comme nom de variable.',
-    static_hint: 'Identifiant pour grouper les éléments par section.',
+    section_hint: 'Identifiant pour grouper les éléments par section.',
     type: 'Type',
     type_hint: 'Type d\'élément.',
     types: {
@@ -212,7 +212,7 @@ export default {
       multiselect: 'Menu déroulant multiple',
       toggle: 'Bascule',
       slider: 'Glissière',
-      static: 'Section',
+      section: 'Section',
       group: 'Groupe',
       rating: 'Échelle'
     },

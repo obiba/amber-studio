@@ -28,7 +28,7 @@
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
             <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('form.type')" :hint="$t('form.type_hint')" emit-value map-options dense filled />
-            <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.static_hint')" dense filled />
+            <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.section_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" dense filled autogrow />
             <q-input class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" dense filled />
@@ -149,7 +149,7 @@ export default defineComponent({
         'select', 'multiselect',
         'slider', 'rating',
         'toggle',
-        'static', 'group'
+        'section', 'group'
       ],
       modelData: ref({})
     }
@@ -175,7 +175,7 @@ export default defineComponent({
       return this.modelValue.name === '__root'
     },
     isVariable () {
-      return ['static'].includes(this.modelValue.type) !== true
+      return ['section'].includes(this.modelValue.type) !== true
     },
     isArray () {
       return ['checkboxgroup', 'multiselect'].includes(this.modelValue.type)

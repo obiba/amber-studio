@@ -195,7 +195,7 @@ export default {
     settings: 'Settings',
     name: 'Name',
     name_hint: 'Required unique identifier, will be used as the variable name.',
-    static_hint: 'Name to group items by section.',
+    section_hint: 'Name to group items by section.',
     type: 'Type',
     type_hint: 'Required element type.',
     types: {
@@ -212,7 +212,7 @@ export default {
       multiselect: 'Multi select dropdown',
       toggle: 'Toggle',
       slider: 'Slider',
-      static: 'Section',
+      section: 'Section',
       group: 'Group',
       rating: 'Rating'
     },
