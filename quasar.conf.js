@@ -25,7 +25,6 @@ module.exports = configure(function (ctx) {
       'auth',
       'i18n',
       'vuelidate',
-      'form-components',
       'recaptcha'
     ],
 
