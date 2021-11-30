@@ -17,7 +17,7 @@ export async function getForms ({ commit }, payload) {
     commit('setForms', result.data)
     commit('setFormCount', result.total)
   } else {
-    commit('setStudForms', [])
+    commit('setForms', [])
     commit('setFormCount', 0)
   }
 }
