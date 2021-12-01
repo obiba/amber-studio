@@ -94,6 +94,8 @@ export default {
     delete_study_forms_confirm: 'Veuillez confirmer la suppression des formulaires sélectionnés:'
   },
   studyForm: {
+    import_schema: 'Import d\'un ficher de schéma',
+    import_schema_hint: 'Fichier de schéma à importer, incluant les items et les traductions du formaulaire.',
     definition: 'Définition',
     items: 'Items',
     translations: 'Traductions',
@@ -209,7 +211,7 @@ export default {
       radiogroup: 'Choix unique',
       checkboxgroup: 'Choix multiples',
       select: 'Menu déroulant',
-      multiselect: 'Menu déroulant multiple',
+      autocomplete: 'Auto complétion',
       toggle: 'Bascule',
       slider: 'Glissière',
       section: 'Section',
@@ -235,6 +237,8 @@ export default {
     placeholder_hint: 'Text d\'aide dans le champ.',
     hint: 'Indice',
     hint_hint: 'Text d\'aide sous le champ.',
+    multiple: 'Multiple',
+    multiple_hint: 'Choix multiple',
     min: 'Minimum',
     min_hint: 'Valeur minimum.',
     max: 'Maximum',

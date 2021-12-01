@@ -56,36 +56,60 @@
                 <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" dense filled />
                 <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" dense filled />
               </div>
+              <div v-if="hasMultiple">
+                <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" :hint="$t('form.multiple_hint')" dense />
+              </div>
               <div v-if="hasOptions">
                 <p class="q-mb-sm q-mt-md">{{ $t('form.options') }}</p>
                 <p class="text-grey">{{ $t('form.options_hint') }}</p>
-                <div v-for="option in modelValue.options" :key="option.value">
-                  <div class="row q-col-gutter-lg">
-                    <div class="col-4">
-                      <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" dense filled />
-                    </div>
-                    <div class="col-6">
-                      <q-input class="q-mb-md" v-model="option.label" :label="$t('form.option_label')" dense filled />
-                    </div>
-                    <div class="col-2">
-                      <q-btn
-                        class="q-mt-sm text-grey-8"
-                        size="12px"
-                        flat
-                        dense
-                        round
-                        icon='delete'
-                        @click='deleteOption(option)'>
-                      </q-btn>
-                    </div>
+                <div class="row q-col-gutter-lg" v-for="option in modelValue.options" :key="option.value">
+                  <div class="col-4">
+                    <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" dense filled />
+                  </div>
+                  <div class="col-6">
+                    <q-input class="q-mb-md" v-model="option.label" :label="$t('form.option_label')" dense filled />
+                  </div>
+                  <div class="col-2">
+                    <q-btn
+                      class="q-mt-sm text-grey-8"
+                      size="12px"
+                      flat
+                      dense
+                      round
+                      icon='delete'
+                      @click='deleteOption(option)'>
+                    </q-btn>
                   </div>
                 </div>
-                <q-btn
-                color="primary"
-                icon="add"
-                :title="$t('fomerl.add_option_hint')"
-                @click="addOption()"
-                class="q-mr-md" />
+                <div class="row q-col-gutter-lg">
+                  <div class="col-4">
+                    <q-btn
+                      color="primary"
+                      icon="add"
+                      :title="$t('form.add_option_hint')"
+                      @click="addOption()"
+                      class="q-mr-md"
+                    />
+                  </div>
+                  <div class="col-8">
+                    <q-file
+                      dense
+                      filled
+                      bottom-slots
+                      clearable
+                      v-model="optionsFile"
+                      accept=".txt,.csv"
+                      :label="$t('form.upload_options')">
+                      <template v-slot:prepend>
+                        <q-icon name="add" @click.stop />
+                      </template>
+
+                      <template v-slot:hint>
+                        {{ $t('form.upload_options_hint') }}
+                      </template>
+                    </q-file>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -146,12 +170,13 @@ export default defineComponent({
         'text', 'textarea', 'number',
         'date', 'datetime', 'time',
         'radiogroup', 'checkboxgroup',
-        'select', 'multiselect',
+        'select', 'autocomplete',
         'slider', 'rating',
         'toggle',
         'section', 'group'
       ],
-      modelData: ref({})
+      modelData: ref({}),
+      optionsFile: ref(null)
     }
   },
   computed: {
@@ -178,16 +203,19 @@ export default defineComponent({
       return ['section'].includes(this.modelValue.type) !== true
     },
     isArray () {
-      return ['checkboxgroup', 'multiselect'].includes(this.modelValue.type)
+      return this.modelValue.type === 'checkbox' || this.modelValue.multiple
     },
     hasPlaceholder () {
       return ['text', 'textarea'].includes(this.modelValue.type)
     },
     hasHint () {
-      return ['text', 'textarea', 'number', 'date', 'datetime', 'time', 'select', 'multiselect'].includes(this.modelValue.type)
+      return ['text', 'textarea', 'number', 'date', 'datetime', 'time', 'select', 'autocomplete'].includes(this.modelValue.type)
+    },
+    hasMultiple () {
+      return ['select', 'autocomplete'].includes(this.modelValue.type)
     },
     hasOptions () {
-      return ['radiogroup', 'checkboxgroup', 'select', 'multiselect'].includes(this.modelValue.type)
+      return ['radiogroup', 'checkboxgroup', 'select', 'autocomplete'].includes(this.modelValue.type)
     },
     typeOptions () {
       return this.types.map(tp => {
@@ -227,6 +255,35 @@ export default defineComponent({
         delete this.modelValue.default
       }
       this.modelData = this.isArray ? (this.modelValue.default ? [this.modelValue.default] : []) : this.modelValue.default
+    },
+    optionsFile: function (newValue) {
+      if (newValue !== null) {
+        const reader = new FileReader()
+        reader.readAsText(newValue, 'UTF-8')
+        reader.onload = evt => {
+          const cleanToken = (token) => {
+            if (token.startsWith('"') && token.endsWith('"')) {
+              return token.substring(1, token.length - 1).trim()
+            }
+            return token
+          }
+          evt.target.result.split(/\r\n|\n/)
+            .map(line => line.trim())
+            .filter(line => line.length > 0)
+            .forEach(line => {
+              const tokens = line.split(',').map(token => cleanToken(token))
+              if (tokens.length > 0 && tokens[0].length > 0) {
+                this.value.options.push({
+                  value: tokens[0],
+                  label: tokens.length > 1 && tokens[1].length > 0 ? tokens[1] : tokens[0]
+                })
+              }
+            })
+        }
+        reader.onerror = evt => {
+          console.error(evt)
+        }
+      }
     }
   },
   methods: {

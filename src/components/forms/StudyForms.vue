@@ -329,7 +329,6 @@ export default defineComponent({
 
       if (this.newStudyFormData.importSchema) {
         delete toSave.importSchema
-        console.log(this.newStudyFormData.importSchema)
         const reader = new FileReader()
         reader.readAsText(this.newStudyFormData.importSchema, 'UTF-8')
         reader.onload = evt => {
