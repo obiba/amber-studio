@@ -94,6 +94,8 @@ export default {
     delete_study_forms_confirm: 'Please confirm that you want to remove all the selected forms:'
   },
   studyForm: {
+    import_schema: 'Import schema file',
+    import_schema_hint: 'Optional schema file to import. Includes form items and translations.',
     definition: 'Definition',
     items: 'Items',
     translations: 'Translations',

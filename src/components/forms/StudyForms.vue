@@ -55,7 +55,7 @@
             dense
             round
             :title="$t('study.edit_study_form_hint')"
-            icon='edit'
+            icon="edit"
             :to="'/study/' + props.row._id">
           </q-btn>
           <q-btn
@@ -65,7 +65,7 @@
             dense
             round
             :title="$t('study.delete_study_form_hint')"
-            icon='delete'
+            icon="delete"
             @click='onConfirmDelete(props.row)'>
           </q-btn>
         </q-td>
@@ -74,14 +74,14 @@
 
     <q-dialog v-model='showCreateStudyForm' persistent>
       <q-card>
-        <q-card-section class='row items-center'>
-           <div class='col-12'>
+        <q-card-section class="row items-center">
+           <div class="col-12">
             <q-input
               filled
               v-model='newStudyFormData.name'
               :label="$t('name')"
               lazy-rules
-              class='q-ma-sm'
+              class="q-ma-sm"
               @blur="v$.newStudyFormData.name.$touch"
               :error="v$.newStudyFormData.name.$error"
               :hint="$t('required')"
@@ -93,14 +93,24 @@
               </template>
             </q-input>
           </div>
-          <div class='col-12'>
+          <div class="col-12">
             <q-input
               filled
               v-model='newStudyFormData.description'
               :label="$t('description')"
               autogrow
               lazy-rules
-              class='q-ma-sm'
+              class="q-ma-sm"
+            />
+          </div>
+          <div class="col-12">
+            <q-file
+              filled
+              v-model="newStudyFormData.importSchema"
+              :label="$t('studyForm.import_schema')"
+              :hint="$t('studyForm.import_schema_hint')"
+              class="q-ma-sm"
+              accept=".json"
             />
           </div>
         </q-card-section>
@@ -316,13 +326,38 @@ export default defineComponent({
       this.v$.$reset()
       const toSave = { ...this.newStudyFormData }
       toSave.study = this.study._id
-      toSave.schema = {
-        label: toSave.name,
-        description: toSave.description
+
+      if (this.newStudyFormData.importSchema) {
+        delete toSave.importSchema
+        console.log(this.newStudyFormData.importSchema)
+        const reader = new FileReader()
+        reader.readAsText(this.newStudyFormData.importSchema, 'UTF-8')
+        reader.onload = evt => {
+          const schema = JSON.parse(evt.target.result)
+          toSave.schema = schema
+          toSave.schema.name = '__root'
+          if (!toSave.schema.label) {
+            toSave.schema.label = toSave.name
+          }
+          if (!toSave.schema.description) {
+            toSave.schema.description = toSave.description
+          }
+          this.createStudyForm({
+            form: toSave
+          })
+        }
+        reader.onerror = evt => {
+          console.error(evt)
+        }
+      } else {
+        toSave.schema = {
+          label: toSave.name,
+          description: toSave.description
+        }
+        this.createStudyForm({
+          form: toSave
+        })
       }
-      this.createStudyForm({
-        form: toSave
-      })
     }
   }
 })

@@ -2,14 +2,14 @@
   <q-page>
     <div class="bg-info q-pa-md">
       <div class="row">
-        <div class="col">
+        <div class="col-8">
           <q-breadcrumbs class="text-h6 text-white">
             <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies" class="text-white"/>
             <q-breadcrumbs-el :label="study ? study.name : '...'" :to="'/study/' + (study ? study._id : '?')" class="text-white"/>
             <q-breadcrumbs-el icon="article" :label="studyForm.name" />
           </q-breadcrumbs>
         </div>
-        <div class="col-1">
+        <div class="col-4">
           <q-btn
             @click='save'
             :disable='disableSave'
@@ -17,6 +17,16 @@
             type="submit"
             color="positive"
             class="float-right">
+            <template v-slot:loading>
+            <q-spinner-facebook />
+            </template>
+          </q-btn>
+          <q-btn
+            @click='onExport'
+            :label="$t('export')"
+            icon="file_download"
+            color="grey"
+            class="float-right q-mr-md">
             <template v-slot:loading>
             <q-spinner-facebook />
             </template>
@@ -49,7 +59,6 @@
               </div>
               </template>
             </q-input>
-            
             <q-input
               filled
               v-model='studyFormData.description'
@@ -148,6 +157,18 @@ export default defineComponent({
       this.updateStudyForm({
         form: toSave
       })
+    },
+    onExport () {
+      const data = { ...this.studyFormData.schema }
+      delete data._id
+      delete data.name
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
+      const a = document.createElement('a')
+      a.download = this.studyFormData.name + '-schema.json'
+      a.href = window.URL.createObjectURL(blob)
+      a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
+      a.click()
+      a.remove()
     }
   }
 })
