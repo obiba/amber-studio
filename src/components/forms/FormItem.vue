@@ -126,8 +126,8 @@
       <q-tab-panel name="preview">
         <q-card>
           <q-card-section v-if="isRoot">
-            <div class="text-h6">{{ modelValue.label }}</div>
-            <div class="text-subtitle2">{{ modelValue.description }}</div>
+            <div class="text-h6">{{ tr(modelValue.label) }}</div>
+            <div class="text-subtitle2">{{ tr(modelValue.description) }}</div>
           </q-card-section>
           <q-separator v-if="isRoot" />
           <q-card-section>
@@ -156,7 +156,7 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import { BlitzForm } from '@blitzar/form'
-import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
+import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
 
 export default defineComponent({
   name: 'FormItem',
@@ -292,6 +292,10 @@ export default defineComponent({
     }
   },
   methods: {
+    tr (key) {
+      console.log(key)
+      return makeSchemaFormTr({ i18n: this.i18n ? this.i18n : {} }, { locale: 'en' })(key)
+    },
     deleteOption (option) {
       this.value.options = this.modelValue.options.filter(opt => opt.value !== option.value)
     },
