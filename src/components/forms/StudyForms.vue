@@ -334,7 +334,7 @@ export default defineComponent({
         reader.onload = evt => {
           const schema = JSON.parse(evt.target.result)
           toSave.schema = schema
-          toSave.schema.name = '__root'
+          toSave.schema.name = '.'
           if (!toSave.schema.label) {
             toSave.schema.label = toSave.name
           }

@@ -197,7 +197,7 @@ export default defineComponent({
       return JSON.stringify(this.modelData, null, '  ')
     },
     isRoot () {
-      return this.modelValue.name === '__root'
+      return this.modelValue.name === '.'
     },
     isVariable () {
       return ['section'].includes(this.modelValue.type) !== true

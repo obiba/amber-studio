@@ -18,7 +18,11 @@
 
             <template v-slot:default-header="prop">
               <div class="row items-center">
-                <div>{{ prop.node.name }} <span class="text-caption text-grey">[{{ $t('form.types.' + (prop.node.type ? prop.node.type : 'form')) }}]</span></div>
+                <div>
+                  <q-icon v-if="prop.node.name === '.'" name="feed"/>
+                  <span v-else>{{ prop.node.name }}</span>
+                  <span class="text-caption text-grey q-ml-xs">[{{ $t('form.types.' + (prop.node.type ? prop.node.type : 'form')) }}]</span>
+                </div>
               </div>
             </template>
 
@@ -42,9 +46,10 @@
       <template v-slot:after>
         <div v-if="selectedItem">
           <div class="row">
-            <span class="float-left text-h6 q-mt-sm q-ml-md">
-              {{ selectedItem.name }}
-            </span>
+            <div class="float-left text-h6 q-mt-sm q-ml-md">
+              <span v-if="isRootSelected">{{ $t('form.types.form') }}</span>
+              <span v-else>{{ selectedItem.name }}</span>
+            </div>
             <div v-if="!isRootSelected" class="q-mt-sm q-ml-md">
               <q-btn
                 class="text-grey-8"
@@ -125,7 +130,7 @@ export default defineComponent({
       return this.formItemSelected
     },
     isRootSelected () {
-      return this.formItemSelected && this.formItemSelected.name === '__root'
+      return this.formItemSelected && this.formItemSelected.name === '.'
     },
     items () {
       if (this.value && this.value.schema) {
@@ -299,7 +304,7 @@ export default defineComponent({
       return this.formItemSelected && this.formItemSelected.name === item.name
     },
     findItemAndParent (name) {
-      if (name === '__root') {
+      if (name === '.') {
         return {
           parent: null,
           name: name,
