@@ -31,9 +31,9 @@
             <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.section_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" dense filled autogrow />
-            <q-input class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" dense filled />
-            <q-input v-if="isVariable" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" dense filled />
-            <q-input v-if="isVariable" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" dense filled />
+            <q-input v-if="!isComputed" class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" dense filled />
+            <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" dense filled />
+            <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" dense filled />
           </div>
           <div class="col-md-6 col-sm-12">
             <div v-if="isVariable">
@@ -44,6 +44,7 @@
               <div v-if="hasHint">
                 <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" dense filled />
               </div>
+              <q-input v-if="isComputed" class="q-mb-md" v-model="value.compute" :label="$t('form.compute')" :hint="$t('form.compute_hint')" dense filled />
               <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" dense filled />
               <div v-if="value.type === 'slider'">
                 <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('form.min')" :hint="$t('form.min_hint')" dense filled />
@@ -173,7 +174,8 @@ export default defineComponent({
         'select', 'autocomplete',
         'slider', 'rating',
         'toggle',
-        'section', 'group'
+        'section', 'group',
+        'computed'
       ],
       modelData: ref({}),
       optionsFile: ref(null)
@@ -202,6 +204,9 @@ export default defineComponent({
     isVariable () {
       return ['section'].includes(this.modelValue.type) !== true
     },
+    isComputed () {
+      return this.modelValue.type === 'computed'
+    },
     isArray () {
       return this.modelValue.type === 'checkbox' || this.modelValue.multiple
     },
@@ -223,7 +228,7 @@ export default defineComponent({
           value: tp,
           label: this.$t('form.types.' + tp)
         }
-      })
+      }).sort((a, b) => a.label.localeCompare(b.label))
     },
     blitzarSchema () {
       const items = this.isRoot ? this.value.items : [this.value]
