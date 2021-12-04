@@ -958,10 +958,10 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     to-fast-properties "^2.0.0"
 
-"@blitzar/form@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@blitzar/form/-/form-1.0.2.tgz#4529664e675a067ee51f39936efd309d78266af6"
-  integrity sha512-Sf1mOP1X2d/YaqxM5dVRR/BDuA3yuYswJB8Hkljydl3N2A7wL50WG+yHP2n1pb34vKPUyNyb2/kgsoUlBkD/fg==
+"@blitzar/form@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@blitzar/form/-/form-1.0.3.tgz#9b27ce04b9cf7111bbf922ea7d303ed6fbd8cdfc"
+  integrity sha512-hdrqR5EKrCdCF+Ajcu4jZVx9LHVLsAv+9N5NPHntftmgwsYXzOs21xEjj2+oq5YluzxpIlDhC/2DrJhC10WiGQ==
   dependencies:
     "@blitzar/utils" "^0.0.33"
     case-anything "^1.1.3"
