@@ -32,6 +32,7 @@
             <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" dense filled />
             <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" dense filled autogrow />
             <q-input v-if="!isComputed" class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" dense filled />
+            <q-toggle v-if="isVariable && !isComputed" class="q-mb-md" v-model.number="value.required" :label="$t('form.required')" :hint="$t('form.required_hint')" dense />
             <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" dense filled />
             <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" dense filled />
           </div>
@@ -46,10 +47,12 @@
               </div>
               <q-input v-if="isComputed" class="q-mb-md" v-model="value.compute" :label="$t('form.compute')" :hint="$t('form.compute_hint')" dense filled />
               <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" dense filled />
+              <div v-if="value.type === 'text'">
+                <q-input class="q-mb-md" v-model.number="value.mask" :label="$t('form.mask')" :hint="$t('form.mask_hint')" dense filled />
+              </div>
               <div v-if="value.type === 'slider'">
                 <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('form.min')" :hint="$t('form.min_hint')" dense filled />
                 <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" dense filled />
-                <q-input class="q-mb-md" v-model="value.format" :label="$t('form.format')" :hint="$t('form.format_hint')" dense filled />
               </div>
               <div v-if="value.type === 'rating'">
                 <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" dense filled />
@@ -247,12 +250,18 @@ export default defineComponent({
       if (!this.hasOptions) {
         delete this.modelValue.options
       }
+      if (!this.hasMultiple) {
+        delete this.modelValue.multiple
+      }
       if (!this.isVariable) {
+        delete this.modelValue.required
         delete this.modelValue.validation
+        delete this.modelValue.validationMessage
         delete this.modelValue.min
         delete this.modelValue.max
-        delete this.modelValue.format
+        delete this.modelValue.mask
         delete this.modelValue.default
+        delete this.modelValue.options
       }
     },
     'modelValue.default': function (newValue, oldValue) {
