@@ -56,9 +56,6 @@
               </div>
               <div v-if="value.type === 'rating'">
                 <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" dense filled />
-                <q-input class="q-mb-md" v-model="value.icon" :label="$t('form.icon')" :hint="$t('form.icon_hint')" dense filled />
-                <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" dense filled />
-                <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" dense filled />
               </div>
               <div v-if="hasMultiple">
                 <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" :hint="$t('form.multiple_hint')" dense />
@@ -114,6 +111,16 @@
                     </q-file>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div v-if="!isComputed">
+              <p class="text-weight-bold q-mb-sm">{{ $t('form.style') }}</p>
+              <q-input class="q-mb-md" v-model="value.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" dense filled />
+              <q-input v-if="!hasDescriptionClass" class="q-mb-md" v-model="value.descriptionClass" :label="$t('form.description_class')" :hint="$t('form.description_class_hint')" dense filled autogrow />
+              <div v-if="value.type === 'rating'">
+                <q-input class="q-mb-md" v-model="value.icon" :label="$t('form.icon')" :hint="$t('form.icon_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" dense filled />
+                <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" dense filled />
               </div>
             </div>
           </div>
@@ -217,6 +224,9 @@ export default defineComponent({
     hasPlaceholder () {
       return ['text', 'textarea'].includes(this.modelValue.type)
     },
+    hasDescriptionClass () {
+      return !['section', 'group'].includes(this.modelValue.type)
+    },
     hasHint () {
       return ['text', 'textarea', 'number', 'date', 'datetime', 'time', 'select', 'autocomplete'].includes(this.modelValue.type)
     },
@@ -307,7 +317,7 @@ export default defineComponent({
       return makeSchemaFormTr({ i18n: this.i18n ? this.i18n : {} }, { locale: 'en' })(key)
     },
     md (text) {
-      return snarkdown(text)
+      return text ? snarkdown(text) : text
     },
     deleteOption (option) {
       this.value.options = this.modelValue.options.filter(opt => opt.value !== option.value)

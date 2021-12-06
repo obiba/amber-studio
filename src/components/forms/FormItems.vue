@@ -172,10 +172,12 @@ export default defineComponent({
         } else {
           found.item.items.push(newItem)
         }
-      } else {
+      } else if (found.parent) {
         // add after selected one
         const idx = found.parent.items.indexOf(found.item)
         found.parent.items.splice(idx + 1, 0, newItem)
+      } else {
+        found.item.items.push(newItem)
       }
       this.selected = newItem.name
     },

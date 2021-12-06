@@ -113,7 +113,7 @@ export async function deleteForm ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'study/getStudies',
+    'form/getForms',
     {
       paginationOpts: payload.paginationOpts,
       study: payload.study
