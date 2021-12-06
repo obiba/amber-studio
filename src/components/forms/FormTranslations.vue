@@ -17,7 +17,7 @@
           color="primary"
           icon="add"
           :title="$t('form.tr_add')"
-          @click="createTranslation()"
+          @click="onAddTranslation()"
           class="q-mr-md" />
         <q-btn
           class="q-mr-md"
@@ -26,8 +26,9 @@
           color="black"
           icon="merge"
           :title="$t('form.tr_merge_items')"
-          @click="mergeObservedKeys()" />
+          @click="onConfirmMergeObservedKeys()" />
         <q-btn
+          v-if="false"
           class="q-mr-md"
           flat
           round
@@ -68,6 +69,94 @@
       </template>
     </q-table>
 
+    <q-dialog v-model='showAddTranslation' persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+           <div class="col-12">
+            <q-input
+              filled
+              v-model='newTranslationData.key'
+              :label="$t('form.tr_key')"
+              lazy-rules
+              class="q-ma-sm"
+              @blur="v$.newTranslationData.key.$touch"
+              :error="v$.newTranslationData.key.$error"
+              :hint="$t('required')"
+            >
+              <template v-slot:error>
+                <div v-for="error in v$.newTranslationData.key.$errors">
+                  {{error.$message}}
+                </div>
+              </template>
+            </q-input>
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='addTranslation'
+            :disable='disableAddTranslation'
+            :label="$t('add')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="showConfirmMerge" persistent>
+      <q-card>
+        <q-card-section>
+          <div>
+            {{$t('form.tr_merge_confirm')}}
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='mergeObservedKeys'
+            :label="$t('merge')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="showConfirmClean" persistent>
+      <q-card>
+        <q-card-section>
+          <div>
+            {{$t('form.tr_clean_confirm')}}
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='cleanKeys'
+            :label="$t('clean')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
     <q-dialog v-model="showConfirmDelete" persistent>
       <q-card>
         <q-card-section>
@@ -98,6 +187,9 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import { locales } from '../../boot/i18n'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '../../boot/vuelidate'
+import { Notify } from 'quasar'
 
 export default defineComponent({
   name: 'FormTranslations',
@@ -105,19 +197,35 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup () {
     return {
+      v$: useVuelidate(),
       selected: ref([]),
       filter: ref('')
     }
   },
   data () {
     return {
+      showAddTranslation: false,
       showConfirmDelete: false,
+      showConfirmClean: false,
+      showConfirmMerge: false,
       paginationOpts: {
         sortBy: 'key',
         descending: false,
         rowsPerPage: 10
       },
-      rows: ref([])
+      rows: ref([]),
+      newTranslationData: {
+        key: ''
+      }
+    }
+  },
+  validations: {
+    newTranslationData: {
+      key: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      }
     }
   },
   watch: {
@@ -157,10 +265,19 @@ export default defineComponent({
       })
 
       return cols
+    },
+    disableAddTranslation () {
+      return this.v$.newTranslationData.$invalid
+    }
+  },
+  mounted () {
+    if (this.value) {
+      this.initRows()
     }
   },
   methods: {
     initRows () {
+      console.log('initRows')
       // read i18n object and make rows
       if (this.value && this.value.schema) {
         if (this.value.schema.i18n) {
@@ -205,7 +322,7 @@ export default defineComponent({
     appendObservedKeys (items, keys) {
       let obsKeys = keys
       const addObsKey = (key) => {
-        if (key && key.trim().length > 0 && !obsKeys.includes(key)) {
+        if (key && key.trim().length > 0 && !key.includes('.') && !obsKeys.includes(key)) {
           const row = { key: key }
           locales.forEach(loc => { row[loc] = key })
           this.rows.push(row)
@@ -224,6 +341,9 @@ export default defineComponent({
       }
       return obsKeys
     },
+    keyExists (key) {
+      return this.rows.map(row => row.key).includes(key)
+    },
     onRowEdit () {
       // do not know whether there was a change but update i18n anyway
       const toSave = this.value
@@ -240,11 +360,29 @@ export default defineComponent({
       })
       this.value = toSave
     },
-    createTranslation () {
-      // TODO
+    onAddTranslation () {
+      this.newTranslationData = {}
+      this.showAddTranslation = true
+    },
+    addTranslation () {
+      if (!this.keyExists(this.newTranslationData.key)) {
+        this.rows.push({ key: this.newTranslationData.key })
+        this.onRowEdit()
+      } else {
+        Notify.create({
+          message: 'Translation key already exists.',
+          color: 'negative'
+        })
+      }
     },
     onConfirmClean () {
+      this.showConfirmClean = true
+    },
+    cleanKeys () {
       // TODO
+    },
+    onConfirmMergeObservedKeys () {
+      this.showConfirmMerge = true
     },
     onConfirmDeleteMultiple () {
       if (this.selected.length > 0) {

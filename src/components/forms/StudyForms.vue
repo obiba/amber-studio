@@ -199,6 +199,9 @@ export default defineComponent({
   name: 'StudyForms',
   mounted: function () {
     this.setPagination()
+    if (this.study) {
+      this.getTableStudyForms()
+    }
   },
   setup () {
     return {

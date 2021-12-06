@@ -181,7 +181,9 @@ export default {
   form: {
     tr_add: 'Ajouter une traduction',
     tr_merge_items: 'Ajouter les clés de traduction des items',
+    tr_merge_confirm: 'Veuillez confirmer l\'ajout des paramètres observés dans le formulaire (libellé, description, placeholder, indice et message de validation) comme clés de traduction. Les clés de traduction existantes ne seront pas modifiées.',
     tr_clean: 'Supprimer les traductions non utilisées dans les items',
+    tr_clean_confirm: 'Veuillez confirmer la suppression des clés de traduction n\'apparaissant pas dans les paramètres du formulaire (libellé, description, placeholder, indice et message de validation).',
     tr_delete_selected: 'Supprimer les traductions sélectionnées',
     tr_search_hint: 'Chercher des traductions',
     tr_key: 'Clé',

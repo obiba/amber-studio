@@ -181,7 +181,9 @@ export default {
   form: {
     tr_add: 'Add a translation',
     tr_merge_items: 'Merge with items translation keys',
+    tr_merge_confirm: 'Please confirm that you want to merge observed item settings (label, description, placeholder, hint and validation message) as translation keys. Existing translation keys will not be modified.',
     tr_clean: 'Remove translations unused in the items',
+    tr_clean_confirm: 'Please confirm the removal of the translation keys which cannot be observed in the item settings (label, description, placeholder, hint and validation message).',
     tr_delete_selected: 'Remove the selected translations',
     tr_search_hint: 'Search translations',
     tr_key: 'Key',
