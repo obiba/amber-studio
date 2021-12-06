@@ -63,7 +63,7 @@
               <div v-if="hasOptions">
                 <p class="q-mb-sm q-mt-md">{{ $t('form.options') }}</p>
                 <p class="text-grey">{{ $t('form.options_hint') }}</p>
-                <div class="row q-col-gutter-lg" v-for="option in modelValue.options" :key="option.value">
+                <div class="row q-col-gutter-lg" v-for="option in optionsList" :key="option.value">
                   <div class="col-4">
                     <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" dense filled />
                   </div>
@@ -82,6 +82,13 @@
                     </q-btn>
                   </div>
                 </div>
+                <q-btn
+                  v-if="hasMoreOptions"
+                  class="q-pa-none q-mb-sm"
+                  size="sm"
+                  flat
+                  @click="showMoreOptions"
+                  :label="$t('form.show_more_options')"/>
                 <div class="row q-col-gutter-lg">
                   <div class="col-4">
                     <q-btn
@@ -189,7 +196,8 @@ export default defineComponent({
         'computed'
       ],
       modelData: ref({}),
-      optionsFile: ref(null)
+      optionsFile: ref(null),
+      optionsCount: ref(5)
     }
   },
   computed: {
@@ -251,11 +259,18 @@ export default defineComponent({
         i18n: this.i18n ? this.i18n : {}
       }
       return makeBlitzarQuasarSchemaForm(schema, { locale: 'en', debug: true })
+    },
+    optionsList () {
+      return this.modelValue.options ? this.modelValue.options.slice(0, this.optionsCount) : []
+    },
+    hasMoreOptions () {
+      return this.modelValue.options && this.modelValue.options.length > this.optionsCount
     }
   },
   watch: {
     modelValue: function (newValue, oldValue) {
       this.$emit('update:modelValue', this.modelValue)
+      this.optionsCount = 5
     },
     'modelValue.type': function (newValue, oldValue) {
       if (!this.hasOptions) {
@@ -322,8 +337,14 @@ export default defineComponent({
     md (text) {
       return text ? snarkdown(text) : text
     },
+    showMoreOptions () {
+      this.optionsCount = this.optionsCount + 5
+    },
     deleteOption (option) {
       this.value.options = this.modelValue.options.filter(opt => opt.value !== option.value)
+      if (this.optionsCount > 5) {
+        this.optionsCount = this.optionsCount - 1
+      }
     },
     addOption () {
       if (!this.modelValue.options) {

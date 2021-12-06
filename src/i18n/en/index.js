@@ -269,6 +269,7 @@ export default {
     options_hint: 'Value is required and unique. If the form is to be translated, provide the translation key as the label.',
     option_value: 'Value',
     option_label: 'Label',
+    show_more_options: 'Show more...',
     add_option_hint: 'Add an option',
     upload_options: 'Upload options',
     upload_options_hint: 'Upload options from a text file.',

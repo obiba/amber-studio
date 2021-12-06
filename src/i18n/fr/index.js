@@ -269,6 +269,7 @@ export default {
     options_hint: 'Pour chaque option, la valeur est requise et unique.',
     option_value: 'Valeur',
     option_label: 'Libellé',
+    show_more_options: 'Montrer plus...',
     add_option: 'Ajouter une option',
     move_up: 'Monter',
     move_down: 'Descendre',
