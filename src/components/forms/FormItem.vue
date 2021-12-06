@@ -130,7 +130,7 @@
         <q-card>
           <q-card-section v-if="isRoot">
             <div class="text-h6">{{ tr(modelValue.label) }}</div>
-            <div class="text-subtitle2">{{ tr(modelValue.description) }}</div>
+            <div v-html="md(tr(modelValue.description))"/>
           </q-card-section>
           <q-separator v-if="isRoot" />
           <q-card-section>
@@ -158,6 +158,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
+import snarkdown from 'snarkdown'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
 
@@ -304,6 +305,9 @@ export default defineComponent({
     tr (key) {
       console.log(key)
       return makeSchemaFormTr({ i18n: this.i18n ? this.i18n : {} }, { locale: 'en' })(key)
+    },
+    md (text) {
+      return snarkdown(text)
     },
     deleteOption (option) {
       this.value.options = this.modelValue.options.filter(opt => opt.value !== option.value)
