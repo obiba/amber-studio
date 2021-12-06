@@ -298,6 +298,9 @@ export default defineComponent({
             .forEach(line => {
               const tokens = line.split(',').map(token => cleanToken(token))
               if (tokens.length > 0 && tokens[0].length > 0) {
+                if (!this.value.options) {
+                  this.value.options = []
+                }
                 this.value.options.push({
                   value: tokens[0],
                   label: tokens.length > 1 && tokens[1].length > 0 ? tokens[1] : tokens[0]
