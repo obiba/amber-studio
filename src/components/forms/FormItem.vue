@@ -239,7 +239,7 @@ export default defineComponent({
         items: items,
         i18n: this.i18n ? this.i18n : {}
       }
-      return makeBlitzarQuasarSchemaForm(schema, { locale: 'en' })
+      return makeBlitzarQuasarSchemaForm(schema, { locale: 'en', debug: true })
     }
   },
   watch: {
