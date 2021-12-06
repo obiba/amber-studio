@@ -13,7 +13,7 @@ export default defineComponent({
         this.$router.push('/login')
       } else {
         this.locale = this.$store.state.auth.payload.user.language
-        this.$router.push('/')
+        // this.$router.push('/')
       }
     }
   },

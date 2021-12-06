@@ -29,7 +29,8 @@ export default boot(async ({ router, store }) => {
         feathersClient.reAuthenticate().then((response) => {
           // show application page
           store.dispatch('auth/responseHandler', response)
-          router.push('/')
+          console.log(to.path)
+          router.push(to.path)
         }).catch(() => {
           // remove expired/unusable token
           LocalStorage.remove('feathers-jwt')
