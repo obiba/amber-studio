@@ -107,8 +107,16 @@ export default defineComponent({
       password: ''
     }
   },
+  watch: {
+    user (newUser, oldUser) {
+      if (newUser !== null) {
+        this.$router.push('/')
+      }
+    }
+  },
   computed: {
     ...mapState({
+      user: state => state.auth.payload ? state.auth.payload.user : null,
       submitting: state => state.auth.isAuthenticatePending
     }),
     disableSubmit () {
