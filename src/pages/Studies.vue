@@ -233,7 +233,7 @@ export default {
         {
           name: 'forms',
           align: 'left',
-          label: this.$t('forms'),
+          label: this.$t('study.forms'),
           field: 'forms',
           sortable: true
         },
