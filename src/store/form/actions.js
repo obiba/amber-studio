@@ -1,4 +1,4 @@
-import formService from '../../services/form'
+import { formService, formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
 import { Notify } from 'quasar'
 
@@ -146,4 +146,34 @@ export async function deleteForms ({ dispatch }, payload) {
     },
     { root: true }
   )
+}
+
+export async function createFormRevision ({ dispatch }, payload) {
+  const result = await formRevisionService
+    .createFormRevision(payload.formRevision)
+    .catch(err => {
+      console.error(err)
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      })
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.published_study_form'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  /*
+  dispatch(
+    'form/getFormRevisions',
+    {
+      paginationOpts: payload.paginationOpts,
+      study: payload.formRevision.study,
+      form: payload.formRevision.form
+    },
+    { root: true }
+  )
+  */
 }

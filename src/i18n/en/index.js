@@ -284,6 +284,7 @@ export default {
   cancel: 'Cancel',
   save: 'Save',
   export: 'Export',
+  publish: 'Publish',
   search: 'Search',
   role: 'Role',
   institution: 'Institution',

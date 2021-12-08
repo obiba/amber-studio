@@ -31,6 +31,16 @@
             <q-spinner-facebook />
             </template>
           </q-btn>
+          <q-btn
+            @click='onPublish'
+            :label="$t('publish')"
+            icon="publish"
+            color="grey"
+            class="float-right q-mr-md">
+            <template v-slot:loading>
+            <q-spinner-facebook />
+            </template>
+          </q-btn>
         </div>
       </div>
     </div>
@@ -144,7 +154,8 @@ export default defineComponent({
     ...mapActions({
       getStudy: 'study/getStudy',
       getStudyForm: 'form/getForm',
-      updateStudyForm: 'form/updateForm'
+      updateStudyForm: 'form/updateForm',
+      createStudyFormRevision: 'form/createFormRevision'
     }),
     async initStudyFormData () {
       await this.getStudyForm({ id: this.$route.params.id })
@@ -169,6 +180,16 @@ export default defineComponent({
       a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
       a.click()
       a.remove()
+    },
+    onPublish () {
+      const toSave = {
+        form: this.studyFormData._id,
+        study: this.studyFormData.study,
+        schema: this.studyFormData.schema
+      }
+      this.createStudyFormRevision({
+        formRevision: toSave
+      })
     }
   }
 })

@@ -1,3 +1,4 @@
-import * as form from './form.js'
+import * as formService from './form.js'
+import * as formRevisionService from './form-revision.js'
 
-export default Object.assign({}, form)
+export { formService, formRevisionService }

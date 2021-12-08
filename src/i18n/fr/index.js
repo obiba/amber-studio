@@ -282,6 +282,7 @@ export default {
   cancel: 'Annuler',
   save: 'Sauvegarder',
   export: 'Exporter',
+  publish: 'Publier',
   search: 'Chercher',
   role: 'Rôle',
   institution: 'Institution',
