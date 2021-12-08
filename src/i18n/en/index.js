@@ -126,7 +126,7 @@ export default {
     fr: 'français'
   },
   roles: {
-    guest: 'Gest',
+    guest: 'Guest',
     interviewer: 'Interviewer',
     manager: 'Manager',
     administrator: 'Administrator',
