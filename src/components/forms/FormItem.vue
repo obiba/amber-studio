@@ -331,7 +331,6 @@ export default defineComponent({
   },
   methods: {
     tr (key) {
-      console.log(key)
       return makeSchemaFormTr({ i18n: this.i18n ? this.i18n : {} }, { locale: 'en' })(key)
     },
     md (text) {
