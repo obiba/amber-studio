@@ -48,6 +48,16 @@
             flat
             dense
             round
+            :title="$t('form.export_form_revision_hint')"
+            icon="file_download"
+            @click='onExport(props.row)'>
+          </q-btn>
+          <q-btn
+            class="text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('form.view_form_revision_hint')"
             icon="visibility"
             @click='onView(props.row)'>
@@ -227,6 +237,18 @@ export default defineComponent({
     }),
     formatDate (dateStr) {
       return date.formatDate(date.extractDate(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ'), 'YYYY-MM-DD HH:mm:ss')
+    },
+    onExport (formRevision) {
+      const data = { ...formRevision.schema }
+      delete data._id
+      delete data.name
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
+      const a = document.createElement('a')
+      a.download = `${this.form.name}-${formRevision.revision}-schema.json`
+      a.href = window.URL.createObjectURL(blob)
+      a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
+      a.click()
+      a.remove()
     },
     onView (formRevision) {
       this.showViewRevision = true

@@ -276,10 +276,11 @@ export default {
     items: 'Items',
     translations: 'Translations',
     search_form_revision_hint: 'Search by revision number or comment',
-    view_form_revision_hint: 'View revision\'s form',
+    export_form_revision_hint: 'Export form',
+    view_form_revision_hint: 'View form',
     delete_form_revisions_hint: 'Delete selected revisions',
     delete_form_revisions_confirm: 'Please confirm that you want to delete the selected form revisions:',
-    delete_form_revision_hint: 'Delete revision',
+    delete_form_revision_hint: 'Delete form revision',
     delete_form_revision_confirm: 'Please confirm that you want to delete the form revision:'
   },
   add: 'Add',

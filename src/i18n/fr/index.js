@@ -274,6 +274,7 @@ export default {
     items: 'Items',
     translations: 'Traductions',
     search_form_revision_hint: 'Chercher par numéro de version ou par commentaire',
+    export_form_revision_hint: 'Exporter cette version du formulaire',
     view_form_revision_hint: 'Voir le formulaire de cette version',
     delete_form_revisions_hint: 'Supprimer les versions sélectionnées',
     delete_form_revisions_confirm: 'Veuillez confirmer la suppression des versions du formulaire:',
