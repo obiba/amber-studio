@@ -9,7 +9,7 @@
       align="justify"
       narrow-indicator>
       <q-tab name="builder" :label="$t('form.builder')" />
-      <q-tab name="schema" :label="$t('form.schema')" />
+      <!--q-tab name="schema" :label="$t('form.schema')" /-->
       <q-tab name="preview" :label="$t('form.preview')" />
     </q-tabs>
 

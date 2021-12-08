@@ -1,6 +1,10 @@
 <template>
   <q-page>
-    <div class="text-h6 text-white bg-info q-pa-md">{{$t('studies.title')}}</div>
+    <div class="bg-blue-grey-1 q-pa-md">
+      <q-breadcrumbs class="q-mt-sm">
+        <q-breadcrumbs-el icon="inventory_2" :label="$t('studies.title')" />
+      </q-breadcrumbs>
+    </div>
     <q-separator/>
 
     <q-table

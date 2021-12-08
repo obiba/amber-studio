@@ -1,21 +1,41 @@
 <template>
   <q-page>
-    <div class="text-h6 text-white bg-info q-pa-md">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies" class="text-white"/>
+    <div class="bg-blue-grey-1 q-pa-md">
+      <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
+        <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
         <q-breadcrumbs-el :label="study.name" />
       </q-breadcrumbs>
+      <q-btn
+        @click='save'
+        :title="$t(showSaveDone ? 'save_done' : 'save')"
+        :icon="showSaveDone ? 'cloud_done' : 'cloud_upload'"
+        flat
+        dense
+        round>
+      </q-btn>
     </div>
     <q-separator/>
 
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <div class="text-h6">{{$t('study.definition')}}</div>
-      </q-card-section>
-      <q-separator/>
-      <q-card-section>
+    <q-tabs
+      v-model="tab"
+      dense
+      class="text-grey"
+      active-color="primary"
+      indicator-color="primary"
+      align="justify"
+    >
+      <q-tab name="definition" :label="$t('study.definition')" />
+      <q-tab name="forms" :label="$t('study.forms')" />
+      <q-tab name="caseReports" :label="$t('study.case_reports')" />
+    </q-tabs>
+
+    <q-separator />
+
+    <q-tab-panels v-model="tab">
+
+      <q-tab-panel name="definition">
         <div class="row">
-          <div class="col-12 col-md-6 q-pa-sm">
+          <div class="col-12 col-md-6">
             <q-input
               filled
               v-model='studyData.name'
@@ -40,40 +60,25 @@
               lazy-rules
               class='q-mb-sm'
             />
-
-            <q-btn
-              @click='saveStudy'
-              :disable='disableSaveStudy'
-              :label="$t('save')"
-              type='submit'
-              color='positive'
-              class="q-mt-md"
-            >
-              <template v-slot:loading>
-                <q-spinner-facebook />
-              </template>
-            </q-btn>
           </div>
         </div>
-      </q-card-section>
-    </q-card>
+      </q-tab-panel>
 
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <div class="text-h6">{{$t('study.forms')}}</div>
-      </q-card-section>
-      <q-separator/>
-      <div>
+      <q-tab-panel name="forms">
         <study-forms/>
-      </div>
-    </q-card>
+      </q-tab-panel>
+
+      <q-tab-panel name="caseReports">
+      </q-tab-panel>
+
+    </q-tab-panels>
 
   </q-page>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent, defineAsyncComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 
@@ -86,6 +91,7 @@ export default defineComponent({
   },
   setup () {
     return {
+      tab: ref('forms'),
       v$: useVuelidate()
     }
   },
@@ -115,8 +121,11 @@ export default defineComponent({
     currentStudy () {
       return this.$store.state.study.study
     },
-    disableSaveStudy () {
+    disableSave () {
       return this.v$.studyData.$invalid
+    },
+    showSaveDone () {
+      return this.studyData.name === this.study.name && this.studyData.description === this.study.description
     }
   },
   methods: {
@@ -128,7 +137,7 @@ export default defineComponent({
       await this.getStudy({ id: this.$route.params.id })
       this.studyData = { ...JSON.parse(JSON.stringify(this.study)) }
     },
-    async saveStudy () {
+    async save () {
       this.v$.$reset()
       const toSave = { ...this.studyData }
       this.updateStudy({

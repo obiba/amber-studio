@@ -1,26 +1,23 @@
 <template>
   <q-page>
-    <div class="bg-info q-pa-md">
+    <div class="bg-blue-grey-1 q-pa-md">
       <div class="row">
         <div class="col-8">
-          <q-breadcrumbs class="text-h6 text-white">
-            <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies" class="text-white"/>
-            <q-breadcrumbs-el :label="study ? study.name : '...'" :to="'/study/' + (study ? study._id : '?')" class="text-white"/>
+          <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
+            <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
+            <q-breadcrumbs-el :label="study ? study.name : '...'" :to="'/study/' + (study ? study._id : '?')"/>
             <q-breadcrumbs-el icon="article" :label="studyForm.name" />
           </q-breadcrumbs>
-        </div>
-        <div class="col-4">
           <q-btn
             @click='save'
-            :disable='disableSave'
-            :label="$t('save')"
-            type="submit"
-            color="positive"
-            class="float-right">
-            <template v-slot:loading>
-            <q-spinner-facebook />
-            </template>
+            :title="$t(showSaveDone ? 'save_done' : 'save')"
+            :icon="showSaveDone ? 'cloud_done' : 'cloud_upload'"
+            flat
+            dense
+            round>
           </q-btn>
+        </div>
+        <div class="col-4">
         </div>
       </div>
     </div>
@@ -120,7 +117,6 @@
             <q-tab-panels
               v-model="innerTab"
             >
-
               <q-tab-panel name="items" class="q-pt-none q-pb-none">
                 <form-items v-model="studyFormData" />
               </q-tab-panel>
@@ -138,7 +134,6 @@
         <form-revisions :form="studyFormData" />
       </q-tab-panel>
     </q-tab-panels>
-
 
     <q-dialog v-model='showPublish' persistent>
       <q-card>
@@ -170,7 +165,6 @@
       </q-card>
     </q-dialog>
 
-
   </q-page>
 </template>
 
@@ -192,7 +186,7 @@ export default defineComponent({
   setup () {
     return {
       v$: useVuelidate(),
-      tab: ref('definition'),
+      tab: ref('schema'),
       innerTab: ref('items'),
       splitterModel: ref(10)
     }
@@ -223,6 +217,10 @@ export default defineComponent({
     }),
     disableSave () {
       return this.v$.studyFormData.$invalid
+    },
+    showSaveDone () {
+      return this.studyFormData.name === this.studyForm.name &&
+        this.studyFormData.description === this.studyForm.description
     }
   },
   methods: {
