@@ -13,3 +13,15 @@ export function setFormPagination (state, payload) {
 export function setFormCount (state, count) {
   state.formPaginationOpts.rowsNumber = count
 }
+
+export function setFormRevisions (state, formRevisions) {
+  state.formRevisions = [...formRevisions]
+}
+
+export function setFormRevisionPagination (state, payload) {
+  state.formRevisionPaginationOpts = payload.formRevisionPaginationOpts
+}
+
+export function setFormRevisionCount (state, count) {
+  state.formRevisionPaginationOpts.rowsNumber = count
+}

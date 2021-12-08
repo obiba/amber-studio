@@ -277,7 +277,6 @@ export default defineComponent({
   },
   methods: {
     initRows () {
-      console.log('initRows')
       // read i18n object and make rows
       if (this.value && this.value.schema) {
         if (this.value.schema.i18n) {
@@ -390,7 +389,6 @@ export default defineComponent({
       }
     },
     deleteSelected () {
-      console.log(this.selected)
       const selectedKeys = this.selected.map(row => row.key)
       this.rows = this.rows.filter(row => !selectedKeys.includes(row.key))
       this.selected = []

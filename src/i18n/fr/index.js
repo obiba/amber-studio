@@ -82,7 +82,7 @@ export default {
   },
   study: {
     title: 'Étude',
-    definition: 'Definition',
+    definition: 'Définition',
     forms: 'Formulaires',
     events: 'Évènements',
     add_study_form_hint: 'Ajouter un nouveau formulaire',
@@ -91,15 +91,9 @@ export default {
     edit_study_form_hint: 'Éditer le formulaire',
     delete_study_form_hint: 'Supprimer le formulaire',
     delete_study_form_confirm: 'Veuillez confirmer la suppression du formulaire:',
-    delete_study_forms_confirm: 'Veuillez confirmer la suppression des formulaires sélectionnés:'
-  },
-  studyForm: {
+    delete_study_forms_confirm: 'Veuillez confirmer la suppression des formulaires sélectionnés:',
     import_schema: 'Import d\'un ficher de schéma',
-    import_schema_hint: 'Fichier de schéma à importer, incluant les items et les traductions du formaulaire.',
-    definition: 'Définition',
-    items: 'Items',
-    translations: 'Traductions',
-    builder: 'Builder'
+    import_schema_hint: 'Fichier de schéma à importer, incluant les items et les traductions du formaulaire.'
   },
   datasets: {
     title: 'Données'
@@ -151,7 +145,8 @@ export default {
     get_studies: 'Erreur à la récupération des études.',
     get_study: 'Erreur à la récupération de l\'étude.',
     get_study_forms: 'Erreur à la récupération des formulaires de l\'étude.',
-    get_study_form: 'Erreur à la récupération du formulaire de l\'étude.'
+    get_study_form: 'Erreur à la récupération du formulaire de l\'étude.',
+    get_form_revisions: 'Erreur à la récupération des versions du formulaire.'
   },
   success: {
     create_account: 'Compte créé avec succès. Un courriel de vérification d\'adresse a été envoyé.',
@@ -274,7 +269,16 @@ export default {
     move_up: 'Monter',
     move_down: 'Descendre',
     delete: 'Supprimer',
-    no_item_selected: 'Aucun élément sélectionné..'
+    no_item_selected: 'Aucun élément sélectionné.',
+    revisions: 'Révisions',
+    items: 'Items',
+    translations: 'Traductions',
+    search_form_revision_hint: 'Chercher par numéro de version ou par commentaire',
+    view_form_revision_hint: 'Voir le formulaire de cette version',
+    delete_form_revisions_hint: 'Supprimer les versions sélectionnées',
+    delete_form_revisions_confirm: 'Veuillez confirmer la suppression des versions du formulaire:',
+    delete_form_revision_hint: 'Supprimer la version',
+    delete_form_revision_confirm: 'Veuillez confirmer la suppression de la version du formulaire:'
   },
   add: 'Ajouter',
   update: 'Appliquer',
@@ -298,6 +302,9 @@ export default {
   preferred_language: 'Langue préférée',
   name: 'Nom',
   description: 'Description',
+  comment: 'Commentaire',
+  revision: 'Revision',
+  date: 'Date',
   status: 'Statuts',
   members: 'Membres',
   action: 'Action',
@@ -305,5 +312,6 @@ export default {
   confirmed: 'Confirmé',
   pending: 'En attente',
   unknown: 'Inconnue',
-  no_results: 'Pas de resultats'
+  no_results: 'Pas de resultats',
+  ok: 'Ok'
 }

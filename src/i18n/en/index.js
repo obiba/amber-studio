@@ -91,15 +91,9 @@ export default {
     edit_study_form_hint: 'Edit form',
     delete_study_form_hint: 'Delete form',
     delete_study_form_confirm: 'Please confirm that you want to remove the form:',
-    delete_study_forms_confirm: 'Please confirm that you want to remove all the selected forms:'
-  },
-  studyForm: {
+    delete_study_forms_confirm: 'Please confirm that you want to remove all the selected forms:',
     import_schema: 'Import schema file',
-    import_schema_hint: 'Optional schema file to import. Includes form items and translations.',
-    definition: 'Definition',
-    items: 'Items',
-    translations: 'Translations',
-    builder: 'Builder'
+    import_schema_hint: 'Optional schema file to import. Includes form items and translations.'
   },
   datasets: {
     title: 'Datasets'
@@ -151,7 +145,8 @@ export default {
     get_studies: 'There was an error while retrieving studies.',
     get_study: 'There was an error while retrieving the study.',
     get_study_forms: 'There was an error while retrieving study\'s forms.',
-    get_study_form: 'There was an error while retrieving the study\'s form.'
+    get_study_form: 'There was an error while retrieving the study\'s form.',
+    get_form_revisions: 'There was an error while retrieving form\'s versions.'
   },
   success: {
     create_account: 'Account successfully created. Please check your email to verify your account.',
@@ -276,7 +271,16 @@ export default {
     move_up: 'Move item up',
     move_down: 'Move item down',
     delete: 'Delete item',
-    no_item_selected: 'No item selected.'
+    no_item_selected: 'No item selected.',
+    revisions: 'Revisions',
+    items: 'Items',
+    translations: 'Translations',
+    search_form_revision_hint: 'Search by revision number or comment',
+    view_form_revision_hint: 'View revision\'s form',
+    delete_form_revisions_hint: 'Delete selected revisions',
+    delete_form_revisions_confirm: 'Please confirm that you want to delete the selected form revisions:',
+    delete_form_revision_hint: 'Delete revision',
+    delete_form_revision_confirm: 'Please confirm that you want to delete the form revision:'
   },
   add: 'Add',
   update: 'Update',
@@ -300,6 +304,9 @@ export default {
   preferred_language: 'Preferred Language',
   name: 'Name',
   description: 'Description',
+  comment: 'Comment',
+  revision: 'Revision',
+  date: 'Date',
   status: 'Status',
   members: 'Members',
   action: 'Action',
@@ -307,5 +314,6 @@ export default {
   confirmed: 'Confirmed',
   pending: 'Pending',
   unknown: 'Unknown',
-  no_results: 'No results'
+  no_results: 'No results',
+  ok: 'Ok'
 }

@@ -21,37 +21,30 @@
             <q-spinner-facebook />
             </template>
           </q-btn>
-          <q-btn
-            @click='onExport'
-            :label="$t('export')"
-            icon="file_download"
-            color="grey"
-            class="float-right q-mr-md">
-            <template v-slot:loading>
-            <q-spinner-facebook />
-            </template>
-          </q-btn>
-          <q-btn
-            @click='onPublish'
-            :label="$t('publish')"
-            icon="publish"
-            color="grey"
-            class="float-right q-mr-md">
-            <template v-slot:loading>
-            <q-spinner-facebook />
-            </template>
-          </q-btn>
         </div>
       </div>
     </div>
 
     <q-separator/>
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <div class="text-h6">{{$t('studyForm.definition')}}</div>
-      </q-card-section>
-      <q-separator />
-      <q-card-section>
+
+    <q-tabs
+      v-model="tab"
+      dense
+      class="text-grey"
+      active-color="primary"
+      indicator-color="primary"
+      align="justify"
+    >
+      <q-tab name="definition" :label="$t('form.definition')" />
+      <q-tab name="schema" :label="$t('form.schema')" />
+      <q-tab name="revisions" :label="$t('form.revisions')" />
+    </q-tabs>
+
+    <q-separator />
+
+    <q-tab-panels v-model="tab">
+
+      <q-tab-panel name="definition">
         <div class="row">
           <div class="col-12 col-md-6">
             <q-input
@@ -78,54 +71,136 @@
               class='q-mb-sm'/>
           </div>
         </div>
+      </q-tab-panel>
 
-      </q-card-section>
-    </q-card>
+      <q-tab-panel name="schema" class="q-pa-none">
 
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <div class="text-h6">{{$t('studyForm.items')}}</div>
-      </q-card-section>
-      <q-separator />
-      <div>
-        <form-items v-model="studyFormData" />
-      </div>
-    </q-card>
+        <div class="q-ma-sm">
+          <q-btn
+            @click='onExport'
+            :label="$t('export')"
+            icon="file_download"
+            flat
+            size="sm">
+            <template v-slot:loading>
+            <q-spinner-facebook />
+            </template>
+          </q-btn>
+          <q-btn
+            @click='onPublish'
+            :label="$t('publish')"
+            icon="sell"
+            flat
+            size="sm"
+            >
+            <template v-slot:loading>
+            <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </div>
 
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <div class="text-h6">{{$t('studyForm.translations')}}</div>
-      </q-card-section>
-      <q-separator />
-      <div>
-        <form-translations v-model="studyFormData" />
-      </div>
-    </q-card>
+        <q-separator/>
+
+        <q-splitter
+          v-model="splitterModel"
+        >
+
+          <template v-slot:before>
+            <q-tabs
+              v-model="innerTab"
+              vertical
+              class="text-teal"
+            >
+              <q-tab name="items" icon="category" :label="$t('form.items')" />
+              <q-tab name="translations" icon="translate" :label="$t('form.translations')" />
+            </q-tabs>
+          </template>
+
+          <template v-slot:after>
+            <q-tab-panels
+              v-model="innerTab"
+            >
+
+              <q-tab-panel name="items" class="q-pt-none q-pb-none">
+                <form-items v-model="studyFormData" />
+              </q-tab-panel>
+
+              <q-tab-panel name="translations">
+                <form-translations v-model="studyFormData" />
+              </q-tab-panel>
+            </q-tab-panels>
+          </template>
+
+        </q-splitter>
+      </q-tab-panel>
+
+      <q-tab-panel name="revisions">
+        <form-revisions :form="studyFormData" />
+      </q-tab-panel>
+    </q-tab-panels>
+
+
+    <q-dialog v-model='showPublish' persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+           <div class="col-12">
+            <q-input
+              filled
+              v-model='publicationComment'
+              :label="$t('comment')"
+              lazy-rules
+              class="q-ma-sm"
+            />
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='publish'
+            :label="$t('publish')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
 
   </q-page>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent, defineAsyncComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default defineComponent({
   components: {
     FormItems: defineAsyncComponent(() => import('src/components/forms/FormItems.vue')),
-    FormTranslations: defineAsyncComponent(() => import('src/components/forms/FormTranslations.vue'))
+    FormTranslations: defineAsyncComponent(() => import('src/components/forms/FormTranslations.vue')),
+    FormRevisions: defineAsyncComponent(() => import('src/components/forms/FormRevisions.vue'))
   },
   mounted: function () {
     this.initStudyFormData()
   },
   setup () {
     return {
-      v$: useVuelidate()
+      v$: useVuelidate(),
+      tab: ref('definition'),
+      innerTab: ref('items'),
+      splitterModel: ref(10)
     }
   },
   data () {
     return {
+      showPublish: false,
+      publicationComment: null,
       studyFormData: {
         name: '',
         description: ''
@@ -182,10 +257,16 @@ export default defineComponent({
       a.remove()
     },
     onPublish () {
+      this.showPublish = true
+      this.publicationComment = null
+    },
+    publish () {
       const toSave = {
         form: this.studyFormData._id,
-        study: this.studyFormData.study,
-        schema: this.studyFormData.schema
+        study: this.studyFormData.study
+      }
+      if (this.publicationComment) {
+        toSave.comment = this.publicationComment
       }
       this.createStudyFormRevision({
         formRevision: toSave

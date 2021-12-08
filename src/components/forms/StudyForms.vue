@@ -107,8 +107,8 @@
             <q-file
               filled
               v-model="newStudyFormData.importSchema"
-              :label="$t('studyForm.import_schema')"
-              :hint="$t('studyForm.import_schema_hint')"
+              :label="$t('study.import_schema')"
+              :hint="$t('study.import_schema_hint')"
               class="q-ma-sm"
               accept=".json"
             />

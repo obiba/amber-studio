@@ -177,3 +177,75 @@ export async function createFormRevision ({ dispatch }, payload) {
   )
   */
 }
+
+export async function getFormRevisions ({ commit }, payload) {
+  const result = await formRevisionService.getFormRevisions(payload.paginationOpts, payload.form, payload.filter).catch(err => {
+    console.error(err)
+    const errorCode = err.code
+    if (errorCode) {
+      Notify.create({
+        message: t('error.get_form_revisions'),
+        color: 'negative'
+      })
+    }
+  })
+  if (result) {
+    commit('setFormRevisions', result.data)
+    commit('setFormRevisionCount', result.total)
+  } else {
+    commit('setFormRevisions', [])
+    commit('setFormRevisionCount', 0)
+  }
+}
+
+export async function deleteFormRevision ({ dispatch }, payload) {
+  const result = await formRevisionService
+    .deleteFormRevision(payload.id)
+    .catch(() => {
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      })
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_form_revision'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'form/getFormRevisions',
+    {
+      paginationOpts: payload.paginationOpts,
+      form: payload.form
+    },
+    { root: true }
+  )
+}
+
+export async function deleteFormRevisions ({ dispatch }, payload) {
+  const result = await formRevisionService
+    .deleteFormRevisions(payload.ids)
+    .catch(() => {
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      })
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_form_revisions'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'form/getFormRevisions',
+    {
+      paginationOpts: payload.paginationOpts,
+      form: payload.form
+    },
+    { root: true }
+  )
+}
