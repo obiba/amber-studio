@@ -111,7 +111,7 @@
     </q-tab-panels>
 
     <q-dialog v-model='showEditDefinition' persistent>
-      <q-card style="min-width: 400px">
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section class="row items-center">
           <div class="col-12">
             <q-input
@@ -155,7 +155,7 @@
     </q-dialog>
 
     <q-dialog v-model='showPublish' persistent>
-      <q-card style="min-width: 400px">
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section class="row items-center">
            <div class="col-12">
             <q-input

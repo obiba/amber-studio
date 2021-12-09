@@ -21,7 +21,6 @@
                 <q-form @submit="resetPassword" class="q-gutter-md">
                   <q-input
                     type="password"
-                    filled
                     v-model="formData.password"
                     :label="$t('password')"
                     lazy-rules

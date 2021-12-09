@@ -36,7 +36,6 @@
           @click="confirmDeleteGroups()" />
         <q-space />
         <q-input
-          borderless
           dense
           debounce="300"
           v-model="filter"

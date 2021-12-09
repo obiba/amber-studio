@@ -21,7 +21,6 @@
                 <q-form @submit="onSubmit" class="q-gutter-md">
 
                   <q-input
-                    filled
                     v-model="formData.email"
                     :label="$t('email')"
                     :hint="$t('email_hint')"
@@ -40,7 +39,6 @@
                   </q-input>
 
                   <q-input
-                    filled
                     v-model="formData.password"
                     :label="$t('password')"
                     :hint="$t('password_hint')"
@@ -59,7 +57,6 @@
                   </q-input>
 
                   <q-input
-                    filled
                     v-model="formData.firstname"
                     :label="$t('firstname')"
                     :hint="$t('required')"
@@ -77,7 +74,6 @@
                   </q-input>
 
                   <q-input
-                    filled
                     v-model="formData.lastname"
                     :label="$t('lastname')"
                     :hint="$t('required')"
@@ -99,7 +95,6 @@
                     v-model="locale"
                     :options="localeOptions"
                     :label="$t('preferred_language')"
-                    filled
                     emit-value
                     map-options
                     options-dense

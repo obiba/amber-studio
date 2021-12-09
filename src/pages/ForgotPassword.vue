@@ -19,9 +19,7 @@
               </q-card-section>
               <q-card-section>
                 <q-form @submit="forgotPassword">
-                  
                   <q-input
-                    filled
                     v-model="resetEmail"
                     :label="$t('email')"
                     type="email"
@@ -38,9 +36,8 @@
                       </div>
                     </template>
                   </q-input>
-              
                   <div class="q-mt-lg">
-                    <q-btn 
+                    <q-btn
                       :label="$t('forgot_password.submit')"
                       type="submit"
                       color="primary"/>

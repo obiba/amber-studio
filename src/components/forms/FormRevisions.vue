@@ -23,8 +23,6 @@
           @click="onConfirmDeleteMultiple()" />
         <q-space />
         <q-input
-          filled
-          borderless
           dense
           debounce="300"
           v-model="filter"
@@ -77,7 +75,7 @@
     </q-table>
 
     <q-dialog v-model='showViewRevision' persistent>
-      <q-card style="min-width: 400px">
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section>
           <q-tabs
             v-model="viewTab"

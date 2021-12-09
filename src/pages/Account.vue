@@ -103,7 +103,6 @@
             v-model="profileData.language"
             :options="localeOptions"
             :label="$t('preferred_language')"
-            filled
             emit-value
             map-options
             options-dense

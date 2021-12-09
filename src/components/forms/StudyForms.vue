@@ -29,8 +29,6 @@
           @click="onConfirmDeleteMultiple()" />
         <q-space />
         <q-input
-          filled
-          borderless
           dense
           debounce="300"
           v-model="filter"

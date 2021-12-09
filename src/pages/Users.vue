@@ -59,7 +59,6 @@
           @change="getTableUsers"
         />
         <q-input
-          borderless
           dense
           debounce="300"
           v-model="filter"

@@ -20,7 +20,6 @@
               <q-card-section>
                 <q-form @submit="onSubmit" class="q-gutter-md">
                   <q-input
-                    filled
                     v-model="email"
                     :label="$t('email')"
                     lazy-rules>
@@ -31,7 +30,6 @@
 
                   <q-input
                     type="password"
-                    filled
                     v-model="password"
                     :label="$t('password')"
                     lazy-rules>

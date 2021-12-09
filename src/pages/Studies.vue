@@ -36,8 +36,6 @@
           @click="confirmDeleteStudies()" />
         <q-space />
         <q-input
-          filled
-          borderless
           dense
           debounce="300"
           v-model="filter"
@@ -96,7 +94,6 @@
         <q-card-section class='row items-center'>
            <div class='col-12'>
             <q-input
-              filled
               v-model='newStudyData.name'
               :label="$t('name')"
               lazy-rules
@@ -114,7 +111,6 @@
           </div>
           <div class='col-12'>
             <q-input
-              filled
               v-model='newStudyData.description'
               :label="$t('description')"
               autogrow

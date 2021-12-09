@@ -47,8 +47,6 @@
           @click="onConfirmDeleteMultiple()" />
         <q-space />
         <q-input
-          filled
-          borderless
           dense
           debounce="300"
           v-model="filter"
@@ -70,11 +68,10 @@
     </q-table>
 
     <q-dialog v-model='showAddTranslation' persistent>
-      <q-card>
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section class="row items-center">
            <div class="col-12">
             <q-input
-              filled
               v-model='newTranslationData.key'
               :label="$t('form.tr_key')"
               lazy-rules
