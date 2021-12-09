@@ -6,6 +6,14 @@
         <q-breadcrumbs-el :label="study.name" />
       </q-breadcrumbs>
       <q-btn
+        @click='onEdit'
+        :title="$t('edit_settings')"
+        icon="settings"
+        flat
+        dense
+        round>
+      </q-btn>
+      <q-btn
         @click='save'
         :title="$t(showSaveDone ? 'save_done' : 'save')"
         :icon="showSaveDone ? 'cloud_done' : 'cloud_upload'"
@@ -13,6 +21,9 @@
         dense
         round>
       </q-btn>
+      <div class="text-caption text-grey-8">
+        {{ study.description }}
+      </div>
     </div>
     <q-separator/>
 
@@ -24,7 +35,6 @@
       indicator-color="primary"
       align="justify"
     >
-      <q-tab name="definition" :label="$t('study.definition')" />
       <q-tab name="forms" :label="$t('study.forms')" />
       <q-tab name="caseReports" :label="$t('study.case_reports')" />
     </q-tabs>
@@ -33,11 +43,20 @@
 
     <q-tab-panels v-model="tab">
 
-      <q-tab-panel name="definition">
-        <div class="row">
-          <div class="col-12 col-md-6">
+      <q-tab-panel name="forms">
+        <study-forms/>
+      </q-tab-panel>
+
+      <q-tab-panel name="caseReports">
+      </q-tab-panel>
+
+    </q-tab-panels>
+
+    <q-dialog v-model='showEditDefinition' persistent>
+      <q-card style="min-width: 400px">
+        <q-card-section class="row items-center">
+           <div class="col-12">
             <q-input
-              filled
               v-model='studyData.name'
               :label="$t('name')"
               lazy-rules
@@ -53,7 +72,6 @@
               </template>
             </q-input>
             <q-input
-              filled
               v-model='studyData.description'
               :label="$t('description')"
               autogrow
@@ -61,17 +79,24 @@
               class='q-mb-sm'
             />
           </div>
-        </div>
-      </q-tab-panel>
-
-      <q-tab-panel name="forms">
-        <study-forms/>
-      </q-tab-panel>
-
-      <q-tab-panel name="caseReports">
-      </q-tab-panel>
-
-    </q-tab-panels>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='save'
+            :disable='disableSave'
+            :label="$t('save')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
   </q-page>
 </template>
@@ -97,6 +122,7 @@ export default defineComponent({
   },
   data () {
     return {
+      showEditDefinition: false,
       studyData: {
         name: '',
         description: ''
@@ -126,6 +152,10 @@ export default defineComponent({
     },
     showSaveDone () {
       return this.studyData.name === this.study.name && this.studyData.description === this.study.description
+    },
+    isOnline () {
+      console.log(window.navigator.onLine)
+      return window.navigator.onLine
     }
   },
   methods: {
@@ -136,6 +166,9 @@ export default defineComponent({
     async initStudyData () {
       await this.getStudy({ id: this.$route.params.id })
       this.studyData = { ...JSON.parse(JSON.stringify(this.study)) }
+    },
+    onEdit () {
+      this.showEditDefinition = true
     },
     async save () {
       this.v$.$reset()

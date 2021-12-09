@@ -77,19 +77,41 @@
     </q-table>
 
     <q-dialog v-model='showViewRevision' persistent>
-      <q-card>
+      <q-card style="min-width: 400px">
         <q-card-section>
-          <div>
-            <BlitzForm :key='remountCounter' :schema='blitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
-          </div>
-        </q-card-section>
-        <q-card-section>
-          <div class="bg-black text-white q-pa-md">
-            <pre>{{ modelDataStr }}</pre>
-          </div>
+          <q-tabs
+            v-model="viewTab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
+          >
+            <q-tab name="form" label="form" />
+            <q-tab name="data" label="data" />
+          </q-tabs>
+
+          <q-separator />
+
+          <q-tab-panels v-model="viewTab">
+            <q-tab-panel name="form">
+              <q-scroll-area style="height: 400px">
+                <BlitzForm :key='remountCounter' :schema='blitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
+              </q-scroll-area>
+            </q-tab-panel>
+
+            <q-tab-panel name="data">
+              <q-scroll-area style="height: 400px">
+                <div class="bg-black text-white q-pa-md">
+                  <pre>{{ modelDataStr }}</pre>
+                </div>
+              </q-scroll-area>
+            </q-tab-panel>
+          </q-tab-panels>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('ok')" flat v-close-popup />
+          <q-btn :label="$t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -176,6 +198,7 @@ export default defineComponent({
   },
   data () {
     return {
+      viewTab: 'form',
       selectedRevision: {},
       showViewRevision: false,
       showConfirmDeleteRevision: false,
@@ -255,6 +278,7 @@ export default defineComponent({
       this.selectedRevision = formRevision
       this.modelData = {}
       this.remountCounter++
+      this.viewTab = 'form'
     },
     onConfirmDelete (formRevision) {
       this.showConfirmDeleteRevision = true

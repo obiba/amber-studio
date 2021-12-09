@@ -186,7 +186,7 @@ export default {
     tr_value: 'Traduction',
     tr_delete_selected_confirm: 'Veuillez confirmer la suppression des traductions sélectionnées.',
     add_item_hint: 'Ajouter un élément',
-    builder: 'Constructeur',
+    design: 'Conception',
     schema: 'Schéma',
     preview: 'Prévue',
     preview_data_clear: 'Effacer',
@@ -280,7 +280,8 @@ export default {
     delete_form_revisions_hint: 'Supprimer les versions sélectionnées',
     delete_form_revisions_confirm: 'Veuillez confirmer la suppression des versions du formulaire:',
     delete_form_revision_hint: 'Supprimer la version',
-    delete_form_revision_confirm: 'Veuillez confirmer la suppression de la version du formulaire:'
+    delete_form_revision_confirm: 'Veuillez confirmer la suppression de la version du formulaire:',
+    publish_comment_hint: 'Commentaire optionel à propos des changements dans le formulaire.'
   },
   add: 'Ajouter',
   update: 'Appliquer',
@@ -288,6 +289,7 @@ export default {
   cancel: 'Annuler',
   save: 'Sauvegarder',
   save_done: 'Toutes les modifications ont été sauvegardées',
+  edit_settings: 'Éditer les paramètres',
   export: 'Exporter',
   publish: 'Publier',
   search: 'Chercher',
@@ -316,5 +318,5 @@ export default {
   pending: 'En attente',
   unknown: 'Inconnue',
   no_results: 'Pas de resultats',
-  ok: 'Ok'
+  close: 'Fermer'
 }

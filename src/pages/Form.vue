@@ -1,24 +1,29 @@
 <template>
   <q-page>
     <div class="bg-blue-grey-1 q-pa-md">
-      <div class="row">
-        <div class="col-8">
-          <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
-            <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
-            <q-breadcrumbs-el :label="study ? study.name : '...'" :to="'/study/' + (study ? study._id : '?')"/>
-            <q-breadcrumbs-el icon="article" :label="studyForm.name" />
-          </q-breadcrumbs>
-          <q-btn
-            @click='save'
-            :title="$t(showSaveDone ? 'save_done' : 'save')"
-            :icon="showSaveDone ? 'cloud_done' : 'cloud_upload'"
-            flat
-            dense
-            round>
-          </q-btn>
-        </div>
-        <div class="col-4">
-        </div>
+      <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
+        <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
+        <q-breadcrumbs-el :label="study ? study.name : '...'" :to="'/study/' + (study ? study._id : '?')"/>
+        <q-breadcrumbs-el icon="article" :label="studyForm.name" />
+      </q-breadcrumbs>
+      <q-btn
+        @click='onEdit'
+        :title="$t('edit_settings')"
+        icon="settings"
+        flat
+        dense
+        round>
+      </q-btn>
+      <q-btn
+        @click='save'
+        :title="$t(showSaveDone ? 'save_done' : 'save')"
+        :icon="showSaveDone ? 'cloud_done' : 'cloud_upload'"
+        flat
+        dense
+        round>
+      </q-btn>
+      <div class="text-caption text-grey-8">
+        {{ studyForm.description }}
       </div>
     </div>
 
@@ -32,7 +37,6 @@
       indicator-color="primary"
       align="justify"
     >
-      <q-tab name="definition" :label="$t('form.definition')" />
       <q-tab name="schema" :label="$t('form.schema')" />
       <q-tab name="revisions" :label="$t('form.revisions')" />
     </q-tabs>
@@ -40,35 +44,6 @@
     <q-separator />
 
     <q-tab-panels v-model="tab">
-
-      <q-tab-panel name="definition">
-        <div class="row">
-          <div class="col-12 col-md-6">
-            <q-input
-              filled
-              v-model='studyFormData.name'
-              :label="$t('name')"
-              lazy-rules
-              class='q-mb-sm'
-              @blur="v$.studyFormData.name.$touch"
-              :error="v$.studyFormData.name.$error"
-              :hint="$t('required')">
-              <template v-slot:error>
-              <div v-for="error in v$.studyFormData.name.$errors">
-                  {{error.$message}}
-              </div>
-              </template>
-            </q-input>
-            <q-input
-              filled
-              v-model='studyFormData.description'
-              :label="$t('description')"
-              autogrow
-              lazy-rules
-              class='q-mb-sm'/>
-          </div>
-        </div>
-      </q-tab-panel>
 
       <q-tab-panel name="schema" class="q-pa-none">
 
@@ -135,14 +110,58 @@
       </q-tab-panel>
     </q-tab-panels>
 
+    <q-dialog v-model='showEditDefinition' persistent>
+      <q-card style="min-width: 400px">
+        <q-card-section class="row items-center">
+          <div class="col-12">
+            <q-input
+              v-model='studyFormData.name'
+              :label="$t('name')"
+              lazy-rules
+              class='q-mb-sm'
+              @blur="v$.studyFormData.name.$touch"
+              :error="v$.studyFormData.name.$error"
+              :hint="$t('required')">
+              <template v-slot:error>
+              <div v-for="error in v$.studyFormData.name.$errors">
+                  {{error.$message}}
+              </div>
+              </template>
+            </q-input>
+            <q-input
+              v-model='studyFormData.description'
+              :label="$t('description')"
+              autogrow
+              lazy-rules
+              class='q-mb-sm'/>
+           </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='save'
+            :disable='disableSave'
+            :label="$t('save')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
     <q-dialog v-model='showPublish' persistent>
-      <q-card>
+      <q-card style="min-width: 400px">
         <q-card-section class="row items-center">
            <div class="col-12">
             <q-input
-              filled
               v-model='publicationComment'
               :label="$t('comment')"
+              :hint="$t('form.publish_comment_hint')"
               lazy-rules
               class="q-ma-sm"
             />
@@ -193,6 +212,7 @@ export default defineComponent({
   },
   data () {
     return {
+      showEditDefinition: false,
       showPublish: false,
       publicationComment: null,
       studyFormData: {
@@ -253,6 +273,9 @@ export default defineComponent({
       a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
       a.click()
       a.remove()
+    },
+    onEdit () {
+      this.showEditDefinition = true
     },
     onPublish () {
       this.showPublish = true

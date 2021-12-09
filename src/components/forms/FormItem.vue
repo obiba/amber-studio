@@ -8,7 +8,7 @@
       indicator-color="primary"
       align="justify"
       narrow-indicator>
-      <q-tab name="builder" :label="$t('form.builder')" />
+      <q-tab name="design" :label="$t('form.design')" />
       <!--q-tab name="schema" :label="$t('form.schema')" /-->
       <q-tab name="preview" :label="$t('form.preview')" />
     </q-tabs>
@@ -16,7 +16,7 @@
     <q-separator />
 
     <q-tab-panels v-model="tab">
-      <q-tab-panel name="builder">
+      <q-tab-panel name="design">
         <div v-if="isRoot" class="row q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
@@ -184,7 +184,7 @@ export default defineComponent({
   setup () {
     return {
       remountCounter: 0,
-      tab: ref('builder'),
+      tab: ref('design'),
       types: [
         'text', 'textarea', 'number',
         'date', 'datetime', 'time',

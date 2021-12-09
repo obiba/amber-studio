@@ -186,7 +186,7 @@ export default {
     tr_value: 'Translation',
     tr_delete_selected_confirm: 'Please confirm that you want to remove all the selected translations.',
     add_item_hint: 'Add a form item',
-    builder: 'Builder',
+    design: 'Design',
     schema: 'Schema',
     preview: 'Preview',
     preview_data_clear: 'Clear',
@@ -282,7 +282,8 @@ export default {
     delete_form_revisions_hint: 'Delete selected revisions',
     delete_form_revisions_confirm: 'Please confirm that you want to delete the selected form revisions:',
     delete_form_revision_hint: 'Delete form revision',
-    delete_form_revision_confirm: 'Please confirm that you want to delete the form revision:'
+    delete_form_revision_confirm: 'Please confirm that you want to delete the form revision:',
+    publish_comment_hint: 'Optional comment about the changes in the form\'s schema.'
   },
   add: 'Add',
   update: 'Update',
@@ -290,6 +291,7 @@ export default {
   cancel: 'Cancel',
   save: 'Save',
   save_done: 'All changes saved',
+  edit_settings: 'Edit settings',
   export: 'Export',
   publish: 'Publish',
   search: 'Search',
@@ -318,5 +320,5 @@ export default {
   pending: 'Pending',
   unknown: 'Unknown',
   no_results: 'No results',
-  ok: 'Ok'
+  close: 'Close'
 }

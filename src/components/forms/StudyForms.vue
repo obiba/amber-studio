@@ -77,7 +77,6 @@
         <q-card-section class="row items-center">
            <div class="col-12">
             <q-input
-              filled
               v-model='newStudyFormData.name'
               :label="$t('name')"
               lazy-rules
@@ -95,7 +94,6 @@
           </div>
           <div class="col-12">
             <q-input
-              filled
               v-model='newStudyFormData.description'
               :label="$t('description')"
               autogrow
@@ -105,7 +103,6 @@
           </div>
           <div class="col-12">
             <q-file
-              filled
               v-model="newStudyFormData.importSchema"
               :label="$t('study.import_schema')"
               :hint="$t('study.import_schema_hint')"
