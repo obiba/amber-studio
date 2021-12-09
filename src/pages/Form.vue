@@ -16,8 +16,9 @@
       </q-btn>
       <q-btn
         @click='save'
-        :title="$t(showSaveDone ? 'save_done' : 'save')"
-        :icon="showSaveDone ? 'cloud_done' : 'cloud_upload'"
+        :title="$t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
+        :icon="saveIcon"
+        :disable="changeDetected < 0"
         flat
         dense
         round>
@@ -61,6 +62,7 @@
           <q-btn
             @click='onPublish'
             :label="$t('publish')"
+            :disable="disablePublish"
             icon="sell"
             flat
             size="sm"
@@ -139,7 +141,7 @@
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='save'
+            @click='save(true)'
             :disable='disableSave'
             :label="$t('save')"
             type='submit'
@@ -199,8 +201,23 @@ export default defineComponent({
     FormTranslations: defineAsyncComponent(() => import('src/components/forms/FormTranslations.vue')),
     FormRevisions: defineAsyncComponent(() => import('src/components/forms/FormRevisions.vue'))
   },
-  mounted: function () {
+  mounted () {
+    // check for changes every 2 seconds
+    this.saveIntervalId = setInterval(() => {
+      if (this.changeDetected >= 0 && this.originalSchemaStr !== JSON.stringify(this.studyFormData.schema)) {
+        this.changeDetected++
+        // auto save every 4s
+        if (this.changeDetected > 2) {
+          this.save(false)
+        }
+      }
+    }, 2000)
     this.initStudyFormData()
+  },
+  beforeUnmount () {
+    if (this.saveIntervalId) {
+      clearInterval(this.saveIntervalId)
+    }
   },
   setup () {
     return {
@@ -212,13 +229,13 @@ export default defineComponent({
   },
   data () {
     return {
+      saveIntervalId: null,
+      changeDetected: 0,
       showEditDefinition: false,
       showPublish: false,
       publicationComment: null,
-      studyFormData: {
-        name: '',
-        description: ''
-      }
+      studyFormData: {},
+      originalSchemaStr: null
     }
   },
   validations: {
@@ -235,12 +252,20 @@ export default defineComponent({
       study: state => state.study.study,
       studyForm: state => state.form.form
     }),
+    disablePublish () {
+      return this.changeDetected !== 0
+    },
     disableSave () {
       return this.v$.studyFormData.$invalid
     },
-    showSaveDone () {
-      return this.studyFormData.name === this.studyForm.name &&
-        this.studyFormData.description === this.studyForm.description
+    saveIcon () {
+      if (this.changeDetected < 0) {
+        return 'cloud_sync'
+      }
+      if (this.changeDetected === 0) {
+        return 'cloud_done'
+      }
+      return 'cloud_upload'
     }
   },
   methods: {
@@ -253,13 +278,16 @@ export default defineComponent({
     async initStudyFormData () {
       await this.getStudyForm({ id: this.$route.params.id })
       this.studyFormData = JSON.parse(JSON.stringify(this.studyForm))
+      this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
       await this.getStudy({ id: this.studyForm.study })
     },
-    async save () {
+    async save (notification) {
       this.v$.$reset()
+      this.changeDetected = -1
+      this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
       const toSave = { ...this.studyFormData }
-      this.updateStudyForm({
-        form: toSave
+      this.updateStudyForm({ form: toSave, notification: notification }).then(() => {
+        this.changeDetected = 0
       })
     },
     onExport () {

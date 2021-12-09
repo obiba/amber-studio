@@ -288,6 +288,7 @@ export default {
   delete: 'Supprimer',
   cancel: 'Annuler',
   save: 'Sauvegarder',
+  saving: 'Sauvegarde en cours...',
   save_done: 'Toutes les modifications ont été sauvegardées',
   edit_settings: 'Éditer les paramètres',
   export: 'Exporter',

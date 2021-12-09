@@ -77,11 +77,14 @@ export async function updateForm ({ commit, dispatch }, payload) {
       })
     })
   if (result) {
-    Notify.create({
-      message: t('success.update_study_form'),
-      color: 'positive',
-      icon: 'fas fa-check'
-    })
+    console.log(payload)
+    if (payload.notification) {
+      Notify.create({
+        message: t('success.update_study_form'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+    }
     commit('setForm', result)
   }
   if (payload.paginationOpts) {
