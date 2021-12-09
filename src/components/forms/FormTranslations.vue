@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-table
+      v-if="rows && rows.length > 0"
       flat
       :rows="rows"
       :columns="columns"
@@ -16,7 +17,7 @@
         <q-btn
           color="primary"
           icon="add"
-          :title="$t('form.tr_add')"
+          :title="$t('form.tr_add_key')"
           @click="onAddTranslation()"
           class="q-mr-md" />
         <q-btn
@@ -66,6 +67,25 @@
         </q-td>
       </template>
     </q-table>
+
+    <div v-else>
+
+      <q-btn
+        color="primary"
+        icon="add"
+        :label="$t('form.tr_add')">
+        <q-menu>
+          <q-list style="min-width: 100px">
+            <q-item clickable v-close-popup>
+              <q-item-section @click="onAddTranslation()">{{ $t('form.tr_add_key') }}</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup>
+              <q-item-section @click="onConfirmMergeObservedKeys()">{{ $t('form.tr_merge_items') }}</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-btn>
+    </div>
 
     <q-dialog v-model='showAddTranslation' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">

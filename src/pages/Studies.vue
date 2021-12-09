@@ -8,15 +8,16 @@
     <q-separator/>
 
     <q-table
-        flat
-        :rows="studies"
-        :columns="columns"
-        :filter="filter"
-        row-key="name"
-        selection="multiple"
-        v-model:selected="selected"
-        v-model:pagination='paginationOpts'
-        @request='getTableStudies'
+      v-if="studies && studies.length > 0"
+      flat
+      :rows="studies"
+      :columns="columns"
+      :filter="filter"
+      row-key="name"
+      selection="multiple"
+      v-model:selected="selected"
+      v-model:pagination='paginationOpts'
+      @request='getTableStudies'
       >
       <template v-slot:top>
         <q-btn
@@ -89,10 +90,18 @@
       </template>
     </q-table>
 
+    <q-btn
+      v-else
+      color="primary"
+      icon="add"
+      :label="$t('studies.add_study_hint')"
+      @click="createStudy()"
+      class="q-ml-md" />
+
     <q-dialog v-model='showCreateStudy' persistent>
       <q-card>
         <q-card-section class='row items-center'>
-           <div class='col-12'>
+            <div class='col-12'>
             <q-input
               v-model='newStudyData.name'
               :label="$t('name')"
@@ -129,7 +138,7 @@
             color='positive'
             v-close-popup
           >
-           <template v-slot:loading>
+            <template v-slot:loading>
               <q-spinner-facebook />
             </template>
           </q-btn>

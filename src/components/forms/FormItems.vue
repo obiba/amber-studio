@@ -163,7 +163,8 @@ export default defineComponent({
       }
       const newItem = {
         name: 'ITEM' + i,
-        type: 'section'
+        type: 'text',
+        label: 'item_' + i
       }
       if (found.item !== null && found.item.type === 'group') {
         // add last in the group

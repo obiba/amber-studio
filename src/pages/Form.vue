@@ -10,6 +10,7 @@
         @click='onEdit'
         :title="$t('edit_settings')"
         icon="settings"
+        class="text-grey-7"
         flat
         dense
         round>
@@ -19,6 +20,7 @@
         :title="$t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
         :icon="saveIcon"
         :disable="changeDetected < 0"
+        class="text-grey-7"
         flat
         dense
         round>

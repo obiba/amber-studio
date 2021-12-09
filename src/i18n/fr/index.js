@@ -176,6 +176,7 @@ export default {
   },
   form: {
     tr_add: 'Ajouter une traduction',
+    tr_add_key: 'Ajouter une clé de traduction',
     tr_merge_items: 'Ajouter les clés de traduction des items',
     tr_merge_confirm: 'Veuillez confirmer l\'ajout des paramètres observés dans le formulaire (libellé, description, placeholder, indice et message de validation) comme clés de traduction. Les clés de traduction existantes ne seront pas modifiées.',
     tr_clean: 'Supprimer les traductions non utilisées dans les items',
@@ -274,6 +275,7 @@ export default {
     revisions: 'Révisions',
     items: 'Items',
     translations: 'Traductions',
+    no_revision: 'Aucune version du formulaire n\'a été publiée. Publier le formulaire est requis afin de pouvoir l\'inclure dans un formulaire de rapport de cas.',
     search_form_revision_hint: 'Chercher par numéro de version ou par commentaire',
     export_form_revision_hint: 'Exporter cette version du formulaire',
     view_form_revision_hint: 'Voir le formulaire de cette version',

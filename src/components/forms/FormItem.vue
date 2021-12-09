@@ -141,6 +141,16 @@
 
       <q-tab-panel name="preview">
         <q-card>
+          <q-card-section>
+            <q-btn-dropdown icon="translate" :label="locale">
+              <q-list>
+                <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in locales" :key="loc">
+                  <q-item-section class="text-uppercase">{{ loc }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </q-card-section>
+          <q-separator/>
           <q-card-section v-if="isRoot">
             <div class="text-h6">{{ tr(modelValue.label) }}</div>
             <div v-html="md(tr(modelValue.description))"/>
@@ -157,8 +167,10 @@
             <q-btn
               icon="backspace"
               :label="$t('form.preview_data_clear')"
-              @click="clearModelData()"
-              class="q-mb-md" />
+              @click="clearModelData()"/>
+          </q-card-section>
+          <q-separator/>
+          <q-card-section>
             <div class="bg-black text-white q-pa-md">
               <pre>{{ modelDataStr }}</pre>
             </div>
@@ -174,6 +186,7 @@ import { defineComponent, ref } from 'vue'
 import snarkdown from 'snarkdown'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
+import { locales } from '../../boot/i18n'
 
 export default defineComponent({
   name: 'FormItem',
@@ -196,7 +209,8 @@ export default defineComponent({
       ],
       modelData: ref({}),
       optionsFile: ref(null),
-      optionsCount: ref(5)
+      optionsCount: ref(5),
+      locale: ref('en')
     }
   },
   computed: {
@@ -207,6 +221,9 @@ export default defineComponent({
       set (value) {
         this.$emit('update:modelValue', value)
       }
+    },
+    locales () {
+      return locales.filter(loc => this.locale !== loc)
     },
     schemaStr () {
       const valueToShow = { ...this.modelValue }
@@ -257,7 +274,7 @@ export default defineComponent({
         items: items,
         i18n: this.i18n ? this.i18n : {}
       }
-      return makeBlitzarQuasarSchemaForm(schema, { locale: 'en', debug: true })
+      return makeBlitzarQuasarSchemaForm(schema, { locale: this.locale, debug: true })
     },
     optionsList () {
       return this.modelValue.options ? this.modelValue.options.slice(0, this.optionsCount) : []
@@ -330,7 +347,7 @@ export default defineComponent({
   },
   methods: {
     tr (key) {
-      return makeSchemaFormTr({ i18n: this.i18n ? this.i18n : {} }, { locale: 'en' })(key)
+      return makeSchemaFormTr({ i18n: this.i18n ? this.i18n : {} }, { locale: this.locale })(key)
     },
     md (text) {
       return text ? snarkdown(text) : text
@@ -353,6 +370,9 @@ export default defineComponent({
         value: val,
         label: val
       })
+    },
+    onLocale (newLocale) {
+      this.locale = newLocale
     },
     clearModelData () {
       this.modelData = {}

@@ -175,7 +175,8 @@ export default {
     delete_study_forms: 'Study\'s forms successfully deleted.'
   },
   form: {
-    tr_add: 'Add a translation',
+    tr_add: 'Add translation',
+    tr_add_key: 'Add a translation key',
     tr_merge_items: 'Merge with items translation keys',
     tr_merge_confirm: 'Please confirm that you want to merge observed item settings (label, description, placeholder, hint and validation message) as translation keys. Existing translation keys will not be modified.',
     tr_clean: 'Remove translations unused in the items',
@@ -276,6 +277,7 @@ export default {
     revisions: 'Revisions',
     items: 'Items',
     translations: 'Translations',
+    no_revision: 'No form revisions have been published. Publishing the form is required so that it can be referred by a case report form.',
     search_form_revision_hint: 'Search by revision number or comment',
     export_form_revision_hint: 'Export form',
     view_form_revision_hint: 'View form',
@@ -290,6 +292,7 @@ export default {
   delete: 'Delete',
   cancel: 'Cancel',
   save: 'Save',
+  saving: 'Saving...',
   save_done: 'All changes saved',
   edit_settings: 'Edit settings',
   export: 'Export',

@@ -9,6 +9,7 @@
         @click='onEdit'
         :title="$t('edit_settings')"
         icon="settings"
+        class="text-grey-7"
         flat
         dense
         round>

@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-table
+      v-if="formRevisions && formRevisions.length > 0"
       flat
       :rows="formRevisions"
       :columns="columns"
@@ -74,6 +75,10 @@
       </template>
     </q-table>
 
+    <div v-else class="text-grey-6">
+      {{ $t('form.no_revision') }}
+    </div>
+
     <q-dialog v-model='showViewRevision' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section>
@@ -90,11 +95,19 @@
             <q-tab name="data" label="data" />
           </q-tabs>
 
-          <q-separator />
+          <q-separator/>
 
           <q-tab-panels v-model="viewTab">
             <q-tab-panel name="form">
-              <q-scroll-area style="height: 400px">
+              <q-btn-dropdown icon="translate" :label="locale">
+                <q-list>
+                  <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in locales" :key="loc">
+                    <q-item-section class="text-uppercase">{{ loc }}</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
+              <q-separator  class="q-mt-md"/>
+              <q-scroll-area style="height: 400px" class="q-pt-md">
                 <BlitzForm :key='remountCounter' :schema='blitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
               </q-scroll-area>
             </q-tab-panel>
@@ -191,7 +204,8 @@ export default defineComponent({
       remountCounter: 0,
       modelData: ref({}),
       selected: ref([]),
-      filter: ref('')
+      filter: ref(''),
+      locale: ref('en')
     }
   },
   data () {
@@ -245,8 +259,11 @@ export default defineComponent({
     ...mapState({
       formRevisions: state => state.form.formRevisions
     }),
+    locales () {
+      return Object.keys(this.selectedRevision.schema.i18n).filter(loc => this.locale !== loc)
+    },
     blitzarSchema () {
-      return makeBlitzarQuasarSchemaForm(this.selectedRevision.schema, { locale: 'en', debug: true })
+      return makeBlitzarQuasarSchemaForm(this.selectedRevision.schema, { locale: this.locale, debug: true })
     },
     modelDataStr () {
       return JSON.stringify(this.modelData, null, '  ')
@@ -258,6 +275,9 @@ export default defineComponent({
     }),
     formatDate (dateStr) {
       return date.formatDate(date.extractDate(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ'), 'YYYY-MM-DD HH:mm:ss')
+    },
+    onLocale (newLocale) {
+      this.locale = newLocale
     },
     onExport (formRevision) {
       const data = { ...formRevision.schema }

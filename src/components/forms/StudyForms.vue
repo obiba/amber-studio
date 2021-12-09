@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-table
+      v-if="hasStudyForms"
       flat
       :rows="studyForms"
       :columns="columns"
@@ -69,6 +70,14 @@
         </q-td>
       </template>
     </q-table>
+
+    <q-btn
+      v-else
+      color="primary"
+      icon="add"
+      :label="$t('study.add_study_form_hint')"
+      @click="onAdd()"
+      class="q-mr-md" />
 
     <q-dialog v-model='showCreateStudyForm' persistent>
       <q-card>
@@ -263,6 +272,9 @@ export default defineComponent({
     }),
     disableCreateStudyForm () {
       return this.v$.newStudyFormData.$invalid
+    },
+    hasStudyForms () {
+      return this.studyForms && this.studyForms.length > 0
     }
   },
   watch: {
