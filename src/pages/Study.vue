@@ -13,14 +13,6 @@
         dense
         round>
       </q-btn>
-      <q-btn
-        @click='save'
-        :title="$t(showSaveDone ? 'save_done' : 'save')"
-        :icon="showSaveDone ? 'cloud_done' : 'cloud_upload'"
-        flat
-        dense
-        round>
-      </q-btn>
       <div class="text-caption text-grey-8">
         {{ study.description }}
       </div>
@@ -149,13 +141,6 @@ export default defineComponent({
     },
     disableSave () {
       return this.v$.studyData.$invalid
-    },
-    showSaveDone () {
-      return this.studyData.name === this.study.name && this.studyData.description === this.study.description
-    },
-    isOnline () {
-      console.log(window.navigator.onLine)
-      return window.navigator.onLine
     }
   },
   methods: {
