@@ -1,12 +1,15 @@
 <template>
   <q-page>
-    <div class="text-h6 text-white bg-info q-pa-md">{{$t('account.title')}} [{{$t('roles.' + user.role)}}]</div>
+    <div class="bg-blue-grey-1 q-pa-md">
+      <q-breadcrumbs class="q-mt-sm">
+        <q-breadcrumbs-el icon="person" :label="$t('account.title') + ' [' + $t('roles.' + user.role) + ']'" />
+      </q-breadcrumbs>
+    </div>
     <q-separator/>
 
     <div class="row">
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.firstname'
           :label="$t('firstname')"
           lazy-rules
@@ -27,7 +30,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.lastname'
           :label="$t('lastname')"
           lazy-rules
@@ -48,7 +50,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.institution'
           :label="$t('institution')"
           lazy-rules
@@ -61,7 +62,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.city'
           :label="$t('city')"
           lazy-rules
@@ -74,7 +74,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.title'
           :label="$t('title')"
           lazy-rules
@@ -87,7 +86,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.phone'
           :label="$t('phone')"
           lazy-rules

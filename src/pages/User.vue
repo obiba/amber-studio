@@ -1,8 +1,8 @@
 <template>
   <q-page>
-    <div class="text-h6 text-white bg-info q-pa-md">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el icon="person" :title="$t('users.title')" to="/users" class="text-white"/>
+    <div class="bg-blue-grey-1 q-pa-md">
+      <q-breadcrumbs class="q-mt-sm">
+        <q-breadcrumbs-el icon="person" :title="$t('users.title')" to="/users"/>
         <q-breadcrumbs-el :label="user.email" />
       </q-breadcrumbs>
     </div>
@@ -11,7 +11,6 @@
     <div class="row">
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.firstname'
           :label="$t('firstname')"
           lazy-rules
@@ -32,7 +31,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.lastname'
           :label="$t('lastname')"
           lazy-rules
@@ -53,7 +51,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.institution'
           :label="$t('institution')"
           lazy-rules
@@ -66,7 +63,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.city'
           :label="$t('city')"
           lazy-rules
@@ -79,7 +75,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.title'
           :label="$t('title')"
           lazy-rules
@@ -92,7 +87,6 @@
       </div>
       <div class='col-12 col-md-6'>
         <q-input
-          filled
           v-model='profileData.phone'
           :label="$t('phone')"
           lazy-rules
@@ -104,21 +98,20 @@
         </q-input>
       </div>
       <div class="col-12 col-md-6">
-          <q-select
-            class='q-ma-sm'
-            v-show="hasLocales"
-            v-model="profileData.language"
-            :options="localeOptions"
-            :label="$t('preferred_language')"
-            filled
-            emit-value
-            map-options
-            options-dense
-          >
-            <template v-slot:prepend>
-              <q-icon name="fas fa-language" size="xs" />
-            </template>
-          </q-select>
+        <q-select
+          class='q-ma-sm'
+          v-show="hasLocales"
+          v-model="profileData.language"
+          :options="localeOptions"
+          :label="$t('preferred_language')"
+          emit-value
+          map-options
+          options-dense
+        >
+          <template v-slot:prepend>
+            <q-icon name="fas fa-language" size="xs" />
+          </template>
+        </q-select>
       </div>
       <div class='col-12 col-md-6'>
         <q-select
@@ -126,7 +119,6 @@
           v-model='profileData.role'
           :options='rolesOptions'
           :label="$t('role')"
-          filled
           emit-value
           map-options
           options-dense

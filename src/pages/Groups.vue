@@ -1,6 +1,10 @@
 <template>
   <q-page>
-    <div class="text-h6 text-white bg-info q-pa-md">{{$t('groups.title')}}</div>
+    <div class="bg-blue-grey-1 q-pa-md">
+      <q-breadcrumbs class="q-mt-sm">
+        <q-breadcrumbs-el icon="groups" :label="$t('groups.title')" />
+      </q-breadcrumbs>
+    </div>
     <q-separator/>
 
     <q-table
@@ -32,7 +36,6 @@
           @click="confirmDeleteGroups()" />
         <q-space />
         <q-input
-          filled
           borderless
           dense
           debounce="300"
@@ -95,7 +98,6 @@
         <q-card-section class='row items-center'>
            <div class='col-12'>
             <q-input
-              filled
               v-model='newGroupData.name'
               :label="$t('name')"
               lazy-rules
@@ -113,7 +115,6 @@
           </div>
           <div class='col-12'>
             <q-input
-              filled
               v-model='newGroupData.description'
               :label="$t('description')"
               autogrow

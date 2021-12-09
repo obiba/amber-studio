@@ -1,8 +1,8 @@
 <template>
   <q-page>
-    <div class="text-h6 text-white bg-info q-pa-md">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el icon="groups" :title="$t('groups.title')" to="/groups" class="text-white"/>
+    <div class="bg-blue-grey-1 q-pa-md">
+      <q-breadcrumbs class="q-mt-sm">
+        <q-breadcrumbs-el icon="groups" :title="$t('groups.title')" to="/groups"/>
         <q-breadcrumbs-el :label="group.name" />
       </q-breadcrumbs>
     </div>
@@ -13,7 +13,6 @@
         <div class="row">
           <div class='col-12'>
             <q-input
-              filled
               v-model='groupData.name'
               :label="$t('name')"
               lazy-rules
@@ -33,7 +32,6 @@
         <div class="row">
           <div class='col-12'>
             <q-input
-              filled
               v-model='groupData.description'
               :label="$t('description')"
               autogrow

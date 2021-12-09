@@ -1,6 +1,10 @@
 <template>
   <q-page>
-    <div class="text-h6 text-white bg-info q-pa-md">{{$t('users.title')}}</div>
+    <div class="bg-blue-grey-1 q-pa-md">
+      <q-breadcrumbs class="q-mt-sm">
+        <q-breadcrumbs-el icon="person" :label="$t('users.title')" />
+      </q-breadcrumbs>
+    </div>
     <q-separator/>
 
     <q-table
@@ -55,7 +59,6 @@
           @change="getTableUsers"
         />
         <q-input
-          filled
           borderless
           dense
           debounce="300"
@@ -158,7 +161,6 @@
 
           <div class='col-12 col-md-6'>
             <q-input
-              filled
               v-model='newProfileData.firstname'
               :label="$t('firstname')"
               lazy-rules
@@ -179,7 +181,6 @@
           </div>
           <div class='col-12 col-md-6'>
             <q-input
-              filled
               v-model='newProfileData.lastname'
               :label="$t('lastname')"
               lazy-rules
@@ -200,7 +201,6 @@
           </div>
           <div class='col-12 col-md-6'>
             <q-input
-              filled
               v-model='newProfileData.email'
               :label="$t('email')"
               lazy-rules
@@ -222,7 +222,6 @@
           </div>
           <div class='col-12 col-md-6'>
             <q-input
-              filled
               v-model='newProfileData.password'
               :label="$t('password')"
               lazy-rules
@@ -245,7 +244,6 @@
           </div>
           <div class='col-12 col-md-6'>
             <q-input
-              filled
               v-model='newProfileData.institution'
               :label="$t('institution')"
               lazy-rules
@@ -258,7 +256,6 @@
           </div>
           <div class='col-12 col-md-6'>
             <q-input
-              filled
               v-model='newProfileData.city'
               :label="$t('city')"
               lazy-rules
@@ -271,7 +268,6 @@
           </div>
           <div class='col-12 col-md-6'>
             <q-input
-              filled
               v-model='newProfileData.title'
               :label="$t('title')"
               lazy-rules
@@ -284,7 +280,6 @@
           </div>
           <div class='col-12 col-md-6'>
             <q-input
-              filled
               v-model='newProfileData.phone'
               :label="$t('phone')"
               lazy-rules
@@ -302,7 +297,6 @@
                 v-model="newProfileData.language"
                 :options="localeOptions"
                 :label="$t('preferred_language')"
-                filled
                 emit-value
                 map-options
                 options-dense
@@ -318,7 +312,6 @@
               v-model='newProfileData.role'
               :options='rolesOptions'
               :label="$t('role')"
-              filled
               emit-value
               map-options
               options-dense
@@ -381,7 +374,6 @@
               :options='groupsOptions'
               :label="$t('group.title')"
               :hint="$t('users.group_add_hint')"
-              filled
               use-input
               map-options
               options-dense
