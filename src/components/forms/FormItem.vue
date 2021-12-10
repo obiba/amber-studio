@@ -141,8 +141,8 @@
 
       <q-tab-panel name="preview">
         <q-card>
-          <q-card-section>
-            <q-btn-dropdown icon="translate" :label="locale">
+          <q-card-section class="bg-grey-3">
+            <q-btn-dropdown icon="translate" flat size="sm" :label="locale">
               <q-list>
                 <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in locales" :key="loc">
                   <q-item-section class="text-uppercase">{{ loc }}</q-item-section>
@@ -163,9 +163,11 @@
           </q-card-section>
         </q-card>
         <q-card class="q-mt-md" v-if="isVariable">
-          <q-card-section>
+          <q-card-section class="bg-grey-3">
             <q-btn
               icon="backspace"
+              flat
+              size="sm"
               :label="$t('form.preview_data_clear')"
               @click="clearModelData()"/>
           </q-card-section>

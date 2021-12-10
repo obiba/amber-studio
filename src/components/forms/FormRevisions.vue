@@ -98,8 +98,8 @@
           <q-separator/>
 
           <q-tab-panels v-model="viewTab">
-            <q-tab-panel name="form">
-              <q-btn-dropdown icon="translate" :label="locale">
+            <q-tab-panel name="form" class="q-pl-none q-pr-none">
+              <q-btn-dropdown icon="translate" flat size="sm" :label="locale">
                 <q-list>
                   <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in locales" :key="loc">
                     <q-item-section class="text-uppercase">{{ loc }}</q-item-section>
@@ -112,7 +112,7 @@
               </q-scroll-area>
             </q-tab-panel>
 
-            <q-tab-panel name="data">
+            <q-tab-panel name="data" class="q-pl-none q-pr-none">
               <q-scroll-area style="height: 400px">
                 <div class="bg-black text-white q-pa-md">
                   <pre>{{ modelDataStr }}</pre>
