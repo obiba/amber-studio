@@ -268,6 +268,8 @@ export default {
     option_label: 'Libellé',
     show_more_options: 'Montrer plus...',
     add_option: 'Ajouter une option',
+    select_next: 'Sélectionner l\'élément suivant (alt-bas)',
+    select_previous: 'Sélectionner l\'élément précédent (alt-haut)',
     move_up: 'Monter',
     move_down: 'Descendre',
     delete: 'Supprimer',

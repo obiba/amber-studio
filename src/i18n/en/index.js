@@ -270,6 +270,8 @@ export default {
     add_option_hint: 'Add an option',
     upload_options: 'Upload options',
     upload_options_hint: 'Upload options from a text file.',
+    select_next: 'Select next item (Alt-Down)',
+    select_previous: 'Select previous item (Alt-Up)',
     move_up: 'Move item up',
     move_down: 'Move item down',
     delete: 'Delete item',

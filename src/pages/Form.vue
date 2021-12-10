@@ -96,7 +96,7 @@
             <q-tab-panels
               v-model="innerTab"
             >
-              <q-tab-panel name="items" class="q-pt-none q-pb-none">
+              <q-tab-panel name="items" class="q-pa-none">
                 <form-items v-model="studyFormData" />
               </q-tab-panel>
 

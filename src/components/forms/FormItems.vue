@@ -4,7 +4,32 @@
       v-model="splitterModel">
 
       <template v-slot:before>
-        <div>
+        <div class="q-ma-sm">
+          <q-btn
+            class="text-grey-8"
+            size="10px"
+            flat
+            dense
+            round
+            icon='chevron_left'
+            :disable="!selectedItem"
+            :title="$t('form.select_previous')"
+            @click='selectUpItem'>
+          </q-btn>
+          <q-btn
+            class="text-grey-8"
+            size="10px"
+            flat
+            dense
+            round
+            icon='chevron_right'
+            :disable="!selectedItem"
+            :title="$t('form.select_next')"
+            @click='selectDownItem'>
+          </q-btn>
+        </div>
+        <q-separator/>
+        <div class="q-pl-sm">
           <q-tree
             v-if="items.length>0"
             :nodes="items"
@@ -187,9 +212,12 @@ export default defineComponent({
         return
       }
       const found = this.findItemAndParent(this.selected)
+      if (found.parent === null) {
+        return
+      }
       const idx = found.parent.items.indexOf(found.item)
-      if (idx === 0 && found.parent.type === 'group') {
-        this.selected = found.parent.name // case selected item is a group
+      if (idx === 0 && (!found.parent.type || found.parent.type === 'group')) {
+        this.selected = found.parent.name // case selected item is a group or main form
       } else if (idx > 0) {
         const upItem = found.parent.items[idx - 1]
         if (upItem.type === 'group' && upItem.items && upItem.items.length > 0) {
@@ -241,7 +269,7 @@ export default defineComponent({
       let found = this.findItemAndParent(this.selected)
       if (found.item.type === 'group' && found.item.items && found.item.items.length > 0) {
         this.selected = found.item.items[0].name // case selected item is a group with items
-      } else {
+      } else if (found.parent) {
         let idx = found.parent.items.indexOf(found.item)
         if (idx === found.parent.items.length - 1 && found.parent.type === 'group') {
           found = this.findItemAndParent(found.parent.name)
@@ -250,6 +278,8 @@ export default defineComponent({
         if (idx < found.parent.items.length - 1) {
           this.selected = found.parent.items[idx + 1].name // case selected is last in the group
         }
+      } else if (found.item.items && found.item.items.length > 0) {
+        this.selected = found.item.items[0].name
       }
     },
     moveDownItem (item) {
