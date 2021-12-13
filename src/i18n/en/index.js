@@ -104,10 +104,16 @@ export default {
     import_schema_hint: 'Optional schema file to import. Includes form items and translations.',
     latest_revision: '(latest)',
     search_case_report_form_hint: 'Search by revision',
+    start_case_report_form_hint: 'Start case report form',
+    pause_case_report_form_hint: 'Pause case report form',
     delete_case_report_form_hint: 'Delete case report form',
     delete_case_report_form_confirm: 'Please confirm that you want to remove the case report form:',
     delete_case_report_forms_hint: 'Delete selected case report forms',
-    delete_case_report_forms_confirm: 'Please confirm that you want to remove all the selected case report forms:'
+    delete_case_report_forms_confirm: 'Please confirm that you want to remove all the selected case report forms:',
+    case_report_form_state: {
+      active: 'Active',
+      paused: 'Paused'
+    }
   },
   datasets: {
     title: 'Datasets'
@@ -337,6 +343,7 @@ export default {
   description: 'Description',
   comment: 'Comment',
   revision: 'Revision',
+  state: 'State',
   date: 'Date',
   status: 'Status',
   members: 'Members',

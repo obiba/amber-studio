@@ -24,7 +24,7 @@ export async function getCaseReportForms ({ commit }, payload) {
 
 export async function createCaseReportForm ({ dispatch }, payload) {
   const result = await caseReportFormService
-    .createCaseReportForm(payload.caseReport)
+    .createCaseReportForm(payload.caseReportForm)
     .catch(err => {
       console.error(err)
       Notify.create({
@@ -43,7 +43,7 @@ export async function createCaseReportForm ({ dispatch }, payload) {
     'caseReportForm/getCaseReportForms',
     {
       paginationOpts: payload.paginationOpts,
-      study: payload.caseReport.study
+      study: payload.caseReportForm.study
     },
     { root: true }
   )
@@ -51,7 +51,7 @@ export async function createCaseReportForm ({ dispatch }, payload) {
 
 export async function updateCaseReportForm ({ commit, dispatch }, payload) {
   const result = await caseReportFormService
-    .updateCaseReportForm(payload.caseReport, payload.id ? payload.id : payload.caseReport._id)
+    .updateCaseReportForm(payload.caseReportForm, payload.id ? payload.id : payload.caseReportForm._id)
     .catch(() => {
       Notify.create({
         message: t('error.general'),
@@ -59,21 +59,19 @@ export async function updateCaseReportForm ({ commit, dispatch }, payload) {
       })
     })
   if (result) {
-    if (payload.notification) {
-      Notify.create({
-        message: t('success.update_case_report_form'),
-        color: 'positive',
-        icon: 'fas fa-check'
-      })
-    }
+    Notify.create({
+      message: t('success.update_case_report_form'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
     commit('setCaseReportForm', result)
   }
   if (payload.paginationOpts) {
     dispatch(
-      'study/getCaseReportForms',
+      'caseReportForm/getCaseReportForms',
       {
         paginationOpts: payload.paginationOpts,
-        study: payload.caseReport.study
+        study: payload.caseReportForm.study
       },
       { root: true }
     )

@@ -50,8 +50,35 @@
           {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
         </q-td>
       </template>
+      <template v-slot:body-cell-state='props'>
+        <q-td :props='props'>
+          {{ $t('study.case_report_form_state.' + props.row.state) }}
+        </q-td>
+      </template>
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
+          <q-btn
+            v-if="props.row.state === 'paused'"
+            class="text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
+            :title="$t('study.start_case_report_form_hint')"
+            icon="play_arrow"
+            @click='start(props.row)'>
+          </q-btn>
+          <q-btn
+            v-if="props.row.state === 'active'"
+            class="text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
+            :title="$t('study.pause_case_report_form_hint')"
+            icon="pause"
+            @click='pause(props.row)'>
+          </q-btn>
           <q-btn
             class="text-grey-8"
             size="12px"
@@ -221,6 +248,13 @@ export default defineComponent({
           sortable: true
         },
         {
+          name: 'state',
+          align: 'left',
+          label: this.$t('state'),
+          field: 'state',
+          sortable: true
+        },
+        {
           name: 'action',
           align: 'left',
           label: this.$t('action')
@@ -270,7 +304,8 @@ export default defineComponent({
   methods: {
     ...mapActions({
       getStudyCaseReportForms: 'caseReportForm/getCaseReportForms',
-      createStudyCaseReportForm: 'caseReportForm/createCaseReportForm'
+      createStudyCaseReportForm: 'caseReportForm/createCaseReportForm',
+      updateStudyCaseReportForm: 'caseReportForm/updateCaseReportForm'
     }),
     onAdd () {
       this.newStudyCaseReportFormData = {}
@@ -307,6 +342,20 @@ export default defineComponent({
     setPagination () {
       this.paginationOpts = this.$store.state.caseReportForm.caseReportFormPaginationOpts
     },
+    start (studyCaseReportForm) {
+      this.setState(studyCaseReportForm, 'active')
+    },
+    pause (studyCaseReportForm) {
+      this.setState(studyCaseReportForm, 'paused')
+    },
+    setState (studyCaseReportForm, state) {
+      const toSave = { ...studyCaseReportForm }
+      toSave.state = state
+      this.updateStudyCaseReportForm({
+        caseReportForm: toSave,
+        paginationOpts: this.paginationOpts
+      })
+    },
     deleteStudyCaseReportForm () {
       this.$store.dispatch('caseReportForm/deleteCaseReportForm', {
         id: this.selectedStudyCaseReportForm._id,
@@ -330,7 +379,7 @@ export default defineComponent({
         delete toSave.revision
       }
       this.createStudyCaseReportForm({
-        caseReport: toSave
+        caseReportForm: toSave
       })
     }
   }

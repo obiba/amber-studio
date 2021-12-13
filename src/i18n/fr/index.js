@@ -104,10 +104,16 @@ export default {
     import_schema_hint: 'Fichier de schéma à importer, incluant les items et les traductions du formaulaire.',
     latest_revision: '(dernière)',
     search_case_report_form_hint: 'Chercher par version',
+    start_case_report_form_hint: 'Démarrer le fomulaire de rapport de cas',
+    pause_case_report_form_hint: 'Metter en pause le fomulaire de rapport de cas',
     delete_case_report_form_hint: 'Supprimer le fomulaire de rapport de cas',
     delete_case_report_form_confirm: 'Veuillez confirmer la suppression du formulaires de rapport de cas:',
     delete_case_report_forms_hint: 'Supprimer les fomulaires de rapport de cas sélectionnés',
-    delete_case_report_forms_confirm: 'Veuillez confirmer la suppression des formulaires de rapport de cas sélectionnés:'
+    delete_case_report_forms_confirm: 'Veuillez confirmer la suppression des formulaires de rapport de cas sélectionnés:',
+    case_report_form_state: {
+      active: 'Actif',
+      paused: 'En pause'
+    }
   },
   datasets: {
     title: 'Données'
@@ -335,6 +341,7 @@ export default {
   description: 'Description',
   comment: 'Commentaire',
   revision: 'Version',
+  state: 'État',
   date: 'Date',
   status: 'Statuts',
   members: 'Membres',
