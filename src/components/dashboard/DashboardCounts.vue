@@ -79,16 +79,16 @@ export default defineComponent({
           color2: '#ea4b64'
         },
         {
-          title: 'Case Report Forms',
+          title: 'study.case_report_forms',
           icon: 'ballot',
-          value: '-',
+          value: this.counts.case_report_forms ? this.counts.case_report_forms : '-',
           color1: '#a270b1',
           color2: '#9f52b1'
         },
         {
-          title: 'Case Reports',
+          title: 'study.records',
           icon: 'bar_chart',
-          value: '-',
+          value: this.counts.records ? this.counts.records : '-',
           color1: '#a270b1',
           color2: '#9f52b1'
         }

@@ -1,5 +1,21 @@
 import { feathersClient } from '../../boot/feathersClient'
 
+export async function getFormRevisionsDigest (study, form) {
+  const formData = {
+    query: {
+      $limit: 1000,
+      $sort: { revision: -1 }
+    }
+  }
+  if (study) {
+    formData.query.study = study
+  }
+  if (form) {
+    formData.query.form = form
+  }
+  return feathersClient.service('form-revision-digest').find(formData)
+}
+
 export async function getFormRevisions (opts, form, filter) {
   const formData = { query: { $sort: { revision: -1 } } }
   if (opts) {

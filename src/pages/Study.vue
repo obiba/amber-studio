@@ -29,7 +29,7 @@
       align="justify"
     >
       <q-tab name="forms" :label="$t('study.forms')" />
-      <q-tab name="caseReports" :label="$t('study.case_reports')" />
+      <q-tab name="dce" :label="$t('study.data_collection')" />
     </q-tabs>
 
     <q-separator />
@@ -40,7 +40,44 @@
         <study-forms/>
       </q-tab-panel>
 
-      <q-tab-panel name="caseReports">
+      <q-tab-panel name="dce" class="q-pa-none">
+        <q-splitter
+          v-model="splitterModel"
+        >
+          <template v-slot:before>
+            <q-tabs
+              v-model="innerTab"
+              vertical
+              class="text-teal"
+            >
+              <q-tab name="caseReports" icon="summarize" :label="$t('study.case_report_forms')" />
+              <q-tab name="interviews" icon="record_voice_over" :label="$t('study.interviews')" />
+              <q-tab name="instruments" icon="straighten" :label="$t('study.instruments')" />
+              <q-tab name="records" icon="cloud_circle" :label="$t('study.records')" />
+            </q-tabs>
+          </template>
+          <template v-slot:after>
+            <q-tab-panels
+                  v-model="innerTab"
+                >
+              <q-tab-panel name="caseReports">
+                <study-case-report-forms/>
+              </q-tab-panel>
+
+              <q-tab-panel name="interviews">
+                TODO interviews design
+              </q-tab-panel>
+
+              <q-tab-panel name="instruments">
+                TODO instrument devices registration and calibration
+              </q-tab-panel>
+
+              <q-tab-panel name="records">
+                TODO list, filter, extract data records
+              </q-tab-panel>
+            </q-tab-panels>
+          </template>
+        </q-splitter>
       </q-tab-panel>
 
     </q-tab-panels>
@@ -102,7 +139,8 @@ import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default defineComponent({
   components: {
-    StudyForms: defineAsyncComponent(() => import('components/forms/StudyForms.vue'))
+    StudyForms: defineAsyncComponent(() => import('components/forms/StudyForms.vue')),
+    StudyCaseReportForms: defineAsyncComponent(() => import('src/components/forms/StudyCaseReportForms.vue'))
   },
   mounted: function () {
     this.initStudyData()
@@ -110,6 +148,8 @@ export default defineComponent({
   setup () {
     return {
       tab: ref('forms'),
+      innerTab: ref('caseReports'),
+      splitterModel: ref(20),
       v$: useVuelidate()
     }
   },

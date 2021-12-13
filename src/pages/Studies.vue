@@ -96,7 +96,7 @@
       icon="add"
       :label="$t('studies.add_study_hint')"
       @click="createStudy()"
-      class="q-ml-md" />
+      class="q-mt-md" />
 
     <q-dialog v-model='showCreateStudy' persistent>
       <q-card>

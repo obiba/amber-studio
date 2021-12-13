@@ -226,7 +226,7 @@ export default defineComponent({
       v$: useVuelidate(),
       tab: ref('schema'),
       innerTab: ref('items'),
-      splitterModel: ref(10)
+      splitterModel: ref(15)
     }
   },
   data () {

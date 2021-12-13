@@ -55,7 +55,7 @@
             round
             :title="$t('study.edit_study_form_hint')"
             icon="edit"
-            :to="'/study/' + props.row._id">
+            :to="'/form/' + props.row._id">
           </q-btn>
           <q-btn
             class="text-grey-8"
@@ -76,8 +76,7 @@
       color="primary"
       icon="add"
       :label="$t('study.add_study_form_hint')"
-      @click="onAdd()"
-      class="q-mr-md" />
+      @click="onAdd()"/>
 
     <q-dialog v-model='showCreateStudyForm' persistent>
       <q-card>
