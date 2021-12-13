@@ -99,9 +99,15 @@ export default {
     delete_study_form_hint: 'Delete form',
     delete_study_form_confirm: 'Please confirm that you want to remove the form:',
     delete_study_forms_confirm: 'Please confirm that you want to remove all the selected forms:',
-    add_study_case_report_form_hint: 'Add a case report form',
+    add_case_report_form_hint: 'Add a case report form',
     import_schema: 'Import schema file',
-    import_schema_hint: 'Optional schema file to import. Includes form items and translations.'
+    import_schema_hint: 'Optional schema file to import. Includes form items and translations.',
+    latest_revision: '(latest)',
+    search_case_report_form_hint: 'Search by revision',
+    delete_case_report_form_hint: 'Delete case report form',
+    delete_case_report_form_confirm: 'Please confirm that you want to remove the case report form:',
+    delete_case_report_forms_hint: 'Delete selected case report forms',
+    delete_case_report_forms_confirm: 'Please confirm that you want to remove all the selected case report forms:'
   },
   datasets: {
     title: 'Datasets'
@@ -152,9 +158,10 @@ export default {
     get_group_users: 'There was an error while retrieving the users of the group.',
     get_studies: 'There was an error while retrieving studies.',
     get_study: 'There was an error while retrieving the study.',
-    get_study_forms: 'There was an error while retrieving study\'s forms.',
-    get_study_form: 'There was an error while retrieving the study\'s form.',
-    get_form_revisions: 'There was an error while retrieving form\'s versions.'
+    get_study_forms: 'There was an error while retrieving forms.',
+    get_study_form: 'There was an error while retrieving the form.',
+    get_form_revisions: 'There was an error while retrieving form\'s versions.',
+    get_case_report_forms: 'There was an error while retrieving the case report forms.'
   },
   success: {
     create_account: 'Account successfully created. Please check your email to verify your account.',
@@ -176,10 +183,17 @@ export default {
     update_study: 'Study successfully updated.',
     delete_study: 'Study successfully deleted.',
     delete_studies: 'Studies successfully deleted.',
-    create_study_form: 'Study\'s form successfully added. Edit to add items.',
-    update_study_form: 'Study\'s form successfully updated.',
-    delete_study_form: 'Study\'s form successfully deleted.',
-    delete_study_forms: 'Study\'s forms successfully deleted.'
+    create_study_form: 'Form successfully added. Edit to add items.',
+    update_study_form: 'Form successfully updated.',
+    delete_study_form: 'Form successfully deleted.',
+    delete_study_forms: 'Forms successfully deleted.',
+    tagged_form: 'Form successfully tagged.',
+    delete_form_revision: 'Form tag successfully deleted.',
+    delete_form_revisions: 'Form tags successfully deleted.',
+    create_case_report_form: 'Case report form successfully added.',
+    update_case_report_form: 'Case report form successfully updated.',
+    delete_case_report_form: 'Case report form successfully deleted.',
+    delete_case_report_forms: 'Case report forms successfully deleted.'
   },
   form: {
     tr_add: 'Add translation',
@@ -286,7 +300,7 @@ export default {
     revisions: 'Revisions',
     items: 'Items',
     translations: 'Translations',
-    no_revision: 'No form revisions have been published. Publishing the form is required so that it can be referred by a case report form.',
+    no_revision: 'No form revisions have been tagged. Tagging the form is required so that it can be referred by a case report form.',
     search_form_revision_hint: 'Search by revision number or comment',
     export_form_revision_hint: 'Export form',
     view_form_revision_hint: 'View form',
@@ -294,7 +308,7 @@ export default {
     delete_form_revisions_confirm: 'Please confirm that you want to delete the selected form revisions:',
     delete_form_revision_hint: 'Delete form revision',
     delete_form_revision_confirm: 'Please confirm that you want to delete the form revision:',
-    publish_comment_hint: 'Optional comment about the changes in the form\'s schema.'
+    tag_comment_hint: 'Optional comment about the changes in the form\'s schema.'
   },
   add: 'Add',
   update: 'Update',
@@ -305,7 +319,7 @@ export default {
   save_done: 'All changes saved',
   edit_settings: 'Edit settings',
   export: 'Export',
-  publish: 'Publish',
+  tag: 'Tag',
   search: 'Search',
   role: 'Role',
   institution: 'Institution',

@@ -1,6 +1,6 @@
 import { feathersClient } from '../../boot/feathersClient'
 
-export async function getCaseReportForms (opts, study) {
+export async function getCaseReportForms (opts, study, filter) {
   const formData = { query: { $sort: { descending: -1 } } }
   if (opts) {
     // qtable pagination's 'All' sets limit to 0
@@ -12,8 +12,19 @@ export async function getCaseReportForms (opts, study) {
   } else {
     formData.query.$limit = 10
   }
-  formData.query.study = study
-
+  // use filter
+  if (filter) {
+    if (!Number.isNaN(Number(filter))) {
+      formData.query.$and = [
+        { study: study },
+        { revision: filter }
+      ]
+    } else {
+      formData.query.study = study
+    }
+  } else {
+    formData.query.study = study
+  }
   return feathersClient.service('case-report-form').find(formData)
 }
 

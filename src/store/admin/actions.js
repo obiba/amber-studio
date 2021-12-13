@@ -45,7 +45,7 @@ export async function updateUser ({ commit, dispatch }, payload) {
   const result = await userService
     .updateUser(payload.user, payload.id ? payload.id : payload.user._id)
     .catch(err => {
-      console.log(err)
+      console.error(err)
       Notify.create({
         message: t('error.general'),
         color: 'negative'

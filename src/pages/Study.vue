@@ -48,11 +48,11 @@
             <q-tabs
               v-model="innerTab"
               vertical
-              class="text-teal"
+              class="text-teal text-smaller"
             >
               <q-tab name="caseReports" icon="summarize" :label="$t('study.case_report_forms')" />
-              <q-tab name="interviews" icon="record_voice_over" :label="$t('study.interviews')" />
-              <q-tab name="instruments" icon="straighten" :label="$t('study.instruments')" />
+              <!--q-tab name="interviews" icon="record_voice_over" :label="$t('study.interviews')" />
+              <q-tab name="instruments" icon="straighten" :label="$t('study.instruments')" /-->
               <q-tab name="records" icon="cloud_circle" :label="$t('study.records')" />
             </q-tabs>
           </template>
@@ -149,7 +149,7 @@ export default defineComponent({
     return {
       tab: ref('forms'),
       innerTab: ref('caseReports'),
-      splitterModel: ref(20),
+      splitterModel: ref(10),
       v$: useVuelidate()
     }
   },

@@ -62,9 +62,9 @@
             </template>
           </q-btn>
           <q-btn
-            @click='onPublish'
-            :label="$t('publish')"
-            :disable="disablePublish"
+            @click='onTag'
+            :label="$t('tag')"
+            :disable="disableTag"
             icon="sell"
             flat
             size="sm"
@@ -158,14 +158,14 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showPublish' persistent>
+    <q-dialog v-model='showTag' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section class="row items-center">
            <div class="col-12">
             <q-input
               v-model='publicationComment'
               :label="$t('comment')"
-              :hint="$t('form.publish_comment_hint')"
+              :hint="$t('form.tag_comment_hint')"
               lazy-rules
               class="q-ma-sm"
             />
@@ -174,8 +174,8 @@
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='publish'
-            :label="$t('publish')"
+            @click='tag'
+            :label="$t('tag')"
             type='submit'
             color='positive'
             v-close-popup
@@ -234,7 +234,7 @@ export default defineComponent({
       saveIntervalId: null,
       changeDetected: 0,
       showEditDefinition: false,
-      showPublish: false,
+      showTag: false,
       publicationComment: null,
       studyFormData: {},
       originalSchemaStr: null
@@ -254,7 +254,7 @@ export default defineComponent({
       study: state => state.study.study,
       studyForm: state => state.form.form
     }),
-    disablePublish () {
+    disableTag () {
       return this.changeDetected !== 0
     },
     disableSave () {
@@ -307,11 +307,11 @@ export default defineComponent({
     onEdit () {
       this.showEditDefinition = true
     },
-    onPublish () {
-      this.showPublish = true
+    onTag () {
+      this.showTag = true
       this.publicationComment = null
     },
-    publish () {
+    tag () {
       const toSave = {
         form: this.studyFormData._id,
         study: this.studyFormData.study

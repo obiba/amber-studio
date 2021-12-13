@@ -77,7 +77,6 @@ export async function updateForm ({ commit, dispatch }, payload) {
       })
     })
   if (result) {
-    console.log(payload)
     if (payload.notification) {
       Notify.create({
         message: t('success.update_study_form'),
@@ -163,22 +162,11 @@ export async function createFormRevision ({ dispatch }, payload) {
     })
   if (result) {
     Notify.create({
-      message: t('success.published_study_form'),
+      message: t('success.tagged_form'),
       color: 'positive',
       icon: 'fas fa-check'
     })
   }
-  /*
-  dispatch(
-    'form/getFormRevisions',
-    {
-      paginationOpts: payload.paginationOpts,
-      study: payload.formRevision.study,
-      form: payload.formRevision.form
-    },
-    { root: true }
-  )
-  */
 }
 
 export async function getFormRevisions ({ commit }, payload) {

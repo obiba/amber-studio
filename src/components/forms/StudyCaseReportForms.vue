@@ -16,7 +16,7 @@
         <q-btn
           color="primary"
           icon="add"
-          :title="$t('study.add_study_case_report_form_hint')"
+          :title="$t('study.add_case_report_form_hint')"
           @click="onAdd()"
           class="q-mr-md" />
         <q-btn
@@ -26,7 +26,7 @@
           color="red"
           icon="delete_outline"
           :disable="selected.length === 0"
-          :title="$t('study.delete_study_case_report_forms_hint')"
+          :title="$t('study.delete_case_report_forms_hint')"
           @click="onConfirmDeleteMultiple()" />
         <q-space />
         <q-input
@@ -34,7 +34,7 @@
           debounce="300"
           v-model="filter"
           :placeholder="$t('search')"
-          :title="$t('study.search_study_case_report_form_hint')">
+          :title="$t('study.search_case_report_form_hint')">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -45,6 +45,11 @@
           <router-link :to="'/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
         </q-td>
       </template>
+      <template v-slot:body-cell-revision='props'>
+        <q-td :props='props'>
+          {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
+        </q-td>
+      </template>
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
           <q-btn
@@ -53,7 +58,7 @@
             flat
             dense
             round
-            :title="$t('study.delete_study_case_report_form_hint')"
+            :title="$t('study.delete_case_report_form_hint')"
             icon="delete"
             @click='onConfirmDelete(props.row)'>
           </q-btn>
@@ -65,7 +70,7 @@
       v-else
       color="primary"
       icon="add"
-      :label="$t('study.add_study_case_report_form_hint')"
+      :label="$t('study.add_case_report_form_hint')"
       @click="onAdd()"
       class="q-mr-md" />
 
@@ -110,10 +115,10 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_study_case_report_form_confirm')}}
+            {{$t('study.delete_case_report_form_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
-            {{selectedStudyCaseReportForm.name}}
+            {{ getCaseReportFormFullName(selectedStudyCaseReportForm) }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
@@ -137,10 +142,10 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_study_case_report_forms_confirm')}}
+            {{$t('study.delete_case_report_forms_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
-            {{selected.map(g => g.name).join(', ')}}
+            {{selected.map(g => getCaseReportFormFullName(g)).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
@@ -254,7 +259,7 @@ export default defineComponent({
           .then((response) => {
             this.revisionOptions = response.data ? response.data.map(rev => rev.revision) : []
             if (this.revisionOptions.length > 0) {
-              this.revisionOptions.splice(0, 0, t('latest'))
+              this.revisionOptions.splice(0, 0, t('study.latest_revision'))
             }
           })
       } else {
@@ -283,6 +288,9 @@ export default defineComponent({
     },
     getFormName (formId) {
       return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
+    },
+    getCaseReportFormFullName (caseReportForm) {
+      return this.getFormName(caseReportForm.form) + ':' + (caseReportForm.revision ? caseReportForm.revision : t('study.latest_revision'))
     },
     async getTableStudyCaseReportForms (requestProp) {
       if (requestProp) {
@@ -318,7 +326,7 @@ export default defineComponent({
     async saveStudyCaseReportForm () {
       const toSave = { ...this.newStudyCaseReportFormData }
       toSave.study = this.study._id
-      if (toSave.revision === t('latest')) {
+      if (toSave.revision === t('study.latest_revision')) {
         delete toSave.revision
       }
       this.createStudyCaseReportForm({

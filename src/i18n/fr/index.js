@@ -92,7 +92,6 @@ export default {
     events: 'Évènements',
     form: 'Formulaire',
     form_revision: 'Version',
-    form_revision_hint: 'Ne pas remplir pour utiliser la dernière version.',
     add_study_form_hint: 'Ajouter un nouveau formulaire',
     delete_study_forms_hint: 'Supprimer les fomulaires sélectionnés',
     search_study_form_hint: 'Chercher par nom ou description',
@@ -100,9 +99,15 @@ export default {
     delete_study_form_hint: 'Supprimer le formulaire',
     delete_study_form_confirm: 'Veuillez confirmer la suppression du formulaire:',
     delete_study_forms_confirm: 'Veuillez confirmer la suppression des formulaires sélectionnés:',
-    add_study_case_report_form_hint: 'Ajouter un formulaire de rapport de cas',
+    add_case_report_form_hint: 'Ajouter un formulaire de rapport de cas',
     import_schema: 'Import d\'un ficher de schéma',
-    import_schema_hint: 'Fichier de schéma à importer, incluant les items et les traductions du formaulaire.'
+    import_schema_hint: 'Fichier de schéma à importer, incluant les items et les traductions du formaulaire.',
+    latest_revision: '(dernière)',
+    search_case_report_form_hint: 'Chercher par version',
+    delete_case_report_form_hint: 'Supprimer le fomulaire de rapport de cas',
+    delete_case_report_form_confirm: 'Veuillez confirmer la suppression du formulaires de rapport de cas:',
+    delete_case_report_forms_hint: 'Supprimer les fomulaires de rapport de cas sélectionnés',
+    delete_case_report_forms_confirm: 'Veuillez confirmer la suppression des formulaires de rapport de cas sélectionnés:'
   },
   datasets: {
     title: 'Données'
@@ -153,9 +158,10 @@ export default {
     get_group_users: 'Erreur à la récupération des utilisateurs du groupe.',
     get_studies: 'Erreur à la récupération des études.',
     get_study: 'Erreur à la récupération de l\'étude.',
-    get_study_forms: 'Erreur à la récupération des formulaires de l\'étude.',
-    get_study_form: 'Erreur à la récupération du formulaire de l\'étude.',
-    get_form_revisions: 'Erreur à la récupération des versions du formulaire.'
+    get_study_forms: 'Erreur à la récupération des formulaires.',
+    get_study_form: 'Erreur à la récupération du formulaire.',
+    get_form_revisions: 'Erreur à la récupération des versions du formulaire.',
+    get_case_report_forms: 'Erreur à la récupération des versions des formulaires de rapport de cas.'
   },
   success: {
     create_account: 'Compte créé avec succès. Un courriel de vérification d\'adresse a été envoyé.',
@@ -180,7 +186,14 @@ export default {
     create_study_form: 'Formulaire ajouté avec succès. Éditer pour ajouter des items.',
     update_study_form: 'Formulaire mis à jour avec succès.',
     delete_study_form: 'Formulaire supprimé avec succès.',
-    delete_study_forms: 'Formulaires supprimés avec succès.'
+    delete_study_forms: 'Formulaires supprimés avec succès.',
+    tagged_form: 'Formulaire étiquetté avec succès.',
+    delete_form_revision: 'Version du formulaire supprimée avec succès.',
+    delete_form_revisions: 'Versions des formulaires supprimées avec succès.',
+    create_case_report_form: 'Formulaire de rapport de case ajouté avec succès.',
+    update_case_report_form: 'Formulaire de rapport de case mis à jour avec succès.',
+    delete_case_report_form: 'Formulaire de rapport de cas supprimé avec succès.',
+    delete_case_report_forms: 'Formulaires de rapport de case supprimés avec succès.'
   },
   form: {
     tr_add: 'Ajouter une traduction',
@@ -293,7 +306,7 @@ export default {
     delete_form_revisions_confirm: 'Veuillez confirmer la suppression des versions du formulaire:',
     delete_form_revision_hint: 'Supprimer la version',
     delete_form_revision_confirm: 'Veuillez confirmer la suppression de la version du formulaire:',
-    publish_comment_hint: 'Commentaire optionel à propos des changements dans le formulaire.'
+    tag_comment_hint: 'Commentaire optionel à propos des changements dans le formulaire.'
   },
   add: 'Ajouter',
   update: 'Appliquer',
@@ -304,7 +317,7 @@ export default {
   save_done: 'Toutes les modifications ont été sauvegardées',
   edit_settings: 'Éditer les paramètres',
   export: 'Exporter',
-  publish: 'Publier',
+  tag: 'Étiquetter',
   search: 'Chercher',
   role: 'Rôle',
   institution: 'Institution',

@@ -8,7 +8,7 @@ export async function getCaseReportForms ({ commit }, payload) {
     const errorCode = err.code
     if (errorCode) {
       Notify.create({
-        message: t('error.get_study_case_report_forms'),
+        message: t('error.get_case_report_forms'),
         color: 'negative'
       })
     }
@@ -19,24 +19,6 @@ export async function getCaseReportForms ({ commit }, payload) {
   } else {
     commit('setCaseReportForms', [])
     commit('setCaseReportFormCount', 0)
-  }
-}
-
-export async function getCaseReportForm ({ commit }, payload) {
-  const result = await caseReportFormService.getCaseReportForm(payload.id).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_study_case_report_form'),
-        color: 'negative'
-      })
-    }
-  })
-  if (result) {
-    commit('setCaseReportForm', result)
-  } else {
-    commit('setCaseReportForm', { _id: payload.id })
   }
 }
 
@@ -52,7 +34,7 @@ export async function createCaseReportForm ({ dispatch }, payload) {
     })
   if (result) {
     Notify.create({
-      message: t('success.create_study_case_report_form'),
+      message: t('success.create_case_report_form'),
       color: 'positive',
       icon: 'fas fa-check'
     })
@@ -77,10 +59,9 @@ export async function updateCaseReportForm ({ commit, dispatch }, payload) {
       })
     })
   if (result) {
-    console.log(payload)
     if (payload.notification) {
       Notify.create({
-        message: t('success.update_study_case_report_form'),
+        message: t('success.update_case_report_form'),
         color: 'positive',
         icon: 'fas fa-check'
       })
@@ -110,7 +91,7 @@ export async function deleteCaseReportForm ({ dispatch }, payload) {
     })
   if (result) {
     Notify.create({
-      message: t('success.delete_study_case_report_form'),
+      message: t('success.delete_case_report_form'),
       color: 'positive',
       icon: 'fas fa-check'
     })
@@ -136,7 +117,7 @@ export async function deleteCaseReportForms ({ dispatch }, payload) {
     })
   if (result) {
     Notify.create({
-      message: t('success.delete_study_case_report_forms'),
+      message: t('success.delete_case_report_forms'),
       color: 'positive',
       icon: 'fas fa-check'
     })
