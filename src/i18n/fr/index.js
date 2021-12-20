@@ -106,6 +106,7 @@ export default {
     search_case_report_form_hint: 'Chercher par version',
     start_case_report_form_hint: 'Démarrer le fomulaire de rapport de cas',
     pause_case_report_form_hint: 'Metter en pause le fomulaire de rapport de cas',
+    add_form_revision_confirm: 'Il n\'y a pas de version pour le formulaire sélectionné. Voulez vous en ajouter une?',
     delete_case_report_form_hint: 'Supprimer le fomulaire de rapport de cas',
     delete_case_report_form_confirm: 'Veuillez confirmer la suppression du formulaires de rapport de cas:',
     delete_case_report_forms_hint: 'Supprimer les fomulaires de rapport de cas sélectionnés',

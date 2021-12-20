@@ -106,6 +106,7 @@ export default {
     search_case_report_form_hint: 'Search by revision',
     start_case_report_form_hint: 'Start case report form',
     pause_case_report_form_hint: 'Pause case report form',
+    add_form_revision_confirm: 'There is no revision tag for the selected form. Would you like to add one?',
     delete_case_report_form_hint: 'Delete case report form',
     delete_case_report_form_confirm: 'Please confirm that you want to remove the case report form:',
     delete_case_report_forms_hint: 'Delete selected case report forms',

@@ -138,6 +138,33 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model='showConfirmCreateFormRevision' persistent>
+      <q-card>
+        <q-card-section>
+          <div>
+            {{$t('study.add_form_revision_confirm')}}
+          </div>
+          <div class="text-weight-bold text-center q-mt-md">
+            {{ getFormName(newStudyCaseReportFormData.form) }}
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='createFormRevision'
+            :label="$t('add')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
     <q-dialog v-model='showConfirmDeleteStudyCaseReportForm' persistent>
       <q-card>
         <q-card-section>
@@ -222,6 +249,7 @@ export default defineComponent({
       revisionOptions: [],
       selectedStudyCaseReportForm: {},
       showCreateStudyCaseReportForm: false,
+      showConfirmCreateFormRevision: false,
       showConfirmDeleteStudyCaseReportForm: false,
       showConfirmDeleteStudyCaseReportForms: false,
       paginationOpts: {
@@ -289,13 +317,7 @@ export default defineComponent({
     },
     'newStudyCaseReportFormData.form': function () {
       if (this.newStudyCaseReportFormData.form) {
-        formRevisionService.getFormRevisionsDigest(this.study._id, this.newStudyCaseReportFormData.form)
-          .then((response) => {
-            this.revisionOptions = response.data ? response.data.map(rev => rev.revision) : []
-            if (this.revisionOptions.length > 0) {
-              this.revisionOptions.splice(0, 0, t('study.latest_revision'))
-            }
-          })
+        this.updateRevisionOptions()
       } else {
         this.revisionOptions = []
       }
@@ -305,8 +327,20 @@ export default defineComponent({
     ...mapActions({
       getStudyCaseReportForms: 'caseReportForm/getCaseReportForms',
       createStudyCaseReportForm: 'caseReportForm/createCaseReportForm',
-      updateStudyCaseReportForm: 'caseReportForm/updateCaseReportForm'
+      updateStudyCaseReportForm: 'caseReportForm/updateCaseReportForm',
+      createStudyFormRevision: 'form/createFormRevision'
     }),
+    updateRevisionOptions () {
+      formRevisionService.getFormRevisionsDigest(this.study._id, this.newStudyCaseReportFormData.form)
+        .then((response) => {
+          this.revisionOptions = response.data ? response.data.map(rev => rev.revision) : []
+          if (this.revisionOptions.length > 0) {
+            this.revisionOptions.splice(0, 0, t('study.latest_revision'))
+          } else {
+            this.showConfirmCreateFormRevision = true
+          }
+        })
+    },
     onAdd () {
       this.newStudyCaseReportFormData = {}
       this.showCreateStudyCaseReportForm = true
@@ -355,6 +389,16 @@ export default defineComponent({
         caseReportForm: toSave,
         paginationOpts: this.paginationOpts
       })
+    },
+    async createFormRevision () {
+      const toSave = {
+        form: this.newStudyCaseReportFormData.form,
+        study: this.study._id
+      }
+      await this.createStudyFormRevision({
+        formRevision: toSave
+      })
+      this.updateRevisionOptions()
     },
     deleteStudyCaseReportForm () {
       this.$store.dispatch('caseReportForm/deleteCaseReportForm', {
