@@ -23,6 +23,14 @@
             <q-input class="q-mb-md" v-model="value.label" :label="$t('form.title')" :hint="$t('form.form_title_hint')" />
             <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.form_description_hint')" autogrow />
           </div>
+          <div class="col-md-6 col-sm-12">
+            <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
+            <q-input class="q-mb-md" v-model="value.idLabel" :label="$t('form.id_label')" :hint="$t('form.id_label_hint')" />
+            <q-input class="q-mb-md" v-model="value.idDescription" :label="$t('form.id_description')" :hint="$t('form.id_description_hint')" autogrow />
+            <q-input class="q-mb-md" v-model.number="value.idMask" :label="$t('form.id_mask')" :hint="$t('form.mask_hint')" />
+            <q-input class="q-mb-md" v-model="value.idValidation" :label="$t('form.id_validation')" :hint="$t('form.id_validation_hint')" />
+            <q-input class="q-mb-md" v-model="value.idValidationMessage" :label="$t('form.id_validation_message')" :hint="$t('form.validation_message_hint')" />
+          </div>
         </div>
         <div v-else class="row q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
@@ -271,7 +279,19 @@ export default defineComponent({
       }).sort((a, b) => a.label.localeCompare(b.label))
     },
     blitzarSchema () {
-      const items = this.isRoot ? this.value.items : [this.value]
+      const items = this.isRoot ? [...this.value.items] : [this.value]
+      if (this.isRoot) {
+        items.splice(0, 0, {
+          name: '_id',
+          type: 'text',
+          label: this.value.idLabel ? this.value.idLabel : 'ID',
+          description: this.value.idDescription,
+          mask: this.value.idMask,
+          validation: this.value.idValidation,
+          validationMessage: this.value.idValidationMessage,
+          required: true
+        })
+      }
       const schema = {
         items: items,
         i18n: this.i18n ? this.i18n : {}
