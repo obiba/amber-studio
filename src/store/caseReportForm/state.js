@@ -8,6 +8,15 @@ export default function () {
       rowsPerPage: 10,
       rowsNumber: 0
     },
-    caseReportForm: {}
+    caseReportForm: {},
+    caseReports: [],
+    caseReportPaginationOpts: {
+      sortBy: 'createdAt',
+      descending: true,
+      page: 1,
+      rowsPerPage: 10,
+      rowsNumber: 0
+    },
+    caseReport: {}
   }
 }

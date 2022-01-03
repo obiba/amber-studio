@@ -1,6 +1,78 @@
-import caseReportFormService from '../../services/caseReportForm'
+import { caseReportFormService, caseReportService } from '../../services/caseReport'
 import { t } from '../../boot/i18n'
 import { Notify } from 'quasar'
+
+export async function getCaseReports ({ commit }, payload) {
+  const result = await caseReportService.getCaseReports(payload.paginationOpts, payload.study, payload.filter).catch(err => {
+    console.error(err)
+    const errorCode = err.code
+    if (errorCode) {
+      Notify.create({
+        message: t('error.get_case_reports'),
+        color: 'negative'
+      })
+    }
+  })
+  if (result) {
+    commit('setCaseReports', result.data)
+    commit('setCaseReportCount', result.total)
+  } else {
+    commit('setCaseReports', [])
+    commit('setCaseReportCount', 0)
+  }
+}
+
+export async function deleteCaseReport ({ dispatch }, payload) {
+  const result = await caseReportService
+    .deleteCaseReport(payload.id)
+    .catch(() => {
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      })
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_case_report'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'caseReportForm/getCaseReports',
+    {
+      paginationOpts: payload.paginationOpts,
+      study: payload.study
+    },
+    { root: true }
+  )
+}
+
+export async function deleteCaseReports ({ dispatch }, payload) {
+  const result = await caseReportService
+    .deleteCaseReports(payload.ids)
+    .catch(() => {
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      })
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_case_reports'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'caseReportForm/getCaseReports',
+    {
+      paginationOpts: payload.paginationOpts,
+      study: payload.study
+    },
+    { root: true }
+  )
+}
 
 export async function getCaseReportForms ({ commit }, payload) {
   const result = await caseReportFormService.getCaseReportForms(payload.paginationOpts, payload.study, payload.filter).catch(err => {

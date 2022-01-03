@@ -73,7 +73,7 @@
               </q-tab-panel>
 
               <q-tab-panel name="records">
-                TODO list, filter, extract data records
+                <study-case-reports/>
               </q-tab-panel>
             </q-tab-panels>
           </template>
@@ -140,7 +140,8 @@ import { required, minLength, maxLength } from '../boot/vuelidate'
 export default defineComponent({
   components: {
     StudyForms: defineAsyncComponent(() => import('components/forms/StudyForms.vue')),
-    StudyCaseReportForms: defineAsyncComponent(() => import('src/components/forms/StudyCaseReportForms.vue'))
+    StudyCaseReportForms: defineAsyncComponent(() => import('src/components/forms/StudyCaseReportForms.vue')),
+    StudyCaseReports: defineAsyncComponent(() => import('src/components/forms/StudyCaseReports.vue'))
   },
   mounted: function () {
     this.initStudyData()

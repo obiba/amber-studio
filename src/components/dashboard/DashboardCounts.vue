@@ -88,7 +88,7 @@ export default defineComponent({
         {
           title: 'study.records',
           icon: 'bar_chart',
-          value: this.counts.records ? this.counts.records : '-',
+          value: this.counts.case_reports ? this.counts.case_reports : '-',
           color1: '#a270b1',
           color2: '#9f52b1'
         }

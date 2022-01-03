@@ -114,6 +114,16 @@ export default {
     case_report_form_state: {
       active: 'Actif',
       paused: 'En pause'
+    },
+    search_case_report_hint: 'Chercher par ID',
+    view_case_report_hint: 'Voir le rapport de cas',
+    delete_case_report_hint: 'Supprimer le rapport de cas',
+    delete_case_report_confirm: 'Veuillez confirmer que vous voulez supprimer le rapport de cas:',
+    delete_case_reports_hint: 'Supprimer les rapports de case sélectionnés',
+    delete_case_reports_confirm: 'Veuillez confirmer que vous voulez supprimer tous les rapport de cas sélectionnés:',
+    case_report_state: {
+      in_progress: 'En cours',
+      completed: 'Complété'
     }
   },
   datasets: {
@@ -360,5 +370,6 @@ export default {
   pending: 'En attente',
   unknown: 'Inconnue',
   no_results: 'Pas de resultats',
-  close: 'Fermer'
+  close: 'Fermer',
+  id: 'ID'
 }

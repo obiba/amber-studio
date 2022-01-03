@@ -114,6 +114,16 @@ export default {
     case_report_form_state: {
       active: 'Active',
       paused: 'Paused'
+    },
+    search_case_report_hint: 'Search case reports by ID',
+    view_case_report_hint: 'View the case report',
+    delete_case_report_hint: 'Delete case report',
+    delete_case_report_confirm: 'Please confirm that you want to remove the case report:',
+    delete_case_reports_hint: 'Delete selected case reports',
+    delete_case_reports_confirm: 'Please confirm that you want to remove all the selected case reports:',
+    case_report_state: {
+      in_progress: 'In progress',
+      completed: 'Completed'
     }
   },
   datasets: {
@@ -362,5 +372,6 @@ export default {
   pending: 'Pending',
   unknown: 'Unknown',
   no_results: 'No results',
-  close: 'Close'
+  close: 'Close',
+  id: 'ID'
 }
