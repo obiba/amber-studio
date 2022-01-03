@@ -32,12 +32,12 @@ export async function getCaseReportForm (id) {
   return feathersClient.service('case-report-form').get(id)
 }
 
-export async function createCaseReportForm (caseReport) {
-  return feathersClient.service('case-report-form').create(caseReport)
+export async function createCaseReportForm (caseReportForm) {
+  return feathersClient.service('case-report-form').create(caseReportForm)
 }
 
-export async function updateCaseReportForm (caseReport, id) {
-  return feathersClient.service('case-report-form').patch(id, caseReport)
+export async function updateCaseReportForm (caseReportForm, id) {
+  return feathersClient.service('case-report-form').patch(id, caseReportForm)
 }
 
 export async function deleteCaseReportForm (id) {
