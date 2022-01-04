@@ -1,4 +1,5 @@
-import * as caseReportFormService from './caseReportForm.js'
-import * as caseReportService from './caseReport.js'
+import * as caseReportFormService from './caseReportForm'
+import * as caseReportService from './caseReport'
+import * as caseReportExportService from './caseReportExport'
 
-export { caseReportFormService, caseReportService }
+export { caseReportFormService, caseReportService, caseReportExportService }

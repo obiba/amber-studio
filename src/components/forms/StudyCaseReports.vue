@@ -13,6 +13,12 @@
     >
       <template v-slot:top>
         <q-btn
+          color="primary"
+          icon="download"
+          :title="$t('study.export_case_reports_hint')"
+          @click="onExport()"
+          class="q-mr-md" />
+        <q-btn
           class="q-mr-md"
           flat
           round
@@ -21,6 +27,13 @@
           :disable="selected.length === 0"
           :title="$t('study.delete_case_reports_hint')"
           @click="onConfirmDeleteMultiple()" />
+        <q-select
+          v-model="formFilter"
+          :options="formOptions"
+          emit-value
+          map-options
+          :label="$t('study.form')"
+          style="min-width: 200px" />
         <q-space />
         <q-input
           dense
@@ -152,7 +165,9 @@
 import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 // import { formRevisionService } from '../../services/form'
+import { caseReportExportService } from '../../services/caseReport'
 import { t } from '../../boot/i18n'
+import { Notify } from 'quasar'
 
 export default defineComponent({
   name: 'StudyCaseReports',
@@ -166,7 +181,8 @@ export default defineComponent({
     return {
       tab: ref('definition'),
       selected: ref([]),
-      filter: ref('')
+      filter: ref(''),
+      formFilter: ref('0')
     }
   },
   data () {
@@ -229,12 +245,17 @@ export default defineComponent({
       studyCaseReports: state => state.caseReportForm ? state.caseReportForm.caseReports : []
     }),
     formOptions () {
-      return this.forms.map(form => {
+      const opts = this.forms.map(form => {
         return {
           value: form._id,
           label: form.name
         }
       })
+      opts.splice(0, 0, {
+        value: '0',
+        label: t('study.all_forms')
+      })
+      return opts
     },
     hasStudyCaseReports () {
       return this.studyCaseReports && this.studyCaseReports.length > 0
@@ -246,12 +267,34 @@ export default defineComponent({
   watch: {
     study: function (newValue, oldValue) {
       this.getTableStudyCaseReports()
+    },
+    formFilter: function (newValue) {
+      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.study._id, form: this.formFilter, filter: this.filter })
     }
   },
   methods: {
     ...mapActions({
       getStudyCaseReports: 'caseReportForm/getCaseReports'
     }),
+    onExport () {
+      caseReportExportService.downloadCaseReports(this.study._id, this.formFilter, this.filter)
+        .then(response => {
+          if (response.status === 200) {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', 'case-report-export.zip') // or any other extension
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+          } else {
+            Notify.create({
+              message: 'Case report export failed.',
+              color: 'negative'
+            })
+          }
+        })
+    },
     onView (studyCaseReport) {
       this.showViewStudyCaseReport = true
       this.modelData = studyCaseReport.data
@@ -280,9 +323,9 @@ export default defineComponent({
         this.$store.commit('caseReportForm/setCaseReportPagination', {
           caseReportPaginationOpts: requestProp.pagination
         })
-        await this.getStudyCaseReports({ paginationOpts: requestProp.pagination, study: this.study._id, filter: requestProp.filter })
+        await this.getStudyCaseReports({ paginationOpts: requestProp.pagination, study: this.study._id, form: this.formFilter, filter: requestProp.filter })
       } else {
-        await this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.study._id, filter: this.filter })
+        await this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.study._id, form: this.formFilter, filter: this.filter })
       }
       this.paginationOpts.rowsNumber = this.$store.state.caseReportForm.caseReportPaginationOpts.rowsNumber
     },

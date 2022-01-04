@@ -124,7 +124,9 @@ export default {
     case_report_state: {
       in_progress: 'In progress',
       completed: 'Completed'
-    }
+    },
+    export_case_reports_hint: 'Export case reports',
+    all_forms: '(all)'
   },
   datasets: {
     title: 'Datasets'

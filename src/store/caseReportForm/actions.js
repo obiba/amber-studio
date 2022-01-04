@@ -3,7 +3,7 @@ import { t } from '../../boot/i18n'
 import { Notify } from 'quasar'
 
 export async function getCaseReports ({ commit }, payload) {
-  const result = await caseReportService.getCaseReports(payload.paginationOpts, payload.study, payload.filter).catch(err => {
+  const result = await caseReportService.getCaseReports(payload.paginationOpts, payload.study, payload.form, payload.filter).catch(err => {
     console.error(err)
     const errorCode = err.code
     if (errorCode) {
@@ -42,7 +42,8 @@ export async function deleteCaseReport ({ dispatch }, payload) {
     'caseReportForm/getCaseReports',
     {
       paginationOpts: payload.paginationOpts,
-      study: payload.study
+      study: payload.study,
+      form: payload.form
     },
     { root: true }
   )
@@ -68,7 +69,8 @@ export async function deleteCaseReports ({ dispatch }, payload) {
     'caseReportForm/getCaseReports',
     {
       paginationOpts: payload.paginationOpts,
-      study: payload.study
+      study: payload.study,
+      form: payload.form
     },
     { root: true }
   )
