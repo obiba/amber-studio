@@ -10,7 +10,9 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@blitzar/form": "^1.0.3",
+    "@blitzar/form": "https://gitpkg.now.sh/epigeny/blitzar/packages/form?v1.0.7-obiba",
+    "@blitzar/types": "https://gitpkg.now.sh/epigeny/blitzar/packages/types?v1.0.7-obiba",
+    "@blitzar/utils": "https://gitpkg.now.sh/epigeny/blitzar/packages/utils?v1.0.7-obiba",
     "@feathersjs/authentication-client": "^4.5.11",
     "@feathersjs/client": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",

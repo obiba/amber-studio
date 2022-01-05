@@ -958,25 +958,42 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     to-fast-properties "^2.0.0"
 
-"@blitzar/form@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@blitzar/form/-/form-1.0.3.tgz#9b27ce04b9cf7111bbf922ea7d303ed6fbd8cdfc"
-  integrity sha512-hdrqR5EKrCdCF+Ajcu4jZVx9LHVLsAv+9N5NPHntftmgwsYXzOs21xEjj2+oq5YluzxpIlDhC/2DrJhC10WiGQ==
+"@blitzar/form@https://gitpkg.now.sh/epigeny/blitzar/packages/form?v1.0.7-obiba":
+  version "1.0.7"
+  resolved "https://gitpkg.now.sh/epigeny/blitzar/packages/form?v1.0.7-obiba#15c6153e04fb9ea7bc6f60b8c01ce4a2c068efef"
   dependencies:
-    "@blitzar/utils" "^0.0.33"
-    case-anything "^1.1.3"
+    "@blitzar/types" "^1.0.7"
+    "@blitzar/utils" "^1.0.7"
+    case-anything "^2.1.2"
     copy-anything "^2.0.3"
     filter-anything "^2.2.1"
     is-what "^3.14.1"
     map-anything "^1.0.4"
-    merge-anything "^4.0.1"
+    merge-anything "^4.0.2"
     nestify-anything "^1.0.3"
     snarkdown "^2.0.0"
 
-"@blitzar/utils@^0.0.33":
-  version "0.0.33"
-  resolved "https://registry.yarnpkg.com/@blitzar/utils/-/utils-0.0.33.tgz#111e2a6de98693b01880e659680e0f87841adf32"
-  integrity sha512-RNLq85Epg53xxCrY8AnQmwxtK8ULjoxU3Kty3GrZSZcSOhpspoazfSnUUCCBlnOOBiEDvhACU54x2a+9aZKUAw==
+"@blitzar/types@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@blitzar/types/-/types-1.0.7.tgz#ac6fcad09b5118613badf2be622c5bb169b1f36b"
+  integrity sha512-lI0rxgX5hn4uRcmf8lv2LLcMXW/fv4rQz2O0OcPQkCkDlwazycbXEyp5O/K/n2lLP5fowEGsgtsXlRP4jji6sw==
+
+"@blitzar/types@https://gitpkg.now.sh/epigeny/blitzar/packages/types?v1.0.7-obiba":
+  version "1.0.7"
+  resolved "https://gitpkg.now.sh/epigeny/blitzar/packages/types?v1.0.7-obiba#80d3ff6a6c9b795bd39306cdb6f243d0f63f90c4"
+
+"@blitzar/utils@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@blitzar/utils/-/utils-1.0.7.tgz#a3a1ed29e28ee10d20b594c0ce5d40aa91e68350"
+  integrity sha512-E/alepr3rDJo14Qk7Q12quS4uWWxFcl2tWYheHGToprZBcv2POXulQMCTSzISc7y+QEp9o7qKrCZORRutA9BlQ==
+  dependencies:
+    commafy-anything "^2.1.0"
+    flatten-anything "^2.0.4"
+    is-what "^3.14.1"
+
+"@blitzar/utils@https://gitpkg.now.sh/epigeny/blitzar/packages/utils?v1.0.7-obiba":
+  version "1.0.7"
+  resolved "https://gitpkg.now.sh/epigeny/blitzar/packages/utils?v1.0.7-obiba#5a1a54681cc8e2049d5fd7f3402d772bc15162c9"
   dependencies:
     commafy-anything "^2.1.0"
     flatten-anything "^2.0.4"
@@ -2531,10 +2548,10 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001272, caniuse-lite@^1.0.30001280:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001282.tgz#38c781ee0a90ccfe1fe7fefd00e43f5ffdcb96fd"
   integrity sha512-YhF/hG6nqBEllymSIjLtR2iWDDnChvhnVJqp+vloyt2tEHFG1yBR+ac2B/rOw0qOK0m0lEXU2dv4E/sMk5P9Kg==
 
-case-anything@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/case-anything/-/case-anything-1.1.3.tgz#01363444375210e83b3438151b6d219bf1839221"
-  integrity sha512-DJLmEwc1dsFQNzTFgfmNcSOJB1SY0/feYjQIbaRJNBve8GuMt22W/GRwrcPtqOsls6tDPTkCwhWKVKgogmwsfw==
+case-anything@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/case-anything/-/case-anything-2.1.2.tgz#2e21da5008fa643374c1d5c8f85d150b417d44ed"
+  integrity sha512-2oyG0/l1av9fpWdrQ67z+mFrj5CEnw8Hseawn0Hr9+vUgqhtRWmwQ1zDPuJl4NrhHddoSJ9LUWUhrmemHXaaSA==
 
 caw@^2.0.1:
   version "2.0.1"
@@ -5736,7 +5753,7 @@ memory-fs@0.5.0:
     errno "^0.1.3"
     readable-stream "^2.0.1"
 
-merge-anything@^4.0.0, merge-anything@^4.0.1:
+merge-anything@^4.0.0, merge-anything@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/merge-anything/-/merge-anything-4.0.2.tgz#cb61fdd4e0604e254ff571f90869fa1af2d39e7f"
   integrity sha512-YxLHKgX8jN5xfKIxcwVNzQ2HpS0r9eUSqifgGhVARoZEW31Jwu95OQzX7qlFPBPQdCmNBhCYaqJzOcwAKi2Elg==

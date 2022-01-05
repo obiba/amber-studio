@@ -68,6 +68,23 @@ pre {
   border-radius: 0;
 }
 
+.blitz-field {
+  padding: 10px;
+  margin-bottom: 20px;
+  // background-color: #efefef99;
+  // border-radius: 5px;
+}
+
+.blitz-field__label {
+  // font-weight: bold;
+    font-size: larger;
+    margin-bottom: 10px;
+}
+
+.blitz-field__sub-label {
+  color: #9e9e9e;
+}
+
 .blitz-field__error {
   display: none;
 }
