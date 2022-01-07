@@ -86,7 +86,10 @@ pre {
 }
 
 .blitz-field__error {
-  display: none;
+  margin-top: 10px;
+  color: #c10015;
+  font-size: smaller;
+  // display: none;
 }
 
 .text-smaller, .text-smaller .q-tab__label {
