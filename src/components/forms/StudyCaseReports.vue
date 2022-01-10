@@ -15,7 +15,8 @@
       <q-btn-dropdown
         color="primary"
         icon="download"
-        :title="$t('study.export_case_reports_hint')">
+        :title="$t('study.export_case_reports_hint')"
+        :disable="studyCaseReports.length === 0">
         <q-list>
           <q-item clickable v-close-popup @click="onExport('csv')">
             <q-item-section>
