@@ -100,6 +100,7 @@ export default {
     delete_study_form_confirm: 'Veuillez confirmer la suppression du formulaire:',
     delete_study_forms_confirm: 'Veuillez confirmer la suppression des formulaires sélectionnés:',
     add_case_report_form_hint: 'Ajouter un formulaire de rapport de cas',
+    edit_case_report_form_hint: 'Editer le formulaire de rapport de cas',
     import_schema: 'Import d\'un ficher de schéma',
     import_schema_hint: 'Fichier de schéma à importer, incluant les items et les traductions du formaulaire.',
     latest_revision: '(dernière)',

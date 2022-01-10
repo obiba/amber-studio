@@ -58,6 +58,16 @@
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
           <q-btn
+            class="text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
+            :title="$t('study.edit_case_report_form_hint')"
+            icon="edit"
+            @click='onEdit(props.row)'>
+          </q-btn>
+          <q-btn
             v-if="props.row.state === 'paused'"
             class="text-grey-8"
             size="12px"
@@ -123,9 +133,39 @@
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='saveStudyCaseReportForm'
+            @click='saveStudyCaseReportForm(true)'
             :disable='disableCreateStudyCaseReportForm'
             :label="$t('add')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model='showEditStudyCaseReportForm' persistent>
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
+        <q-card-section class="row items-center">
+           <div class="col-12">
+             <q-select
+              v-model="selectedStudyCaseReportForm.revision"
+              :options="revisionOptions"
+              emit-value
+              map-options
+              :label="$t('study.form_revision')" />
+           </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='saveStudyCaseReportForm(false)'
+            :disable='disableEditStudyCaseReportForm'
+            :label="$t('update')"
             type='submit'
             color='positive'
             v-close-popup
@@ -249,6 +289,7 @@ export default defineComponent({
       revisionOptions: [],
       selectedStudyCaseReportForm: {},
       showCreateStudyCaseReportForm: false,
+      showEditStudyCaseReportForm: false,
       showConfirmCreateFormRevision: false,
       showConfirmDeleteStudyCaseReportForm: false,
       showConfirmDeleteStudyCaseReportForms: false,
@@ -307,6 +348,9 @@ export default defineComponent({
     disableCreateStudyCaseReportForm () {
       return !this.newStudyCaseReportFormData.form || !this.newStudyCaseReportFormData.revision || this.revisionOptions.length === 0
     },
+    disableEditStudyCaseReportForm () {
+      return !this.selectedStudyCaseReportForm.revision || this.revisionOptions.length === 0
+    },
     hasStudyCaseReportForms () {
       return this.studyCaseReportForms && this.studyCaseReportForms.length > 0
     }
@@ -317,7 +361,7 @@ export default defineComponent({
     },
     'newStudyCaseReportFormData.form': function () {
       if (this.newStudyCaseReportFormData.form) {
-        this.updateRevisionOptions()
+        this.updateRevisionOptions(this.newStudyCaseReportFormData.form)
       } else {
         this.revisionOptions = []
       }
@@ -330,8 +374,8 @@ export default defineComponent({
       updateStudyCaseReportForm: 'caseReportForm/updateCaseReportForm',
       createStudyFormRevision: 'form/createFormRevision'
     }),
-    updateRevisionOptions () {
-      formRevisionService.getFormRevisionsDigest(this.study._id, this.newStudyCaseReportFormData.form)
+    updateRevisionOptions (form) {
+      formRevisionService.getFormRevisionsDigest(this.study._id, form)
         .then((response) => {
           this.revisionOptions = response.data ? response.data.map(rev => rev.revision) : []
           if (this.revisionOptions.length > 0) {
@@ -345,6 +389,11 @@ export default defineComponent({
       this.newStudyCaseReportFormData = {}
       this.showCreateStudyCaseReportForm = true
       this.selectedStudyCaseReportForm = undefined
+    },
+    onEdit (studyCaseReportForm) {
+      this.selectedStudyCaseReportForm = { ...studyCaseReportForm }
+      this.updateRevisionOptions(this.selectedStudyCaseReportForm.form)
+      this.showEditStudyCaseReportForm = true
     },
     onConfirmDelete (studyCaseReportForm) {
       this.showConfirmDeleteStudyCaseReportForm = true
@@ -416,15 +465,27 @@ export default defineComponent({
       })
       this.selected = []
     },
-    async saveStudyCaseReportForm () {
-      const toSave = { ...this.newStudyCaseReportFormData }
-      toSave.study = this.study._id
-      if (toSave.revision === t('study.latest_revision')) {
-        delete toSave.revision
+    async saveStudyCaseReportForm (create) {
+      if (create) {
+        const toSave = { ...this.newStudyCaseReportFormData }
+        toSave.study = this.study._id
+        if (toSave.revision === t('study.latest_revision')) {
+          delete toSave.revision
+        }
+        this.createStudyCaseReportForm({
+          caseReportForm: toSave
+        })
+      } else {
+        const toSave = { ...this.selectedStudyCaseReportForm }
+        console.log(toSave)
+        if (toSave.revision === t('study.latest_revision')) {
+          delete toSave.revision
+        }
+        this.updateStudyCaseReportForm({
+          caseReportForm: toSave,
+          paginationOpts: this.paginationOpts
+        })
       }
-      this.createStudyCaseReportForm({
-        caseReportForm: toSave
-      })
     }
   }
 })

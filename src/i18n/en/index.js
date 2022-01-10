@@ -100,6 +100,7 @@ export default {
     delete_study_form_confirm: 'Please confirm that you want to remove the form:',
     delete_study_forms_confirm: 'Please confirm that you want to remove all the selected forms:',
     add_case_report_form_hint: 'Add a case report form',
+    edit_case_report_form_hint: 'Edit the case report form',
     import_schema: 'Import schema file',
     import_schema_hint: 'Optional schema file to import. Includes form items and translations.',
     latest_revision: '(latest)',

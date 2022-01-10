@@ -37,7 +37,7 @@ export async function createCaseReportForm (caseReportForm) {
 }
 
 export async function updateCaseReportForm (caseReportForm, id) {
-  return feathersClient.service('case-report-form').patch(id, caseReportForm)
+  return feathersClient.service('case-report-form').update(id, caseReportForm)
 }
 
 export async function deleteCaseReportForm (id) {
