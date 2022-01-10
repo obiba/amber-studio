@@ -2,7 +2,7 @@
 import { api } from '../../boot/axios'
 import { LocalStorage } from 'quasar'
 
-export async function downloadCaseReports (study, form, filter) {
+export async function downloadCaseReports (study, accept, form, filter) {
   const query = {
     $limit: 1000000,
     $skip: 0
@@ -25,7 +25,7 @@ export async function downloadCaseReports (study, form, filter) {
     params: query,
     responseType: 'blob',
     headers: {
-      Accept: 'application/zip',
+      Accept: accept,
       Authorization: `Bearer ${token}`
     }
   })

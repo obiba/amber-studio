@@ -12,12 +12,23 @@
       @request='getTableStudyCaseReports'
     >
       <template v-slot:top>
-        <q-btn
-          color="primary"
-          icon="download"
-          :title="$t('study.export_case_reports_hint')"
-          @click="onExport()"
-          class="q-mr-md" />
+      <q-btn-dropdown
+        color="primary"
+        icon="download"
+        :title="$t('study.export_case_reports_hint')">
+        <q-list>
+          <q-item clickable v-close-popup @click="onExport('csv')">
+            <q-item-section>
+              <q-item-label>CSV</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="onExport('json')">
+            <q-item-section>
+              <q-item-label>JSON</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
         <q-btn
           class="q-mr-md"
           flat
@@ -276,14 +287,16 @@ export default defineComponent({
     ...mapActions({
       getStudyCaseReports: 'caseReportForm/getCaseReports'
     }),
-    onExport () {
-      caseReportExportService.downloadCaseReports(this.study._id, this.formFilter, this.filter)
+    onExport (format) {
+      const accept = format === 'csv' ? 'application/zip' : 'application/json'
+      caseReportExportService.downloadCaseReports(this.study._id, accept, this.formFilter, this.filter)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')
             link.href = url
-            link.setAttribute('download', 'case-report-export.zip') // or any other extension
+            const ext = format === 'csv' ? 'zip' : format
+            link.setAttribute('download', `case-report-export.${ext}`)
             document.body.appendChild(link)
             link.click()
             link.remove()
