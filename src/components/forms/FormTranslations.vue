@@ -8,19 +8,21 @@
       :filter="filter"
       binary-state-sort
       row-key="key"
-      selection="multiple"
+      :selection="isReadOnly ? 'none' : 'multiple'"
       v-model:selected="selected"
       v-model:pagination="paginationOpts"
     >
 
       <template v-slot:top>
         <q-btn
+          v-if="!isReadOnly"
           color="primary"
           icon="add"
           :title="$t('form.tr_add_key')"
           @click="onAddTranslation()"
           class="q-mr-md" />
         <q-btn
+          v-if="!isReadOnly"
           class="q-mr-md"
           flat
           round
@@ -38,6 +40,7 @@
           :title="$t('form.tr_clean')"
           @click="onConfirmClean()" />
         <q-btn
+          v-if="!isReadOnly"
           class="q-mr-md"
           flat
           round
@@ -71,6 +74,7 @@
     <div v-else>
 
       <q-btn
+        v-if="!isReadOnly"
         color="primary"
         icon="add"
         :label="$t('form.tr_add')">
@@ -207,11 +211,13 @@ import { locales } from '../../boot/i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { Notify } from 'quasar'
+import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'FormTranslations',
   props: ['modelValue'],
   emits: ['update:modelValue'],
+  mixins: [AuthMixin],
   setup () {
     return {
       v$: useVuelidate(),

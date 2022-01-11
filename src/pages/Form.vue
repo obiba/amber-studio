@@ -1,12 +1,13 @@
 <template>
   <q-page>
     <div class="bg-blue-grey-1 q-pa-md">
-      <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
+      <q-breadcrumbs class="q-mt-sm q-mr-md" :class="isReadOnly ? '' : 'float-left'">
         <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
         <q-breadcrumbs-el :label="study ? study.name : '...'" :to="'/study/' + (study ? study._id : '?')"/>
         <q-breadcrumbs-el icon="article" :label="studyForm.name" />
       </q-breadcrumbs>
       <q-btn
+        v-if="!isReadOnly"
         @click='onEdit'
         :title="$t('edit_settings')"
         icon="settings"
@@ -16,6 +17,7 @@
         round>
       </q-btn>
       <q-btn
+        v-if="!isReadOnly"
         @click='save'
         :title="$t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
         :icon="saveIcon"
@@ -62,6 +64,7 @@
             </template>
           </q-btn>
           <q-btn
+            v-if="!isReadOnly"
             @click='onTag'
             :label="$t('tag')"
             :disable="disableTag"
@@ -196,6 +199,7 @@ import { mapState, mapActions } from 'vuex'
 import { defineComponent, defineAsyncComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
+import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({
   components: {
@@ -203,14 +207,17 @@ export default defineComponent({
     FormTranslations: defineAsyncComponent(() => import('src/components/forms/FormTranslations.vue')),
     FormRevisions: defineAsyncComponent(() => import('src/components/forms/FormRevisions.vue'))
   },
+  mixins: [AuthMixin],
   mounted () {
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
-      if (this.changeDetected >= 0 && this.originalSchemaStr !== JSON.stringify(this.studyFormData.schema)) {
-        this.changeDetected++
-        // auto save every 4s
-        if (this.changeDetected > 2) {
-          this.save(false)
+      if (!this.isReadOnly) {
+        if (this.changeDetected >= 0 && this.originalSchemaStr !== JSON.stringify(this.studyFormData.schema)) {
+          this.changeDetected++
+          // auto save every 4s
+          if (this.changeDetected > 2) {
+            this.save(false)
+          }
         }
       }
     }, 2000)

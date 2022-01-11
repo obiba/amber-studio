@@ -20,66 +20,67 @@
         <div v-if="isRoot" class="row q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
-            <q-input class="q-mb-md" v-model="value.label" :label="$t('form.title')" :hint="$t('form.form_title_hint')" />
-            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.form_description_hint')" autogrow />
+            <q-input class="q-mb-md" v-model="value.label" :label="$t('form.title')" :hint="$t('form.form_title_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.form_description_hint')" autogrow :disable="isReadOnly" />
           </div>
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
-            <q-input class="q-mb-md" v-model="value.idLabel" :label="$t('form.id_label')" :hint="$t('form.id_label_hint')" />
-            <q-input class="q-mb-md" v-model="value.idDescription" :label="$t('form.id_description')" :hint="$t('form.id_description_hint')" autogrow />
-            <q-input class="q-mb-md" v-model.number="value.idMask" :label="$t('form.id_mask')" :hint="$t('form.mask_hint')" />
-            <q-input class="q-mb-md" v-model="value.idValidation" :label="$t('form.id_validation')" :hint="$t('form.id_validation_hint')" />
-            <q-input class="q-mb-md" v-model="value.idValidationMessage" :label="$t('form.id_validation_message')" :hint="$t('form.validation_message_hint')" />
+            <q-input class="q-mb-md" v-model="value.idLabel" :label="$t('form.id_label')" :hint="$t('form.id_label_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.idDescription" :label="$t('form.id_description')" :hint="$t('form.id_description_hint')" autogrow :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model.number="value.idMask" :label="$t('form.id_mask')" :hint="$t('form.mask_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.idValidation" :label="$t('form.id_validation')" :hint="$t('form.id_validation_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.idValidationMessage" :label="$t('form.id_validation_message')" :hint="$t('form.validation_message_hint')" :disable="isReadOnly" />
           </div>
         </div>
         <div v-else class="row q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
-            <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('form.type')" :hint="$t('form.type_hint')" emit-value map-options />
-            <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.section_hint')" />
-            <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" />
-            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" autogrow />
-            <q-input v-if="!isComputed" class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" />
-            <q-toggle v-if="isVariable && !isComputed" class="q-mb-md" v-model.number="value.required" :label="$t('form.required')" :hint="$t('form.required_hint')" dense />
-            <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" />
-            <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" />
+            <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('form.type')" :hint="$t('form.type_hint')" emit-value map-options :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.section_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" autogrow :disable="isReadOnly" />
+            <q-input v-if="!isComputed" class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" :disable="isReadOnly" />
+            <q-toggle v-if="isVariable && !isComputed" class="q-mb-md" v-model.number="value.required" :label="$t('form.required')" :hint="$t('form.required_hint')" dense :disable="isReadOnly" />
+            <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" :disable="isReadOnly" />
+            <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" :disable="isReadOnly" />
           </div>
           <div class="col-md-6 col-sm-12">
             <div v-if="isVariable">
               <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
               <div v-if="hasPlaceholder">
-                <q-input class="q-mb-md" v-model="value.placeholder" :label="$t('form.placeholder')" :hint="$t('form.placeholder_hint')" />
+                <q-input class="q-mb-md" v-model="value.placeholder" :label="$t('form.placeholder')" :hint="$t('form.placeholder_hint')" :disable="isReadOnly" />
               </div>
               <div v-if="hasHint">
-                <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" />
+                <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" :disable="isReadOnly" />
               </div>
               <q-input v-if="isComputed" class="q-mb-md" v-model="value.compute" :label="$t('form.compute')" :hint="$t('form.compute_hint')" />
-              <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" />
+              <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="isReadOnly" />
               <div v-if="value.type === 'text'">
-                <q-input class="q-mb-md" v-model.number="value.mask" :label="$t('form.mask')" :hint="$t('form.mask_hint')" />
+                <q-input class="q-mb-md" v-model.number="value.mask" :label="$t('form.mask')" :hint="$t('form.mask_hint')" :disable="isReadOnly" />
               </div>
               <div v-if="value.type === 'slider'">
-                <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('form.min')" :hint="$t('form.min_hint')" />
-                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" />
+                <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('form.min')" :hint="$t('form.min_hint')" :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" :disable="isReadOnly" />
               </div>
               <div v-if="value.type === 'rating'">
-                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" />
+                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" :disable="isReadOnly" />
               </div>
               <div v-if="hasMultiple">
-                <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" :hint="$t('form.multiple_hint')" dense />
+                <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" :hint="$t('form.multiple_hint')" dense :disable="isReadOnly" />
               </div>
               <div v-if="hasOptions">
                 <p class="q-mb-sm q-mt-md">{{ $t('form.options') }}</p>
                 <p class="text-grey">{{ $t('form.options_hint') }}</p>
                 <div class="row q-col-gutter-lg" v-for="option in optionsList" :key="option.value">
                   <div class="col-4">
-                    <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" />
+                    <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" :disable="isReadOnly" />
                   </div>
-                  <div class="col-6">
-                    <q-input class="q-mb-md" v-model="option.label" :label="$t('form.option_label')" />
+                  <div :class="isReadOnly ? 'col-8' : 'col-6'">
+                    <q-input class="q-mb-md" v-model="option.label" :label="$t('form.option_label')" :disable="isReadOnly" />
                   </div>
                   <div class="col-2">
                     <q-btn
+                      v-if="!isReadOnly"
                       class="q-mt-sm text-grey-8"
                       size="12px"
                       flat
@@ -97,7 +98,7 @@
                   flat
                   @click="showMoreOptions"
                   :label="$t('form.show_more_options')"/>
-                <div class="row q-col-gutter-lg">
+                <div class="row q-col-gutter-lg" v-if="!isReadOnly">
                   <div class="col-4">
                     <q-btn
                       color="primary"
@@ -129,12 +130,12 @@
             </div>
             <div v-if="!isComputed">
               <p class="text-weight-bold q-mb-sm">{{ $t('form.style') }}</p>
-              <q-input class="q-mb-md" v-model="value.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" />
-              <q-input v-if="!hasDescriptionClass" class="q-mb-md" v-model="value.descriptionClass" :label="$t('form.description_class')" :hint="$t('form.description_class_hint')" autogrow />
+              <q-input class="q-mb-md" v-model="value.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" :disable="isReadOnly" />
+              <q-input v-if="!hasDescriptionClass" class="q-mb-md" v-model="value.descriptionClass" :label="$t('form.description_class')" :hint="$t('form.description_class_hint')" autogrow :disable="isReadOnly" />
               <div v-if="value.type === 'rating'">
-                <q-input class="q-mb-md" v-model="value.icon" :label="$t('form.icon')" :hint="$t('form.icon_hint')" />
-                <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" />
-                <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" />
+                <q-input class="q-mb-md" v-model="value.icon" :label="$t('form.icon')" :hint="$t('form.icon_hint')" :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" :disable="isReadOnly" />
               </div>
             </div>
           </div>
@@ -197,12 +198,14 @@ import snarkdown from 'snarkdown'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
 import { locales } from '../../boot/i18n'
+import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'FormItem',
   components: { BlitzForm },
   props: ['modelValue', 'i18n'],
   emits: ['update:modelValue'],
+  mixins: [AuthMixin],
   setup () {
     return {
       remountCounter: 0,

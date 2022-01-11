@@ -1,20 +1,21 @@
 <template>
-  <q-page class="q-pa-sm">
-    <dashboard-counts :counts="counts"/>
-    <card-charts/>
+  <q-page class="q-pa-md">
+    <dashboard-counts v-if="!isGuest" :counts="counts" class="q-mb-md"/>
+    <q-btn color="primary" :label="$t('main.my_profile')" icon="person" to="/account"/>
   </q-page>
 </template>
 
 <script>
 import { defineComponent, defineAsyncComponent } from 'vue'
 import metricsService from '../services/metrics'
+import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'Dashboard',
   components: {
-    DashboardCounts: defineAsyncComponent(() => import('components/dashboard/DashboardCounts')),
-    CardCharts: defineAsyncComponent(() => import('components/cards/CardCharts'))
+    DashboardCounts: defineAsyncComponent(() => import('components/dashboard/DashboardCounts'))
   },
+  mixins: [AuthMixin],
   data () {
     return {
       counts: {}

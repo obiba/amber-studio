@@ -30,6 +30,7 @@
 
 <script>
 import { defineComponent } from 'vue'
+import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'DashboardCounts',
@@ -39,15 +40,12 @@ export default defineComponent({
       required: false
     }
   },
-  watch: {
-    counts () {
-      console.log(this.counts)
-    }
-  },
+  mixins: [AuthMixin],
   computed: {
     items: function () {
-      return [
-        {
+      const cards = []
+      if (this.isAdministrator) {
+        cards.push({
           title: 'users.title',
           icon: 'person',
           value: this.counts.users ? this.counts.users : '-',
@@ -62,7 +60,9 @@ export default defineComponent({
           color1: '#5064b5',
           color2: '#3e51b5',
           link: '/groups'
-        },
+        })
+      }
+      cards.push(
         {
           title: 'studies.title',
           icon: 'inventory',
@@ -91,8 +91,8 @@ export default defineComponent({
           value: this.counts.case_reports ? this.counts.case_reports : '-',
           color1: '#a270b1',
           color2: '#9f52b1'
-        }
-      ]
+        })
+      return cards
     }
   }
 })

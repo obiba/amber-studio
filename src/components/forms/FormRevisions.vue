@@ -7,13 +7,14 @@
       :columns="columns"
       :filter="filter"
       row-key="revision"
-      selection="multiple"
+      :selection="isReadOnly ? 'none' : 'multiple'"
       v-model:selected="selected"
       v-model:pagination='paginationOpts'
       @request='getTableFormRevisions'
     >
       <template v-slot:top>
         <q-btn
+          v-if="!isReadOnly"
           class="q-mr-md"
           flat
           round
@@ -62,6 +63,7 @@
             @click='onView(props.row)'>
           </q-btn>
           <q-btn
+            v-if="!isReadOnly"
             class="text-grey-8"
             size="12px"
             flat
@@ -190,11 +192,13 @@ import { defineComponent, ref } from 'vue'
 import { date } from 'quasar'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
+import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'FormRevisions',
   props: ['form'],
   components: { BlitzForm },
+  mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     this.getTableFormRevisions()

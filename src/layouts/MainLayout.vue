@@ -11,7 +11,9 @@
           aria-label="Menu"
         />
         <q-toolbar-title>
-          {{$t('main.brand')}}
+          <q-btn flat to="/" no-caps size="lg">
+            {{$t('main.brand')}}
+          </q-btn>
         </q-toolbar-title>
         <q-space/>
         <div class="q-gutter-sm row items-center no-wrap">
@@ -73,9 +75,9 @@
           </q-item-section>
         </q-item>
 
-        <q-item-label header class="text-weight-bolder text-white">{{$t('main.content')}}</q-item-label>
+        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{$t('main.content')}}</q-item-label>
 
-        <q-item to="/studies" active-class="q-item-no-link-highlighting">
+        <q-item v-if="!isGuest" to="/studies" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="inventory_2"/>
           </q-item-section>
@@ -143,11 +145,11 @@
 import { useI18n } from 'vue-i18n'
 import { locales } from '../boot/i18n'
 import { defineComponent, ref } from 'vue'
-import { mapState } from 'vuex'
+import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'MainLayout',
-
+  mixins: [AuthMixin],
   setup () {
     const { locale } = useI18n({ useScope: 'global' })
     const leftDrawerOpen = ref(false)
@@ -161,9 +163,6 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      user: state => state.auth.payload ? state.auth.payload.user : undefined
-    }),
     localeOptions () {
       return locales.map(loc => {
         return {
@@ -177,30 +176,6 @@ export default defineComponent({
     },
     userName () {
       return this.userEmail.split('@')[0]
-    },
-    userEmail () {
-      if (this.user) {
-        return this.user.email
-      }
-      return '?'
-    },
-    isAdministrator () {
-      if (this.user) {
-        return this.user.role === 'administrator'
-      }
-      return false
-    },
-    isManager () {
-      if (this.user) {
-        return this.user.role === 'manager'
-      }
-      return false
-    },
-    isInterviewer () {
-      if (this.user) {
-        return this.user.role === 'interviewer'
-      }
-      return false
     }
   },
   methods: {

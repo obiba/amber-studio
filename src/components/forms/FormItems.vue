@@ -59,6 +59,7 @@
 
           </q-tree>
         <q-btn
+          v-if="!isReadOnly"
           color="primary"
           icon="add"
           :title="$t('form.add_item_hint')"
@@ -77,6 +78,7 @@
             </div>
             <div v-if="!isRootSelected" class="q-mt-sm q-ml-md">
               <q-btn
+                v-if="!isReadOnly"
                 class="text-grey-8"
                 size="10px"
                 flat
@@ -87,6 +89,7 @@
                 @click='moveUpItem(formItemSelected)'>
               </q-btn>
               <q-btn
+                v-if="!isReadOnly"
                 class="text-grey-8"
                 size="10px"
                 flat
@@ -97,6 +100,7 @@
                 @click='moveDownItem(formItemSelected)'>
               </q-btn>
               <q-btn
+                v-if="!isReadOnly"
                 class="text-grey-8"
                 size="10px"
                 flat
@@ -124,6 +128,7 @@
 
 <script>
 import { defineComponent, defineAsyncComponent, ref } from 'vue'
+import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'FormItems',
@@ -132,6 +137,7 @@ export default defineComponent({
   components: {
     FormItem: defineAsyncComponent(() => import('src/components/forms/FormItem.vue'))
   },
+  mixins: [AuthMixin],
   setup () {
     return {
       splitterModel: ref(30),

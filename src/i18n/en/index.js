@@ -136,6 +136,7 @@ export default {
     brand: 'Amber Studio',
     organisation: 'OBiBa',
     profile: 'Profile',
+    my_profile: 'My profile',
     logout: 'Sign out',
     dashboard: 'Dashboard',
     content: 'Content',

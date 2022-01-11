@@ -8,16 +8,18 @@ export default boot(async ({ router, store }) => {
       // if requires admin
       const user = store.state.auth.payload && store.state.auth.payload.user ? store.state.auth.payload.user : undefined
       if (user) {
-        if (to.meta.requiresAdmin) {
-          if (user.role && user.role === 'administrator') {
-            next()
-          } else {
-            Notify.create({
-              message: 'Your account is not authorized to see this view. If this is in error, please contact support.',
-              color: 'negative'
-            })
-            next(from.path)
-          }
+        if (to.meta.requiresAdmin && (!user.role || user.role !== 'administrator')) {
+          Notify.create({
+            message: 'Your account is not authorized to see this view. If this is in error, please contact support.',
+            color: 'negative'
+          })
+          next(from.path)
+        } else if (to.meta.noGuest && (!user.role || user.role === 'guest')) {
+          Notify.create({
+            message: 'Your account is not authorized to see this view. If this is in error, please contact support.',
+            color: 'negative'
+          })
+          next(from.path)
         } else if (!LocalStorage.getItem('feathers-jwt') && to.path !== '/') {
           next('/login')
         } else {

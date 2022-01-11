@@ -6,31 +6,33 @@
       :columns="columns"
       :filter="filter"
       row-key="name"
-      selection="multiple"
+      :selection="isReadOnly ? 'none' : 'multiple'"
       v-model:selected="selected"
       v-model:pagination='paginationOpts'
       @request='getTableStudyCaseReports'
     >
       <template v-slot:top>
-      <q-btn-dropdown
-        color="primary"
-        icon="download"
-        :title="$t('study.export_case_reports_hint')"
-        :disable="studyCaseReports.length === 0">
-        <q-list>
-          <q-item clickable v-close-popup @click="onExport('csv')">
-            <q-item-section>
-              <q-item-label>CSV</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="onExport('json')">
-            <q-item-section>
-              <q-item-label>JSON</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
+        <q-btn-dropdown
+          class="q-mr-md"
+          color="primary"
+          icon="download"
+          :title="$t('study.export_case_reports_hint')"
+          :disable="studyCaseReports.length === 0">
+          <q-list>
+            <q-item clickable v-close-popup @click="onExport('csv')">
+              <q-item-section>
+                <q-item-label>CSV</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="onExport('json')">
+              <q-item-section>
+                <q-item-label>JSON</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <q-btn
+          v-if="!isReadOnly"
           class="q-mr-md"
           flat
           round
@@ -86,6 +88,7 @@
             @click='onView(props.row)'>
           </q-btn>
           <q-btn
+            v-if="!isReadOnly"
             class="text-grey-8"
             size="12px"
             flat
@@ -180,9 +183,11 @@ import { defineComponent, ref } from 'vue'
 import { caseReportExportService } from '../../services/caseReport'
 import { t } from '../../boot/i18n'
 import { Notify } from 'quasar'
+import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'StudyCaseReports',
+  mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     if (this.study) {

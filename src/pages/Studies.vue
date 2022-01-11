@@ -14,19 +14,21 @@
       :columns="columns"
       :filter="filter"
       row-key="name"
-      selection="multiple"
+      :selection="isReadOnly ? 'none' : 'multiple'"
       v-model:selected="selected"
       v-model:pagination='paginationOpts'
       @request='getTableStudies'
       >
       <template v-slot:top>
         <q-btn
+          v-if="!isReadOnly"
           color="primary"
           icon="add"
           :title="$t('studies.add_study_hint')"
           @click="createStudy()"
           class="q-mr-md" />
         <q-btn
+          v-if="!isReadOnly"
           class="q-mr-md"
           flat
           round
@@ -208,8 +210,10 @@ import { mapState, mapActions } from 'vuex'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
+import AuthMixin from '../mixins/AuthMixin'
 
 export default {
+  mixins: [AuthMixin],
   mounted: function () {
     this.getTableStudies()
     this.setPagination()
@@ -223,35 +227,6 @@ export default {
   },
   data () {
     return {
-      columns: [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left',
-          field: 'name',
-          sortable: true
-        },
-        {
-          name: 'description',
-          align: 'left',
-          label: this.$t('description'),
-          field: 'description',
-          sortable: true
-        },
-        {
-          name: 'forms',
-          align: 'left',
-          label: this.$t('study.forms'),
-          field: 'forms',
-          sortable: true
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ],
       selectedStudy: {},
       showCreateStudy: false,
       showConfirmDeleteStudy: false,
@@ -292,6 +267,40 @@ export default {
     }),
     disableCreateStudy () {
       return this.v$.newStudyData.$invalid
+    },
+    columns () {
+      const cols = [
+        {
+          name: 'name',
+          required: true,
+          label: this.$t('name'),
+          align: 'left',
+          field: 'name',
+          sortable: true
+        },
+        {
+          name: 'description',
+          align: 'left',
+          label: this.$t('description'),
+          field: 'description',
+          sortable: true
+        },
+        {
+          name: 'forms',
+          align: 'left',
+          label: this.$t('study.forms'),
+          field: 'forms',
+          sortable: true
+        }
+      ]
+      if (!this.isReadOnly) {
+        cols.push({
+          name: 'action',
+          align: 'left',
+          label: this.$t('action')
+        })
+      }
+      return cols
     }
   },
   methods: {

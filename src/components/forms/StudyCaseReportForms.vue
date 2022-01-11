@@ -7,19 +7,21 @@
       :columns="columns"
       :filter="filter"
       row-key="name"
-      selection="multiple"
+      :selection="isReadOnly ? 'none' : 'multiple'"
       v-model:selected="selected"
       v-model:pagination='paginationOpts'
       @request='getTableStudyCaseReportForms'
     >
       <template v-slot:top>
         <q-btn
+          v-if="!isReadOnly"
           color="primary"
           icon="add"
           :title="$t('study.add_case_report_form_hint')"
           @click="onAdd()"
           class="q-mr-md" />
         <q-btn
+          v-if="!isReadOnly"
           class="q-mr-md"
           flat
           round
@@ -267,9 +269,11 @@ import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import { formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
+import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
   name: 'StudyCaseReportForms',
+  mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     if (this.study) {
@@ -299,8 +303,17 @@ export default defineComponent({
         page: 1,
         rowsPerPage: 10,
         rowsNumber: 10
-      },
-      columns: [
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      study: state => state.study.study,
+      forms: state => state.form.forms,
+      studyCaseReportForms: state => state.caseReportForm ? state.caseReportForm.caseReportForms : []
+    }),
+    columns () {
+      const cols = [
         {
           name: 'form',
           required: true,
@@ -322,21 +335,17 @@ export default defineComponent({
           label: this.$t('state'),
           field: 'state',
           sortable: true
-        },
-        {
+        }
+      ]
+      if (!this.isReadOnly) {
+        cols.push({
           name: 'action',
           align: 'left',
           label: this.$t('action')
-        }
-      ]
-    }
-  },
-  computed: {
-    ...mapState({
-      study: state => state.study.study,
-      forms: state => state.form.forms,
-      studyCaseReportForms: state => state.caseReportForm ? state.caseReportForm.caseReportForms : []
-    }),
+        })
+      }
+      return cols
+    },
     formOptions () {
       return this.forms.map(form => {
         return {

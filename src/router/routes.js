@@ -36,22 +36,22 @@ const routes = [
       {
         path: '/studies',
         component: () => import('pages/Studies.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/study/:id',
         component: () => import('pages/Study.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/form/:id',
         component: () => import('pages/Form.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/datasets',
         component: () => import('pages/Datasets.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, noGuest: true }
       }
     ]
   },
