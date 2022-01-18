@@ -106,6 +106,40 @@
                 flat
                 dense
                 round
+                icon='content_copy'
+                :title="$t('form.copy_item')"
+                @click='copyItem(formItemSelected)'>
+              </q-btn>
+              <q-btn
+                v-if="!isReadOnly"
+                class="text-grey-8"
+                size="10px"
+                flat
+                dense
+                round
+                icon='content_cut'
+                :title="$t('form.cut_item')"
+                @click='cutItem(formItemSelected)'>
+              </q-btn>
+              <q-btn
+                v-if="!isReadOnly"
+                class="text-grey-8"
+                size="10px"
+                flat
+                dense
+                round
+                icon='content_paste'
+                :disable="!canPaste"
+                :title="formItemCopied ? $t('form.paste_copied_item', { name: formItemCopied.name }) : (formItemCut ? $t('form.paste_cut_item', { name: formItemCut.name }) : $t('form.paste_item'))"
+                @click='pasteItem(formItemSelected)'>
+              </q-btn>
+              <q-btn
+                v-if="!isReadOnly"
+                class="text-grey-8"
+                size="10px"
+                flat
+                dense
+                round
                 icon='delete'
                 :title="$t('form.delete')"
                 @click='deleteItem(formItemSelected)'>
@@ -142,7 +176,9 @@ export default defineComponent({
     return {
       splitterModel: ref(30),
       formItemSelected: ref(null),
-      selected: ref(null)
+      selected: ref(null),
+      formItemCut: ref(null),
+      formItemCopied: ref(null)
     }
   },
   computed: {
@@ -168,6 +204,9 @@ export default defineComponent({
         return [this.value.schema]
       }
       return []
+    },
+    canPaste () {
+      return this.formItemCut !== null || this.formItemCopied !== null
     }
   },
   watch: {
@@ -184,7 +223,7 @@ export default defineComponent({
     selectItem (item) {
       this.formItemSelected = item
     },
-    addItem () {
+    addItem (itemToAdd, name) {
       const found = this.findItemAndParent(this.selected)
       let i = 1
       let test = this.findItemAndParent('ITEM' + i)
@@ -192,11 +231,12 @@ export default defineComponent({
         i = i + 1
         test = this.findItemAndParent('ITEM' + i)
       }
-      const newItem = {
+      const newItem = itemToAdd ? { ...itemToAdd } : {
         name: 'ITEM' + i,
         type: 'text',
         label: 'item_' + i
       }
+      newItem.name = name || ('ITEM' + i)
       if (found.item !== null && found.item.type === 'group') {
         // add last in the group
         if (!found.item.items) {
@@ -317,6 +357,29 @@ export default defineComponent({
           found.parent.items.splice(idx + 1, 0, item)
         }
       }
+    },
+    copyItem (item) {
+      this.formItemCopied = item
+      this.formItemCut = null
+    },
+    cutItem (item) {
+      this.formItemCut = item
+      this.formItemCopied = null
+    },
+    pasteItem (item) {
+      if (this.formItemCopied !== null) {
+        this.addItem(this.formItemCopied)
+      } else if (this.formItemCut !== null) {
+        // cannot cut and paste the selected item
+        if (this.selected !== this.formItemCut.name) {
+          const found = this.findItemAndParent(this.formItemCut.name)
+          const idx = found.parent.items.indexOf(this.formItemCut)
+          found.parent.items.splice(idx, 1)
+          this.addItem(this.formItemCut, this.formItemCut.name)
+        }
+      }
+      this.formItemCut = null
+      this.formItemCopied = null
     },
     deleteItem (item) {
       const found = this.findItemAndParent(item.name)

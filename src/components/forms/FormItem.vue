@@ -250,7 +250,7 @@ export default defineComponent({
       return this.modelValue.name === '.'
     },
     isVariable () {
-      return ['section'].includes(this.modelValue.type) !== true
+      return ['section', 'group'].includes(this.modelValue.type) !== true
     },
     isComputed () {
       return this.modelValue.type === 'computed'
