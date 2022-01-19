@@ -58,7 +58,6 @@ pre {
   padding-left: 25px;
 }
 
-
 .q-tree__children .q-tree__node-body {
   padding-left: 4px;
 }
@@ -66,6 +65,10 @@ pre {
 .q-tree__node--selected {
   background-color: #eeeeee;
   border-radius: 0;
+}
+
+.blitz-form .q-field__messages div[role=alert] {
+   display: none;
 }
 
 .blitz-field {
