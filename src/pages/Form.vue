@@ -64,6 +64,16 @@
             </template>
           </q-btn>
           <q-btn
+            @click='onImport'
+            :label="$t('import')"
+            icon="file_upload"
+            flat
+            size="sm">
+            <template v-slot:loading>
+            <q-spinner-facebook />
+            </template>
+          </q-btn>
+          <q-btn
             v-if="!isReadOnly"
             @click='onTag'
             :label="$t('tag')"
@@ -161,6 +171,37 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model='showImportSchema' persistent>
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
+        <q-card-section class="row items-center">
+          <div class="col-12">
+            <q-file
+              v-model="importSchemaFile"
+              :label="$t('form.import_schema')"
+              :hint="$t('form.import_schema_hint')"
+              class="q-ma-sm"
+              accept=".json"
+            />
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='importSchema'
+            :disable='disableImportSchema'
+            :label="$t('import')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
     <q-dialog v-model='showTag' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section class="row items-center">
@@ -233,7 +274,8 @@ export default defineComponent({
       v$: useVuelidate(),
       tab: ref('schema'),
       innerTab: ref('items'),
-      splitterModel: ref(15)
+      splitterModel: ref(15),
+      importSchemaFile: ref(null)
     }
   },
   data () {
@@ -241,6 +283,7 @@ export default defineComponent({
       saveIntervalId: null,
       changeDetected: 0,
       showEditDefinition: false,
+      showImportSchema: false,
       showTag: false,
       publicationComment: null,
       studyFormData: {},
@@ -261,6 +304,9 @@ export default defineComponent({
       study: state => state.study.study,
       studyForm: state => state.form.form
     }),
+    disableImportSchema () {
+      return this.importSchemaFile === null
+    },
     disableTag () {
       return this.changeDetected !== 0
     },
@@ -311,12 +357,31 @@ export default defineComponent({
       a.click()
       a.remove()
     },
+    onImport () {
+      this.showImportSchema = true
+      this.importSchemaFile = null
+    },
     onEdit () {
       this.showEditDefinition = true
     },
     onTag () {
       this.showTag = true
       this.publicationComment = null
+    },
+    importSchema () {
+      if (this.importSchemaFile) {
+        const reader = new FileReader()
+        reader.readAsText(this.importSchemaFile, 'UTF-8')
+        reader.onload = evt => {
+          const schema = JSON.parse(evt.target.result)
+          this.studyFormData.schema.items = schema.items
+          this.studyFormData.schema.i18n = schema.i18n
+          this.save(true)
+        }
+        reader.onerror = evt => {
+          console.error(evt)
+        }
+      }
     },
     tag () {
       const toSave = {
