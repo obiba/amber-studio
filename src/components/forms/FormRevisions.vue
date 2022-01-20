@@ -58,6 +58,16 @@
             flat
             dense
             round
+            :title="$t('form.reinstate_form_revision_hint')"
+            icon="undo"
+            @click='onReinstate(props.row)'>
+          </q-btn>
+          <q-btn
+            class="text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
             :title="$t('form.view_form_revision_hint')"
             icon="visibility"
             @click='onView(props.row)'>
@@ -125,6 +135,33 @@
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('close')" flat v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model='showConfirmReinstateRevision' persistent>
+      <q-card>
+        <q-card-section>
+          <div>
+            {{$t('form.reinstate_form_revision_confirm')}}
+          </div>
+          <div class="text-weight-bold text-center q-mt-md">
+            {{selectedRevision.revision}}
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='reinstateFormRevision'
+            :label="$t('reinstate')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -197,6 +234,7 @@ import AuthMixin from '../../mixins/AuthMixin'
 export default defineComponent({
   name: 'FormRevisions',
   props: ['form'],
+  emits: ['reinstate'],
   components: { BlitzForm },
   mixins: [AuthMixin],
   mounted: function () {
@@ -217,6 +255,7 @@ export default defineComponent({
       viewTab: 'form',
       selectedRevision: {},
       showViewRevision: false,
+      showConfirmReinstateRevision: false,
       showConfirmDeleteRevision: false,
       showConfirmDeleteRevisions: false,
       paginationOpts: {
@@ -275,6 +314,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions({
+      updateStudyForm: 'form/updateForm',
       getFormRevisions: 'form/getFormRevisions'
     }),
     formatDate (dateStr) {
@@ -294,6 +334,10 @@ export default defineComponent({
       a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
       a.click()
       a.remove()
+    },
+    onReinstate (formRevision) {
+      this.showConfirmReinstateRevision = true
+      this.selectedRevision = formRevision
     },
     onView (formRevision) {
       this.showViewRevision = true
@@ -325,6 +369,11 @@ export default defineComponent({
     },
     setPagination () {
       this.paginationOpts = this.$store.state.form.formRevisionPaginationOpts
+    },
+    async reinstateFormRevision () {
+      const toSave = { ...this.form }
+      toSave.schema = this.selectedRevision.schema
+      this.updateStudyForm({ form: toSave, notification: true }).then(() => this.$emit('reinstate'))
     },
     deleteFormRevision () {
       this.$store.dispatch('form/deleteFormRevision', {

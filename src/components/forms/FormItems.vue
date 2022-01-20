@@ -27,6 +27,17 @@
             :title="$t('form.select_next')"
             @click='selectDownItem'>
           </q-btn>
+          <q-btn
+            v-if="!isReadOnly"
+            class="text-grey-8"
+            size="10px"
+            flat
+            dense
+            round
+            icon='add'
+            :title="$t('form.add_item_hint')"
+            @click='addItem'>
+          </q-btn>
         </div>
         <q-separator/>
         <div class="q-pl-sm">
@@ -210,7 +221,7 @@ export default defineComponent({
     }
   },
   watch: {
-    selected: function (newValue, oldValue) {
+    selected (newValue, oldValue) {
       if (newValue === null) {
         this.selected = oldValue
       } else {

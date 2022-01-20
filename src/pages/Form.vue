@@ -110,11 +110,11 @@
               v-model="innerTab"
             >
               <q-tab-panel name="items" class="q-pa-none">
-                <form-items v-model="studyFormData" />
+                <form-items :key="reload" v-model="studyFormData" />
               </q-tab-panel>
 
               <q-tab-panel name="translations">
-                <form-translations v-model="studyFormData" />
+                <form-translations :key="reload" v-model="studyFormData" />
               </q-tab-panel>
             </q-tab-panels>
           </template>
@@ -123,7 +123,7 @@
       </q-tab-panel>
 
       <q-tab-panel name="revisions">
-        <form-revisions :form="studyFormData" />
+        <form-revisions :form="studyFormData" @reinstate="onReinstate"/>
       </q-tab-panel>
     </q-tab-panels>
 
@@ -275,7 +275,8 @@ export default defineComponent({
       tab: ref('schema'),
       innerTab: ref('items'),
       splitterModel: ref(15),
-      importSchemaFile: ref(null)
+      importSchemaFile: ref(null),
+      reload: ref(0)
     }
   },
   data () {
@@ -341,7 +342,7 @@ export default defineComponent({
       this.changeDetected = -1
       this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
       const toSave = { ...this.studyFormData }
-      this.updateStudyForm({ form: toSave, notification: notification }).then(() => {
+      return this.updateStudyForm({ form: toSave, notification: notification }).then(() => {
         this.changeDetected = 0
       })
     },
@@ -368,15 +369,19 @@ export default defineComponent({
       this.showTag = true
       this.publicationComment = null
     },
+    onReinstate () {
+      this.studyFormData = JSON.parse(JSON.stringify(this.studyForm))
+      this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
+      this.reload++
+    },
     importSchema () {
       if (this.importSchemaFile) {
         const reader = new FileReader()
         reader.readAsText(this.importSchemaFile, 'UTF-8')
         reader.onload = evt => {
           const schema = JSON.parse(evt.target.result)
-          this.studyFormData.schema.items = schema.items
-          this.studyFormData.schema.i18n = schema.i18n
-          this.save(true)
+          this.studyFormData.schema = schema
+          this.save(true).then(() => this.onReinstate())
         }
         reader.onerror = evt => {
           console.error(evt)
