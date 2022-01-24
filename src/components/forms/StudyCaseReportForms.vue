@@ -106,7 +106,7 @@
     </q-table>
 
     <q-btn
-      v-else
+      v-else-if="!isReadOnly"
       color="primary"
       icon="add"
       :label="$t('study.add_case_report_form_hint')"

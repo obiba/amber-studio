@@ -41,6 +41,32 @@ export async function getUser ({ commit }, payload) {
   }
 }
 
+export async function createUser ({ dispatch }, payload) {
+  const result = await userService
+    .createUser(payload.user)
+    .catch(err => {
+      console.error(err)
+      Notify.create({
+        message: t('error.general'),
+        color: 'negative'
+      })
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.create_user'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'admin/getUsers',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  )
+}
+
 export async function updateUser ({ commit, dispatch }, payload) {
   const result = await userService
     .updateUser(payload.user, payload.id ? payload.id : payload.user._id)
