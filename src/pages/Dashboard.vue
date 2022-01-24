@@ -7,7 +7,7 @@
 
 <script>
 import { defineComponent, defineAsyncComponent } from 'vue'
-import metricsService from '../services/metrics'
+import { metricsService } from '../services/utils'
 import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({

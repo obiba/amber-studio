@@ -52,9 +52,18 @@
           {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
         </q-td>
       </template>
+      <template v-slot:body-cell-permissions='props'>
+        <q-td :props='props'>
+          <div v-if="props.row.permissions">
+            <q-chip v-for="id in props.row.permissions.users" icon="person" size="sm" :label="getSubject(id, 'user').name" :key="id"/>
+            <q-chip v-for="id in props.row.permissions.groups" icon="people" size="sm" :label="getSubject(id, 'group').name" :key="id"/>
+          </div>
+        </q-td>
+      </template>
       <template v-slot:body-cell-state='props'>
         <q-td :props='props'>
           {{ $t('study.case_report_form_state.' + props.row.state) }}
+          <q-icon v-if="props.row.permissions" name="lock"/>
         </q-td>
       </template>
       <template v-slot:body-cell-action='props'>
@@ -115,22 +124,44 @@
 
     <q-dialog v-model='showCreateStudyCaseReportForm' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
-        <q-card-section class="row items-center">
-           <div class="col-12">
-             <q-select
-              v-model="newStudyCaseReportFormData.form"
-              :options="formOptions"
-              emit-value
-              map-options
-              :label="$t('study.form')" />
-             <q-select
-              v-model="newStudyCaseReportFormData.revision"
-              :options="revisionOptions"
-              emit-value
-              map-options
-              :label="$t('study.form_revision')"
-              :disable="!newStudyCaseReportFormData.form" />
-           </div>
+        <q-card-section>
+          <q-select
+            v-model="newStudyCaseReportFormData.form"
+            :options="formOptions"
+            emit-value
+            map-options
+            :label="$t('study.form')" />
+          <q-select
+            v-model="newStudyCaseReportFormData.revision"
+            :options="revisionOptions"
+            emit-value
+            map-options
+            :label="$t('study.form_revision')"
+            :disable="!newStudyCaseReportFormData.form" />
+        </q-card-section>
+        <q-card-section>
+          <q-toggle
+            v-model="newStudyCaseReportFormData.restrictedAccess"
+            :label="$t('restricted_access')"
+          />
+          <q-select
+            v-if="newStudyCaseReportFormData.restrictedAccess"
+            v-model="newStudyCaseReportFormData.permissions.users"
+            :options="userSubjectOptions"
+            emit-value
+            map-options
+            multiple
+            use-chips
+            :label="$t('study.form_permitted_users')" />
+          <q-select
+            v-if="newStudyCaseReportFormData.restrictedAccess"
+            v-model="newStudyCaseReportFormData.permissions.groups"
+            :options="groupSubjectOptions"
+            emit-value
+            map-options
+            multiple
+            use-chips
+            :label="$t('study.form_permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -152,15 +183,37 @@
 
     <q-dialog v-model='showEditStudyCaseReportForm' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
-        <q-card-section class="row items-center">
-           <div class="col-12">
-             <q-select
-              v-model="selectedStudyCaseReportForm.revision"
-              :options="revisionOptions"
-              emit-value
-              map-options
-              :label="$t('study.form_revision')" />
-           </div>
+        <q-card-section>
+          <q-select
+            v-model="selectedStudyCaseReportForm.revision"
+            :options="revisionOptions"
+            emit-value
+            map-options
+            :label="$t('study.form_revision')" />
+        </q-card-section>
+        <q-card-section>
+          <q-toggle
+            v-model="selectedStudyCaseReportForm.restrictedAccess"
+            :label="$t('restricted_access')"
+          />
+          <q-select
+            v-if="selectedStudyCaseReportForm.restrictedAccess"
+            v-model="selectedStudyCaseReportForm.permissions.users"
+            :options="userSubjectOptions"
+            emit-value
+            map-options
+            multiple
+            use-chips
+            :label="$t('study.form_permitted_users')" />
+          <q-select
+            v-if="selectedStudyCaseReportForm.restrictedAccess"
+            v-model="selectedStudyCaseReportForm.permissions.groups"
+            :options="groupSubjectOptions"
+            emit-value
+            map-options
+            multiple
+            use-chips
+            :label="$t('study.form_permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -269,6 +322,7 @@ import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import { formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
+import { subjectsService } from '../../services/utils'
 import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
@@ -279,6 +333,9 @@ export default defineComponent({
     if (this.study) {
       this.getTableStudyCaseReportForms()
     }
+    subjectsService.getSubjects().then((result) => {
+      this.subjects = result
+    })
   },
   setup () {
     return {
@@ -303,7 +360,8 @@ export default defineComponent({
         page: 1,
         rowsPerPage: 10,
         rowsNumber: 10
-      }
+      },
+      subjects: []
     }
   },
   computed: {
@@ -328,15 +386,24 @@ export default defineComponent({
           label: this.$t('revision'),
           field: 'revision',
           sortable: true
-        },
-        {
-          name: 'state',
-          align: 'left',
-          label: this.$t('state'),
-          field: 'state',
-          sortable: true
         }
       ]
+      if (this.subjects && this.subjects.length > 0) {
+        cols.push({
+          name: 'permissions',
+          align: 'left',
+          label: this.$t('restricted_access'),
+          field: 'permissions',
+          sortable: false
+        })
+      }
+      cols.push({
+        name: 'state',
+        align: 'left',
+        label: this.$t('state'),
+        field: 'state',
+        sortable: true
+      })
       if (!this.isReadOnly) {
         cols.push({
           name: 'action',
@@ -353,6 +420,12 @@ export default defineComponent({
           label: form.name
         }
       })
+    },
+    userSubjectOptions () {
+      return this.getSubjectOptions('user')
+    },
+    groupSubjectOptions () {
+      return this.getSubjectOptions('group')
     },
     disableCreateStudyCaseReportForm () {
       return !this.newStudyCaseReportFormData.form || !this.newStudyCaseReportFormData.revision || this.revisionOptions.length === 0
@@ -395,12 +468,23 @@ export default defineComponent({
         })
     },
     onAdd () {
-      this.newStudyCaseReportFormData = {}
+      this.newStudyCaseReportFormData = {
+        restrictedAccess: false,
+        permissions: {
+          users: [],
+          groups: []
+        }
+      }
       this.showCreateStudyCaseReportForm = true
       this.selectedStudyCaseReportForm = undefined
     },
     onEdit (studyCaseReportForm) {
       this.selectedStudyCaseReportForm = { ...studyCaseReportForm }
+      this.selectedStudyCaseReportForm.permissions = {
+        users: studyCaseReportForm.permissions && studyCaseReportForm.permissions.users ? studyCaseReportForm.permissions.users : [],
+        groups: studyCaseReportForm.permissions && studyCaseReportForm.permissions.groups ? studyCaseReportForm.permissions.groups : []
+      }
+      this.selectedStudyCaseReportForm.restrictedAccess = this.selectedStudyCaseReportForm.permissions.users.length > 0 || this.selectedStudyCaseReportForm.permissions.groups.length > 0
       this.updateRevisionOptions(this.selectedStudyCaseReportForm.form)
       this.showEditStudyCaseReportForm = true
     },
@@ -412,6 +496,20 @@ export default defineComponent({
       if (this.selected.length > 0) {
         this.showConfirmDeleteStudyCaseReportForms = true
       }
+    },
+    getSubject (id, type) {
+      if (this.subjects && this.subjects.length > 0) {
+        return this.subjects.filter(s => s.type === type && s.id === id).pop()
+      }
+      return { id: id, type: type, name: '?' }
+    },
+    getSubjectOptions (type) {
+      return this.subjects.filter(s => s.type === type).map(s => {
+        return {
+          value: s.id,
+          label: s.name
+        }
+      })
     },
     getFormName (formId) {
       return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
@@ -486,7 +584,15 @@ export default defineComponent({
         })
       } else {
         const toSave = { ...this.selectedStudyCaseReportForm }
-        console.log(toSave)
+        if (this.selectedStudyCaseReportForm.restrictedAccess) {
+          // empty permissions means it is not a restricted access
+          if (this.selectedStudyCaseReportForm.permissions.users.length === 0 && this.selectedStudyCaseReportForm.permissions.groups.length === 0) {
+            toSave.permissions = null
+          }
+        } else {
+          toSave.permissions = null
+        }
+        delete toSave.restrictedAccess
         if (toSave.revision === t('study.latest_revision')) {
           delete toSave.revision
         }
