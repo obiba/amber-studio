@@ -258,6 +258,7 @@ export default {
       checkboxgroup: 'Choix multiple',
       select: 'Menu déroulant',
       autocomplete: 'Auto complétion',
+      'image-select': 'Image à sélectionner',
       toggle: 'Bascule',
       slider: 'Glissière',
       section: 'Section',

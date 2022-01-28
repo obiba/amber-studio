@@ -75,10 +75,10 @@
                   <div class="col-4">
                     <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" :disable="isReadOnly" />
                   </div>
-                  <div :class="isReadOnly ? 'col-8' : 'col-6'">
+                  <div :class="isReadOnly ? 'col-8' : 'col-7'">
                     <q-input class="q-mb-md" v-model="option.label" :label="$t('form.option_label')" :disable="isReadOnly" />
                   </div>
-                  <div class="col-2">
+                  <div class="col-1">
                     <q-btn
                       v-if="!isReadOnly"
                       class="q-mt-sm text-grey-8"
@@ -114,7 +114,7 @@
                       bottom-slots
                       clearable
                       v-model="optionsFile"
-                      accept=".txt,.csv"
+                      accept=".txt,.csv,.tsv"
                       :label="$t('form.upload_options')">
                       <template v-slot:prepend>
                         <q-icon name="add" @click.stop />
@@ -122,6 +122,82 @@
 
                       <template v-slot:hint>
                         {{ $t('form.upload_options_hint') }}
+                      </template>
+                    </q-file>
+                  </div>
+                </div>
+              </div>
+              <div v-if="hasImageMap">
+                <q-toggle class="q-mt-md q-mb-md" v-model.number="value.showSelect" :label="$t('form.show_area_select')" dense :disable="isReadOnly" />
+                <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('form.image') }}</p>
+                <p class="text-grey">{{ $t('form.image_hint') }}</p>
+                <q-input class="q-mb-md" v-model="value.imageSrc" :label="$t('form.image_src')" :hint="$t('form.image_src_hint')" :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model.number="value.imageWidth" type="number" :label="$t('form.image_width')" :hint="$t('form.image_width_hint')" :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model.number="value.imageHeight" type="number" :label="$t('form.image_height')" :hint="$t('form.image_height_hint')" :disable="isReadOnly" />
+                <p class="q-mb-sm q-mt-md">{{ $t('form.image_areas') }}</p>
+                <p class="text-grey">{{ $t('form.image_areas_hint') }}</p>
+                <div class="row q-col-gutter-lg" v-for="area in areasList" :key="area.value + '-' + area.points">
+                  <div class="col-2">
+                    <q-input class="q-mb-md" v-model="area.value" :label="$t('form.area_value')" :disable="isReadOnly" />
+                  </div>
+                  <div class="col-3">
+                    <q-input class="q-mb-md" v-model="area.fill" :label="$t('form.area_fill')" :disable="isReadOnly">
+                      <template v-slot:append>
+                        <q-icon name="colorize" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-color v-model="area.fill" />
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+                  </div>
+                  <div :class="isReadOnly ? 'col-7' : 'col-6'">
+                    <q-input class="q-mb-md" v-model="area.points" :label="$t('form.area_points')" :disable="isReadOnly" />
+                  </div>
+                  <div class="col-1">
+                    <q-btn
+                      v-if="!isReadOnly"
+                      class="q-mt-sm text-grey-8"
+                      size="12px"
+                      flat
+                      dense
+                      round
+                      icon='delete'
+                      @click='deleteArea(area)'>
+                    </q-btn>
+                  </div>
+                </div>
+                <q-btn
+                  v-if="hasMoreAreas"
+                  class="q-pa-none q-mb-sm"
+                  size="sm"
+                  flat
+                  @click="showMoreAreas"
+                  :label="$t('form.show_more_areas')"/>
+                <div class="row q-col-gutter-lg" v-if="!isReadOnly">
+                  <div class="col-4">
+                    <q-btn
+                      color="primary"
+                      icon="add"
+                      :title="$t('form.add_area_hint')"
+                      @click="addArea()"
+                      class="q-mr-md"
+                    />
+                  </div>
+                  <div class="col-8">
+                    <q-file
+                      dense
+                      bottom-slots
+                      clearable
+                      v-model="areasFile"
+                      accept=".txt,.csv,.tsv"
+                      :label="$t('form.upload_areas')">
+                      <template v-slot:prepend>
+                        <q-icon name="add" @click.stop />
+                      </template>
+
+                      <template v-slot:hint>
+                        {{ $t('form.upload_areas_hint') }}
                       </template>
                     </q-file>
                   </div>
@@ -214,7 +290,7 @@ export default defineComponent({
         'text', 'textarea', 'number',
         'date', 'datetime', 'time',
         'radiogroup', 'checkboxgroup',
-        'select', 'autocomplete',
+        'select', 'autocomplete', 'image-select',
         'slider', 'rating',
         'toggle',
         'section', 'group',
@@ -223,6 +299,8 @@ export default defineComponent({
       modelData: ref({}),
       optionsFile: ref(null),
       optionsCount: ref(5),
+      areasFile: ref(null),
+      areasCount: ref(5),
       locale: ref('en')
     }
   },
@@ -265,13 +343,16 @@ export default defineComponent({
       return !['section', 'group'].includes(this.modelValue.type)
     },
     hasHint () {
-      return ['text', 'textarea', 'number', 'date', 'datetime', 'time', 'select', 'autocomplete'].includes(this.modelValue.type)
+      return ['text', 'textarea', 'number', 'date', 'datetime', 'time', 'select', 'autocomplete', 'image-select'].includes(this.modelValue.type)
     },
     hasMultiple () {
-      return ['select', 'autocomplete'].includes(this.modelValue.type)
+      return ['select', 'autocomplete', 'image-select'].includes(this.modelValue.type)
     },
     hasOptions () {
-      return ['radiogroup', 'checkboxgroup', 'select', 'autocomplete'].includes(this.modelValue.type)
+      return ['radiogroup', 'checkboxgroup', 'select', 'autocomplete', 'image-select'].includes(this.modelValue.type)
+    },
+    hasImageMap () {
+      return ['image-select'].includes(this.modelValue.type)
     },
     typeOptions () {
       return this.types.map(tp => {
@@ -306,6 +387,12 @@ export default defineComponent({
     },
     hasMoreOptions () {
       return this.modelValue.options && this.modelValue.options.length > this.optionsCount
+    },
+    areasList () {
+      return this.modelValue.areas ? this.modelValue.areas.slice(0, this.areasCount) : []
+    },
+    hasMoreAreas () {
+      return this.modelValue.areas && this.modelValue.areas.length > this.areasCount
     }
   },
   watch: {
@@ -316,6 +403,13 @@ export default defineComponent({
     'modelValue.type': function (newValue, oldValue) {
       if (!this.hasOptions) {
         delete this.modelValue.options
+      }
+      if (!this.hasImageMap) {
+        delete this.modelValue.imageSrc
+        delete this.modelValue.imageWidth
+        delete this.modelValue.imageHeight
+        delete this.modelValue.showSelect
+        delete this.modelValue.areas
       }
       if (!this.hasMultiple) {
         delete this.modelValue.multiple
@@ -339,27 +433,55 @@ export default defineComponent({
     },
     optionsFile: function (newValue) {
       if (newValue !== null) {
+        const delim = this.getFileDelim(newValue)
         const reader = new FileReader()
         reader.readAsText(newValue, 'UTF-8')
         reader.onload = evt => {
-          const cleanToken = (token) => {
-            if (token.startsWith('"') && token.endsWith('"')) {
-              return token.substring(1, token.length - 1).trim()
-            }
-            return token
-          }
           evt.target.result.split(/\r\n|\n/)
             .map(line => line.trim())
             .filter(line => line.length > 0)
             .forEach(line => {
-              const tokens = line.split(',').map(token => cleanToken(token))
+              const tokens = line.split(delim).map(token => this.cleanToken(token))
               if (tokens.length > 0 && tokens[0].length > 0) {
                 if (!this.value.options) {
                   this.value.options = []
                 }
+                const value = tokens[0]
+                tokens.splice(0, 1)
                 this.value.options.push({
-                  value: tokens[0],
-                  label: tokens.length > 1 && tokens[1].length > 0 ? tokens[1] : tokens[0]
+                  value: value,
+                  label: tokens.length > 0 ? tokens.join(delim) : value
+                })
+              }
+            })
+        }
+        reader.onerror = evt => {
+          console.error(evt)
+        }
+      }
+    },
+    areasFile: function (newValue) {
+      if (newValue !== null) {
+        const delim = this.getFileDelim(newValue)
+        const reader = new FileReader()
+        reader.readAsText(newValue, 'UTF-8')
+        reader.onload = evt => {
+          evt.target.result.split(/\r\n|\n/)
+            .map(line => line.trim())
+            .filter(line => line.length > 0)
+            .forEach(line => {
+              const tokens = line.split(delim).map(token => this.cleanToken(token))
+              if (tokens.length > 0 && tokens[0].length > 0) {
+                if (!this.value.areas) {
+                  this.value.areas = []
+                }
+                const value = tokens[0]
+                const fill = tokens[1]
+                tokens.splice(0, 2)
+                this.value.areas.push({
+                  value: value,
+                  fill: fill,
+                  points: tokens.join(delim)
                 })
               }
             })
@@ -376,6 +498,15 @@ export default defineComponent({
     },
     md (text) {
       return text ? snarkdown(text) : text
+    },
+    cleanToken (token) {
+      if (token.startsWith('"') && token.endsWith('"')) {
+        return token.substring(1, token.length - 1)
+      }
+      return token
+    },
+    getFileDelim (file) {
+      return file.name.endsWith('.tsv') ? '\t' : ','
     },
     showMoreOptions () {
       this.optionsCount = this.optionsCount + 5
@@ -394,6 +525,26 @@ export default defineComponent({
       this.value.options.push({
         value: val,
         label: val
+      })
+    },
+    showMoreAreas () {
+      this.areasCount = this.areasCount + 5
+    },
+    deleteArea (area) {
+      this.value.areas = this.modelValue.areas.filter(ar => `${ar.value}-${ar.points}` !== `${area.value}-${area.points}`)
+      if (this.areasCount > 5) {
+        this.areasCount = this.areasCount - 1
+      }
+    },
+    addArea () {
+      if (!this.modelValue.areas) {
+        this.value.areas = []
+      }
+      const val = '' + (this.modelValue.areas.length + 1)
+      this.value.areas.push({
+        value: val,
+        fill: '#cccccc',
+        points: '0,0 10,0 0,10 10,10'
       })
     },
     onLocale (newLocale) {
