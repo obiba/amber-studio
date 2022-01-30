@@ -576,6 +576,14 @@ export default defineComponent({
       if (create) {
         const toSave = { ...this.newStudyCaseReportFormData }
         toSave.study = this.study._id
+        if (toSave.restrictedAccess) {
+          // empty permissions means it is not a restricted access
+          if (toSave.permissions.users.length === 0 && toSave.permissions.groups.length === 0) {
+            toSave.permissions = null
+          }
+        } else {
+          toSave.permissions = null
+        }
         if (toSave.revision === t('study.latest_revision')) {
           delete toSave.revision
         }
