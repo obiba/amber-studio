@@ -1225,17 +1225,17 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@obiba/quasar-app-extension-amber@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@obiba/quasar-app-extension-amber/-/quasar-app-extension-amber-0.8.2.tgz#309811b71b93f9ec7318ab7a4a34157854951371"
-  integrity sha512-O+h5lFyOf8AqAIXXLfTtR6RC64XaneOcQfHNzdO++1zvhHh1DHPqYjLZyHDitjb7xi4T5WQQT0X8uLxZQDTFGQ==
+"@obiba/quasar-app-extension-amber@^0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@obiba/quasar-app-extension-amber/-/quasar-app-extension-amber-0.8.3.tgz#04e52dce138800164a0dbfa9effe6b10d2bdedc8"
+  integrity sha512-m6AOfIvncp4b8gGevA7sl4pRnAGKv8vwd1GvWvvvIDBXHl0qPZ43ueHCH3N13Wxt7XcNGJAiNze8H5z7tTQCFQ==
   dependencies:
-    "@obiba/quasar-ui-amber" "^0.8.2"
+    "@obiba/quasar-ui-amber" "^0.8.3"
 
-"@obiba/quasar-ui-amber@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@obiba/quasar-ui-amber/-/quasar-ui-amber-0.8.2.tgz#61b59441e58596f608039c905deee9608ff306e8"
-  integrity sha512-8+LkB5OO/4XM4bolW7z0kMPO7exRrW6SCFcJyFNKkI6Co6zuPpXEWNeMvJu6sdpZJ4RUCbBGSiojaUtpPzCCPA==
+"@obiba/quasar-ui-amber@^0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@obiba/quasar-ui-amber/-/quasar-ui-amber-0.8.3.tgz#75a96c303db80d2de2646f1b27918e6d10aa4464"
+  integrity sha512-x+4t8cb2Kv/ltiX3SsSMYoV6vHdmawsyV9nWEMmBmAcnl9JO9jhz54AhijVF0GpWqcU5rCFXyXaMnHjb6U/0vg==
 
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.21"

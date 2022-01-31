@@ -132,6 +132,21 @@
                 <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('form.image') }}</p>
                 <p class="text-grey">{{ $t('form.image_hint') }}</p>
                 <q-input class="q-mb-md" v-model="value.imageSrc" :label="$t('form.image_src')" :hint="$t('form.image_src_hint')" :disable="isReadOnly" />
+                <q-file
+                  dense
+                  bottom-slots
+                  clearable
+                  v-model="imageFile"
+                  accept=".jpg,.jpeg,.png"
+                  :label="$t('form.upload_image')">
+                  <template v-slot:prepend>
+                    <q-icon name="add" @click.stop />
+                  </template>
+
+                  <template v-slot:hint>
+                    {{ $t('form.upload_image_hint') }}
+                  </template>
+                </q-file>
                 <p class="q-mb-sm q-mt-md">{{ $t('form.image_areas') }}</p>
                 <p class="text-grey">{{ $t('form.image_areas_hint') }}</p>
                 <div class="row q-col-gutter-lg" v-for="area in areasList" :key="area.value + '-' + area.points">
@@ -206,6 +221,7 @@
               <p class="text-weight-bold q-mb-sm">{{ $t('form.style') }}</p>
               <q-input class="q-mb-md" v-model="value.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" :disable="isReadOnly" />
               <q-input v-if="!hasDescriptionClass" class="q-mb-md" v-model="value.descriptionClass" :label="$t('form.description_class')" :hint="$t('form.description_class_hint')" autogrow :disable="isReadOnly" />
+              <q-input v-if="hasImageMap" class="q-mb-md" v-model="value.imageClass" :label="$t('form.image_class')" :hint="$t('form.image_class_hint')" :disable="isReadOnly" />
               <div v-if="value.type === 'rating'">
                 <q-input class="q-mb-md" v-model="value.icon" :label="$t('form.icon')" :hint="$t('form.icon_hint')" :disable="isReadOnly" />
                 <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" :disable="isReadOnly" />
@@ -297,6 +313,7 @@ export default defineComponent({
       modelData: ref({}),
       optionsFile: ref(null),
       optionsCount: ref(5),
+      imageFile: ref(null),
       areasFile: ref(null),
       areasCount: ref(5),
       locale: ref('en')
@@ -404,6 +421,7 @@ export default defineComponent({
       }
       if (!this.hasImageMap) {
         delete this.modelValue.imageSrc
+        delete this.modelValue.imageClass
         delete this.modelValue.showSelect
         delete this.modelValue.areas
       }
@@ -454,6 +472,18 @@ export default defineComponent({
         reader.onerror = evt => {
           console.error(evt)
         }
+      }
+    },
+    imageFile: function (newValue) {
+      if (newValue !== null) {
+        const reader = new FileReader()
+        reader.onload = evt => {
+          this.value.imageSrc = evt.target.result
+        }
+        reader.onerror = evt => {
+          console.error(evt)
+        }
+        reader.readAsDataURL(newValue)
       }
     },
     areasFile: function (newValue) {
