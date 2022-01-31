@@ -132,8 +132,6 @@
                 <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('form.image') }}</p>
                 <p class="text-grey">{{ $t('form.image_hint') }}</p>
                 <q-input class="q-mb-md" v-model="value.imageSrc" :label="$t('form.image_src')" :hint="$t('form.image_src_hint')" :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model.number="value.imageWidth" type="number" :label="$t('form.image_width')" :hint="$t('form.image_width_hint')" :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model.number="value.imageHeight" type="number" :label="$t('form.image_height')" :hint="$t('form.image_height_hint')" :disable="isReadOnly" />
                 <p class="q-mb-sm q-mt-md">{{ $t('form.image_areas') }}</p>
                 <p class="text-grey">{{ $t('form.image_areas_hint') }}</p>
                 <div class="row q-col-gutter-lg" v-for="area in areasList" :key="area.value + '-' + area.points">
@@ -406,8 +404,6 @@ export default defineComponent({
       }
       if (!this.hasImageMap) {
         delete this.modelValue.imageSrc
-        delete this.modelValue.imageWidth
-        delete this.modelValue.imageHeight
         delete this.modelValue.showSelect
         delete this.modelValue.areas
       }
