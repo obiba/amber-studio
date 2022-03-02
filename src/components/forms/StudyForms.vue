@@ -44,7 +44,7 @@
       </template>
       <template v-slot:body-cell-name='props'>
         <q-td :props='props'>
-          <router-link :to="'/form/' + props.row._id">{{ props.row.name }}</router-link>
+          <router-link :to="'/study/' + studyId + '/form/' + props.row._id">{{ props.row.name }}</router-link>
         </q-td>
       </template>
       <template v-slot:body-cell-action='props'>
@@ -57,7 +57,7 @@
             round
             :title="$t('study.edit_study_form_hint')"
             icon="edit"
-            :to="'/form/' + props.row._id">
+            :to="'/study/' + studyId + '/form/' + props.row._id">
           </q-btn>
           <q-btn
             class="text-grey-8"
@@ -78,7 +78,8 @@
       color="primary"
       icon="add"
       :label="$t('study.add_study_form_hint')"
-      @click="onAdd()"/>
+      @click="onAdd()"
+      class="q-ma-md" />
 
     <q-dialog v-model='showCreateStudyForm' persistent>
       <q-card>
@@ -206,7 +207,7 @@ export default defineComponent({
   mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
-    if (this.study) {
+    if (this.studyId) {
       this.getTableStudyForms()
     }
   },
@@ -251,6 +252,9 @@ export default defineComponent({
       study: state => state.study.study,
       studyForms: state => state.form.forms
     }),
+    studyId () {
+      return this.$route.params.id
+    },
     columns () {
       const cols = [
         {
@@ -315,9 +319,9 @@ export default defineComponent({
         this.$store.commit('form/setFormPagination', {
           formPaginationOpts: requestProp.pagination
         })
-        await this.getStudyForms({ paginationOpts: requestProp.pagination, study: this.study._id, filter: requestProp.filter })
+        await this.getStudyForms({ paginationOpts: requestProp.pagination, study: this.studyId, filter: requestProp.filter })
       } else {
-        await this.getStudyForms({ paginationOpts: this.paginationOpts, study: this.study._id, filter: this.filter })
+        await this.getStudyForms({ paginationOpts: this.paginationOpts, study: this.studyId, filter: this.filter })
       }
       this.paginationOpts.rowsNumber = this.$store.state.form.formPaginationOpts.rowsNumber
     },
@@ -327,7 +331,7 @@ export default defineComponent({
     deleteStudyForm () {
       this.$store.dispatch('form/deleteForm', {
         id: this.selectedStudyForm._id,
-        study: this.study._id,
+        study: this.studyId,
         paginationOpts: this.paginationOpts
       })
     },
@@ -335,7 +339,7 @@ export default defineComponent({
       const ids = this.selected.map(u => u._id)
       this.$store.dispatch('form/deleteForms', {
         ids: ids,
-        study: this.study._id,
+        study: this.studyId,
         paginationOpts: this.paginationOpts
       })
       this.selected = []
@@ -343,7 +347,7 @@ export default defineComponent({
     async saveStudyForm () {
       this.v$.$reset()
       const toSave = { ...this.newStudyFormData }
-      toSave.study = this.study._id
+      toSave.study = this.studyId
 
       if (this.newStudyFormData.importSchema) {
         delete toSave.importSchema

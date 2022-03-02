@@ -62,7 +62,7 @@
       </template>
       <template v-slot:body-cell-form='props'>
         <q-td :props='props'>
-          <router-link :to="'/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
+          <router-link :to="'/study/' + studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
         </q-td>
       </template>
       <template v-slot:body-cell-revision='props'>
@@ -261,6 +261,9 @@ export default defineComponent({
       forms: state => state.form.forms,
       studyCaseReports: state => state.caseReportForm ? state.caseReportForm.caseReports : []
     }),
+    studyId () {
+      return this.$route.params.id
+    },
     formOptions () {
       const opts = this.forms.map(form => {
         return {
@@ -286,7 +289,7 @@ export default defineComponent({
       this.getTableStudyCaseReports()
     },
     formFilter: function (newValue) {
-      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.study._id, form: this.formFilter, filter: this.filter })
+      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter })
     }
   },
   methods: {
@@ -295,7 +298,7 @@ export default defineComponent({
     }),
     onExport (format) {
       const accept = format === 'csv' ? 'application/zip' : 'application/json'
-      caseReportExportService.downloadCaseReports(this.study._id, accept, this.formFilter, this.filter)
+      caseReportExportService.downloadCaseReports(this.studyId, accept, this.formFilter, this.filter)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -342,9 +345,9 @@ export default defineComponent({
         this.$store.commit('caseReportForm/setCaseReportPagination', {
           caseReportPaginationOpts: requestProp.pagination
         })
-        await this.getStudyCaseReports({ paginationOpts: requestProp.pagination, study: this.study._id, form: this.formFilter, filter: requestProp.filter })
+        await this.getStudyCaseReports({ paginationOpts: requestProp.pagination, study: this.studyId, form: this.formFilter, filter: requestProp.filter })
       } else {
-        await this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.study._id, form: this.formFilter, filter: this.filter })
+        await this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter })
       }
       this.paginationOpts.rowsNumber = this.$store.state.caseReportForm.caseReportPaginationOpts.rowsNumber
     },
@@ -354,7 +357,7 @@ export default defineComponent({
     deleteStudyCaseReport () {
       this.$store.dispatch('caseReportForm/deleteCaseReport', {
         id: this.selectedStudyCaseReport._id,
-        study: this.study._id,
+        study: this.studyId,
         paginationOpts: this.paginationOpts
       })
     },
@@ -362,7 +365,7 @@ export default defineComponent({
       const ids = this.selected.map(u => u._id)
       this.$store.dispatch('caseReportForm/deleteCaseReports', {
         ids: ids,
-        study: this.study._id,
+        study: this.studyId,
         paginationOpts: this.paginationOpts
       })
       this.selected = []

@@ -81,14 +81,18 @@ export default {
     search_hint: 'Chercher par nom ou description'
   },
   study: {
+    design: 'Conception',
     title: 'Étude',
     definition: 'Définition',
     forms: 'Formulaires',
+    forms_hint: 'Un formulaire définit comment collecter les données. Il est constitué d\'une séquence d\'items (questions, sections, champs calculés etc.). Une version de formulaire est un instantané du formulaire à un moment donné. La saisie de données se fait à partir d\'une version de formulaire, permettant ainsi l\'édition du formulaire sans affecter la collecte de données et le suivi des changements de formulaire dans les enregistrements. Un formulaire (ou une version de formulaire) ne peut être supprimée quand des enregistrements y sont associés.',
     data_collection: 'Collecte de données',
     case_report_forms: 'Formulaires de rapport de cas',
+    case_report_forms_hint: 'Un formulaire de rapport de cas est basé sur une version de formulaire spécifique (ou la dernière). Les rapports de case sont enregistrés quand le formulaire a été complété. L\'accès au formulaire de rapport de cas peut être restreint à un ensemble d\'utilisateurs ou de groupes d\'utilisateurs. Un formulaire de rapport de cas peut être (dés)activé à n\'importe quel moment.',
     interviews: 'Entrevues',
     instruments: 'Instruments',
     records: 'Enregistrements',
+    records_hint: 'Les données enregistrées (rapport de cas) ont été saisies via un formulaire de rapport de cas, qui est lui-même associé à une version de formulaire.',
     events: 'Évènements',
     form: 'Formulaire',
     form_revision: 'Version',

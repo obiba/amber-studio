@@ -44,7 +44,7 @@
       </template>
       <template v-slot:body-cell-form='props'>
         <q-td :props='props'>
-          <router-link :to="'/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
+          <router-link :to="'/study/' + this.studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
         </q-td>
       </template>
       <template v-slot:body-cell-revision='props'>
@@ -120,7 +120,7 @@
       icon="add"
       :label="$t('study.add_case_report_form_hint')"
       @click="onAdd()"
-      class="q-mr-md" />
+      class="q-ma-md" />
 
     <q-dialog v-model='showCreateStudyCaseReportForm' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
@@ -330,7 +330,7 @@ export default defineComponent({
   mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
-    if (this.study) {
+    if (this.studyId) {
       this.getTableStudyCaseReportForms()
     }
     subjectsService.getSubjects().then((result) => {
@@ -370,6 +370,9 @@ export default defineComponent({
       forms: state => state.form.forms,
       studyCaseReportForms: state => state.caseReportForm ? state.caseReportForm.caseReportForms : []
     }),
+    studyId () {
+      return this.$route.params.id
+    },
     columns () {
       const cols = [
         {
@@ -457,7 +460,7 @@ export default defineComponent({
       createStudyFormRevision: 'form/createFormRevision'
     }),
     updateRevisionOptions (form) {
-      formRevisionService.getFormRevisionsDigest(this.study._id, form)
+      formRevisionService.getFormRevisionsDigest(this.studyId, form)
         .then((response) => {
           this.revisionOptions = response.data ? response.data.map(rev => rev.revision) : []
           if (this.revisionOptions.length > 0) {
@@ -523,9 +526,9 @@ export default defineComponent({
         this.$store.commit('caseReportForm/setCaseReportFormPagination', {
           caseReportFormPaginationOpts: requestProp.pagination
         })
-        await this.getStudyCaseReportForms({ paginationOpts: requestProp.pagination, study: this.study._id, filter: requestProp.filter })
+        await this.getStudyCaseReportForms({ paginationOpts: requestProp.pagination, study: this.studyId, filter: requestProp.filter })
       } else {
-        await this.getStudyCaseReportForms({ paginationOpts: this.paginationOpts, study: this.study._id, filter: this.filter })
+        await this.getStudyCaseReportForms({ paginationOpts: this.paginationOpts, study: this.studyId, filter: this.filter })
       }
       this.paginationOpts.rowsNumber = this.$store.state.caseReportForm.caseReportFormPaginationOpts.rowsNumber
     },
@@ -549,7 +552,7 @@ export default defineComponent({
     async createFormRevision () {
       const toSave = {
         form: this.newStudyCaseReportFormData.form,
-        study: this.study._id
+        study: this.studyId
       }
       await this.createStudyFormRevision({
         formRevision: toSave
@@ -559,7 +562,7 @@ export default defineComponent({
     deleteStudyCaseReportForm () {
       this.$store.dispatch('caseReportForm/deleteCaseReportForm', {
         id: this.selectedStudyCaseReportForm._id,
-        study: this.study._id,
+        study: this.studyId,
         paginationOpts: this.paginationOpts
       })
     },
@@ -567,7 +570,7 @@ export default defineComponent({
       const ids = this.selected.map(u => u._id)
       this.$store.dispatch('caseReportForm/deleteCaseReportForms', {
         ids: ids,
-        study: this.study._id,
+        study: this.studyId,
         paginationOpts: this.paginationOpts
       })
       this.selected = []
@@ -575,7 +578,7 @@ export default defineComponent({
     async saveStudyCaseReportForm (create) {
       if (create) {
         const toSave = { ...this.newStudyCaseReportFormData }
-        toSave.study = this.study._id
+        toSave.study = this.studyId
         if (toSave.restrictedAccess) {
           // empty permissions means it is not a restricted access
           if (toSave.permissions.users.length === 0 && toSave.permissions.groups.length === 0) {

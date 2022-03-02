@@ -1,38 +1,42 @@
 <template>
   <q-page>
-    <div class="bg-blue-grey-1 q-pa-md">
-      <q-breadcrumbs class="q-mt-sm q-mr-md" :class="isReadOnly ? '' : 'float-left'">
-        <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
-        <q-breadcrumbs-el :label="study ? study.name : '...'" :to="'/study/' + (study ? study._id : '?')"/>
-        <q-breadcrumbs-el icon="article" :label="studyForm.name" />
-      </q-breadcrumbs>
-      <q-btn
-        v-if="!isReadOnly"
-        @click='onEdit'
-        :title="$t('edit_settings')"
-        icon="settings"
-        class="text-grey-7"
-        flat
-        dense
-        round>
-      </q-btn>
-      <q-btn
-        v-if="!isReadOnly"
-        @click='save'
-        :title="$t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
-        :icon="saveIcon"
-        :disable="changeDetected < 0"
-        class="text-grey-7"
-        flat
-        dense
-        round>
-      </q-btn>
-      <div class="text-caption text-grey-8">
-        {{ studyForm.description }}
+
+    <div class="q-pl-md q-pr-md q-pt-sm q-pb-md">
+      <div class="row q-mb-md">
+        <div class="col-12">
+          <q-breadcrumbs class="q-mt-sm q-mr-md text-h5" :class="isReadOnly ? '' : 'float-left'">
+            <q-breadcrumbs-el :label="$t('study.forms')" :to="'/study/' + studyId + '/forms'"/>
+            <q-breadcrumbs-el :label="studyForm.name" />
+          </q-breadcrumbs>
+          <div class="text-grey-7 q-mt-sm">
+            <q-btn
+              v-if="!isReadOnly"
+              @click='onEdit'
+              :title="$t('edit_settings')"
+              icon="settings"
+              flat
+              dense
+              round>
+            </q-btn>
+            <q-btn
+              v-if="!isReadOnly"
+              @click='save'
+              :title="$t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
+              :icon="saveIcon"
+              :disable="changeDetected < 0"
+              flat
+              dense
+              round>
+            </q-btn>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="text-caption text-grey-8 col-12">
+          {{ studyForm.description }}
+        </div>
       </div>
     </div>
-
-    <q-separator/>
 
     <q-tabs
       v-model="tab"
@@ -305,6 +309,9 @@ export default defineComponent({
       study: state => state.study.study,
       studyForm: state => state.form.form
     }),
+    studyId () {
+      return this.$route.params.id
+    },
     disableImportSchema () {
       return this.importSchemaFile === null
     },
@@ -332,7 +339,7 @@ export default defineComponent({
       createStudyFormRevision: 'form/createFormRevision'
     }),
     async initStudyFormData () {
-      await this.getStudyForm({ id: this.$route.params.id })
+      await this.getStudyForm({ id: this.$route.params.fid })
       this.studyFormData = JSON.parse(JSON.stringify(this.studyForm))
       this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
       await this.getStudy({ id: this.studyForm.study })

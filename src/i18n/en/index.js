@@ -81,14 +81,18 @@ export default {
     search_hint: 'Search by name or description'
   },
   study: {
+    design: 'Design',
     title: 'Study',
     definition: 'Definition',
     forms: 'Forms',
+    forms_hint: 'A form defines how to collect data. It is made of a sequence of items (questions, sections, computed fields etc.). A form revision is a snapshot of the form at a given point of time. Data collection is based on form revisions, allowing the safe edition of the form and the tracking of form changes in the records. A form (or a form revision) cannot be deleted when there are associated records.',
     data_collection: 'Data collection',
     case_report_forms: 'Case report Forms',
+    case_report_forms_hint: 'A case report form is based on a specific (or the latest) form revision. Case reports are recorded after the form is completed. Access to the case report form can be limited to a set of users or groups of users. A case report form can be enabled or disabled at any time.',
     interviews: 'Interviews',
     instruments: 'Instruments',
     records: 'Records',
+    records_hint: 'Data records (case reports) are captured through a case report form, which is itself based on a form revision.',
     events: 'Events',
     form: 'Form',
     form_revision: 'Revision',

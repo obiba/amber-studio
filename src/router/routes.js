@@ -39,21 +39,43 @@ const routes = [
         meta: { requiresAuth: true, noGuest: true }
       },
       {
-        path: '/study/:id',
-        component: () => import('pages/Study.vue'),
-        meta: { requiresAuth: true, noGuest: true }
-      },
-      {
-        path: '/form/:id',
-        component: () => import('pages/Form.vue'),
-        meta: { requiresAuth: true, noGuest: true }
-      },
-      {
         path: '/datasets',
         component: () => import('pages/Datasets.vue'),
         meta: { requiresAuth: true, noGuest: true }
       }
     ]
+  },
+  {
+    path: '/study',
+    component: () => import('layouts/StudyLayout.vue'),
+    children: [
+      {
+        path: '/study/:id',
+        component: () => import('pages/StudyForms.vue'),
+        meta: { requiresAuth: true, noGuest: true }
+      },
+      {
+        path: '/study/:id/forms',
+        component: () => import('pages/StudyForms.vue'),
+        meta: { requiresAuth: true, noGuest: true }
+      },
+      {
+        path: '/study/:id/form/:fid',
+        component: () => import('pages/StudyForm.vue'),
+        meta: { requiresAuth: true, noGuest: true }
+      },
+      {
+        path: '/study/:id/crfs',
+        component: () => import('pages/StudyCaseReportForms.vue'),
+        meta: { requiresAuth: true, noGuest: true }
+      },
+      {
+        path: '/study/:id/records',
+        component: () => import('pages/StudyRecords.vue'),
+        meta: { requiresAuth: true, noGuest: true }
+      }
+    ]
+
   },
   {
     path: '/maintenance',
