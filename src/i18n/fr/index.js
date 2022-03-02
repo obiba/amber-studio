@@ -264,7 +264,12 @@ export default {
       section: 'Section',
       group: 'Groupe',
       rating: 'Échelle',
-      computed: 'Calculé'
+      computed: 'Calculé',
+      map: 'Donnée géographique'
+    },
+    geo_types: {
+      Point: 'Point',
+      Polygon: 'Polygone'
     },
     title: 'Titre',
     form_title_hint: 'Titre du formulaire publié',
@@ -299,6 +304,8 @@ export default {
     default_hint: 'Valeur par défaut.',
     placeholder: 'Placeholder',
     placeholder_hint: 'Text d\'aide dans le champ.',
+    close_label: 'Libellé de fermeture',
+    close_label_hint: 'Ajoute un bouton avec le libellé fourni pour fermer la boite de dialogue.',
     hint: 'Indice',
     hint_hint: 'Text d\'aide sous le champ.',
     mask: 'Masque',
@@ -313,6 +320,16 @@ export default {
     max_hint: 'Valeur maximum.',
     format: 'Format',
     format_hint: 'Règle de mise en forme.',
+    geo: {
+      types: {
+        Point: 'Point',
+        Polygon: 'Polygône'
+      },
+      type: 'Type de géometrie',
+      type_hint: 'Le type de géometrie à dessiner sur la carte.',
+      map_height: 'Hauteur de la carte',
+      map_height_hint: 'La hauteur par défault est 400px.'
+    },
     icon: 'Icône',
     icon_hint: 'Nom de l\'icône.',
     size: 'Taille',

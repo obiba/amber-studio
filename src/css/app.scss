@@ -3,9 +3,9 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap'); */
 
 a {
-    color: #007bff;
-    text-decoration: none;
-    background-color: transparent;
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
 }
 
 .q-drawer .fixed-bottom a {
@@ -24,7 +24,7 @@ a {
   border-style: solid;
   border-width: 0 5px;
   font-size: 1em;
-  letter-spacing: .5px;
+  letter-spacing: 0.5px;
   line-height: 1.35em;
   margin: 16px 0;
   padding: 16px 24px;
@@ -40,7 +40,8 @@ a {
   border-color: #9cedaf;
 }
 
-.note>p, .note>ul {
+.note > p,
+.note > ul {
   margin-bottom: 0;
 }
 
@@ -67,8 +68,8 @@ pre {
   border-radius: 0;
 }
 
-.blitz-form .q-field__messages div[role=alert] {
-   display: none;
+.blitz-form .q-field__messages div[role="alert"] {
+  display: none;
 }
 
 .blitz-field {
@@ -80,8 +81,8 @@ pre {
 
 .blitz-field__label {
   // font-weight: bold;
-    font-size: larger;
-    margin-bottom: 10px;
+  font-size: larger;
+  margin-bottom: 10px;
 }
 
 .blitz-field__sub-label {
@@ -95,6 +96,85 @@ pre {
   // display: none;
 }
 
-.text-smaller, .text-smaller .q-tab__label {
+.text-smaller,
+.text-smaller .q-tab__label {
   font-size: smaller;
+}
+
+// open layers
+.ol-full-screen {
+  right: 0.5em;
+  top: 0.5em;
+}
+
+.ol-zoom {
+  top: 0.5em;
+  left: 0.5em;
+}
+
+.ol-attribution.ol-uncollapsible {
+  bottom: 0;
+  right: 0;
+  border-radius: 4px 0 0;
+}
+
+.ol-attribution:not(.ol-collapsed) {
+  background: hsla(0, 0%, 100%, 0.8);
+}
+
+.ol-attribution {
+  text-align: right;
+  bottom: 0.5em;
+  right: 0.5em;
+  max-width: calc(100% - 1.3em);
+  display: flex;
+  flex-flow: row-reverse;
+  align-items: center;
+}
+
+.ol-attribution.ol-uncollapsible button {
+  display: none;
+}
+
+.ol-attribution button {
+  flex-shrink: 0;
+}
+
+.ol-attribution ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 1px 0.5em;
+  color: #000;
+  text-shadow: 0 0 2px #fff;
+  font-size: 12px;
+}
+
+.ol-control button {
+  display: block;
+  margin: 1px;
+  padding: 0;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: inherit;
+  text-align: center;
+  height: 1.375em;
+  width: 1.375em;
+  line-height: 0.4em;
+  background-color: rgba(0, 60, 136, 0.5);
+  border: none;
+  border-radius: 2px;
+}
+
+.ol-control {
+  position: absolute;
+  background-color: hsla(0, 0%, 100%, 0.4);
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.ol-unselectable,
+.ol-viewport {
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }

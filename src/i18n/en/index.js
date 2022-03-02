@@ -264,7 +264,8 @@ export default {
       section: 'Section',
       group: 'Group',
       rating: 'Rating',
-      computed: 'Computed'
+      computed: 'Computed',
+      map: 'Geographic data'
     },
     title: 'Title',
     form_title_hint: 'Published form title',
@@ -299,6 +300,8 @@ export default {
     default_hint: 'Default value.',
     placeholder: 'Placeholder',
     placeholder_hint: 'Help text within the field.',
+    close_label: 'Close label',
+    close_label_hint: 'Adds a button with the provided label to close the popup.',
     hint: 'Hint',
     hint_hint: 'Help text below the field.',
     mask: 'Mask',
@@ -313,6 +316,16 @@ export default {
     max_hint: 'Maximum value.',
     format: 'Format',
     format_hint: 'Value formatting rule.',
+    geo: {
+      types: {
+        Point: 'Point',
+        Polygon: 'Polygon'
+      },
+      type: 'Geometry type',
+      type_hint: 'The type of geometry to be drawn on the map.',
+      map_height: 'Map height',
+      map_height_hint: 'Default height is 400px.'
+    },
     icon: 'Icon',
     icon_hint: 'Icon name.',
     size: 'Size',

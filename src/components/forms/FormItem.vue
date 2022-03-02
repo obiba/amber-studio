@@ -53,6 +53,9 @@
               <div v-if="hasHint">
                 <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" :disable="isReadOnly" />
               </div>
+              <div v-if="hasPopup">
+                <q-input class="q-mb-md" v-model="value.closeLabel" :label="$t('form.close_label')" :hint="$t('form.close_label_hint')" :disable="isReadOnly" />
+              </div>
               <q-input v-if="isComputed" class="q-mb-md" v-model="value.compute" :label="$t('form.compute')" :hint="$t('form.compute_hint')" />
               <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="isReadOnly" />
               <div v-if="value.type === 'text'">
@@ -64,6 +67,9 @@
               </div>
               <div v-if="value.type === 'rating'">
                 <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" :disable="isReadOnly" />
+              </div>
+              <div v-if="value.type === 'map'">
+                <q-select class="q-mb-md" v-model="value.geometryType" :options="geoTypeOptions" :label="$t('form.geo.type')" :hint="$t('form.geo.type_hint')" emit-value map-options :disable="isReadOnly" />
               </div>
               <div v-if="hasMultiple">
                 <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" :hint="$t('form.multiple_hint')" dense :disable="isReadOnly" />
@@ -227,6 +233,9 @@
                 <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" :disable="isReadOnly" />
                 <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" :disable="isReadOnly" />
               </div>
+              <div v-if="value.type === 'map'">
+                <q-input class="q-mb-md" v-model="value.mapHeight" :label="$t('form.geo.map_height')" :hint="$t('form.geo.map_height_hint')" placeholder="400px" :disable="isReadOnly" />
+              </div>
             </div>
           </div>
         </div>
@@ -308,7 +317,10 @@ export default defineComponent({
         'slider', 'rating',
         'toggle',
         'section', 'group',
-        'computed'
+        'computed', 'map'
+      ],
+      geoTypes: [
+        'Point', 'Polygon'
       ],
       modelData: ref({}),
       optionsFile: ref(null),
@@ -357,11 +369,14 @@ export default defineComponent({
     hasDescriptionClass () {
       return !['section', 'group'].includes(this.modelValue.type)
     },
+    hasPopup () {
+      return ['date', 'datetime', 'time'].includes(this.modelValue.type)
+    },
     hasHint () {
       return ['text', 'textarea', 'number', 'date', 'datetime', 'time', 'select', 'autocomplete', 'image-select'].includes(this.modelValue.type)
     },
     hasMultiple () {
-      return ['select', 'autocomplete', 'image-select'].includes(this.modelValue.type)
+      return ['select', 'autocomplete', 'image-select', 'map'].includes(this.modelValue.type)
     },
     hasOptions () {
       return ['radiogroup', 'checkboxgroup', 'select', 'autocomplete', 'image-select'].includes(this.modelValue.type)
@@ -369,11 +384,25 @@ export default defineComponent({
     hasImageMap () {
       return ['image-select'].includes(this.modelValue.type)
     },
+    hasGeoMap () {
+      return ['map'].includes(this.modelValue.type)
+    },
+    hasNumber () {
+      return ['rating', 'slider'].includes(this.modelValue.type)
+    },
     typeOptions () {
       return this.types.map(tp => {
         return {
           value: tp,
           label: this.$t('form.types.' + tp)
+        }
+      }).sort((a, b) => a.label.localeCompare(b.label))
+    },
+    geoTypeOptions () {
+      return this.geoTypes.map(tp => {
+        return {
+          value: tp,
+          label: this.$t('form.geo.types.' + tp)
         }
       }).sort((a, b) => a.label.localeCompare(b.label))
     },
@@ -425,6 +454,20 @@ export default defineComponent({
         delete this.modelValue.showSelect
         delete this.modelValue.areas
       }
+      if (!this.hasGeoMap) {
+        delete this.modelValue.geometryType
+        delete this.modelValue.mapHeight
+      }
+      if (!this.hasNumber) {
+        delete this.modelValue.icon
+        delete this.modelValue.size
+        delete this.modelValue.color
+        delete this.modelValue.min
+        delete this.modelValue.max
+      }
+      if (!this.hasPopup) {
+        delete this.modelValue.closeLabel
+      }
       if (!this.hasMultiple) {
         delete this.modelValue.multiple
       }
@@ -432,8 +475,6 @@ export default defineComponent({
         delete this.modelValue.required
         delete this.modelValue.validation
         delete this.modelValue.validationMessage
-        delete this.modelValue.min
-        delete this.modelValue.max
         delete this.modelValue.mask
         delete this.modelValue.default
         delete this.modelValue.options
