@@ -53,6 +53,7 @@
             @click='onExport(props.row)'>
           </q-btn>
           <q-btn
+            v-if="!isReadOnly"
             class="text-grey-8"
             size="12px"
             flat

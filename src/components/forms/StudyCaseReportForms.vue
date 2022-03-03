@@ -6,7 +6,7 @@
       :rows="studyCaseReportForms"
       :columns="columns"
       :filter="filter"
-      row-key="name"
+      row-key="_id"
       :selection="isReadOnly ? 'none' : 'multiple'"
       v-model:selected="selected"
       v-model:pagination='paginationOpts'

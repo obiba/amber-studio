@@ -68,6 +68,7 @@
             </template>
           </q-btn>
           <q-btn
+            v-if="!isReadOnly"
             @click='onImport'
             :label="$t('import')"
             icon="file_upload"
