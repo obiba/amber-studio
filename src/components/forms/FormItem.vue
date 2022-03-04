@@ -68,11 +68,14 @@
               <div v-if="value.type === 'rating'">
                 <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" :disable="isReadOnly" />
               </div>
-              <div v-if="value.type === 'map'">
+              <div v-if="hasGeoMap">
                 <q-select class="q-mb-md" v-model="value.geometryType" :options="geoTypeOptions" :label="$t('form.geo.type')" :hint="$t('form.geo.type_hint')" emit-value map-options :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model.number="value.center" :label="$t('form.geo.center')" :hint="$t('form.geo.center_hint')" :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model.number="value.zoom" type="number" :label="$t('form.geo.zoom')" :hint="$t('form.geo.zoom_hint')" :disable="isReadOnly" />
+                <q-toggle class="q-mb-md" v-model.number="value.geoLocation" :label="$t('form.geo.geo_location')" dense :disable="isReadOnly" />
               </div>
               <div v-if="hasMultiple">
-                <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" :hint="$t('form.multiple_hint')" dense :disable="isReadOnly" />
+                <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" dense :disable="isReadOnly" />
               </div>
               <div v-if="hasOptions">
                 <p class="q-mb-sm q-mt-md">{{ $t('form.options') }}</p>
@@ -233,7 +236,7 @@
                 <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" :disable="isReadOnly" />
                 <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" :disable="isReadOnly" />
               </div>
-              <div v-if="value.type === 'map'">
+              <div v-if="hasGeoMap">
                 <q-input class="q-mb-md" v-model="value.mapHeight" :label="$t('form.geo.map_height')" :hint="$t('form.geo.map_height_hint')" placeholder="400px" :disable="isReadOnly" />
               </div>
             </div>
@@ -456,6 +459,9 @@ export default defineComponent({
       }
       if (!this.hasGeoMap) {
         delete this.modelValue.geometryType
+        delete this.modelValue.center
+        delete this.modelValue.zoom
+        delete this.modelValue.geoLocation
         delete this.modelValue.mapHeight
       }
       if (!this.hasNumber) {
