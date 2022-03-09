@@ -242,10 +242,11 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, defineAsyncComponent, ref } from 'vue'
+import { defineComponent, defineAsyncComponent, ref, toRaw } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import AuthMixin from '../mixins/AuthMixin'
+import FormMixin from '../mixins/FormMixin'
 
 export default defineComponent({
   components: {
@@ -253,7 +254,7 @@ export default defineComponent({
     FormTranslations: defineAsyncComponent(() => import('src/components/forms/FormTranslations.vue')),
     FormRevisions: defineAsyncComponent(() => import('src/components/forms/FormRevisions.vue'))
   },
-  mixins: [AuthMixin],
+  mixins: [AuthMixin, FormMixin],
   mounted () {
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
@@ -342,6 +343,7 @@ export default defineComponent({
     async initStudyFormData () {
       await this.getStudyForm({ id: this.$route.params.fid })
       this.studyFormData = JSON.parse(JSON.stringify(this.studyForm))
+      this.generateIds(this.studyFormData.schema.items)
       this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
       await this.getStudy({ id: this.studyForm.study })
     },
@@ -349,15 +351,16 @@ export default defineComponent({
       this.v$.$reset()
       this.changeDetected = -1
       this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
-      const toSave = { ...this.studyFormData }
+      const toSave = toRaw(this.studyFormData)
       return this.updateStudyForm({ form: toSave, notification: notification }).then(() => {
         this.changeDetected = 0
       })
     },
     onExport () {
-      const data = { ...this.studyFormData.schema }
+      const data = toRaw(this.studyFormData.schema)
       delete data._id
       delete data.name
+      this.deleteIds(data.items)
       const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
       const a = document.createElement('a')
       a.download = this.studyFormData.name + '-schema.json'
@@ -389,6 +392,9 @@ export default defineComponent({
         reader.onload = evt => {
           const schema = JSON.parse(evt.target.result)
           this.studyFormData.schema = schema
+          if (this.studyFormData.schema.items) {
+            this.generateIds(this.studyFormData.schema.items)
+          }
           this.save(true).then(() => this.onReinstate())
         }
         reader.onerror = evt => {

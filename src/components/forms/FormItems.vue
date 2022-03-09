@@ -36,7 +36,7 @@
             round
             icon='add'
             :title="$t('form.add_item_hint')"
-            @click='addItem'>
+            @click='addItem()'>
           </q-btn>
         </div>
         <q-separator/>
@@ -44,7 +44,7 @@
           <q-tree
             v-if="items.length>0"
             :nodes="items"
-            node-key="name"
+            node-key="_id"
             children-key="items"
             selected-color="primary"
             v-model:selected="selected"
@@ -174,6 +174,7 @@
 <script>
 import { defineComponent, defineAsyncComponent, ref } from 'vue'
 import AuthMixin from '../../mixins/AuthMixin'
+import FormMixin from '../../mixins/FormMixin'
 
 export default defineComponent({
   name: 'FormItems',
@@ -182,7 +183,7 @@ export default defineComponent({
   components: {
     FormItem: defineAsyncComponent(() => import('src/components/forms/FormItem.vue'))
   },
-  mixins: [AuthMixin],
+  mixins: [AuthMixin, FormMixin],
   setup () {
     return {
       splitterModel: ref(30),
@@ -236,19 +237,26 @@ export default defineComponent({
     },
     addItem (itemToAdd, name) {
       const found = this.findItemAndParent(this.selected)
-      let i = 1
-      let test = this.findItemAndParent('ITEM' + i)
-      while (test.item !== null) {
-        i = i + 1
-        test = this.findItemAndParent('ITEM' + i)
+
+      const makeNewName = function (items) {
+        let i = 1
+        if (items) {
+          let found = items.filter(item => item.name === 'ITEM' + i).pop()
+          while (found) {
+            i++
+            found = items.filter(item => item.name === 'ITEM' + i).pop()
+          }
+        }
+        return 'ITEM' + i
       }
+
       const newItem = itemToAdd ? { ...itemToAdd } : {
-        name: 'ITEM' + i,
         type: 'text',
-        label: 'item_' + i
+        label: 'item_label'
       }
-      newItem.name = name || ('ITEM' + i)
+      newItem._id = this.generateId()
       if (found.item !== null && found.item.type === 'group') {
+        newItem.name = name || makeNewName(found.item.items)
         // add last in the group
         if (!found.item.items) {
           found.item.items = [newItem]
@@ -256,10 +264,12 @@ export default defineComponent({
           found.item.items.push(newItem)
         }
       } else if (found.parent) {
+        newItem.name = name || makeNewName(found.parent.items)
         // add after selected one
         const idx = found.parent.items.indexOf(found.item)
         found.parent.items.splice(idx + 1, 0, newItem)
       } else {
+        newItem.name = name || makeNewName(found.item.items)
         found.item.items.push(newItem)
       }
       this.selected = newItem.name
@@ -285,7 +295,7 @@ export default defineComponent({
       }
     },
     moveUpItem (item) {
-      let found = this.findItemAndParent(item.name)
+      let found = this.findItemAndParent(item._id)
       if (found.item === null) {
         return
       }
@@ -295,7 +305,7 @@ export default defineComponent({
         found.parent.items.splice(idx, 1)
         if (idx === 0) {
           // case first in a group, move item before the group
-          found = this.findItemAndParent(found.parent.name)
+          found = this.findItemAndParent(found.parent._id)
           idx = found.parent.items.indexOf(found.item)
           found.parent.items.splice(idx, 0, item)
         } else {
@@ -329,7 +339,7 @@ export default defineComponent({
       } else if (found.parent) {
         let idx = found.parent.items.indexOf(found.item)
         if (idx === found.parent.items.length - 1 && found.parent.type === 'group') {
-          found = this.findItemAndParent(found.parent.name)
+          found = this.findItemAndParent(found.parent._id)
           idx = found.parent.items.indexOf(found.item) // case selected item is last item in a group
         }
         if (idx < found.parent.items.length - 1) {
@@ -340,7 +350,7 @@ export default defineComponent({
       }
     },
     moveDownItem (item) {
-      let found = this.findItemAndParent(item.name)
+      let found = this.findItemAndParent(item._id)
       if (found.item === null) {
         return
       }
@@ -350,7 +360,7 @@ export default defineComponent({
         found.parent.items.splice(idx, 1)
         if (idx === found.parent.items.length) {
           // case it was last, move it after the parent
-          found = this.findItemAndParent(found.parent.name)
+          found = this.findItemAndParent(found.parent._id)
           idx = found.parent.items.indexOf(found.item)
         }
         found.parent.items.splice(idx + 1, 0, item)
@@ -383,7 +393,7 @@ export default defineComponent({
       } else if (this.formItemCut !== null) {
         // cannot cut and paste the selected item
         if (this.selected !== this.formItemCut.name) {
-          const found = this.findItemAndParent(this.formItemCut.name)
+          const found = this.findItemAndParent(this.formItemCut._id)
           const idx = found.parent.items.indexOf(this.formItemCut)
           found.parent.items.splice(idx, 1)
           this.addItem(this.formItemCut, this.formItemCut.name)
@@ -393,7 +403,7 @@ export default defineComponent({
       this.formItemCopied = null
     },
     deleteItem (item) {
-      const found = this.findItemAndParent(item.name)
+      const found = this.findItemAndParent(item._id)
       if (found.item === null) {
         return
       }
@@ -416,25 +426,25 @@ export default defineComponent({
     isItemSelected (item) {
       return this.formItemSelected && this.formItemSelected.name === item.name
     },
-    findItemAndParent (name) {
-      if (name === '.') {
+    findItemAndParent (id) {
+      if (id === this.value.schema._id) {
         return {
           parent: null,
-          name: name,
+          _id: id,
           item: this.value.schema
         }
       }
-      return this.findItemInParent(this.value.schema, name)
+      return this.findItemInParent(this.value.schema, id)
     },
-    findItemInParent (parent, name) {
+    findItemInParent (parent, id) {
       let rval = {
         parent: parent,
-        name: name,
+        _id: id,
         item: null
       }
 
       if (parent.items) {
-        const item = parent.items.filter(it => it.name === name).pop()
+        const item = parent.items.filter(it => it._id === id).pop()
         if (item) {
           rval.item = item
           return rval
@@ -443,7 +453,7 @@ export default defineComponent({
           if (groups) {
             groups.forEach(group => {
               if (rval.item === null) {
-                const grval = this.findItemInParent(group, name)
+                const grval = this.findItemInParent(group, id)
                 if (grval.item !== null) {
                   rval = grval
                 }
