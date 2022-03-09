@@ -272,7 +272,7 @@ export default defineComponent({
         newItem.name = name || makeNewName(found.item.items)
         found.item.items.push(newItem)
       }
-      this.selected = newItem.name
+      this.selected = newItem._id
     },
     selectUpItem () {
       if (this.selected === null) {
