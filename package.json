@@ -30,6 +30,7 @@
     "quasar": "^2.0.4",
     "secure-ls": "^1.2.6",
     "snarkdown": "^2.0.0",
+    "uuid": "^8.3.2",
     "vue-i18n": "^9.1.7",
     "vue-recaptcha-v3": "^2.0.1",
     "vuedraggable": "^4.0.1",

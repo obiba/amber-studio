@@ -357,7 +357,7 @@ export default defineComponent({
       })
     },
     onExport () {
-      const data = toRaw(this.studyFormData.schema)
+      const data = JSON.parse(JSON.stringify(this.studyFormData.schema))
       delete data._id
       delete data.name
       this.deleteIds(data.items)

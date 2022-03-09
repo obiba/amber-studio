@@ -22,7 +22,7 @@ const feathersClient = feathers()
     },
     after: {
       all: [
-        context => console.debug(context)
+        // context => console.debug(context)
       ]
     }
   })
