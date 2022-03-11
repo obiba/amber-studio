@@ -105,10 +105,6 @@ const routes = [
     path: '/verify',
     component: () => import('pages/Verify.vue')
   },
-  {
-    path: '/lock',
-    component: () => import('pages/LockScreen.vue')
-  },
   // Always leave this as last one,
   // but you can also remove it
   {
