@@ -1,18 +1,12 @@
 import userService from '../../services/user'
 import groupService from '../../services/group'
 import { t } from '../../boot/i18n'
+import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
 
 export async function getUsers ({ commit }, payload) {
   const result = await userService.getUsers(payload.paginationOpts, payload.filter, payload.roles).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_users'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_users'))
   })
   if (result) {
     commit('setUsers', result.data)
@@ -25,14 +19,7 @@ export async function getUsers ({ commit }, payload) {
 
 export async function getUser ({ commit }, payload) {
   const result = await userService.getUser(payload.id).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_user'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_user'))
   })
   if (result) {
     commit('setUser', result)
@@ -45,11 +32,7 @@ export async function createUser ({ dispatch }, payload) {
   const result = await userService
     .createUser(payload.user)
     .catch(err => {
-      console.error(err)
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -71,11 +54,7 @@ export async function updateUser ({ commit, dispatch }, payload) {
   const result = await userService
     .updateUser(payload.user, payload.id ? payload.id : payload.user._id)
     .catch(err => {
-      console.error(err)
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -99,11 +78,8 @@ export async function updateUser ({ commit, dispatch }, payload) {
 export async function deleteUser ({ dispatch }, payload) {
   const result = await userService
     .deleteUser(payload.id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -124,11 +100,8 @@ export async function deleteUser ({ dispatch }, payload) {
 export async function deleteUsers ({ dispatch }, payload) {
   const result = await userService
     .deleteUsers(payload.ids)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -148,14 +121,7 @@ export async function deleteUsers ({ dispatch }, payload) {
 
 export async function getGroups ({ commit }, payload) {
   const result = await groupService.getGroups(payload.paginationOpts, payload.filter).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_groups'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_groups'))
   })
   if (result) {
     commit('setGroups', result.data)
@@ -168,14 +134,7 @@ export async function getGroups ({ commit }, payload) {
 
 export async function getGroup ({ commit }, payload) {
   const result = await groupService.getGroup(payload.id).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_group'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_group'))
   })
   if (result) {
     commit('setGroup', result)
@@ -189,14 +148,7 @@ export async function getGroup ({ commit }, payload) {
 export async function getGroupUsers ({ commit }, payload) {
   if (payload.group.users && payload.group.users.length > 0) {
     const result = await userService.getUsersByIds(payload.group.users).catch(err => {
-      console.error(err)
-      const errorCode = err.code
-      if (errorCode) {
-        Notify.create({
-          message: t('error.get_group_users'),
-          color: 'negative'
-        })
-      }
+      errorHandler.onError(err, t('error.get_group_users'))
     })
     if (result) {
       commit('setGroupUsers', result.data)
@@ -211,11 +163,8 @@ export async function getGroupUsers ({ commit }, payload) {
 export async function createGroup ({ dispatch }, payload) {
   const result = await groupService
     .createGroup(payload.group)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -236,11 +185,8 @@ export async function createGroup ({ dispatch }, payload) {
 export async function updateGroup ({ commit, dispatch }, payload) {
   const result = await groupService
     .updateGroup(payload.group, payload.id ? payload.id : payload.group._id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -264,11 +210,8 @@ export async function updateGroup ({ commit, dispatch }, payload) {
 export async function deleteGroup ({ dispatch }, payload) {
   const result = await groupService
     .deleteGroup(payload.id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -289,11 +232,8 @@ export async function deleteGroup ({ dispatch }, payload) {
 export async function deleteGroups ({ dispatch }, payload) {
   const result = await groupService
     .deleteGroups(payload.ids)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({

@@ -89,7 +89,7 @@
 import { useI18n } from 'vue-i18n'
 import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
-import { Notify } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 import { locales } from '../boot/i18n'
 
 export default defineComponent({
@@ -104,6 +104,9 @@ export default defineComponent({
       email: '',
       password: ''
     }
+  },
+  mounted () {
+    LocalStorage.remove('feathers-jwt')
   },
   watch: {
     user (newUser, oldUser) {

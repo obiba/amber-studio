@@ -502,7 +502,7 @@ export default {
           name: 'lastLoggedIn',
           align: 'left',
           label: this.$t('users.last_seen'),
-          field: 'lastLoggedIn',
+          field: 'lastSeen',
           sortable: true,
           format: val =>
             `${val ? date.formatDate(val, 'DD MMM YY HH:mm A') : this.$t('unknown')}`

@@ -1,5 +1,5 @@
 import { boot } from 'quasar/wrappers'
-import { Notify } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 
 class ErrorHandler {
   init (router) {
@@ -9,6 +9,7 @@ class ErrorHandler {
   onError (error, message) {
     // console.error(error)
     if (error.name === 'NotAuthenticated') {
+      LocalStorage.remove('feathers-jwt')
       this.router.push('/login')
     } else {
       Notify.create({
