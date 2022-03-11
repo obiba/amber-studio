@@ -499,7 +499,7 @@ export default {
           sortable: false
         },
         {
-          name: 'lastLoggedIn',
+          name: 'lastSeen',
           align: 'left',
           label: this.$t('users.last_seen'),
           field: 'lastSeen',
@@ -520,7 +520,7 @@ export default {
       showConfirmDeleteUsers: false,
       showConfirmGroupUsers: false,
       paginationOpts: {
-        sortBy: 'lastLoggedIn',
+        sortBy: 'lastSeen',
         descending: false,
         page: 1,
         rowsPerPage: 10,

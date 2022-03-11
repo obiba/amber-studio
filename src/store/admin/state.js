@@ -2,7 +2,7 @@ export default function () {
   return {
     users: [],
     userPaginationOpts: {
-      sortBy: 'lastLoggedIn',
+      sortBy: 'lastSeen',
       descending: false,
       page: 1,
       rowsPerPage: 10,
