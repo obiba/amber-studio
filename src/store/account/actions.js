@@ -1,5 +1,6 @@
 import userService from '../../services/user'
 import { t } from '../../boot/i18n'
+import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
 
 export async function registerUser (context, payload) {
@@ -41,15 +42,7 @@ export async function updateProfile (context, payload) {
   const result = await userService
     .updateProfile(payload.id, payload.profileData)
     .catch(err => {
-      if (err.response) {
-        const errorCode = err.response.data.code
-        if (errorCode) {
-          Notify.create({
-            message: t('error.update_account'),
-            color: 'negative'
-          })
-        }
-      }
+      errorHandler.onError(err, t('error.update_account'))
     })
   if (result) {
     Notify.create({
@@ -70,11 +63,7 @@ export async function forgotPassword (context, payload) {
       })
     })
     .catch(err => {
-      Notify.create({
-        message: err.response.data.message,
-        // 'There was an error processing your request. If this problem persists, contact support.',
-        color: 'negative'
-      })
+      errorHandler.onError(err)
     })
 }
 
@@ -103,11 +92,8 @@ export async function updatePasswordFromProfile ({ dispatch }, payload) {
       payload.oldPassword,
       payload.newPassword
     )
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result && result.status >= 200) {
     Notify.create({
@@ -125,11 +111,8 @@ export async function updateIdentity (context, payload) {
       payload.currentEmail,
       payload.updatedEmail
     )
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result && result.status === 201) {
     Notify.create({
@@ -142,11 +125,8 @@ export async function updateIdentity (context, payload) {
 export async function resendVerification (context, payload) {
   const result = await userService
     .resendVerification(payload.email)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result && result.status >= 200 && result.status < 300) {
     Notify.create({

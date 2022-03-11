@@ -1,17 +1,11 @@
 import { formService, formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
+import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
 
 export async function getForms ({ commit }, payload) {
   const result = await formService.getForms(payload.paginationOpts, payload.study, payload.filter).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_study_forms'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_study_forms'))
   })
   if (result) {
     commit('setForms', result.data)
@@ -24,14 +18,7 @@ export async function getForms ({ commit }, payload) {
 
 export async function getForm ({ commit }, payload) {
   const result = await formService.getForm(payload.id).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_study_form'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_study_form'))
   })
   if (result) {
     commit('setForm', result)
@@ -44,11 +31,7 @@ export async function createForm ({ dispatch }, payload) {
   const result = await formService
     .createForm(payload.form)
     .catch(err => {
-      console.error(err)
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -70,11 +53,8 @@ export async function createForm ({ dispatch }, payload) {
 export async function updateForm ({ commit, dispatch }, payload) {
   const result = await formService
     .updateForm(payload.form, payload.id ? payload.id : payload.form._id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     if (payload.notification) {
@@ -101,11 +81,8 @@ export async function updateForm ({ commit, dispatch }, payload) {
 export async function deleteForm ({ dispatch }, payload) {
   const result = await formService
     .deleteForm(payload.id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -127,11 +104,8 @@ export async function deleteForm ({ dispatch }, payload) {
 export async function deleteForms ({ dispatch }, payload) {
   const result = await formService
     .deleteForms(payload.ids)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -154,11 +128,7 @@ export async function createFormRevision ({ dispatch }, payload) {
   const result = await formRevisionService
     .createFormRevision(payload.formRevision)
     .catch(err => {
-      console.error(err)
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -171,14 +141,7 @@ export async function createFormRevision ({ dispatch }, payload) {
 
 export async function getFormRevisions ({ commit }, payload) {
   const result = await formRevisionService.getFormRevisions(payload.paginationOpts, payload.form, payload.filter).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_form_revisions'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_form_revisions'))
   })
   if (result) {
     commit('setFormRevisions', result.data)
@@ -192,11 +155,8 @@ export async function getFormRevisions ({ commit }, payload) {
 export async function deleteFormRevision ({ dispatch }, payload) {
   const result = await formRevisionService
     .deleteFormRevision(payload.id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -218,11 +178,8 @@ export async function deleteFormRevision ({ dispatch }, payload) {
 export async function deleteFormRevisions ({ dispatch }, payload) {
   const result = await formRevisionService
     .deleteFormRevisions(payload.ids)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({

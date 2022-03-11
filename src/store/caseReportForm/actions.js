@@ -1,17 +1,11 @@
 import { caseReportFormService, caseReportService } from '../../services/caseReport'
 import { t } from '../../boot/i18n'
+import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
 
 export async function getCaseReports ({ commit }, payload) {
   const result = await caseReportService.getCaseReports(payload.paginationOpts, payload.study, payload.form, payload.filter).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_case_reports'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_case_reports'))
   })
   if (result) {
     commit('setCaseReports', result.data)
@@ -25,11 +19,8 @@ export async function getCaseReports ({ commit }, payload) {
 export async function deleteCaseReport ({ dispatch }, payload) {
   const result = await caseReportService
     .deleteCaseReport(payload.id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -52,11 +43,8 @@ export async function deleteCaseReport ({ dispatch }, payload) {
 export async function deleteCaseReports ({ dispatch }, payload) {
   const result = await caseReportService
     .deleteCaseReports(payload.ids)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -78,14 +66,7 @@ export async function deleteCaseReports ({ dispatch }, payload) {
 
 export async function getCaseReportForms ({ commit }, payload) {
   const result = await caseReportFormService.getCaseReportForms(payload.paginationOpts, payload.study, payload.filter).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_case_report_forms'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_case_report_forms'))
   })
   if (result) {
     commit('setCaseReportForms', result.data)
@@ -100,11 +81,7 @@ export async function createCaseReportForm ({ dispatch }, payload) {
   const result = await caseReportFormService
     .createCaseReportForm(payload.caseReportForm)
     .catch(err => {
-      console.error(err)
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -126,11 +103,8 @@ export async function createCaseReportForm ({ dispatch }, payload) {
 export async function updateCaseReportForm ({ commit, dispatch }, payload) {
   const result = await caseReportFormService
     .updateCaseReportForm(payload.caseReportForm, payload.id ? payload.id : payload.caseReportForm._id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -155,11 +129,8 @@ export async function updateCaseReportForm ({ commit, dispatch }, payload) {
 export async function deleteCaseReportForm ({ dispatch }, payload) {
   const result = await caseReportFormService
     .deleteCaseReportForm(payload.id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -181,11 +152,8 @@ export async function deleteCaseReportForm ({ dispatch }, payload) {
 export async function deleteCaseReportForms ({ dispatch }, payload) {
   const result = await caseReportFormService
     .deleteCaseReportForms(payload.ids)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({

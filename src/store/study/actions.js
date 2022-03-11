@@ -1,17 +1,11 @@
 import studyService from '../../services/study'
 import { t } from '../../boot/i18n'
+import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
 
 export async function getStudies ({ commit }, payload) {
   const result = await studyService.getStudies(payload.paginationOpts, payload.filter).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_studies'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_studies'))
   })
   if (result) {
     commit('setStudies', result.data)
@@ -24,14 +18,7 @@ export async function getStudies ({ commit }, payload) {
 
 export async function getStudy ({ commit }, payload) {
   const result = await studyService.getStudy(payload.id).catch(err => {
-    console.error(err)
-    const errorCode = err.code
-    if (errorCode) {
-      Notify.create({
-        message: t('error.get_study'),
-        color: 'negative'
-      })
-    }
+    errorHandler.onError(err, t('error.get_study'))
   })
   if (result) {
     commit('setStudy', result)
@@ -43,11 +30,8 @@ export async function getStudy ({ commit }, payload) {
 export async function createStudy ({ dispatch }, payload) {
   const result = await studyService
     .createStudy(payload.study)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -68,11 +52,8 @@ export async function createStudy ({ dispatch }, payload) {
 export async function updateStudy ({ commit, dispatch }, payload) {
   const result = await studyService
     .updateStudy(payload.study, payload.id ? payload.id : payload.study._id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -96,11 +77,8 @@ export async function updateStudy ({ commit, dispatch }, payload) {
 export async function deleteStudy ({ dispatch }, payload) {
   const result = await studyService
     .deleteStudy(payload.id)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
@@ -121,11 +99,8 @@ export async function deleteStudy ({ dispatch }, payload) {
 export async function deleteStudies ({ dispatch }, payload) {
   const result = await studyService
     .deleteStudies(payload.ids)
-    .catch(() => {
-      Notify.create({
-        message: t('error.general'),
-        color: 'negative'
-      })
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
     })
   if (result) {
     Notify.create({
