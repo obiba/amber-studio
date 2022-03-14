@@ -21,7 +21,7 @@
                  @click="$q.fullscreen.toggle()"
                  v-if="$q.screen.gt.sm">
           </q-btn>
-          <q-btn round dense flat icon="help" type="a" href="https://amberdoc.obiba.org" target="_blank">
+          <q-btn round dense flat icon="help" type="a" href="https://amberdoc.obiba.org/en/latest/studio-user-guide/" target="_blank">
           </q-btn>
           <q-btn-dropdown
             v-show="hasLocales"
