@@ -38,7 +38,7 @@
           class="q-mr-md"
           flat
           round
-          color="red"
+          color="negative"
           icon="delete_outline"
           :disable="selected.length === 0"
           :title="$t('users.delete_users_hint')"

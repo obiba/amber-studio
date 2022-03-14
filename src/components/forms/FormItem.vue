@@ -117,8 +117,10 @@
                       class="q-mr-sm"
                     />
                     <q-btn
+                      flat
+                      round
                       color="negative"
-                      icon="delete"
+                      icon="delete_outline"
                       :title="$t('form.delete_options_hint')"
                       @click="deleteOptions()"
                     />
@@ -215,8 +217,10 @@
                       class="q-mr-sm"
                     />
                     <q-btn
+                      flat
+                      round
                       color="negative"
-                      icon="delete"
+                      icon="delete_outline"
                       :title="$t('form.delete_areas_hint')"
                       @click="deleteAreas()"
                     />

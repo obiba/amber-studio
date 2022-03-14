@@ -25,7 +25,7 @@
           class="q-mr-md"
           flat
           round
-          color="red"
+          color="negative"
           icon="delete_outline"
           :disable="selected.length === 0"
           :title="$t('study.delete_study_forms_hint')"
