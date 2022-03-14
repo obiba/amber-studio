@@ -107,14 +107,20 @@
                   flat
                   @click="showMoreOptions"
                   :label="$t('form.show_more_options')"/>
-                <div class="row q-col-gutter-lg" v-if="!isReadOnly">
+                <div class="row q-col-gutter-sm" v-if="!isReadOnly">
                   <div class="col-4">
                     <q-btn
                       color="primary"
                       icon="add"
                       :title="$t('form.add_option_hint')"
                       @click="addOption()"
-                      class="q-mr-md"
+                      class="q-mr-sm"
+                    />
+                    <q-btn
+                      color="negative"
+                      icon="delete"
+                      :title="$t('form.delete_options_hint')"
+                      @click="deleteOptions()"
                     />
                   </div>
                   <div class="col-8">
@@ -206,7 +212,13 @@
                       icon="add"
                       :title="$t('form.add_area_hint')"
                       @click="addArea()"
-                      class="q-mr-md"
+                      class="q-mr-sm"
+                    />
+                    <q-btn
+                      color="negative"
+                      icon="delete"
+                      :title="$t('form.delete_areas_hint')"
+                      @click="deleteAreas()"
                     />
                   </div>
                   <div class="col-8">
@@ -604,6 +616,9 @@ export default defineComponent({
         label: val
       })
     },
+    deleteOptions () {
+      this.value.options = []
+    },
     showMoreAreas () {
       this.areasCount = this.areasCount + 5
     },
@@ -623,6 +638,9 @@ export default defineComponent({
         fill: '#cccccc',
         points: '0,0 10,0 0,10 10,10'
       })
+    },
+    deleteAreas (area) {
+      this.value.areas = []
     },
     onLocale (newLocale) {
       this.locale = newLocale

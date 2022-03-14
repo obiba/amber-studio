@@ -186,7 +186,7 @@ export default defineComponent({
   mixins: [AuthMixin, FormMixin],
   setup () {
     return {
-      splitterModel: ref(30),
+      splitterModel: ref(20),
       formItemSelected: ref(null),
       selected: ref(null),
       formItemCut: ref(null),
