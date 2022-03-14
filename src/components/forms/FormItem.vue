@@ -136,6 +136,9 @@
                   </div>
                 </div>
               </div>
+              <div v-if="value.type === 'autocomplete'">
+                <q-toggle class="q-mt-md q-mb-md" v-model.number="value.newValue" :label="$t('form.new_value')" dense :disable="isReadOnly" />
+              </div>
               <div v-if="hasImageMap">
                 <q-toggle class="q-mt-md q-mb-md" v-model.number="value.showSelect" :label="$t('form.show_area_select')" dense :disable="isReadOnly" />
                 <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('form.image') }}</p>
@@ -484,6 +487,7 @@ export default defineComponent({
         delete this.modelValue.mask
         delete this.modelValue.default
         delete this.modelValue.options
+        delete this.modelValue.newValue
       }
     },
     'modelValue.default': function (newValue, oldValue) {

@@ -313,6 +313,7 @@ export default {
     required: 'Required',
     required_hint: 'Whether a value is required. Checked before value validation.',
     multiple: 'Multiple choices',
+    new_value: 'Can enter new value (not in the options)',
     min: 'Minimum',
     min_hint: 'Minimum value.',
     max: 'Maximum',

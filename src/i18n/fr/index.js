@@ -317,6 +317,7 @@ export default {
     required: 'Requis',
     required_hint: 'Une valeur est requise. Vérifé avant la validation.',
     multiple: 'Choix multiple',
+    new_value: 'Possibilté d\'ajouter une nouvelle valeur (non listée dans les options)',
     min: 'Minimum',
     min_hint: 'Valeur minimum.',
     max: 'Maximum',
