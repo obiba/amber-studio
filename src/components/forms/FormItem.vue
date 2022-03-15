@@ -57,7 +57,7 @@
                 <q-input class="q-mb-md" v-model="value.closeLabel" :label="$t('form.close_label')" :hint="$t('form.close_label_hint')" :disable="isReadOnly" />
               </div>
               <q-input v-if="isComputed" class="q-mb-md" v-model="value.compute" :label="$t('form.compute')" :hint="$t('form.compute_hint')" />
-              <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="isReadOnly" />
+              <q-input v-if="!isComputed" class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="isReadOnly" />
               <div v-if="value.type === 'text'">
                 <q-input class="q-mb-md" v-model.number="value.mask" :label="$t('form.mask')" :hint="$t('form.mask_hint')" :disable="isReadOnly" />
               </div>
