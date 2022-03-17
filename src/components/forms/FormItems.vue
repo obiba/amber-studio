@@ -284,13 +284,13 @@ export default defineComponent({
       }
       const idx = found.parent.items.indexOf(found.item)
       if (idx === 0 && (!found.parent.type || found.parent.type === 'group')) {
-        this.selected = found.parent.name // case selected item is a group or main form
+        this.selected = found.parent._id // case selected item is a group or main form
       } else if (idx > 0) {
         const upItem = found.parent.items[idx - 1]
         if (upItem.type === 'group' && upItem.items && upItem.items.length > 0) {
-          this.selected = upItem.items[upItem.items.length - 1].name // case selected item is after a group with items
+          this.selected = upItem.items[upItem.items.length - 1]._id // case selected item is after a group with items
         } else {
-          this.selected = upItem.name // case regular up item
+          this.selected = upItem._id // case regular up item
         }
       }
     },
@@ -329,13 +329,14 @@ export default defineComponent({
       }
     },
     selectDownItem () {
+      console.log(this.selected)
       if (this.selected === null) {
         return
       }
 
       let found = this.findItemAndParent(this.selected)
       if (found.item.type === 'group' && found.item.items && found.item.items.length > 0) {
-        this.selected = found.item.items[0].name // case selected item is a group with items
+        this.selected = found.item.items[0]._id // case selected item is a group with items
       } else if (found.parent) {
         let idx = found.parent.items.indexOf(found.item)
         if (idx === found.parent.items.length - 1 && found.parent.type === 'group') {
@@ -343,10 +344,10 @@ export default defineComponent({
           idx = found.parent.items.indexOf(found.item) // case selected item is last item in a group
         }
         if (idx < found.parent.items.length - 1) {
-          this.selected = found.parent.items[idx + 1].name // case selected is last in the group
+          this.selected = found.parent.items[idx + 1]._id // case selected is last in the group
         }
       } else if (found.item.items && found.item.items.length > 0) {
-        this.selected = found.item.items[0].name
+        this.selected = found.item.items[0]._id
       }
     },
     moveDownItem (item) {
