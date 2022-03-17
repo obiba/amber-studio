@@ -78,7 +78,10 @@ export async function deleteStudy ({ dispatch }, payload) {
   const result = await studyService
     .deleteStudy(payload.id)
     .catch((err) => {
-      errorHandler.onError(err, t('error.general'))
+      errorHandler.onError(err, {
+        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        default: t('error.general')
+      })
     })
   if (result) {
     Notify.create({
@@ -100,7 +103,10 @@ export async function deleteStudies ({ dispatch }, payload) {
   const result = await studyService
     .deleteStudies(payload.ids)
     .catch((err) => {
-      errorHandler.onError(err, t('error.general'))
+      errorHandler.onError(err, {
+        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        default: t('error.general')
+      })
     })
   if (result) {
     Notify.create({

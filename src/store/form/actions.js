@@ -82,7 +82,10 @@ export async function deleteForm ({ dispatch }, payload) {
   const result = await formService
     .deleteForm(payload.id)
     .catch((err) => {
-      errorHandler.onError(err, t('error.general'))
+      errorHandler.onError(err, {
+        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        default: t('error.general')
+      })
     })
   if (result) {
     Notify.create({
@@ -105,7 +108,10 @@ export async function deleteForms ({ dispatch }, payload) {
   const result = await formService
     .deleteForms(payload.ids)
     .catch((err) => {
-      errorHandler.onError(err, t('error.general'))
+      errorHandler.onError(err, {
+        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        default: t('error.general')
+      })
     })
   if (result) {
     Notify.create({
@@ -156,7 +162,10 @@ export async function deleteFormRevision ({ dispatch }, payload) {
   const result = await formRevisionService
     .deleteFormRevision(payload.id)
     .catch((err) => {
-      errorHandler.onError(err, t('error.general'))
+      errorHandler.onError(err, {
+        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        default: t('error.general')
+      })
     })
   if (result) {
     Notify.create({
@@ -179,7 +188,10 @@ export async function deleteFormRevisions ({ dispatch }, payload) {
   const result = await formRevisionService
     .deleteFormRevisions(payload.ids)
     .catch((err) => {
-      errorHandler.onError(err, t('error.general'))
+      errorHandler.onError(err, {
+        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        default: t('error.general')
+      })
     })
   if (result) {
     Notify.create({

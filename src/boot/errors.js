@@ -7,13 +7,28 @@ class ErrorHandler {
   }
 
   onError (error, message) {
-    // console.error(error)
+    console.error(error)
     if (error.name === 'NotAuthenticated') {
       LocalStorage.remove('feathers-jwt')
       this.router.push('/login')
+    } else if (typeof message === 'string') {
+      Notify.create({
+        message: message,
+        color: 'negative'
+      })
+    } else if (message[error.name]) {
+      Notify.create({
+        message: message[error.name],
+        color: 'negative'
+      })
+    } else if (message.default) {
+      Notify.create({
+        message: message.default,
+        color: 'negative'
+      })
     } else {
       Notify.create({
-        message: message || (error.data && error.data.message ? error.data.message : 'Unknown error'),
+        message: error.message,
         color: 'negative'
       })
     }

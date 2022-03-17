@@ -188,7 +188,8 @@ export default {
     get_study_forms: 'There was an error while retrieving forms.',
     get_study_form: 'There was an error while retrieving the form.',
     get_form_revisions: 'There was an error while retrieving form\'s versions.',
-    get_case_report_forms: 'There was an error while retrieving the case report forms.'
+    get_case_report_forms: 'There was an error while retrieving the case report forms.',
+    form_revision_has_case_reports: 'The form {name} with revision {revision} cannot be removed because case reports are still associated to it.'
   },
   success: {
     create_account: 'Account successfully created. Please check your email to verify your account.',

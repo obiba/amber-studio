@@ -188,7 +188,8 @@ export default {
     get_study_forms: 'Erreur à la récupération des formulaires.',
     get_study_form: 'Erreur à la récupération du formulaire.',
     get_form_revisions: 'Erreur à la récupération des versions du formulaire.',
-    get_case_report_forms: 'Erreur à la récupération des versions des formulaires de rapport de cas.'
+    get_case_report_forms: 'Erreur à la récupération des versions des formulaires de rapport de cas.',
+    form_revision_has_case_reports: 'Le formulaire {name} dans la version {revision} ne peut être supprimé car des rapports de cas sont toujours associés.'
   },
   success: {
     create_account: 'Compte créé avec succès. Un courriel de vérification d\'adresse a été envoyé.',
