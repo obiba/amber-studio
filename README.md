@@ -35,7 +35,7 @@ Environment variable for building the app in production:
 ### Customize the configuration
 
 * Modify the `settings.json` file for theming and overriding translations.
-* Override the `src/components/Banner.vue` file to apply your own banner in front pages (login and forgot password pages).
+* Override the `src/components/Banner.vue` file to apply your own banner in front pages (login, register, forgot password etc. pages).
 * Override the `src/css/custom.scss` file to apply your own stylesheet rules.
 
 See also [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
