@@ -140,6 +140,7 @@ export default {
   },
   main: {
     brand: 'Amber Studio',
+    brand_caption: 'Système de rapport de cas',
     organisation: 'OBiBa',
     profile: 'Profile',
     my_profile: 'Mon profile',
@@ -440,5 +441,7 @@ export default {
   unknown: 'Inconnue',
   no_results: 'Pas de resultats',
   close: 'Fermer',
-  id: 'ID'
+  id: 'ID',
+  go_home: 'Retour à l\'accueil',
+  nothing_here: 'Il n\'y a rien ici...'
 }

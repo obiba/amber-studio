@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="bg-blue-grey-1 q-pa-md">
+    <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
         <q-breadcrumbs-el icon="inventory_2" :label="$t('studies.title')" />
       </q-breadcrumbs>
@@ -210,6 +210,7 @@ import { mapState, mapActions } from 'vuex'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
+import { settings } from '../boot/settings'
 import AuthMixin from '../mixins/AuthMixin'
 
 export default {
@@ -222,7 +223,8 @@ export default {
     return {
       v$: useVuelidate(),
       selected: ref([]),
-      filter: ref('')
+      filter: ref(''),
+      settings
     }
   },
   data () {

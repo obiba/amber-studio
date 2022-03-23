@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar class="bg-white text-grey-8">
+    <q-header elevated :class="settings.theme.header">
+      <q-toolbar>
         <q-btn
           flat
           dense
@@ -63,7 +63,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      class="bg-grey-9 text-grey-4"
+      :class="settings.theme.drawer"
     >
       <q-list>
         <q-item to="/studies" active-class="q-item-no-link-highlighting">
@@ -117,7 +117,7 @@
     </q-drawer>
 
     <q-page-container class="bg-white">
-      <div class="bg-blue-grey-1 q-pa-md">
+      <div class="q-pa-md" :class="settings.theme.header2">
         <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
           <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
           <q-breadcrumbs-el :label="study.name" />
@@ -193,7 +193,8 @@
 <script>
 import { useI18n } from 'vue-i18n'
 import { locales } from '../boot/i18n'
-import { defineComponent, defineAsyncComponent, ref } from 'vue'
+import { settings } from '../boot/settings'
+import { defineComponent, ref } from 'vue'
 import AuthMixin from '../mixins/AuthMixin'
 import { mapState, mapActions } from 'vuex'
 import useVuelidate from '@vuelidate/core'
@@ -215,7 +216,8 @@ export default defineComponent({
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
-      v$: useVuelidate()
+      v$: useVuelidate(),
+      settings
     }
   },
   data () {

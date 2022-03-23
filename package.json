@@ -1,9 +1,10 @@
 {
   "name": "amber-studio",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Amber Studio for managing Amber server",
-  "productName": "Amber Studio App",
-  "author": "",
+  "productName": "Amber Studio",
+  "author": "Yannick Marcon <yannick.marcon@obiba.org>",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
@@ -27,6 +28,7 @@
     "core-js": "^3.6.5",
     "echarts": "^5.2.1",
     "feathers-hooks-common": "^5.0.6",
+    "merge-anything": "^5.0.2",
     "quasar": "^2.0.4",
     "secure-ls": "^1.2.6",
     "snarkdown": "^2.0.0",

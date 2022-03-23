@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="bg-blue-grey-1 q-pa-md">
+    <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
         <q-breadcrumbs-el icon="person" :label="$t('users.title')" />
       </q-breadcrumbs>
@@ -437,6 +437,7 @@ import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, email } from '../boot/vuelidate'
 import { date } from 'quasar'
 import { locales } from '../boot/i18n'
+import { settings } from '../boot/settings'
 
 export default {
   mounted: function () {
@@ -450,7 +451,8 @@ export default {
       selected: ref([]),
       filter: ref(''),
       rolesFilter: ref([]),
-      selectedGroup: ref(null)
+      selectedGroup: ref(null),
+      settings
     }
   },
   data () {

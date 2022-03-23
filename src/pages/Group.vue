@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="bg-blue-grey-1 q-pa-md">
+    <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
         <q-breadcrumbs-el icon="groups" :title="$t('groups.title')" to="/groups"/>
         <q-breadcrumbs-el :label="group.name" />
@@ -104,6 +104,7 @@ import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
+import { settings } from '../boot/settings'
 
 export default defineComponent({
   mounted: function () {
@@ -113,7 +114,8 @@ export default defineComponent({
     const userOptions = ref([])
     return {
       v$: useVuelidate(),
-      userOptions
+      userOptions,
+      settings
     }
   },
   data () {

@@ -1,5 +1,5 @@
 <template>
-  <q-layout class="bg-base text-grey-5" v-cloak>
+  <q-layout :class="settings.theme.front.bg" v-cloak>
     <q-page-container>
       <q-page class="flex flex-center">
         <q-card class="bg-transparent no-border no-shadow">
@@ -33,9 +33,15 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { settings } from '../boot/settings'
 
 export default defineComponent({
-  name: 'Loading'
+  name: 'Loading',
+  setup () {
+    return {
+      settings: settings
+    }
+  }
 })
 </script>
 

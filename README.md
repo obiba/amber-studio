@@ -2,9 +2,9 @@
 
 [Amber](https://github.com/obiba/amber) is the Electronic Data Capture server. Amber Studio is a web interface for managing the server:
 
-* users
+* users and groups
 * studies and forms
-* datasets
+* case reports
 * ...
 
 ## Install the dependencies
@@ -31,12 +31,15 @@ Environment variable for building the app in production:
 
 * `AMBER_URL`, the url of the Amber server, exposing a REST API used by Amber Studio (make sure CORS policy is set correctly on the server)
 * `RECAPTCHA_SITE_KEY`, the [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3) site key for the Registration page
-* `LOCALES`, comma separated locales, default value is 'en,fr'
 
 ### Customize the configuration
 
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+* Modify the `settings.json` file for theming and overriding translations.
+* Override the `src/components/Banner.vue` file to apply your own banner in front pages (login and forgot password pages).
+* Override the `src/css/custom.scss` file to apply your own stylesheet rules.
+
+See also [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 ## License
 
-[GPLv3](https://opensource.org/licenses/GPL-3.0)
+[MIT](https://mit-license.org/)

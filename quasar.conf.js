@@ -7,6 +7,10 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
 const { configure } = require('quasar/wrappers')
+const fs = require('fs')
+const packageJson = fs.readFileSync('./package.json')
+const version = JSON.parse(packageJson).version || 0
+const settingsJson = fs.readFileSync('./settings.json', 'utf8')
 const path = require('path')
 
 module.exports = configure(function (ctx) {
@@ -27,12 +31,14 @@ module.exports = configure(function (ctx) {
       'i18n',
       'vuelidate',
       'recaptcha',
-      'errors'
+      'errors',
+      'settings'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
-      'app.scss'
+      'app.scss',
+      'custom.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -56,7 +62,8 @@ module.exports = configure(function (ctx) {
       env: {
         API: ctx.dev ? 'http://localhost:3030' : process.env.AMBER_URL,
         RECAPTCHA_SITE_KEY: ctx.dev ? '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u' : process.env.RECAPTCHA_SITE_KEY,
-        LOCALES: ctx.dev ? 'en,fr' : (process.env.LOCALES ? process.env.LOCALES : 'en,fr')
+        SETTINGS: ctx.dev ? settingsJson : (process.env.SETTINGS ? process.env.SETTINGS : settingsJson),
+        VERSION: version
       },
 
       // transpile: false,

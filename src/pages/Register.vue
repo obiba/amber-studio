@@ -1,19 +1,17 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-page class="flex bg-base flex-center">
+      <q-page class="flex flex-center" :class="settings.theme.front.bg">
         <div class="column"  v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
           <div class="col">
-            <div class="text-center text-h4 text-grey-8 q-pb-lg">
-              {{$t('main.brand')}}
-            </div>
+            <banner/>
           </div>
           <div class="col">
-            <q-card>
+            <q-card :class="settings.theme.front.card">
               <q-card-section>
                 <div class="text-center q-pt-sm">
-                  <div class="col text-subtitle text-grey-7">
-                    {{$t('register.title')}} 
+                  <div class="col text-subtitle">
+                    {{$t('register.title')}}
                   </div>
                 </div>
               </q-card-section>
@@ -140,13 +138,18 @@
 
 <script>
 import { useI18n } from 'vue-i18n'
+import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { useReCaptcha } from 'vue-recaptcha-v3'
 import { required, minLength, email } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
+import { settings } from '../boot/settings'
 
-export default {
+import Banner from 'components/Banner'
+
+export default defineComponent({
+  components: { Banner },
   setup () {
     const { locale } = useI18n({ useScope: 'global' })
     const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
@@ -165,7 +168,8 @@ export default {
     return {
       locale,
       v$: useVuelidate(),
-      recaptcha
+      recaptcha,
+      settings
     }
   },
   data () {
@@ -230,5 +234,5 @@ export default {
       })
     }
   }
-}
+})
 </script>

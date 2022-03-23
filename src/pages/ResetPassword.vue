@@ -1,18 +1,16 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-page class="flex bg-base flex-center">
+      <q-page class="flex flex-center" :class="settings.theme.front.bg">
         <div class="column"  v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
           <div class="col">
-            <div class="text-center text-h4 text-grey-8 q-pb-lg">
-              {{$t('main.brand')}}
-            </div>
+            <banner/>
           </div>
           <div class="col">
-            <q-card>
+            <q-card :class="settings.theme.front.card">
               <q-card-section>
                 <div class="text-center q-pt-sm">
-                  <div class="col text-subtitle text-grey-7">
+                  <div class="col text-subtitle">
                     {{$t('reset.title')}}
                   </div>
                 </div>
@@ -46,12 +44,22 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
 import { required, minLength } from '../boot/vuelidate'
 import userService from '../services/user'
 import { Notify } from 'quasar'
+import { settings } from '../boot/settings'
 
-export default {
+import Banner from 'components/Banner'
+
+export default defineComponent({
+  components: { Banner },
+  setup () {
+    return {
+      settings
+    }
+  },
   data () {
     return {
       valid: false,
@@ -110,5 +118,5 @@ export default {
       }
     }
   }
-}
+})
 </script>
