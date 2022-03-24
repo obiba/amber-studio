@@ -21,6 +21,8 @@ export async function registerUser (context, payload) {
             message: t('error.account_already_exists'),
             color: 'negative'
           })
+        } else if (errorCode === 400) {
+          errorHandler.onError(err.response.data, t('error.create_account_invalid'))
         } else {
           Notify.create({
             message: t('error.create_account'),

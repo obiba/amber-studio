@@ -179,7 +179,7 @@ export default defineComponent({
       },
       institution: {
         minLength: minLength(2),
-        maxLength: maxLength(30)
+        maxLength: maxLength(100)
       },
       city: {
         minLength: minLength(2),

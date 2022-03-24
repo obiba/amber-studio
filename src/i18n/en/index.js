@@ -177,6 +177,7 @@ export default {
   error: {
     general: 'There was an error while processing this request. If this problem persists, contact support.',
     account_already_exists: 'This account already exists. Try resetting your password or contact support.',
+    create_account_invalid: 'The account information are not valid.',
     create_account: 'There was an error while creating your account. If this issue persists, contact support.',
     update_account: 'There was an error while updating your profile. If this persists, contact support.',
     get_users: 'There was an error while retrieving users.',
@@ -417,7 +418,7 @@ export default {
   email: 'Email',
   email_hint: 'Verifiable email address.',
   password: 'Password',
-  password_hint: 'Create a password. 8 character minimum.',
+  password_hint: 'Create a password. 8 character minimum with lower and upper case, digit and special character.',
   firstname: 'First Name',
   lastname: 'Last Name',
   preferred_language: 'Preferred Language',

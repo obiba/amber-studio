@@ -177,6 +177,7 @@ export default {
   error: {
     general: 'Erreur dans le traitement de la requète. Si ce problème persiste, contacter le support.',
     account_already_exists: 'Ce compte existe déjà. Essayez de réinitialiser votre mot de passe ou contactez le support.',
+    create_account_invalid: 'Les informations du compte ne sont pas valides.',
     create_account: 'Erreur à la creation du compte. Si ce problème persiste, contacter le support.',
     update_account: 'Erreur à la mise à jour du compte. Si ce problème persiste, contacter le support.',
     get_users: 'Erreur à la récupération des utilisateurs.',
@@ -421,7 +422,7 @@ export default {
   email: 'Courriel',
   email_hint: 'Adresse courriel vérifiable.',
   password: 'Mot de passe',
-  password_hint: 'Créer un mot de passe de 8 character au minimum.',
+  password_hint: 'Créer un mot de passe de 8 character au minimum avec majuscule et minuscule, chiffre et caractère spécial.',
   firstname: 'Prénom',
   lastname: 'Nom de famille',
   preferred_language: 'Langue préférée',
