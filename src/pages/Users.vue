@@ -507,7 +507,7 @@ export default {
           field: 'lastSeen',
           sortable: true,
           format: val =>
-            `${val ? date.formatDate(val, 'DD MMM YY HH:mm A') : this.$t('unknown')}`
+            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
         },
         {
           name: 'action',

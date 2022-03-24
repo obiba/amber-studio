@@ -322,6 +322,7 @@ import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import { formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
+import { date } from 'quasar'
 import { subjectsService } from '../../services/utils'
 import AuthMixin from '../../mixins/AuthMixin'
 
@@ -355,7 +356,7 @@ export default defineComponent({
       showConfirmDeleteStudyCaseReportForm: false,
       showConfirmDeleteStudyCaseReportForms: false,
       paginationOpts: {
-        sortBy: 'createdAt',
+        sortBy: 'updatedAt',
         descending: true,
         page: 1,
         rowsPerPage: 10,
@@ -389,6 +390,15 @@ export default defineComponent({
           label: this.$t('revision'),
           field: 'revision',
           sortable: true
+        },
+        {
+          name: 'updatedAt',
+          align: 'left',
+          label: this.$t('updated_at'),
+          field: 'updatedAt',
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
         }
       ]
       if (this.subjects && this.subjects.length > 0) {

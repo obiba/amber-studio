@@ -182,7 +182,7 @@ import { defineComponent, ref } from 'vue'
 // import { formRevisionService } from '../../services/form'
 import { caseReportExportService } from '../../services/caseReport'
 import { t } from '../../boot/i18n'
-import { Notify } from 'quasar'
+import { date, Notify } from 'quasar'
 import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
@@ -210,7 +210,7 @@ export default defineComponent({
       showConfirmDeleteStudyCaseReport: false,
       showConfirmDeleteStudyCaseReports: false,
       paginationOpts: {
-        sortBy: 'createdAt',
+        sortBy: 'updatedAt',
         descending: true,
         page: 1,
         rowsPerPage: 10,
@@ -239,6 +239,15 @@ export default defineComponent({
           label: this.$t('revision'),
           field: 'revision',
           sortable: true
+        },
+        {
+          name: 'updatedAt',
+          align: 'left',
+          label: this.$t('updated_at'),
+          field: 'updatedAt',
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
         },
         /* {
           name: 'state',

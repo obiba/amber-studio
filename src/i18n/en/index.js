@@ -441,5 +441,6 @@ export default {
   close: 'Close',
   id: 'ID',
   go_home: 'Go Home',
-  nothing_here: 'Oops. Nothing here...'
+  nothing_here: 'Oops. Nothing here...',
+  updated_at: 'Updated at'
 }

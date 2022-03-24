@@ -199,6 +199,7 @@
 import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
+import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import AuthMixin from '../../mixins/AuthMixin'
 
@@ -271,6 +272,15 @@ export default defineComponent({
           label: this.$t('description'),
           field: 'description',
           sortable: true
+        },
+        {
+          name: 'updatedAt',
+          align: 'left',
+          label: this.$t('updated_at'),
+          field: 'updatedAt',
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
         }
       ]
       if (!this.isReadOnly) {

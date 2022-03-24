@@ -445,5 +445,6 @@ export default {
   close: 'Fermer',
   id: 'ID',
   go_home: 'Retour à l\'accueil',
-  nothing_here: 'Il n\'y a rien ici...'
+  nothing_here: 'Il n\'y a rien ici...',
+  updated_at: 'Mise à jour'
 }

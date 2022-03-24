@@ -209,6 +209,7 @@
 import { mapState, mapActions } from 'vuex'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
+import { date } from 'quasar'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
 import AuthMixin from '../mixins/AuthMixin'
@@ -293,6 +294,15 @@ export default {
           label: this.$t('study.forms'),
           field: 'forms',
           sortable: true
+        },
+        {
+          name: 'updatedAt',
+          align: 'left',
+          label: this.$t('updated_at'),
+          field: 'updatedAt',
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
         }
       ]
       if (!this.isReadOnly) {
