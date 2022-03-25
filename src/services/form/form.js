@@ -10,23 +10,21 @@ export async function getForms (opts, study, filter) {
       formData.query.$sort[opts.sortBy] = opts.descending ? 1 : -1
     }
   } else {
-    formData.query.$limit = 10
+    formData.query.$limit = 100
   }
   // use filter
   if (filter && filter.length > 1) {
-    formData.query = {
-      $and: [
-        { study: study },
-        {
-          $or: [
-            { name: { $search: filter } },
-            { description: { $search: filter } }
-          ]
-        }
-      ]
-    }
+    formData.query.$and = [
+      { study: study },
+      {
+        $or: [
+          { name: { $search: filter } },
+          { description: { $search: filter } }
+        ]
+      }
+    ]
   } else {
-    formData.query = { study: study }
+    formData.query.study = study
   }
 
   return feathersClient.service('form').find(formData)

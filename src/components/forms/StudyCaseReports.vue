@@ -191,6 +191,7 @@ export default defineComponent({
   mounted: function () {
     this.setPagination()
     if (this.study) {
+      this.getStudyForms({ study: this.studyId })
       this.getTableStudyCaseReports()
     }
   },
@@ -303,6 +304,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions({
+      getStudyForms: 'form/getForms',
       getStudyCaseReports: 'caseReportForm/getCaseReports'
     }),
     onExport (format) {

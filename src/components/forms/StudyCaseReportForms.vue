@@ -332,6 +332,7 @@ export default defineComponent({
   mounted: function () {
     this.setPagination()
     if (this.studyId) {
+      this.getStudyForms({ study: this.studyId })
       this.getTableStudyCaseReportForms()
     }
     subjectsService.getSubjects().then((result) => {
@@ -464,6 +465,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions({
+      getStudyForms: 'form/getForms',
       getStudyCaseReportForms: 'caseReportForm/getCaseReportForms',
       createStudyCaseReportForm: 'caseReportForm/createCaseReportForm',
       updateStudyCaseReportForm: 'caseReportForm/updateCaseReportForm',
