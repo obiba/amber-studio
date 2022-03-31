@@ -276,6 +276,10 @@ export default {
       computed: 'Computed',
       map: 'Geographic data'
     },
+    layout: 'Preferred layout',
+    layout_hint: 'How the form should be laid out: single page or multiple pages.',
+    single_page: 'Single page',
+    multi_steps: 'Multiple steps',
     title: 'Title',
     form_title_hint: 'Published form title',
     form_description_hint: 'Published description of the form.',

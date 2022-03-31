@@ -24,7 +24,8 @@
             <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.form_description_hint')" autogrow :disable="isReadOnly" />
             <q-input class="q-mb-md" v-model="value.copyright" :label="$t('form.copyright')" :hint="$t('form.form_copyright_hint')" :disable="isReadOnly" />
             <q-select class="q-mb-md" v-model="value.license" :options="licenseOptions" :label="$t('form.license')" :hint="$t('form.form_license_hint')" emit-value map-options :disable="isReadOnly" />
-            <div v-html="$t('form.form_license_cc')" class="text-caption text-grey-7"/>
+            <div v-html="$t('form.form_license_cc')" class="text-caption text-grey-7 q-mb-md"/>
+            <q-select class="q-mb-md" v-model="value.layout" :options="layoutOptions" :label="$t('form.layout')" :hint="$t('form.layout_hint')" emit-value map-options :disable="isReadOnly" />
           </div>
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
@@ -448,6 +449,18 @@ export default defineComponent({
     },
     hasNumber () {
       return ['rating', 'slider'].includes(this.modelValue.type)
+    },
+    layoutOptions () {
+      return [
+        {
+          value: 'single',
+          label: this.$t('form.single_page')
+        },
+        {
+          value: 'multi',
+          label: this.$t('form.multi_steps')
+        }
+      ]
     },
     licenseOptions () {
       const licenses = this.ccLicenses.map(lic => {

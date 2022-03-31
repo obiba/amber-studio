@@ -280,6 +280,10 @@ export default {
       Point: 'Point',
       Polygon: 'Polygone'
     },
+    layout: 'Mise en page préferée',
+    layout_hint: 'Mise en page du formulaire : use seule page ou plusieurs.',
+    single_page: 'Une seule page',
+    multi_steps: 'Étapes multiples',
     title: 'Titre',
     form_title_hint: 'Titre du formulaire publié',
     form_description_hint: 'Description du formulaire publié.',
