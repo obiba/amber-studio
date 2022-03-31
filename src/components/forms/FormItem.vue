@@ -22,6 +22,9 @@
             <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
             <q-input class="q-mb-md" v-model="value.label" :label="$t('form.title')" :hint="$t('form.form_title_hint')" :disable="isReadOnly" />
             <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.form_description_hint')" autogrow :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.copyright" :label="$t('form.copyright')" :hint="$t('form.form_copyright_hint')" :disable="isReadOnly" />
+            <q-select class="q-mb-md" v-model="value.license" :options="licenseOptions" :label="$t('form.license')" :hint="$t('form.form_license_hint')" emit-value map-options :disable="isReadOnly" />
+            <div v-html="$t('form.form_license_cc')" class="text-caption text-grey-7"/>
           </div>
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
@@ -319,6 +322,7 @@ import snarkdown from 'snarkdown'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
 import { locales } from '../../boot/i18n'
+import { settings } from '../../boot/settings'
 import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
@@ -328,6 +332,37 @@ export default defineComponent({
   emits: ['update:modelValue'],
   mixins: [AuthMixin],
   setup () {
+    const ccLicenses = [
+      {
+        value: 'cc-by-40',
+        label: 'license.cc_by_40'
+      },
+      {
+        value: 'cc-by-sa-40',
+        label: 'license.cc_by_sa_40'
+      },
+      {
+        value: 'cc-by-nc-40',
+        label: 'license.cc_by_nc_40'
+      },
+      {
+        value: 'cc-by-nc-sa-40',
+        label: 'license.cc_by_nc_sa_40'
+      },
+      {
+        value: 'cc-by_nd-40',
+        label: 'license.cc_by_nd_40'
+      },
+      {
+        value: 'cc-by-nc-nd-40',
+        label: 'license.cc_by_nc_nd_40'
+      },
+      {
+        value: 'cc-cc0-10',
+        label: 'license.cc_cc0_10'
+      }
+    ]
+
     return {
       remountCounter: 0,
       tab: ref('design'),
@@ -350,7 +385,9 @@ export default defineComponent({
       imageFile: ref(null),
       areasFile: ref(null),
       areasCount: ref(5),
-      locale: ref('en')
+      locale: ref('en'),
+      settings: settings,
+      ccLicenses: ccLicenses
     }
   },
   computed: {
@@ -411,6 +448,21 @@ export default defineComponent({
     },
     hasNumber () {
       return ['rating', 'slider'].includes(this.modelValue.type)
+    },
+    licenseOptions () {
+      const licenses = this.ccLicenses.map(lic => {
+        return {
+          value: lic.value,
+          label: this.$t(lic.label)
+        }
+      })
+      if (this.settings.licenses) {
+        this.settings.licenses.forEach(lic => licenses.push({
+          value: lic.value,
+          label: lic.label ? this.$t(lic.label) : this.$t(lic.value)
+        }))
+      }
+      return licenses
     },
     typeOptions () {
       return this.types.map(tp => {

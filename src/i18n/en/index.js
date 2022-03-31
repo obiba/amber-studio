@@ -279,6 +279,11 @@ export default {
     title: 'Title',
     form_title_hint: 'Published form title',
     form_description_hint: 'Published description of the form.',
+    copyright: 'Copyright',
+    form_copyright_hint: 'The intellectual property on this form.',
+    license: 'License',
+    form_license_hint: 'License under which the form can be used and shared.',
+    form_license_cc: 'Suggested licenses are the ones of <a href="https://creativecommons.org/about/cclicenses/" target="_blank">Creative Commons</a>.',
     id_label: 'ID label',
     id_label_hint: 'Patient or participant\'s unique identifier field label.',
     id_description: 'ID instructions',
@@ -397,6 +402,15 @@ export default {
     delete_form_revision_hint: 'Delete form revision',
     delete_form_revision_confirm: 'Please confirm that you want to delete the form revision:',
     tag_comment_hint: 'Optional comment about the changes in the form\'s schema.'
+  },
+  license: {
+    cc_by_40: 'Creative Commons BY 4.0',
+    cc_by_sa_40: 'Creative Commons BY SA 4.0',
+    cc_by_nc_40: 'Creative Commons BY NC 4.0',
+    cc_by_nc_sa_40: 'Creative Commons BY NC SA 4.0',
+    cc_by_nd_40: 'Creative Commons BY ND 4.0',
+    cc_by_nc_nd_40: 'Creative Commons BY NC ND 4.0',
+    cc_cc0_10: 'Creative Commons CC0 1.0'
   },
   add: 'Add',
   update: 'Update',

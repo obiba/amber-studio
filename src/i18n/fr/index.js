@@ -283,6 +283,11 @@ export default {
     title: 'Titre',
     form_title_hint: 'Titre du formulaire publié',
     form_description_hint: 'Description du formulaire publié.',
+    copyright: 'Droit d\'auteur',
+    form_copyright_hint: 'Qui possède la propriété intellectuelle de ce formulaire.',
+    license: 'Licence',
+    form_license_hint: 'Licence sous laquelle ce formulaire peut être utilisé et partagé.',
+    form_license_cc: 'Les licences suggérées sont celles de <a href="https://creativecommons.org/about/cclicenses/" target="_blank">Creative Commons</a>.',
     id_label: 'Libellé de l\'identifiant',
     id_label_hint: 'Libellé du champ de l\'identifiant unique du patient/participant.',
     id_description: 'Instructions pour l\'identifiant',
@@ -401,6 +406,15 @@ export default {
     delete_form_revision_hint: 'Supprimer la version',
     delete_form_revision_confirm: 'Veuillez confirmer la suppression de la version du formulaire:',
     tag_comment_hint: 'Commentaire optionel à propos des changements dans le formulaire.'
+  },
+  license: {
+    cc_by_40: 'Creative Commons BY 4.0',
+    cc_by_sa_40: 'Creative Commons BY SA 4.0',
+    cc_by_nc_40: 'Creative Commons BY NC 4.0',
+    cc_by_nc_sa_40: 'Creative Commons BY NC SA 4.0',
+    cc_by_nd_40: 'Creative Commons BY ND 4.0',
+    cc_by_nc_nd_40: 'Creative Commons BY NC ND 4.0',
+    cc_cc0_10: 'Creative Commons CC0 1.0'
   },
   add: 'Ajouter',
   update: 'Appliquer',

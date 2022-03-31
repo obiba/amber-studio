@@ -22,10 +22,22 @@
       "link": "https://forum.obiba.org"
     }
   ],
+  "licenses": [
+    {
+      "value": "mit",
+      "label": "license.mit"
+    }
+  ],
   "i18n": {
     "en": {
+      "license": {
+        "mit": "MIT license"
+      }
     },
     "fr": {
+      "license": {
+        "mit": "Licence MIT"
+      }
     }
   }
 }
