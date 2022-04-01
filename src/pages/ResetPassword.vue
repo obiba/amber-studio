@@ -2,7 +2,7 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex flex-center" :class="settings.theme.front.bg">
-        <div class="column"  v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
+        <div class="column" v-bind:style="$q.screen.lt.sm?{'width': '80%'}:$q.screen.lt.md?{'width':'50%'}:{'width':'30%'}">
           <div class="col">
             <banner/>
           </div>
@@ -27,11 +27,17 @@
                       <q-icon name="fas fa-lock" size="xs" />
                     </template>
                   </q-input>
-                  <div>
+                  <div class="q-pt-md">
                     <q-btn
                       :label="$t('reset.submit')"
                       type="submit"
                       color="primary"/>
+                    <q-btn
+                      :label="$t('cancel')"
+                      flat
+                      to="/login"
+                      stretch
+                      class="text-bold q-ml-md"/>
                   </div>
                 </q-form>
               </q-card-section>

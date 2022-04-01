@@ -16,7 +16,8 @@ export async function register (firstname, lastname, language, email, password, 
     language: language,
     email: email,
     password: password,
-    token: token
+    token: token,
+    clientId: 'amber_studio'
   })
 }
 
@@ -27,7 +28,10 @@ export async function updateProfile (id, user) {
 export async function forgotPassword (email) {
   return api.post('/authManagement', {
     action: 'sendResetPwd',
-    value: { email: email }
+    value: {
+      email: email,
+      clientId: 'amber_studio'
+    }
   })
 }
 

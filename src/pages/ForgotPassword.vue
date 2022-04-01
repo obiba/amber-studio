@@ -2,7 +2,7 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex flex-center" :class="settings.theme.front.bg">
-        <div class="column"  v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
+        <div class="column" v-bind:style="$q.screen.lt.sm?{'width': '80%'}:$q.screen.lt.md?{'width':'50%'}:{'width':'30%'}">
           <div class="col">
             <banner/>
           </div>
@@ -34,7 +34,7 @@
                       </div>
                     </template>
                   </q-input>
-                  <div class="q-mt-lg">
+                  <div class="q-pt-md">
                     <q-btn
                       :label="$t('forgot_password.submit')"
                       type="submit"

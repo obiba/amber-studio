@@ -2,7 +2,7 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex flex-center" :class="settings.theme.front.bg">
-        <div class="column" :style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
+        <div class="column" v-bind:style="$q.screen.lt.sm?{'width': '80%'}:$q.screen.lt.md?{'width':'50%'}:{'width':'30%'}">
           <div class="col">
             <banner/>
           </div>
