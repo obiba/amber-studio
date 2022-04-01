@@ -22,16 +22,24 @@
                     v-model="formData.password"
                     :label="$t('password')"
                     lazy-rules
-                    :hint="$t('password_hint')">
+                    :hint="$t('password_hint')"
+                    @blur="v$.formData.password.$touch"
+                    :error="v$.formData.password.$error">
                     <template v-slot:prepend>
                       <q-icon name="fas fa-lock" size="xs" />
+                    </template>
+                    <template v-slot:error>
+                      <div v-for="error in v$.formData.password.$errors" :key="error">
+                        {{error.$message}}
+                      </div>
                     </template>
                   </q-input>
                   <div class="q-pt-md">
                     <q-btn
                       :label="$t('reset.submit')"
                       type="submit"
-                      color="primary"/>
+                      color="primary"
+                      :disable="disableSubmit"/>
                     <q-btn
                       :label="$t('cancel')"
                       flat
@@ -52,7 +60,8 @@
 <script>
 import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
-import { required, minLength } from '../boot/vuelidate'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength, strongPassword } from '../boot/vuelidate'
 import userService from '../services/user'
 import { Notify } from 'quasar'
 import { settings } from '../boot/settings'
@@ -63,6 +72,7 @@ export default defineComponent({
   components: { Banner },
   setup () {
     return {
+      v$: useVuelidate(),
       settings
     }
   },
@@ -79,7 +89,9 @@ export default defineComponent({
     formData: {
       password: {
         required,
-        minLength: minLength(8)
+        minLength: minLength(8),
+        maxLength: maxLength(64),
+        strongPassword
       }
     }
   },
@@ -87,8 +99,8 @@ export default defineComponent({
     ...mapState({
       submitting: state => state.auth.showLoading
     }),
-    resetValid () {
-      return this.$v.formData.$invalid
+    disableSubmit () {
+      return this.v$.formData.$invalid
     }
   },
   methods: {

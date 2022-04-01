@@ -162,7 +162,8 @@ export default {
     required: 'Value is required',
     minLength: 'The minimum length required is {min}',
     maxLength: 'The maximum length allowed is {max}',
-    email: 'Value is not a valid email address'
+    email: 'Value is not a valid email address',
+    strongPassword: 'Password must contain at least one of each: lower case letter, upper case letter, digit, special character.'
   },
   locales: {
     en: 'English',

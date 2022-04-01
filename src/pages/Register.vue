@@ -30,7 +30,7 @@
                       <q-icon name="fas fa-envelope" size="xs" />
                     </template>
                     <template v-slot:error>
-                      <div v-for="error in v$.formData.email.$errors">
+                      <div v-for="error in v$.formData.email.$errors" :key="error">
                         {{error.$message}}
                       </div>
                     </template>
@@ -48,7 +48,7 @@
                       <q-icon name="fas fa-lock" size="xs" />
                     </template>
                     <template v-slot:error>
-                      <div v-for="error in v$.formData.password.$errors">
+                      <div v-for="error in v$.formData.password.$errors" :key="error">
                         {{error.$message}}
                       </div>
                     </template>
@@ -65,7 +65,7 @@
                       <q-icon name="fas fa-user" size="xs" />
                     </template>
                     <template v-slot:error>
-                      <div v-for="error in v$.formData.firstname.$errors">
+                      <div v-for="error in v$.formData.firstname.$errors" :key="error">
                         {{error.$message}}
                       </div>
                     </template>
@@ -82,7 +82,7 @@
                       <q-icon name="fas fa-user" size="xs" />
                     </template>
                     <template v-slot:error>
-                      <div v-for="error in v$.formData.lastname.$errors">
+                      <div v-for="error in v$.formData.lastname.$errors" :key="error">
                         {{error.$message}}
                       </div>
                     </template>
@@ -142,7 +142,7 @@ import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { useReCaptcha } from 'vue-recaptcha-v3'
-import { required, minLength, email } from '../boot/vuelidate'
+import { required, minLength, maxLength, email, strongPassword } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 
@@ -199,7 +199,9 @@ export default defineComponent({
       },
       password: {
         required,
-        minLength: minLength(8)
+        minLength: minLength(8),
+        maxLength: maxLength(64),
+        strongPassword
       }
     }
   },
