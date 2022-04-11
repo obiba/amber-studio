@@ -2,7 +2,7 @@
   <q-card class="bg-transparent no-shadow no-border">
     <q-card-section class="q-pa-none">
       <div class="row q-col-gutter-sm ">
-        <div v-for="(item, index) in items" :key="index" class="col-md-2 col-sm-6 col-xs-12">
+        <div v-for="(item, index) in items" :key="index" class="col-sm-6 col-xs-12" :class="isAdministrator ? 'col-md-2' : 'col-md-3'">
           <q-item :style="`background-color: ${item.color1}`" class="q-pa-none">
             <q-item-section side :style="`background-color: ${item.color2}`"
                             class=" q-pa-lg q-mr-none text-white">
