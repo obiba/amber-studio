@@ -36,7 +36,7 @@ export default defineComponent({
         valuesByDate[`${agg._id.year}-${agg._id.month}-${agg._id.day}`] = agg.count
       }
       const start = this.aggregations[0]
-      let baseDate = +new Date(start._id.year, start._id.month, start._id.day)
+      let baseDate = +new Date(start._id.year, start._id.month - 1, start._id.day)
       const end = this.aggregations[this.aggregations.length - 1]
       const endStr = `${end._id.year}-${end._id.month}-${end._id.day}`
       const oneDay = 24 * 3600 * 1000
@@ -51,7 +51,7 @@ export default defineComponent({
           acc = acc + valuesByDate[currKey]
         }
         data.push([+curr, acc])
-        console.log(currKey + ' ~ ' + endStr)
+        console.debug(currKey + ' ~ ' + endStr)
         isEnd = curr.getTime() > now || currKey === endStr
       }
       const option = {
