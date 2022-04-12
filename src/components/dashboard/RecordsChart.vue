@@ -43,15 +43,16 @@ export default defineComponent({
       const data = [[baseDate, start.count]]
       let isEnd = false
       let acc = start.count
+      const now = new Date().getTime()
       while (!isEnd) {
-        const now = new Date((baseDate += oneDay))
-        const nowKey = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
-        if (valuesByDate[nowKey]) {
-          acc = acc + valuesByDate[nowKey]
+        const curr = new Date((baseDate += oneDay))
+        const currKey = curr.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
+        if (valuesByDate[currKey]) {
+          acc = acc + valuesByDate[currKey]
         }
         data.push([+now, acc])
-        console.log(nowKey + ' ~ ' + endStr)
-        isEnd = nowKey === endStr
+        console.log(currKey + ' ~ ' + endStr)
+        isEnd = curr.getTime() > now || currKey === endStr
       }
       const option = {
         tooltip: {
