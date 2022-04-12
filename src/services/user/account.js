@@ -29,8 +29,7 @@ export async function forgotPassword (email) {
   return api.post('/authManagement', {
     action: 'sendResetPwd',
     value: {
-      email: email,
-      clientId: 'amber_studio'
+      email: email
     }
   })
 }
