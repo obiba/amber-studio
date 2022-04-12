@@ -30,7 +30,6 @@ export default defineComponent({
   },
   methods: {
     init () {
-      console.log('init!!!')
       this.chart = echarts.init(document.getElementById('chartId'))
       const valuesByDate = {}
       for (const agg of this.aggregations) {
@@ -51,6 +50,7 @@ export default defineComponent({
           acc = acc + valuesByDate[nowKey]
         }
         data.push([+now, acc])
+        console.log(nowKey + ' ~ ' + endStr)
         isEnd = nowKey === endStr
       }
       const option = {
