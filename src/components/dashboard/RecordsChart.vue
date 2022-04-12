@@ -46,11 +46,11 @@ export default defineComponent({
       const now = new Date().getTime()
       while (!isEnd) {
         const curr = new Date((baseDate += oneDay))
-        const currKey = curr.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
+        const currKey = curr.getFullYear() + '-' + (curr.getMonth() + 1) + '-' + curr.getDate()
         if (valuesByDate[currKey]) {
           acc = acc + valuesByDate[currKey]
         }
-        data.push([+now, acc])
+        data.push([+curr, acc])
         console.log(currKey + ' ~ ' + endStr)
         isEnd = curr.getTime() > now || currKey === endStr
       }
