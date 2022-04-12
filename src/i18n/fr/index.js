@@ -154,6 +154,12 @@ export default {
     all_rights_reserved: 'Tous droits réservés',
     powered_by: 'Propulsé par'
   },
+  chart: {
+    cumulated_records: 'Nombre cumulé d\'enregistrements',
+    zoom: 'Zoom',
+    reset_zoom: 'Réinitialiser le zoom',
+    restore: 'Restaurer'
+  },
   loading: {
     title: 'Chargement',
     caption: 'Veuillez patienter...'

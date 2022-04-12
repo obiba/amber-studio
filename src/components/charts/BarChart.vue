@@ -8,7 +8,7 @@
         </q-btn>
       </q-card-section>
       <q-card-section>
-        <div ref="barchart" id="barChart" style="height: 300px;"></div>
+        <div ref="barchart" id="barChart" style="height: 300px"></div>
       </q-card-section>
     </q-card>
     <q-resize-observer @resize="onResize"/>
@@ -16,18 +16,17 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue';
-import {ref} from 'vue';
-import * as echarts from 'echarts';
+import { defineComponent, ref } from 'vue'
+import * as echarts from 'echarts'
 
 export default defineComponent({
-  name: "BarChart",
-  setup() {
+  name: 'BarChart',
+  setup () {
     return {
       model: ref(false),
       options: {
         legend: {
-          bottom: 10,
+          bottom: 10
         },
         tooltip: {},
         dataset: {
@@ -46,40 +45,40 @@ export default defineComponent({
           top: '5%',
           containLabel: true
         },
-        xAxis: {type: 'category'},
+        xAxis: { type: 'category' },
         yAxis: {},
         // Declare several bar series, each will be mapped
         // to a column of dataset.source by default.
         series: [
-          {type: 'bar'},
-          {type: 'bar'},
-          {type: 'bar'}
+          { type: 'bar' },
+          { type: 'bar' },
+          { type: 'bar' }
         ]
       },
-      bar_chart: ref(null),
+      bar_chart: ref(null)
     }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   methods: {
-    SaveImage() {
-      const linkSource = this.bar_chart.getDataURL();
-      const downloadLink = document.createElement('a');
-      document.body.appendChild(downloadLink);
-      downloadLink.href = linkSource;
-      downloadLink.target = '_self';
-      downloadLink.download = 'BarChart.png';
-      downloadLink.click();
+    SaveImage () {
+      const linkSource = this.bar_chart.getDataURL()
+      const downloadLink = document.createElement('a')
+      document.body.appendChild(downloadLink)
+      downloadLink.href = linkSource
+      downloadLink.target = '_self'
+      downloadLink.download = 'BarChart.png'
+      downloadLink.click()
     },
-    init() {
-      let barChart = document.getElementById('barChart');
-      this.bar_chart = echarts.init(barChart,'light');
+    init () {
+      const barChart = document.getElementById('barChart')
+      this.bar_chart = echarts.init(barChart, 'light')
       this.bar_chart.setOption(this.options)
     },
-    onResize() {
+    onResize () {
       if (this.bar_chart) {
-        this.bar_chart.resize();
+        this.bar_chart.resize()
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <div class="text-h5 q-mb-md">{{$t('main.dashboard')}}</div>
-    <dashboard-counts v-if="!isGuest" :counts="counts" class="q-mb-md"/>
+    <dashboard-counts v-if="!isGuest" :counts="counts"/>
     <q-btn color="primary" :label="$t('main.my_profile')" icon="person" to="/account"/>
   </q-page>
 </template>

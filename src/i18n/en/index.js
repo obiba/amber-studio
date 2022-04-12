@@ -154,6 +154,12 @@ export default {
     all_rights_reserved: 'All rights reserved',
     powered_by: 'Powered by'
   },
+  chart: {
+    cumulated_records: 'Cumulated count of records',
+    zoom: 'Zoom',
+    reset_zoom: 'Reset zoom',
+    restore: 'Restore'
+  },
   loading: {
     title: 'Loading',
     caption: 'Please wait...'
