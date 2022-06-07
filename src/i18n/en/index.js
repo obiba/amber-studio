@@ -58,7 +58,8 @@ export default {
     last_seen: 'Last Seen',
     roles_filter: 'Roles',
     search_hint: 'Search by name or email',
-    reset_2fa: 'Reset 2FA'
+    reset_2fa: 'Reset 2FA',
+    required_2fa: 'Two-factor authentication (2FA) is required'
   },
   groups: {
     title: 'Groups',

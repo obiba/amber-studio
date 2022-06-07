@@ -125,6 +125,12 @@
         >
         </q-select>
       </div>
+      <div class='col-12 col-md-6'>
+        <q-toggle
+          v-model="profileData.totp2faRequired"
+          :label="$t('users.required_2fa')"
+        />
+      </div>
     </div>
 
     <q-btn
@@ -267,7 +273,8 @@ export default defineComponent({
         title: user.title,
         phone: user.phone,
         language: user.language,
-        role: user.role
+        role: user.role,
+        totp2faRequired: user.totp2faRequired
       }
     },
     async initData () {

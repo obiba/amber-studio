@@ -58,7 +58,8 @@ export default {
     last_seen: 'Dernière conn.',
     roles_filter: 'Rôles',
     search_hint: 'Chercher par nom ou courriel',
-    reset_2fa: 'Réinitialiser 2FA'
+    reset_2fa: 'Réinitialiser 2FA',
+    required_2fa: 'L\'authentification à deux facteurs (2FA) est requise'
   },
   groups: {
     title: 'Groupes',
