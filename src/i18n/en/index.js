@@ -6,7 +6,12 @@ export default {
     title: 'Sign in to start your session',
     submit: 'Sign in',
     forgot_password: 'Forgot password?',
-    register: 'Sign up'
+    register: 'Sign up',
+    validate: 'Validate',
+    token: '6-digits token',
+    totp: 'Scan this QR code with a multifactor authentication app (Microsoft authenticator is recommended), and then enter the temporary token.',
+    failed: 'Incorrect email/password combination.',
+    failed_token: 'Incorrect token.'
   },
   register: {
     title: 'Register new membership',
@@ -52,7 +57,8 @@ export default {
     delete_user_confirm: 'Please confirm that you want to remove the user:',
     last_seen: 'Last Seen',
     roles_filter: 'Roles',
-    search_hint: 'Search by name or email'
+    search_hint: 'Search by name or email',
+    reset_2fa: 'Reset 2FA'
   },
   groups: {
     title: 'Groups',

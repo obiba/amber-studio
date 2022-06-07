@@ -140,6 +140,20 @@
       </template>
     </q-btn>
 
+    <q-btn
+      v-show="currentUser.totp2faRequired"
+      @click='resetTotp2FA'
+      :disable='disableTotp2FA'
+      :label="$t('users.reset_2fa')"
+      type='submit'
+      color='primary'
+      class="q-ml-sm q-mt-md"
+    >
+      <template v-slot:loading>
+        <q-spinner-facebook />
+      </template>
+    </q-btn>
+
   </q-page>
 </template>
 
@@ -216,6 +230,9 @@ export default defineComponent({
     disableSaveUser () {
       return this.v$.profileData.$invalid
     },
+    disableTotp2FA () {
+      return this.currentUser.totp2faEnabled === false
+    },
     localeOptions () {
       return locales.map(loc => {
         return {
@@ -264,6 +281,10 @@ export default defineComponent({
         user: toSave,
         id: this.user._id
       })
+    },
+    async resetTotp2FA () {
+      this.profileData.totp2faEnabled = false
+      this.saveUser()
     }
   }
 })

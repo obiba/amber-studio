@@ -51,7 +51,7 @@ export default defineComponent({
           acc = acc + valuesByDate[currKey]
         }
         data.push([+curr, acc])
-        console.debug(currKey + ' ~ ' + endStr)
+        // console.debug(currKey + ' ~ ' + endStr)
         isEnd = curr.getTime() > now || currKey === endStr
       }
       const option = {

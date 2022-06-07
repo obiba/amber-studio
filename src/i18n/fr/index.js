@@ -6,7 +6,12 @@ export default {
     title: 'Identifiez vous pour commencer une session',
     submit: 'Connexion',
     forgot_password: 'Mot de passe oublié ?',
-    register: 'Enregistrement'
+    register: 'Enregistrement',
+    validate: 'Valider',
+    token: 'Code à 6 chiffres',
+    totp: 'Scanner ce code QR avec une app d\'authentification multifacteur (Microsoft authenticator est recommandée), puis entrer le code temporaire indiqué.',
+    failed: 'Combinaison courriel/mot de passe incorrecte.',
+    failed_token: 'Code incorrect.'
   },
   register: {
     title: 'Créer un compte',
@@ -52,7 +57,8 @@ export default {
     delete_user_confirm: 'Veuillez confirmer la suppression de l\'utilisateur :',
     last_seen: 'Dernière conn.',
     roles_filter: 'Rôles',
-    search_hint: 'Chercher par nom ou courriel'
+    search_hint: 'Chercher par nom ou courriel',
+    reset_2fa: 'Réinitialiser 2FA'
   },
   groups: {
     title: 'Groupes',

@@ -16,7 +16,8 @@
                 </div>
               </q-card-section>
               <q-card-section>
-                <q-form @submit="onSubmit" class="q-gutter-md">
+                <q-form v-show="!withToken" @submit="onSubmit" class="q-gutter-md">
+
                   <q-input
                     v-model="email"
                     :label="$t('email')"
@@ -34,7 +35,7 @@
                     <template v-slot:prepend>
                     <q-icon name="fas fa-lock" size="xs" />
                   </template>
-                </q-input>
+                  </q-input>
 
                   <div>
                     <q-btn
@@ -50,6 +51,43 @@
                       class="text-bold q-ml-md"/>
                   </div>
                 </q-form>
+
+                <div v-show="secret">
+                  <div class="col text-subtitle">
+                    {{$t('login.totp')}}
+                  </div>
+                  <div class="text-center">
+                    <img :src="qr"/>
+                  </div>
+                </div>
+
+                <q-form v-show="withToken" @submit="onSubmit" class="q-gutter-md">
+
+                  <q-input
+                    type="number"
+                    v-model="token"
+                    :label="$t('login.token')"
+                    lazy-rules>
+                    <template v-slot:prepend>
+                    <q-icon name="fas fa-mobile" size="xs" />
+                  </template>
+                  </q-input>
+
+                  <div>
+                    <q-btn
+                      :label="$t('login.validate')"
+                      type="submit"
+                      color="primary"
+                      :disable="disableValidate"/>
+                    <q-btn
+                      :label="$t('cancel')"
+                      @click="onCancelToken"
+                      flat
+                      stretch
+                      class="text-bold q-ml-md"/>
+                  </div>
+                </q-form>
+
               </q-card-section>
               <q-card-section>
                 <q-btn
@@ -105,7 +143,11 @@ export default defineComponent({
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      token: '',
+      secret: '',
+      qr: '',
+      withToken: false
     }
   },
   mounted () {
@@ -126,6 +168,9 @@ export default defineComponent({
     disableSubmit () {
       return this.email.length === 0 || this.password.length === 0
     },
+    disableValidate () {
+      return this.token.length < 6
+    },
     localeOptions () {
       return locales.map(loc => {
         return {
@@ -142,28 +187,58 @@ export default defineComponent({
     onLocaleSelection (opt) {
       this.locale = opt.value
     },
+    makePayload () {
+      const payload = {
+        strategy: 'local',
+        email: this.email,
+        password: this.password
+      }
+      if (this.token && this.token.length > 0) {
+        payload.token = this.token
+      }
+      if (this.secret && this.secret.length > 0) {
+        payload.secret = this.secret
+      }
+      return payload
+    },
     onSubmit () {
       this.$store
-        .dispatch('auth/authenticate', {
-          strategy: 'local',
-          email: this.email,
-          password: this.password
+        .dispatch('auth/authenticate', this.makePayload())
+        .then(response => {
+          if (response.data && response.data.qr && response.data.secret) {
+            // 2FA is enabled for that user
+            this.qr = response.data.qr
+            this.secret = response.data.secret
+            this.withToken = true
+          }
         })
         // Just use the returned error instead of mapping it from the store.
         .catch(err => {
           // Convert the error to a plain object and add a message.
           const type = err.className
           err = Object.assign({}, err)
-          err.message =
-            type === 'not-authenticated'
-              ? 'Incorrect email or password.'
-              : 'An error prevented login.'
-          this.error = err
-          Notify.create({
-            message: 'Incorrect email/password combination.',
-            color: 'negative'
-          })
+          if (type === 'bad-request' && err.message === 'Token required.') {
+            this.withToken = true
+          } else if (type === 'bad-request' && err.message === 'Invalid token.') {
+            Notify.create({
+              message: this.$t('login.failed_token'),
+              color: 'negative'
+            })
+            this.token = ''
+          } else {
+            Notify.create({
+              message: this.$t('login.failed'),
+              color: 'negative'
+            })
+          }
         })
+    },
+    onCancelToken () {
+      this.secret = ''
+      this.qr = ''
+      this.withToken = ''
+      this.token = ''
+      this.password = ''
     }
   }
 })
