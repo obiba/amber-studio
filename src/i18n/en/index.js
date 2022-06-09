@@ -451,7 +451,7 @@ export default {
   email: 'Email',
   email_hint: 'Verifiable email address.',
   password: 'Password',
-  password_hint: 'Create a password. 8 character minimum with lower and upper case, digit and special character.',
+  password_hint: 'Create a password. 8 characters minimum with lower and upper case, digit and special character.',
   firstname: 'First Name',
   lastname: 'Last Name',
   preferred_language: 'Preferred Language',
