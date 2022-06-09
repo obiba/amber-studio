@@ -49,219 +49,9 @@
             <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" :disable="isReadOnly" />
           </div>
           <div class="col-md-6 col-sm-12">
-            <div v-if="isVariable">
-              <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
-              <div v-if="hasPlaceholder">
-                <q-input class="q-mb-md" v-model="value.placeholder" :label="$t('form.placeholder')" :hint="$t('form.placeholder_hint')" :disable="isReadOnly" />
-              </div>
-              <div v-if="hasHint">
-                <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" :disable="isReadOnly" />
-              </div>
-              <div v-if="hasPopup">
-                <q-input class="q-mb-md" v-model="value.closeLabel" :label="$t('form.close_label')" :hint="$t('form.close_label_hint')" :disable="isReadOnly" />
-              </div>
-              <q-input v-if="isComputed" class="q-mb-md" v-model="value.compute" :label="$t('form.compute')" :hint="$t('form.compute_hint')" />
-              <q-input v-if="!isComputed" class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="isReadOnly" />
-              <div v-if="value.type === 'text'">
-                <q-input class="q-mb-md" v-model.number="value.mask" :label="$t('form.mask')" :hint="$t('form.mask_hint')" :disable="isReadOnly" />
-              </div>
-              <div v-if="value.type === 'slider'">
-                <q-input class="q-mb-md" v-model.number="value.min" type="number" :label="$t('form.min')" :hint="$t('form.min_hint')" :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" :disable="isReadOnly" />
-              </div>
-              <div v-if="value.type === 'rating'">
-                <q-input class="q-mb-md" v-model.number="value.max" type="number" :label="$t('form.max')" :hint="$t('form.max_hint')" :disable="isReadOnly" />
-              </div>
-              <div v-if="hasGeoMap">
-                <q-select class="q-mb-md" v-model="value.geometryType" :options="geoTypeOptions" :label="$t('form.geo.type')" :hint="$t('form.geo.type_hint')" emit-value map-options :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model.number="value.center" :label="$t('form.geo.center')" :hint="$t('form.geo.center_hint')" :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model.number="value.zoom" type="number" :label="$t('form.geo.zoom')" :hint="$t('form.geo.zoom_hint')" :disable="isReadOnly" />
-                <q-toggle class="q-mb-md" v-model.number="value.geoLocation" :label="$t('form.geo.geo_location')" dense :disable="isReadOnly" />
-              </div>
-              <div v-if="hasMultiple">
-                <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" dense :disable="isReadOnly" />
-              </div>
-              <div v-if="hasOptions">
-                <p class="q-mb-sm q-mt-md">{{ $t('form.options') }}</p>
-                <p class="text-grey">{{ $t('form.options_hint') }}</p>
-                <div class="row q-col-gutter-lg" v-for="option in optionsList" :key="option.value">
-                  <div class="col-4">
-                    <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" :disable="isReadOnly" />
-                  </div>
-                  <div :class="isReadOnly ? 'col-8' : 'col-7'">
-                    <q-input class="q-mb-md" v-model="option.label" :label="$t('form.option_label')" :disable="isReadOnly" />
-                  </div>
-                  <div class="col-1">
-                    <q-btn
-                      v-if="!isReadOnly"
-                      class="q-mt-sm text-grey-8"
-                      size="12px"
-                      flat
-                      dense
-                      round
-                      icon='delete'
-                      @click='deleteOption(option)'>
-                    </q-btn>
-                  </div>
-                </div>
-                <q-btn
-                  v-if="hasMoreOptions"
-                  class="q-pa-none q-mb-sm"
-                  size="sm"
-                  flat
-                  @click="showMoreOptions"
-                  :label="$t('form.show_more_options')"/>
-                <div class="row q-col-gutter-sm" v-if="!isReadOnly">
-                  <div class="col-4">
-                    <q-btn
-                      color="primary"
-                      icon="add"
-                      :title="$t('form.add_option_hint')"
-                      @click="addOption()"
-                      class="q-mr-sm"
-                    />
-                    <q-btn
-                      flat
-                      round
-                      color="negative"
-                      icon="delete_outline"
-                      :title="$t('form.delete_options_hint')"
-                      @click="deleteOptions()"
-                    />
-                  </div>
-                  <div class="col-8">
-                    <q-file
-                      dense
-                      bottom-slots
-                      clearable
-                      v-model="optionsFile"
-                      accept=".txt,.csv,.tsv"
-                      :label="$t('form.upload_options')">
-                      <template v-slot:prepend>
-                        <q-icon name="add" @click.stop />
-                      </template>
 
-                      <template v-slot:hint>
-                        {{ $t('form.upload_options_hint') }}
-                      </template>
-                    </q-file>
-                  </div>
-                </div>
-              </div>
-              <div v-if="value.type === 'autocomplete'">
-                <q-toggle class="q-mt-md q-mb-md" v-model.number="value.newValue" :label="$t('form.new_value')" dense :disable="isReadOnly" />
-              </div>
-              <div v-if="hasImageMap">
-                <q-toggle class="q-mt-md q-mb-md" v-model.number="value.showSelect" :label="$t('form.show_area_select')" dense :disable="isReadOnly" />
-                <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('form.image') }}</p>
-                <p class="text-grey">{{ $t('form.image_hint') }}</p>
-                <q-input class="q-mb-md" v-model="value.imageSrc" :label="$t('form.image_src')" :hint="$t('form.image_src_hint')" :disable="isReadOnly" />
-                <q-file
-                  dense
-                  bottom-slots
-                  clearable
-                  v-model="imageFile"
-                  accept=".jpg,.jpeg,.png"
-                  :label="$t('form.upload_image')">
-                  <template v-slot:prepend>
-                    <q-icon name="add" @click.stop />
-                  </template>
-
-                  <template v-slot:hint>
-                    {{ $t('form.upload_image_hint') }}
-                  </template>
-                </q-file>
-                <p class="q-mb-sm q-mt-md">{{ $t('form.image_areas') }}</p>
-                <p class="text-grey">{{ $t('form.image_areas_hint') }}</p>
-                <div class="row q-col-gutter-lg" v-for="area in areasList" :key="area.value + '-' + area.points">
-                  <div class="col-2">
-                    <q-input class="q-mb-md" v-model="area.value" :label="$t('form.area_value')" :disable="isReadOnly" />
-                  </div>
-                  <div class="col-3">
-                    <q-input class="q-mb-md" v-model="area.fill" :label="$t('form.area_fill')" :disable="isReadOnly">
-                      <template v-slot:append>
-                        <q-icon name="colorize" class="cursor-pointer">
-                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                            <q-color v-model="area.fill" />
-                          </q-popup-proxy>
-                        </q-icon>
-                      </template>
-                    </q-input>
-                  </div>
-                  <div :class="isReadOnly ? 'col-7' : 'col-6'">
-                    <q-input class="q-mb-md" v-model="area.points" :label="$t('form.area_points')" :disable="isReadOnly" />
-                  </div>
-                  <div class="col-1">
-                    <q-btn
-                      v-if="!isReadOnly"
-                      class="q-mt-sm text-grey-8"
-                      size="12px"
-                      flat
-                      dense
-                      round
-                      icon='delete'
-                      @click='deleteArea(area)'>
-                    </q-btn>
-                  </div>
-                </div>
-                <q-btn
-                  v-if="hasMoreAreas"
-                  class="q-pa-none q-mb-sm"
-                  size="sm"
-                  flat
-                  @click="showMoreAreas"
-                  :label="$t('form.show_more_areas')"/>
-                <div class="row q-col-gutter-lg" v-if="!isReadOnly">
-                  <div class="col-4">
-                    <q-btn
-                      color="primary"
-                      icon="add"
-                      :title="$t('form.add_area_hint')"
-                      @click="addArea()"
-                      class="q-mr-sm"
-                    />
-                    <q-btn
-                      flat
-                      round
-                      color="negative"
-                      icon="delete_outline"
-                      :title="$t('form.delete_areas_hint')"
-                      @click="deleteAreas()"
-                    />
-                  </div>
-                  <div class="col-8">
-                    <q-file
-                      dense
-                      bottom-slots
-                      clearable
-                      v-model="areasFile"
-                      accept=".txt,.csv,.tsv"
-                      :label="$t('form.upload_areas')">
-                      <template v-slot:prepend>
-                        <q-icon name="add" @click.stop />
-                      </template>
-
-                      <template v-slot:hint>
-                        {{ $t('form.upload_areas_hint') }}
-                      </template>
-                    </q-file>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-if="!isComputed">
-              <p class="text-weight-bold q-mb-sm">{{ $t('form.style') }}</p>
-              <q-input class="q-mb-md" v-model="value.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" :disable="isReadOnly" />
-              <q-input v-if="!hasDescriptionClass" class="q-mb-md" v-model="value.descriptionClass" :label="$t('form.description_class')" :hint="$t('form.description_class_hint')" autogrow :disable="isReadOnly" />
-              <q-input v-if="hasImageMap" class="q-mb-md" v-model="value.imageClass" :label="$t('form.image_class')" :hint="$t('form.image_class_hint')" :disable="isReadOnly" />
-              <div v-if="value.type === 'rating'">
-                <q-input class="q-mb-md" v-model="value.icon" :label="$t('form.icon')" :hint="$t('form.icon_hint')" :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model="value.size" :label="$t('form.size')" :hint="$t('form.size_hint')" :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model="value.color" :label="$t('form.color')" :hint="$t('form.color_hint')" :disable="isReadOnly" />
-              </div>
-              <div v-if="hasGeoMap">
-                <q-input class="q-mb-md" v-model="value.mapHeight" :label="$t('form.geo.map_height')" :hint="$t('form.geo.map_height_hint')" placeholder="400px" :disable="isReadOnly" />
-              </div>
+            <div>
+              <component :is="typeComponent" v-model="value" :read-only="isReadOnly"/>
             </div>
           </div>
         </div>
@@ -326,6 +116,25 @@ import { locales } from '../../boot/i18n'
 import { settings } from '../../boot/settings'
 import AuthMixin from '../../mixins/AuthMixin'
 
+import AutocompleteItem from './items/AutocompleteItem.vue'
+import CheckboxGroupItem from './items/CheckboxGroupItem.vue'
+import ComputedItem from './items/ComputedItem.vue'
+import DateItem from './items/DateItem.vue'
+import DateTimeItem from './items/DateTimeItem.vue'
+import GroupItem from './items/GroupItem.vue'
+import ImageSelectItem from './items/ImageSelectItem.vue'
+import MapItem from './items/MapItem.vue'
+import NumberItem from './items/NumberItem.vue'
+import RadioGroupItem from './items/RadioGroupItem.vue'
+import RatingItem from './items/RatingItem.vue'
+import SectionItem from './items/SectionItem.vue'
+import SelectItem from './items/SelectItem.vue'
+import SliderItem from './items/SliderItem.vue'
+import TextAreaItem from './items/TextAreaItem.vue'
+import TextItem from './items/TextItem.vue'
+import TimeItem from './items/TimeItem.vue'
+import ToggleItem from './items/ToggleItem.vue'
+
 export default defineComponent({
   name: 'FormItem',
   components: { BlitzForm },
@@ -376,9 +185,6 @@ export default defineComponent({
         'toggle',
         'section', 'group',
         'computed', 'map'
-      ],
-      geoTypes: [
-        'Point', 'Polygon'
       ],
       modelData: ref({}),
       optionsFile: ref(null),
@@ -485,13 +291,46 @@ export default defineComponent({
         }
       }).sort((a, b) => a.label.localeCompare(b.label))
     },
-    geoTypeOptions () {
-      return this.geoTypes.map(tp => {
-        return {
-          value: tp,
-          label: this.$t('form.geo.types.' + tp)
-        }
-      }).sort((a, b) => a.label.localeCompare(b.label))
+    typeComponent () {
+      switch (this.value.type) {
+        case 'text':
+          return TextItem
+        case 'textarea':
+          return TextAreaItem
+        case 'number':
+          return NumberItem
+        case 'date':
+          return DateItem
+        case 'datetime':
+          return DateTimeItem
+        case 'time':
+          return TimeItem
+        case 'radiogroup':
+          return RadioGroupItem
+        case 'checkboxgroup':
+          return CheckboxGroupItem
+        case 'select':
+          return SelectItem
+        case 'autocomplete':
+          return AutocompleteItem
+        case 'image-select':
+          return ImageSelectItem
+        case 'slider':
+          return SliderItem
+        case 'rating':
+          return RatingItem
+        case 'toggle':
+          return ToggleItem
+        case 'section':
+          return SectionItem
+        case 'group':
+          return GroupItem
+        case 'computed':
+          return ComputedItem
+        case 'map':
+          return MapItem
+      }
+      return TextItem
     },
     blitzarSchema () {
       const items = this.isRoot ? [...this.value.items] : [this.value]
@@ -512,18 +351,6 @@ export default defineComponent({
         i18n: this.i18n ? this.i18n : {}
       }
       return makeBlitzarQuasarSchemaForm(schema, { locale: this.locale, debug: true })
-    },
-    optionsList () {
-      return this.modelValue.options ? this.modelValue.options.slice(0, this.optionsCount) : []
-    },
-    hasMoreOptions () {
-      return this.modelValue.options && this.modelValue.options.length > this.optionsCount
-    },
-    areasList () {
-      return this.modelValue.areas ? this.modelValue.areas.slice(0, this.areasCount) : []
-    },
-    hasMoreAreas () {
-      return this.modelValue.areas && this.modelValue.areas.length > this.areasCount
     }
   },
   watch: {
@@ -576,78 +403,6 @@ export default defineComponent({
         delete this.modelValue.default
       }
       this.modelData = this.isArray ? (this.modelValue.default ? [this.modelValue.default] : []) : this.modelValue.default
-    },
-    optionsFile: function (newValue) {
-      if (newValue !== null) {
-        const delim = this.getFileDelim(newValue)
-        const reader = new FileReader()
-        reader.readAsText(newValue, 'UTF-8')
-        reader.onload = evt => {
-          evt.target.result.split(/\r\n|\n/)
-            .map(line => line.trim())
-            .filter(line => line.length > 0)
-            .forEach(line => {
-              const tokens = line.split(delim).map(token => this.cleanToken(token))
-              if (tokens.length > 0 && tokens[0].length > 0) {
-                if (!this.value.options) {
-                  this.value.options = []
-                }
-                const value = tokens[0]
-                tokens.splice(0, 1)
-                this.value.options.push({
-                  value: value,
-                  label: tokens.length > 0 ? tokens.join(delim) : value
-                })
-              }
-            })
-        }
-        reader.onerror = evt => {
-          console.error(evt)
-        }
-      }
-    },
-    imageFile: function (newValue) {
-      if (newValue !== null) {
-        const reader = new FileReader()
-        reader.onload = evt => {
-          this.value.imageSrc = evt.target.result
-        }
-        reader.onerror = evt => {
-          console.error(evt)
-        }
-        reader.readAsDataURL(newValue)
-      }
-    },
-    areasFile: function (newValue) {
-      if (newValue !== null) {
-        const delim = this.getFileDelim(newValue)
-        const reader = new FileReader()
-        reader.readAsText(newValue, 'UTF-8')
-        reader.onload = evt => {
-          evt.target.result.split(/\r\n|\n/)
-            .map(line => line.trim())
-            .filter(line => line.length > 0)
-            .forEach(line => {
-              const tokens = line.split(delim).map(token => this.cleanToken(token))
-              if (tokens.length > 0 && tokens[0].length > 0) {
-                if (!this.value.areas) {
-                  this.value.areas = []
-                }
-                const value = tokens[0]
-                const fill = tokens[1]
-                tokens.splice(0, 2)
-                this.value.areas.push({
-                  value: value,
-                  fill: fill,
-                  points: tokens.join(delim)
-                })
-              }
-            })
-        }
-        reader.onerror = evt => {
-          console.error(evt)
-        }
-      }
     }
   },
   methods: {
@@ -656,60 +411,6 @@ export default defineComponent({
     },
     md (text) {
       return text ? snarkdown(text) : text
-    },
-    cleanToken (token) {
-      if (token.startsWith('"') && token.endsWith('"')) {
-        return token.substring(1, token.length - 1)
-      }
-      return token
-    },
-    getFileDelim (file) {
-      return file.name.endsWith('.tsv') ? '\t' : ','
-    },
-    showMoreOptions () {
-      this.optionsCount = this.optionsCount + 5
-    },
-    deleteOption (option) {
-      this.value.options = this.modelValue.options.filter(opt => opt.value !== option.value)
-      if (this.optionsCount > 5) {
-        this.optionsCount = this.optionsCount - 1
-      }
-    },
-    addOption () {
-      if (!this.modelValue.options) {
-        this.value.options = []
-      }
-      const val = '' + (this.modelValue.options.length + 1)
-      this.value.options.push({
-        value: val,
-        label: val
-      })
-    },
-    deleteOptions () {
-      this.value.options = []
-    },
-    showMoreAreas () {
-      this.areasCount = this.areasCount + 5
-    },
-    deleteArea (area) {
-      this.value.areas = this.modelValue.areas.filter(ar => `${ar.value}-${ar.points}` !== `${area.value}-${area.points}`)
-      if (this.areasCount > 5) {
-        this.areasCount = this.areasCount - 1
-      }
-    },
-    addArea () {
-      if (!this.modelValue.areas) {
-        this.value.areas = []
-      }
-      const val = '' + (this.modelValue.areas.length + 1)
-      this.value.areas.push({
-        value: val,
-        fill: '#cccccc',
-        points: '0,0 10,0 0,10 10,10'
-      })
-    },
-    deleteAreas (area) {
-      this.value.areas = []
     },
     onLocale (newLocale) {
       this.locale = newLocale

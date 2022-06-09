@@ -9,6 +9,7 @@ const locales = settings.i18n ? Object.keys(settings.i18n) : ['en', 'fr']
 const i18n = createI18n({
   locale: locales[0],
   fallbackLocale: 'en',
+  warnHtmlInMessage: 'off',
   messages: merge(messages, settings.i18n ? settings.i18n : {})
 })
 const t = i18n.global.t
