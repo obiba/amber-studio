@@ -1,110 +1,120 @@
 <template>
-  <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
-  <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" :disable="readOnly" />
-  <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="readOnly" />
-  <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" dense :disable="readOnly" />
+  <div class="row q-col-gutter-lg">
+    <div class="col-md-6 col-sm-12">
+      <p class="text-weight-bold q-mb-sm">{{ $t('form.data') }}</p>
+      <q-toggle class="q-mb-md" v-model.number="value.required" :label="$t('form.required')" :hint="$t('form.required_hint')" dense :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" :disable="readOnly" />
+      <p class="text-weight-bold q-mb-sm">{{ $t('form.rendering') }}</p>
+      <q-input class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="value.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="value.imageClass" :label="$t('form.image_class')" :hint="$t('form.image_class_hint')" :disable="readOnly" />
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
+      <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="readOnly" />
+      <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" dense :disable="readOnly" />
 
-  <options-item v-model="value" :read-only="readOnly"/>
-  <q-toggle class="q-mt-md q-mb-md" v-model.number="value.showSelect" :label="$t('form.show_area_select')" dense :disable="readOnly" />
+      <options-item v-model="value" :read-only="readOnly"/>
+      <q-toggle class="q-mt-md q-mb-md" v-model.number="value.showSelect" :label="$t('form.show_area_select')" dense :disable="readOnly" />
 
-  <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('form.image') }}</p>
-  <p class="text-grey">{{ $t('form.image_hint') }}</p>
-  <q-input class="q-mb-md" v-model="value.imageSrc" :label="$t('form.image_src')" :hint="$t('form.image_src_hint')" :disable="readOnly" />
-  <q-file
-    dense
-    bottom-slots
-    clearable
-    v-model="imageFile"
-    accept=".jpg,.jpeg,.png"
-    :label="$t('form.upload_image')">
-    <template v-slot:prepend>
-      <q-icon name="add" @click.stop />
-    </template>
-
-    <template v-slot:hint>
-      {{ $t('form.upload_image_hint') }}
-    </template>
-  </q-file>
-  <p class="q-mb-sm q-mt-md">{{ $t('form.image_areas') }}</p>
-  <p class="text-grey">{{ $t('form.image_areas_hint') }}</p>
-  <div class="row q-col-gutter-lg" v-for="area in areasList" :key="area.value + '-' + area.points">
-    <div class="col-2">
-      <q-input class="q-mb-md" v-model="area.value" :label="$t('form.area_value')" :disable="readOnly" />
-    </div>
-    <div class="col-3">
-      <q-input class="q-mb-md" v-model="area.fill" :label="$t('form.area_fill')" :disable="readOnly">
-        <template v-slot:append>
-          <q-icon name="colorize" class="cursor-pointer">
-            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-              <q-color v-model="area.fill" />
-            </q-popup-proxy>
-          </q-icon>
-        </template>
-      </q-input>
-    </div>
-    <div :class="readOnly ? 'col-7' : 'col-6'">
-      <q-input class="q-mb-md" v-model="area.points" :label="$t('form.area_points')" :disable="readOnly" />
-    </div>
-    <div class="col-1">
-      <q-btn
-        v-if="!readOnly"
-        class="q-mt-sm text-grey-8"
-        size="12px"
-        flat
-        dense
-        round
-        icon='delete'
-        @click='deleteArea(area)'>
-      </q-btn>
-    </div>
-  </div>
-  <q-btn
-    v-if="hasMoreAreas"
-    class="q-pa-none q-mb-sm"
-    size="sm"
-    flat
-    @click="showMoreAreas"
-    :label="$t('form.show_more_areas')"/>
-  <div class="row q-col-gutter-lg" v-if="!readOnly">
-    <div class="col-4">
-      <q-btn
-        color="primary"
-        icon="add"
-        :title="$t('form.add_area_hint')"
-        @click="addArea()"
-        class="q-mr-sm"
-      />
-      <q-btn
-        flat
-        round
-        color="negative"
-        icon="delete_outline"
-        :title="$t('form.delete_areas_hint')"
-        @click="deleteAreas()"
-      />
-    </div>
-    <div class="col-8">
+      <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('form.image') }}</p>
+      <p class="text-grey">{{ $t('form.image_hint') }}</p>
+      <q-input class="q-mb-md" v-model="value.imageSrc" :label="$t('form.image_src')" :hint="$t('form.image_src_hint')" :disable="readOnly" />
       <q-file
         dense
         bottom-slots
         clearable
-        v-model="areasFile"
-        accept=".txt,.csv,.tsv"
-        :label="$t('form.upload_areas')">
+        v-model="imageFile"
+        accept=".jpg,.jpeg,.png"
+        :label="$t('form.upload_image')">
         <template v-slot:prepend>
           <q-icon name="add" @click.stop />
         </template>
 
         <template v-slot:hint>
-          {{ $t('form.upload_areas_hint') }}
+          {{ $t('form.upload_image_hint') }}
         </template>
       </q-file>
+      <p class="q-mb-sm q-mt-md">{{ $t('form.image_areas') }}</p>
+      <p class="text-grey">{{ $t('form.image_areas_hint') }}</p>
+      <div class="row q-col-gutter-lg" v-for="area in areasList" :key="area.value + '-' + area.points">
+        <div class="col-2">
+          <q-input class="q-mb-md" v-model="area.value" :label="$t('form.area_value')" :disable="readOnly" />
+        </div>
+        <div class="col-3">
+          <q-input class="q-mb-md" v-model="area.fill" :label="$t('form.area_fill')" :disable="readOnly">
+            <template v-slot:append>
+              <q-icon name="colorize" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-color v-model="area.fill" />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        </div>
+        <div :class="readOnly ? 'col-7' : 'col-6'">
+          <q-input class="q-mb-md" v-model="area.points" :label="$t('form.area_points')" :disable="readOnly" />
+        </div>
+        <div class="col-1">
+          <q-btn
+            v-if="!readOnly"
+            class="q-mt-sm text-grey-8"
+            size="12px"
+            flat
+            dense
+            round
+            icon='delete'
+            @click='deleteArea(area)'>
+          </q-btn>
+        </div>
+      </div>
+      <q-btn
+        v-if="hasMoreAreas"
+        class="q-pa-none q-mb-sm"
+        size="sm"
+        flat
+        @click="showMoreAreas"
+        :label="$t('form.show_more_areas')"/>
+      <div class="row q-col-gutter-lg" v-if="!readOnly">
+        <div class="col-4">
+          <q-btn
+            color="primary"
+            icon="add"
+            :title="$t('form.add_area_hint')"
+            @click="addArea()"
+            class="q-mr-sm"
+          />
+          <q-btn
+            flat
+            round
+            color="negative"
+            icon="delete_outline"
+            :title="$t('form.delete_areas_hint')"
+            @click="deleteAreas()"
+          />
+        </div>
+        <div class="col-8">
+          <q-file
+            dense
+            bottom-slots
+            clearable
+            v-model="areasFile"
+            accept=".txt,.csv,.tsv"
+            :label="$t('form.upload_areas')">
+            <template v-slot:prepend>
+              <q-icon name="add" @click.stop />
+            </template>
+
+            <template v-slot:hint>
+              {{ $t('form.upload_areas_hint') }}
+            </template>
+          </q-file>
+        </div>
+      </div>
     </div>
   </div>
-
-  <p class="text-weight-bold q-mb-sm">{{ $t('form.style') }}</p>
-  <q-input class="q-mb-md" v-model="value.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" :disable="readOnly" />
-  <q-input class="q-mb-md" v-model="value.imageClass" :label="$t('form.image_class')" :hint="$t('form.image_class_hint')" :disable="readOnly" />
 </template>
 
 <script>

@@ -9,15 +9,15 @@
       align="justify"
       narrow-indicator>
       <q-tab name="design" :label="$t('form.design')" />
-      <!--q-tab name="schema" :label="$t('form.schema')" /-->
+      <q-tab name="schema" :label="$t('form.schema')" />
       <q-tab name="preview" :label="$t('form.preview')" />
     </q-tabs>
 
     <q-separator />
 
     <q-tab-panels v-model="tab">
-      <q-tab-panel name="design">
-        <div v-if="isRoot" class="row q-col-gutter-lg">
+      <q-tab-panel name="design" class="q-pa-none">
+        <div v-if="isRoot" class="row q-col-gutter-lg q-pa-md">
           <div class="col-md-6 col-sm-12">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
             <q-input class="q-mb-md" v-model="value.label" :label="$t('form.title')" :hint="$t('form.form_title_hint')" :disable="isReadOnly" />
@@ -36,24 +36,22 @@
             <q-input class="q-mb-md" v-model="value.idValidationMessage" :label="$t('form.id_validation_message')" :hint="$t('form.validation_message_hint')" :disable="isReadOnly" />
           </div>
         </div>
-        <div v-else class="row q-col-gutter-lg">
-          <div class="col-md-6 col-sm-12">
+        <div v-else>
+          <div class="q-pa-md bg-grey-2">
             <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
-            <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('form.type')" :hint="$t('form.type_hint')" emit-value map-options :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.section_hint')" :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" autogrow :disable="isReadOnly" />
-            <q-input v-if="!isComputed" class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" :disable="isReadOnly" />
-            <q-toggle v-if="isVariable && !isComputed" class="q-mb-md" v-model.number="value.required" :label="$t('form.required')" :hint="$t('form.required_hint')" dense :disable="isReadOnly" />
-            <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" :disable="isReadOnly" />
-            <q-input v-if="isVariable && !isComputed" class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" :disable="isReadOnly" />
-          </div>
-          <div class="col-md-6 col-sm-12">
-
-            <div>
-              <component :is="typeComponent" v-model="value" :read-only="isReadOnly"/>
+            <div class="row q-col-gutter-lg">
+              <div class="col-md-6 col-sm-12">
+                <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('form.type')" :hint="$t('form.type_hint')" emit-value map-options :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.section_hint')" :disable="isReadOnly" />
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" autogrow :disable="isReadOnly" />
+              </div>
             </div>
           </div>
+          <q-separator />
+          <component :is="typeComponent" v-model="value" :read-only="isReadOnly" class="q-pa-md"/>
         </div>
       </q-tab-panel>
 
@@ -211,7 +209,16 @@ export default defineComponent({
     },
     schemaStr () {
       const valueToShow = { ...this.modelValue }
-      delete valueToShow._id
+      const deleteId = (item) => {
+        delete item._id
+        if (item.items) {
+          item.items.forEach(it => deleteId(it))
+        }
+      }
+      if (valueToShow.name === '.') {
+        delete valueToShow.name
+      }
+      deleteId(valueToShow)
       return JSON.stringify(valueToShow, null, '  ')
     },
     modelDataStr () {
@@ -382,11 +389,20 @@ export default defineComponent({
         delete this.modelValue.min
         delete this.modelValue.max
       }
+      if (!this.hasPlaceholder) {
+        delete this.modelValue.placeholder
+      }
+      if (!this.hasHint) {
+        delete this.modelValue.hint
+      }
       if (!this.hasPopup) {
         delete this.modelValue.closeLabel
       }
       if (!this.hasMultiple) {
         delete this.modelValue.multiple
+      }
+      if (!this.isComputed) {
+        delete this.modelValue.compute
       }
       if (!this.isVariable) {
         delete this.modelValue.required
