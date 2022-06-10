@@ -78,7 +78,7 @@ export default defineComponent({
     const optionsCount = ref(5)
     const optionsFile = ref(null)
 
-    const value = computed({
+    const schema = computed({
       get () {
         return props.modelValue
       },
@@ -100,7 +100,7 @@ export default defineComponent({
     }
 
     function deleteOption (option) {
-      value.value.options = props.modelValue.options.filter(opt => opt.value !== option.value)
+      schema.value.options = props.modelValue.options.filter(opt => opt.value !== option.value)
       if (optionsCount.value > 5) {
         optionsCount.value = optionsCount.value - 1
       }
@@ -108,19 +108,18 @@ export default defineComponent({
 
     function addOption () {
       if (!props.modelValue.options) {
-        value.value.options = []
+        schema.value.options = []
       }
       const val = '' + (props.modelValue.options.length + 1)
-      this.value.options.push({
+      schema.value.options.push({
         value: val,
         label: val
       })
     }
 
     function deleteOptions () {
-      value.value.options = []
+      schema.value.options = []
     }
-
 
     watch(optionsFile, async (newValue) => {
       if (newValue !== null) {
@@ -134,14 +133,14 @@ export default defineComponent({
             .forEach(line => {
               const tokens = line.split(delim).map(token => cleanToken(token))
               if (tokens.length > 0 && tokens[0].length > 0) {
-                if (!value.value.options) {
-                  value.value.options = []
+                if (!schema.value.options) {
+                  schema.value.options = []
                 }
                 const val = tokens[0]
                 tokens.splice(0, 1)
-                value.value.options.push({
+                schema.value.options.push({
                   value: val,
-                  label: tokens.length > 0 ? tokens.join(delim) : value
+                  label: tokens.length > 0 ? tokens.join(delim) : val
                 })
               }
             })
@@ -155,7 +154,7 @@ export default defineComponent({
     return {
       optionsCount,
       optionsFile,
-      value,
+      schema,
       optionsList,
       hasMoreOptions,
       showMoreOptions,

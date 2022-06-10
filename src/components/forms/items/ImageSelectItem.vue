@@ -2,26 +2,26 @@
   <div class="row q-col-gutter-lg">
     <div class="col-md-6 col-sm-12">
       <p class="text-weight-bold q-mb-sm">{{ $t('form.data') }}</p>
-      <q-toggle class="q-mb-md" v-model.number="value.required" :label="$t('form.required')" :hint="$t('form.required_hint')" dense :disable="readOnly" />
-      <q-input class="q-mb-md" v-model="value.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" :disable="readOnly" />
-      <q-input class="q-mb-md" v-model="value.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" :disable="readOnly" />
+      <q-toggle class="q-mb-md" v-model.number="schema.required" :label="$t('form.required')" :hint="$t('form.required_hint')" dense :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="schema.validation" :label="$t('form.validation')" :hint="$t('form.validation_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="schema.validationMessage" :label="$t('form.validation_message')" :hint="$t('form.validation_message_hint')" :disable="readOnly" />
       <p class="text-weight-bold q-mb-sm">{{ $t('form.rendering') }}</p>
-      <q-input class="q-mb-md" v-model="value.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" :disable="readOnly" />
-      <q-input class="q-mb-md" v-model="value.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" :disable="readOnly" />
-      <q-input class="q-mb-md" v-model="value.imageClass" :label="$t('form.image_class')" :hint="$t('form.image_class_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="schema.condition" :label="$t('form.condition')" :hint="$t('form.condition_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="schema.labelClass" :label="$t('form.label_class')" :hint="$t('form.label_class_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="schema.imageClass" :label="$t('form.image_class')" :hint="$t('form.image_class_hint')" :disable="readOnly" />
     </div>
     <div class="col-md-6 col-sm-12">
       <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
-      <q-input class="q-mb-md" v-model="value.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" :disable="readOnly" />
-      <q-input class="q-mb-md" v-model="value.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="readOnly" />
-      <q-toggle class="q-mb-md" v-model.number="value.multiple" :label="$t('form.multiple')" dense :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="schema.hint" :label="$t('form.hint')" :hint="$t('form.hint_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="schema.default" :label="$t('form.default')" :hint="$t('form.default_hint')" :disable="readOnly" />
+      <q-toggle class="q-mb-md" v-model.number="schema.multiple" :label="$t('form.multiple')" dense :disable="readOnly" />
 
-      <options-item v-model="value" :read-only="readOnly"/>
-      <q-toggle class="q-mt-md q-mb-md" v-model.number="value.showSelect" :label="$t('form.show_area_select')" dense :disable="readOnly" />
+      <options-item v-model="schema" :read-only="readOnly"/>
+      <q-toggle class="q-mt-md q-mb-md" v-model.number="schema.showSelect" :label="$t('form.show_area_select')" dense :disable="readOnly" />
 
       <p class="text-weight-bold q-mb-sm q-mt-md">{{ $t('form.image') }}</p>
       <p class="text-grey">{{ $t('form.image_hint') }}</p>
-      <q-input class="q-mb-md" v-model="value.imageSrc" :label="$t('form.image_src')" :hint="$t('form.image_src_hint')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="schema.imageSrc" :label="$t('form.image_src')" :hint="$t('form.image_src_hint')" :disable="readOnly" />
       <q-file
         dense
         bottom-slots
@@ -132,7 +132,7 @@ export default defineComponent({
     const imageFile = ref(null)
     const areasFile = ref(null)
 
-    const value = computed({
+    const schema = computed({
       get () {
         return props.modelValue
       },
@@ -154,17 +154,17 @@ export default defineComponent({
     }
 
     function deleteArea (area) {
-      value.value.areas = props.modelValue.areas.filter(ar => `${ar.value}-${ar.points}` !== `${area.value}-${area.points}`)
+      schema.value.areas = props.modelValue.areas.filter(ar => `${ar.value}-${ar.points}` !== `${area.value}-${area.points}`)
       if (areasCount.value > 5) {
         areasCount.value = areasCount.value - 1
       }
     }
     function addArea () {
       if (!props.modelValue.areas) {
-        value.value.areas = []
+        schema.value.areas = []
       }
       const val = '' + (props.modelValue.areas.length + 1)
-      value.value.areas.push({
+      schema.value.areas.push({
         value: val,
         fill: '#cccccc',
         points: '0,0 10,0 0,10 10,10'
@@ -172,14 +172,14 @@ export default defineComponent({
     }
 
     function deleteAreas (area) {
-      value.value.areas = []
+      schema.value.areas = []
     }
 
     watch(imageFile, async (newValue) => {
       if (newValue !== null) {
         const reader = new FileReader()
         reader.onload = evt => {
-          value.value.imageSrc = evt.target.result
+          schema.value.imageSrc = evt.target.result
         }
         reader.onerror = evt => {
           console.error(evt)
@@ -200,13 +200,13 @@ export default defineComponent({
             .forEach(line => {
               const tokens = line.split(delim).map(token => cleanToken(token))
               if (tokens.length > 0 && tokens[0].length > 0) {
-                if (!value.value.areas) {
-                  value.value.areas = []
+                if (!schema.value.areas) {
+                  schema.value.areas = []
                 }
                 const val = tokens[0]
                 const fill = tokens[1]
                 tokens.splice(0, 2)
-                value.value.areas.push({
+                schema.value.areas.push({
                   value: val,
                   fill: fill,
                   points: tokens.join(delim)
@@ -224,7 +224,7 @@ export default defineComponent({
       areasCount,
       imageFile,
       areasFile,
-      value,
+      schema,
       areasList,
       hasMoreAreas,
       showMoreAreas,
