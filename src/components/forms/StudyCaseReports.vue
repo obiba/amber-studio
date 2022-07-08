@@ -299,6 +299,7 @@ export default defineComponent({
       this.getTableStudyCaseReports()
     },
     formFilter: function (newValue) {
+      this.selected = []
       this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter })
     }
   },
