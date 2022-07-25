@@ -479,5 +479,7 @@ export default {
   id: 'ID',
   go_home: 'Retour à l\'accueil',
   nothing_here: 'Il n\'y a rien ici...',
-  updated_at: 'Mise à jour'
+  updated_at: 'Mise à jour',
+  from: 'Depuis',
+  to: 'Jusqu\'à'
 }

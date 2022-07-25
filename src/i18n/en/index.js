@@ -475,5 +475,7 @@ export default {
   id: 'ID',
   go_home: 'Go Home',
   nothing_here: 'Oops. Nothing here...',
-  updated_at: 'Updated at'
+  updated_at: 'Updated at',
+  from: 'From',
+  to: 'To'
 }

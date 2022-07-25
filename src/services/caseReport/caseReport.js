@@ -1,6 +1,6 @@
 import { feathersClient } from '../../boot/feathersClient'
 
-export async function getCaseReports (opts, study, form, filter) {
+export async function getCaseReports (opts, study, form, filter, from, to) {
   const formData = { query: { $sort: { descending: -1 } } }
   if (opts) {
     // qtable pagination's 'All' sets limit to 0
@@ -19,6 +19,20 @@ export async function getCaseReports (opts, study, form, filter) {
   }
   if (filter) {
     formData.query.$and.push({ 'data._id': { $search: filter } })
+  }
+  if (from) {
+    formData.query.$and.push({
+      updatedAt: {
+        $gte: from
+      }
+    })
+  }
+  if (to) {
+    formData.query.$and.push({
+      updatedAt: {
+        $lte: to
+      }
+    })
   }
   return feathersClient.service('case-report').find(formData)
 }

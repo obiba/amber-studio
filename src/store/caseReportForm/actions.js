@@ -4,7 +4,7 @@ import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
 
 export async function getCaseReports ({ commit }, payload) {
-  const result = await caseReportService.getCaseReports(payload.paginationOpts, payload.study, payload.form, payload.filter).catch(err => {
+  const result = await caseReportService.getCaseReports(payload.paginationOpts, payload.study, payload.form, payload.filter, payload.from, payload.to).catch(err => {
     errorHandler.onError(err, t('error.get_case_reports'))
   })
   if (result) {

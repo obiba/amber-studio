@@ -48,6 +48,62 @@
           map-options
           :label="$t('study.form')"
           style="min-width: 200px" />
+        <div class="q-pa-md" style="max-width: 300px">
+          <q-input filled v-model="fromDate" :placeholder="$t('from')">
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="fromDate" mask="YYYY-MM-DD HH:mm">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-time v-model="fromDate" mask="YYYY-MM-DD HH:mm" format24h>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                    </div>
+                  </q-time>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+            <template v-slot:append>
+              <q-icon name="close" class="cursor-pointer" @click="onClearDate('from')">
+              </q-icon>
+            </template>
+          </q-input>
+        </div>
+        <div class="q-pa-md" style="max-width: 300px">
+          <q-input filled v-model="toDate" :placeholder="$t('to')">
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="toDate" mask="YYYY-MM-DD HH:mm">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-time v-model="toDate" mask="YYYY-MM-DD HH:mm" format24h>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                    </div>
+                  </q-time>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+            <template v-slot:append>
+              <q-icon name="close" class="cursor-pointer" @click="onClearDate('to')">
+              </q-icon>
+            </template>
+          </q-input>
+        </div>
         <q-space />
         <q-input
           dense
@@ -200,7 +256,9 @@ export default defineComponent({
       tab: ref('definition'),
       selected: ref([]),
       filter: ref(''),
-      formFilter: ref('0')
+      formFilter: ref('0'),
+      fromDate: ref(''),
+      toDate: ref('')
     }
   },
   data () {
@@ -300,7 +358,15 @@ export default defineComponent({
     },
     formFilter: function (newValue) {
       this.selected = []
-      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter })
+      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
+    },
+    fromDate: function (newValue) {
+      this.selected = []
+      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
+    },
+    toDate: function (newValue) {
+      this.selected = []
+      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
     }
   },
   methods: {
@@ -310,7 +376,7 @@ export default defineComponent({
     }),
     onExport (format) {
       const accept = format === 'csv' ? 'application/zip' : 'application/json'
-      caseReportExportService.downloadCaseReports(this.studyId, accept, this.formFilter, this.filter)
+      caseReportExportService.downloadCaseReports(this.studyId, accept, this.formFilter, this.filter, this.fromDate, this.toDate)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -342,6 +408,13 @@ export default defineComponent({
         this.showConfirmDeleteStudyCaseReports = true
       }
     },
+    onClearDate (name) {
+      if (name === 'from') {
+        this.fromDate = ''
+      } else {
+        this.toDate = ''
+      }
+    },
     getFormName (formId) {
       return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
     },
@@ -357,9 +430,9 @@ export default defineComponent({
         this.$store.commit('caseReportForm/setCaseReportPagination', {
           caseReportPaginationOpts: requestProp.pagination
         })
-        await this.getStudyCaseReports({ paginationOpts: requestProp.pagination, study: this.studyId, form: this.formFilter, filter: requestProp.filter })
+        await this.getStudyCaseReports({ paginationOpts: requestProp.pagination, study: this.studyId, form: this.formFilter, filter: requestProp.filter, from: this.fromDate, to: this.toDate })
       } else {
-        await this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter })
+        await this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
       }
       this.paginationOpts.rowsNumber = this.$store.state.caseReportForm.caseReportPaginationOpts.rowsNumber
     },
