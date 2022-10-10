@@ -124,9 +124,9 @@
 
 <script>
 import { useI18n } from 'vue-i18n'
-import { defineComponent } from 'vue'
+import { defineComponent, watch } from 'vue'
 import { mapState } from 'vuex'
-import { LocalStorage, Notify } from 'quasar'
+import { LocalStorage, Notify, useQuasar } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 
@@ -135,7 +135,18 @@ import Banner from 'components/Banner'
 export default defineComponent({
   components: { Banner },
   setup () {
+    const $q = useQuasar()
     const { locale } = useI18n({ useScope: 'global' })
+
+    watch(locale, val => {
+      // dynamic import, so loading on demand only
+      const langIso = val === 'en' ? 'en-US' : val
+      import('quasar/lang/' + langIso)
+        .then(lang => {
+          $q.lang.set(lang.default)
+        })
+    })
+
     return {
       locale: locale,
       settings

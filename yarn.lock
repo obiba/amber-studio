@@ -979,9 +979,9 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@blitzar/form@https://gitpkg.now.sh/epigeny/blitzar/packages/form?v1.0.7-obiba":
+"@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.7-obiba":
   version "1.0.7"
-  resolved "https://gitpkg.now.sh/epigeny/blitzar/packages/form?v1.0.7-obiba#15c6153e04fb9ea7bc6f60b8c01ce4a2c068efef"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.7-obiba#15c6153e04fb9ea7bc6f60b8c01ce4a2c068efef"
   dependencies:
     "@blitzar/types" "^1.0.7"
     "@blitzar/utils" "^1.0.7"
@@ -1001,9 +1001,9 @@
   dependencies:
     ts-toolbelt "^9.6.0"
 
-"@blitzar/types@https://gitpkg.now.sh/epigeny/blitzar/packages/types?v1.0.7-obiba":
+"@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.7-obiba":
   version "1.0.7"
-  resolved "https://gitpkg.now.sh/epigeny/blitzar/packages/types?v1.0.7-obiba#80d3ff6a6c9b795bd39306cdb6f243d0f63f90c4"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.7-obiba#80d3ff6a6c9b795bd39306cdb6f243d0f63f90c4"
 
 "@blitzar/utils@^1.0.7":
   version "1.1.21"
@@ -1015,9 +1015,9 @@
     flatten-anything "^2.0.4"
     is-what "^4.1.7"
 
-"@blitzar/utils@https://gitpkg.now.sh/epigeny/blitzar/packages/utils?v1.0.7-obiba":
+"@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.7-obiba":
   version "1.0.7"
-  resolved "https://gitpkg.now.sh/epigeny/blitzar/packages/utils?v1.0.7-obiba#5a1a54681cc8e2049d5fd7f3402d772bc15162c9"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.7-obiba#5a1a54681cc8e2049d5fd7f3402d772bc15162c9"
   dependencies:
     commafy-anything "^2.1.0"
     flatten-anything "^2.0.4"
@@ -2628,9 +2628,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001297, caniuse-lite@^1.0.30001317:
-  version "1.0.30001320"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001320.tgz#8397391bec389b8ccce328636499b7284ee13285"
-  integrity sha512-MWPzG54AGdo3nWx7zHZTefseM5Y1ccM7hlQKHRqJkPozUaw3hNbBTMmLn16GG2FUzjR13Cr3NPfhIieX5PzXDA==
+  version "1.0.30001418"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001418.tgz"
+  integrity sha512-oIs7+JL3K9JRQ3jPZjlH6qyYDp+nBTCais7hjh0s+fuBwufc7uZ7hPYMXrDOJhV360KGMTcczMRObk0/iMqZRg==
 
 canvg@^3.0.6:
   version "3.0.10"
