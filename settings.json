@@ -32,21 +32,21 @@
     "en": {
       "locales": {
         "en": "English",
-        "fr": "French",
-        "ar": "Arabic"
+        "fr": "français",
+        "ar": "العربية"
       }
     },
     "fr": {
       "locales": {
-        "en": "anglais",
+        "en": "English",
         "fr": "français",
-        "ar": "arabe"
+        "ar": "العربية"
       }
     },
     "ar": {
       "locales": {
-        "en": "الفرنسية",
-        "fr": "فرنسي",
+        "en": "English",
+        "fr": "français",
         "ar": "العربية"
       }
     }
