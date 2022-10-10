@@ -3,12 +3,18 @@ import { createI18n } from 'vue-i18n'
 import messages from 'src/i18n'
 import { settings } from './settings'
 import { merge } from 'merge-anything'
+import { Quasar } from 'quasar'
 
 const locales = settings.i18n ? Object.keys(settings.i18n) : ['en', 'fr']
 
+let detectedLocale = Quasar.lang.getLocale().split('-')[0]
+if (!locales.includes(detectedLocale)) {
+  detectedLocale = locales[0]
+}
+
 const i18n = createI18n({
-  locale: locales[0],
-  fallbackLocale: 'en',
+  locale: detectedLocale,
+  fallbackLocale: locales[0],
   warnHtmlInMessage: 'off',
   messages: merge(messages, settings.i18n ? settings.i18n : {})
 })
