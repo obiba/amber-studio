@@ -14,7 +14,7 @@ export async function downloadCaseReports (study, accept, form, filter, from, to
     and['[data._id][$search]'] = filter
   }
   if (form && form !== '0') {
-    and['[study]'] = form
+    and['[study]'] = study
     query['$and[1][form]'] = form
   }
   if (from) {
