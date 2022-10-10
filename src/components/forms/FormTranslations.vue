@@ -49,6 +49,19 @@
           :disable="selected.length === 0"
           :title="$t('form.tr_delete_selected')"
           @click="onConfirmDeleteMultiple()" />
+        <q-btn-dropdown icon="translate" flat :label="locale">
+          <q-list>
+            <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in locales" :key="loc">
+              <q-item-section>
+                <q-checkbox @click="onToggleFormLocale(loc)" v-model="formLocales" :val="loc"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-uppercase">{{loc}}</q-item-label>
+                <q-item-label caption>{{$t('locales.' + loc)}}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <q-space />
         <q-input
           dense
@@ -202,6 +215,34 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model="showConfirmDeleteLocale" persistent>
+      <q-card>
+        <q-card-section>
+          <div>
+            {{$t('form.tr_delete_locale_confirm')}}
+          </div>
+          <div class="q-mt-md">
+            <span class="text-weight-bold text-uppercase">{{localeToDelete}}</span>
+            <span class="text-grey-8 q-ml-sm">({{$t('locales.' + localeToDelete)}})</span>
+          </div>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='deleteLocale'
+            :label="$t('delete')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </div>
 </template>
 
@@ -220,6 +261,7 @@ export default defineComponent({
   mixins: [AuthMixin],
   setup () {
     return {
+      locales: locales,
       v$: useVuelidate(),
       selected: ref([]),
       filter: ref('')
@@ -229,8 +271,10 @@ export default defineComponent({
     return {
       showAddTranslation: false,
       showConfirmDelete: false,
+      showConfirmDeleteLocale: false,
       showConfirmClean: false,
       showConfirmMerge: false,
+      localeToDelete: ref(null),
       paginationOpts: {
         sortBy: 'key',
         descending: false,
@@ -277,7 +321,7 @@ export default defineComponent({
         }
       ]
 
-      locales.forEach(loc => {
+      this.formLocales.forEach(loc => {
         cols.push({
           name: loc,
           label: loc.toUpperCase(),
@@ -291,6 +335,9 @@ export default defineComponent({
     },
     disableAddTranslation () {
       return this.v$.newTranslationData.$invalid
+    },
+    formLocales () {
+      return Object.keys(this.value.schema.i18n).length === 0 ? ['en'] : Object.keys(this.value.schema.i18n).sort()
     }
   },
   mounted () {
@@ -303,7 +350,7 @@ export default defineComponent({
       // read i18n object and make rows
       if (this.value && this.value.schema) {
         if (this.value.schema.i18n) {
-          locales.forEach(loc => {
+          this.formLocales.forEach(loc => {
             if (this.value.schema.i18n[loc]) {
               Object.entries(this.value.schema.i18n[loc]).forEach(([key, value]) => {
                 let found = false
@@ -346,7 +393,7 @@ export default defineComponent({
       const addObsKey = (key) => {
         if (key && key.trim().length > 0 && !key.includes('.') && !obsKeys.includes(key)) {
           const row = { key: key }
-          locales.forEach(loc => { row[loc] = key })
+          this.formLocales.forEach(loc => { row[loc] = key })
           this.rows.push(row)
           obsKeys.push(key)
         }
@@ -372,7 +419,10 @@ export default defineComponent({
       if (!toSave.schema.i18n) {
         toSave.schema.i18n = {}
       }
-      locales.forEach(loc => {
+      if (Object.keys(toSave.schema.i18n).length === 0) {
+        toSave.schema.i18n.en = {}
+      }
+      Object.keys(toSave.schema.i18n).forEach(loc => {
         toSave.schema.i18n[loc] = {}
         this.rows.forEach(row => {
           if (row.key && row.key.trim().length > 0 && row[loc]) {
@@ -385,6 +435,15 @@ export default defineComponent({
     onAddTranslation () {
       this.newTranslationData = {}
       this.showAddTranslation = true
+    },
+    onToggleFormLocale (locale) {
+      if (this.value.schema.i18n[locale]) {
+        this.localeToDelete = locale
+        this.showConfirmDeleteLocale = true
+      } else {
+        this.value.schema.i18n[locale] = {}
+        this.onRowEdit()
+      }
     },
     addTranslation () {
       if (!this.keyExists(this.newTranslationData.key)) {
@@ -416,6 +475,15 @@ export default defineComponent({
       this.rows = this.rows.filter(row => !selectedKeys.includes(row.key))
       this.selected = []
       this.onRowEdit()
+    },
+    deleteLocale () {
+      if (this.localeToDelete) {
+        delete this.value.schema.i18n[this.localeToDelete]
+        this.rows.forEach(row => {
+          delete row[this.localeToDelete]
+        })
+        this.onRowEdit()
+      }
     }
   }
 })

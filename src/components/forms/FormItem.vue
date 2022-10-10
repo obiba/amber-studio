@@ -66,7 +66,7 @@
           <q-card-section class="bg-grey-3">
             <q-btn-dropdown icon="translate" flat size="sm" :label="locale">
               <q-list>
-                <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in locales" :key="loc">
+                <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in formLocales" :key="loc">
                   <q-item-section class="text-uppercase">{{ loc }}</q-item-section>
                 </q-item>
               </q-list>
@@ -110,7 +110,6 @@ import { defineComponent, ref } from 'vue'
 import snarkdown from 'snarkdown'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
-import { locales } from '../../boot/i18n'
 import { settings } from '../../boot/settings'
 import AuthMixin from '../../mixins/AuthMixin'
 
@@ -132,6 +131,7 @@ import TextAreaItem from './items/TextAreaItem.vue'
 import TextItem from './items/TextItem.vue'
 import TimeItem from './items/TimeItem.vue'
 import ToggleItem from './items/ToggleItem.vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   name: 'FormItem',
@@ -171,6 +171,8 @@ export default defineComponent({
       }
     ]
 
+    const { locale } = useI18n({ useScope: 'global' })
+
     return {
       remountCounter: 0,
       tab: ref('design'),
@@ -190,7 +192,7 @@ export default defineComponent({
       imageFile: ref(null),
       areasFile: ref(null),
       areasCount: ref(5),
-      locale: ref('en'),
+      locale: ref(locale.value),
       settings: settings,
       ccLicenses: ccLicenses
     }
@@ -204,8 +206,8 @@ export default defineComponent({
         this.$emit('update:modelValue', value)
       }
     },
-    locales () {
-      return locales.filter(loc => this.locale !== loc)
+    formLocales () {
+      return this.i18n ? Object.keys(this.i18n).sort().filter(loc => this.locale !== loc) : ['en']
     },
     schemaStr () {
       const valueToShow = { ...this.modelValue }

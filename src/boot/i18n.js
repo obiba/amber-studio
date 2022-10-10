@@ -4,7 +4,7 @@ import messages from 'src/i18n'
 import { settings } from './settings'
 import { merge } from 'merge-anything'
 
-const locales = settings.i18n ? Object.keys(settings.i18n) : ['en', 'fr']
+const locales = settings.i18n ? Object.keys(settings.i18n).sort() : ['en', 'fr']
 
 const i18n = createI18n({
   locale: locales[0],

@@ -178,10 +178,6 @@ export default {
     email: 'Adresse courriel non valide',
     strongPassword: 'Le mot de passe de passe doit avoir au moins un caractère pour chaque type : minuscule, majuscule, chiffre, caractère spécial.'
   },
-  locales: {
-    en: 'English',
-    fr: 'français'
-  },
   roles: {
     guest: 'Invité',
     interviewer: 'Interviewer',
@@ -253,6 +249,7 @@ export default {
     tr_key: 'Clé',
     tr_value: 'Traduction',
     tr_delete_selected_confirm: 'Veuillez confirmer la suppression des traductions sélectionnées.',
+    tr_delete_locale_confirm: 'Veuillez confirmer la suppression de toutes les traductions pour cette langue.',
     import_schema: 'Ficher de schéma',
     import_schema_hint: 'Ficher de schéma à importer, contenant les éléments et les traductions du formulaire.',
     add_item_hint: 'Ajouter un élément',
@@ -432,7 +429,8 @@ export default {
     cc_by_nc_sa_40: 'Creative Commons BY NC SA 4.0',
     cc_by_nd_40: 'Creative Commons BY ND 4.0',
     cc_by_nc_nd_40: 'Creative Commons BY NC ND 4.0',
-    cc_cc0_10: 'Creative Commons CC0 1.0'
+    cc_cc0_10: 'Creative Commons CC0 1.0',
+    mit: 'Licence MIT'
   },
   add: 'Ajouter',
   update: 'Appliquer',

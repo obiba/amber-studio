@@ -178,10 +178,6 @@ export default {
     email: 'Value is not a valid email address',
     strongPassword: 'Password must contain at least one of each: lower case letter, upper case letter, digit, special character.'
   },
-  locales: {
-    en: 'English',
-    fr: 'français'
-  },
   roles: {
     guest: 'Guest',
     interviewer: 'Interviewer',
@@ -253,6 +249,7 @@ export default {
     tr_key: 'Key',
     tr_value: 'Translation',
     tr_delete_selected_confirm: 'Please confirm that you want to remove all the selected translations.',
+    tr_delete_locale_confirm: 'Please confirm that you want to remove all the translations for this language.',
     import_schema: 'Schema file',
     import_schema_hint: 'Schema file to import. Form items and translations will be replaced by the ones provided.',
     add_item_hint: 'Add a form item',
@@ -428,7 +425,8 @@ export default {
     cc_by_nc_sa_40: 'Creative Commons BY NC SA 4.0',
     cc_by_nd_40: 'Creative Commons BY ND 4.0',
     cc_by_nc_nd_40: 'Creative Commons BY NC ND 4.0',
-    cc_cc0_10: 'Creative Commons CC0 1.0'
+    cc_cc0_10: 'Creative Commons CC0 1.0',
+    mit: 'MIT license'
   },
   add: 'Add',
   update: 'Update',

@@ -30,18 +30,24 @@
   ],
   "i18n": {
     "en": {
-      "license": {
-        "mit": "MIT license"
+      "locales": {
+        "en": "English",
+        "fr": "French",
+        "ar": "Arabic"
       }
     },
     "fr": {
-      "license": {
-        "mit": "Licence MIT"
+      "locales": {
+        "en": "anglais",
+        "fr": "français",
+        "ar": "arabe"
       }
     },
     "ar": {
-      "license": {
-        "mit": "رخصة معهد ماساتشوستس للتكنولوجيا"
+      "locales": {
+        "en": "الفرنسية",
+        "fr": "فرنسي",
+        "ar": "العربية"
       }
     }
   }
