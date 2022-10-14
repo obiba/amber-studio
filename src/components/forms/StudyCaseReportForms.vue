@@ -125,6 +125,26 @@
     <q-dialog v-model='showCreateStudyCaseReportForm' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section>
+          <q-input
+            v-model='newStudyCaseReportFormData.name'
+            :label="$t('name')"
+            lazy-rules
+            @blur="v$.newStudyCaseReportFormData.name.$touch"
+            :error="v$.newStudyCaseReportFormData.name.$error"
+            :hint="$t('required')"
+          >
+            <template v-slot:error>
+              <div v-for="error in v$.newStudyCaseReportFormData.name.$errors">
+                {{error.$message}}
+              </div>
+            </template>
+          </q-input>
+          <q-input
+            v-model='newStudyCaseReportFormData.description'
+            :label="$t('description')"
+            autogrow
+            lazy-rules
+          />
           <q-select
             v-model="newStudyCaseReportFormData.form"
             :options="formOptions"
@@ -184,6 +204,26 @@
     <q-dialog v-model='showEditStudyCaseReportForm' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section>
+          <q-input
+            v-model='selectedStudyCaseReportForm.name'
+            :label="$t('name')"
+            lazy-rules
+            @blur="v$.selectedStudyCaseReportForm.name.$touch"
+            :error="v$.selectedStudyCaseReportForm.name.$error"
+            :hint="$t('required')"
+          >
+            <template v-slot:error>
+              <div v-for="error in v$.selectedStudyCaseReportForm.name.$errors">
+                {{error.$message}}
+              </div>
+            </template>
+          </q-input>
+          <q-input
+            v-model='selectedStudyCaseReportForm.description'
+            :label="$t('description')"
+            autogrow
+            lazy-rules
+          />
           <q-select
             v-model="selectedStudyCaseReportForm.revision"
             :options="revisionOptions"
@@ -320,9 +360,11 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
 import { formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
 import { date } from 'quasar'
+import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
 import AuthMixin from '../../mixins/AuthMixin'
 
@@ -341,6 +383,7 @@ export default defineComponent({
   },
   setup () {
     return {
+      v$: useVuelidate(),
       tab: ref('definition'),
       selected: ref([]),
       filter: ref('')
@@ -348,7 +391,10 @@ export default defineComponent({
   },
   data () {
     return {
-      newStudyCaseReportFormData: {},
+      newStudyCaseReportFormData: {
+        name: '',
+        description: ''
+      },
       revisionOptions: [],
       selectedStudyCaseReportForm: {},
       showCreateStudyCaseReportForm: false,
@@ -366,6 +412,22 @@ export default defineComponent({
       subjects: []
     }
   },
+  validations: {
+    newStudyCaseReportFormData: {
+      name: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      }
+    },
+    selectedStudyCaseReportForm: {
+      name: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      }
+    }
+  },
   computed: {
     ...mapState({
       study: state => state.study.study,
@@ -377,6 +439,21 @@ export default defineComponent({
     },
     columns () {
       const cols = [
+        {
+          name: 'name',
+          required: true,
+          label: this.$t('name'),
+          align: 'left',
+          field: 'name',
+          sortable: true
+        },
+        {
+          name: 'description',
+          align: 'left',
+          label: this.$t('description'),
+          field: 'description',
+          sortable: true
+        },
         {
           name: 'form',
           required: true,
@@ -442,10 +519,10 @@ export default defineComponent({
       return this.getSubjectOptions('group')
     },
     disableCreateStudyCaseReportForm () {
-      return !this.newStudyCaseReportFormData.form || !this.newStudyCaseReportFormData.revision || this.revisionOptions.length === 0
+      return this.v$.newStudyCaseReportFormData.$invalid || !this.newStudyCaseReportFormData.form || !this.newStudyCaseReportFormData.revision || this.revisionOptions.length === 0
     },
     disableEditStudyCaseReportForm () {
-      return !this.selectedStudyCaseReportForm.revision || this.revisionOptions.length === 0
+      return this.v$.selectedStudyCaseReportForm.$invalid || !this.selectedStudyCaseReportForm.revision || this.revisionOptions.length === 0
     },
     hasStudyCaseReportForms () {
       return this.studyCaseReportForms && this.studyCaseReportForms.length > 0
@@ -484,6 +561,8 @@ export default defineComponent({
     },
     onAdd () {
       this.newStudyCaseReportFormData = {
+        name: '',
+        description: '',
         restrictedAccess: false,
         permissions: {
           users: [],
@@ -588,6 +667,7 @@ export default defineComponent({
       this.selected = []
     },
     async saveStudyCaseReportForm (create) {
+      this.v$.$reset()
       if (create) {
         const toSave = { ...this.newStudyCaseReportFormData }
         toSave.study = this.studyId

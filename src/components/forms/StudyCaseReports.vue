@@ -12,6 +12,7 @@
       @request='getTableStudyCaseReports'
     >
       <template v-slot:top>
+        <div></div>
         <q-btn-dropdown
           class="q-mr-md"
           color="primary"
@@ -115,6 +116,11 @@
             <q-icon name="search"/>
           </template>
         </q-input>
+      </template>
+      <template v-slot:body-cell-caseReportForm='props'>
+        <q-td :props='props'>
+          <router-link :to="'/study/' + studyId + '/crfs'">{{ getCaseReportFormName(props.row.caseReportForm) }}</router-link>
+        </q-td>
       </template>
       <template v-slot:body-cell-form='props'>
         <q-td :props='props'>
@@ -247,6 +253,7 @@ export default defineComponent({
   mounted: function () {
     this.setPagination()
     if (this.study) {
+      this.getStudyCaseReportForms({ study: this.studyId })
       this.getStudyForms({ study: this.studyId })
       this.getTableStudyCaseReports()
     }
@@ -282,6 +289,14 @@ export default defineComponent({
           label: this.$t('id'),
           align: 'left',
           field: row => (row.data && row.data._id) ? row.data._id : '',
+          sortable: true
+        },
+        {
+          name: 'caseReportForm',
+          required: true,
+          label: this.$t('study.case_report_form'),
+          align: 'left',
+          field: 'caseReportForm',
           sortable: true
         },
         {
@@ -327,7 +342,8 @@ export default defineComponent({
     ...mapState({
       study: state => state.study.study,
       forms: state => state.form.forms,
-      studyCaseReports: state => state.caseReportForm ? state.caseReportForm.caseReports : []
+      studyCaseReports: state => state.caseReportForm ? state.caseReportForm.caseReports : [],
+      studyCaseReportForms: state => state.caseReportForm ? state.caseReportForm.caseReportForms : []
     }),
     studyId () {
       return this.$route.params.id
@@ -372,7 +388,8 @@ export default defineComponent({
   methods: {
     ...mapActions({
       getStudyForms: 'form/getForms',
-      getStudyCaseReports: 'caseReportForm/getCaseReports'
+      getStudyCaseReports: 'caseReportForm/getCaseReports',
+      getStudyCaseReportForms: 'caseReportForm/getCaseReportForms'
     }),
     onExport (format) {
       const accept = format === 'csv' ? 'application/zip' : 'application/json'
@@ -415,11 +432,14 @@ export default defineComponent({
         this.toDate = ''
       }
     },
+    getCaseReportFormName (crfId) {
+      return this.studyCaseReportForms.filter(crf => crf._id === crfId).map(crf => crf.name).pop()
+    },
     getFormName (formId) {
       return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
     },
     getCaseReportFullName (caseReport) {
-      return this.getCaseReportID(caseReport) + ':' + this.getFormName(caseReport.form) + ':' + (caseReport.revision ? caseReport.revision : t('study.latest_revision'))
+      return this.getCaseReportID(caseReport) + ':' + this.getCaseReportFormName(caseReport.caseReportForm) + ':' + (caseReport.revision ? caseReport.revision : t('study.latest_revision'))
     },
     getCaseReportID (caseReport) {
       return caseReport.data && caseReport.data._id ? caseReport.data._id : ''
