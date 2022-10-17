@@ -2,14 +2,14 @@
   <div>
     <q-table
       flat
-      :rows="studyCaseReports"
+      :rows="caseReports"
       :columns="columns"
       :filter="filter"
       row-key="_id"
       :selection="isReadOnly ? 'none' : 'multiple'"
       v-model:selected="selected"
       v-model:pagination='paginationOpts'
-      @request='getTableStudyCaseReports'
+      @request='getTableCaseReports'
     >
       <template v-slot:top>
         <div></div>
@@ -18,7 +18,7 @@
           color="primary"
           icon="download"
           :title="$t('study.export_case_reports_hint')"
-          :disable="studyCaseReports.length === 0">
+          :disable="caseReports.length === 0">
           <q-list>
             <q-item clickable v-close-popup @click="onExport('csv')">
               <q-item-section>
@@ -43,13 +43,22 @@
           :title="$t('study.delete_case_reports_hint')"
           @click="onConfirmDeleteMultiple()" />
         <q-select
+          class="q-ma-md"
+          v-model="caseReportFormFilter"
+          :options="caseReportFormOptions"
+          emit-value
+          map-options
+          :label="$t('study.case_report_form')"
+          style="min-width: 200px" />
+        <q-select
+          class="q-ma-md"
           v-model="formFilter"
           :options="formOptions"
           emit-value
           map-options
           :label="$t('study.form')"
           style="min-width: 200px" />
-        <div class="q-pa-md" style="max-width: 300px">
+        <div class="q-ma-md" style="max-width: 300px">
           <q-input filled v-model="fromDate" :placeholder="$t('from')">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
@@ -77,7 +86,7 @@
             </template>
           </q-input>
         </div>
-        <div class="q-pa-md" style="max-width: 300px">
+        <div class="q-ma-md" style="max-width: 300px">
           <q-input filled v-model="toDate" :placeholder="$t('to')">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
@@ -164,7 +173,7 @@
       </template>
     </q-table>
 
-    <q-dialog v-model='showViewStudyCaseReport' persistent>
+    <q-dialog v-model='showViewCaseReport' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section>
           <div class="q-pl-none q-pr-none">
@@ -181,20 +190,20 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showConfirmDeleteStudyCaseReport' persistent>
+    <q-dialog v-model='showConfirmDeleteCaseReport' persistent>
       <q-card>
         <q-card-section>
           <div>
             {{$t('study.delete_case_report_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
-            {{ getCaseReportFullName(selectedStudyCaseReport) }}
+            {{ getCaseReportFullName(selectedCaseReport) }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='deleteStudyCaseReport'
+            @click='deleteCaseReport'
             :label="$t('delete')"
             type='submit'
             color='positive'
@@ -208,7 +217,7 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showConfirmDeleteStudyCaseReports' persistent>
+    <q-dialog v-model='showConfirmDeleteCaseReports' persistent>
       <q-card>
         <q-card-section>
           <div>
@@ -221,7 +230,7 @@
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='deleteStudyCaseReports'
+            @click='deleteCaseReports'
             :label="$t('delete')"
             type='submit'
             color='positive'
@@ -253,9 +262,9 @@ export default defineComponent({
   mounted: function () {
     this.setPagination()
     if (this.study) {
-      this.getStudyCaseReportForms({ study: this.studyId })
+      this.getCaseReportForms({ study: this.studyId })
       this.getStudyForms({ study: this.studyId })
-      this.getTableStudyCaseReports()
+      this.getTableCaseReports()
     }
   },
   setup () {
@@ -263,6 +272,7 @@ export default defineComponent({
       tab: ref('definition'),
       selected: ref([]),
       filter: ref(''),
+      caseReportFormFilter: ref('0'),
       formFilter: ref('0'),
       fromDate: ref(''),
       toDate: ref('')
@@ -271,10 +281,10 @@ export default defineComponent({
   data () {
     return {
       revisionOptions: [],
-      selectedStudyCaseReport: {},
-      showViewStudyCaseReport: false,
-      showConfirmDeleteStudyCaseReport: false,
-      showConfirmDeleteStudyCaseReports: false,
+      selectedCaseReport: {},
+      showViewCaseReport: false,
+      showConfirmDeleteCaseReport: false,
+      showConfirmDeleteCaseReports: false,
       paginationOpts: {
         sortBy: 'updatedAt',
         descending: true,
@@ -342,11 +352,24 @@ export default defineComponent({
     ...mapState({
       study: state => state.study.study,
       forms: state => state.form.forms,
-      studyCaseReports: state => state.caseReportForm ? state.caseReportForm.caseReports : [],
-      studyCaseReportForms: state => state.caseReportForm ? state.caseReportForm.caseReportForms : []
+      caseReports: state => state.caseReportForm ? state.caseReportForm.caseReports : [],
+      caseReportForms: state => state.caseReportForm ? state.caseReportForm.caseReportForms : []
     }),
     studyId () {
       return this.$route.params.id
+    },
+    caseReportFormOptions () {
+      const opts = this.caseReportForms.map(crf => {
+        return {
+          value: crf._id,
+          label: crf.name
+        }
+      })
+      opts.splice(0, 0, {
+        value: '0',
+        label: t('study.all_forms')
+      })
+      return opts
     },
     formOptions () {
       const opts = this.forms.map(form => {
@@ -361,8 +384,8 @@ export default defineComponent({
       })
       return opts
     },
-    hasStudyCaseReports () {
-      return this.studyCaseReports && this.studyCaseReports.length > 0
+    hasCaseReports () {
+      return this.caseReports && this.caseReports.length > 0
     },
     modelDataStr () {
       return JSON.stringify(this.modelData, null, '  ')
@@ -370,27 +393,39 @@ export default defineComponent({
   },
   watch: {
     study: function (newValue, oldValue) {
-      this.getTableStudyCaseReports()
+      this.getTableCaseReports()
+    },
+    caseReportFormFilter: function (newValue) {
+      this.onFilter()
     },
     formFilter: function (newValue) {
-      this.selected = []
-      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
+      this.onFilter()
     },
     fromDate: function (newValue) {
-      this.selected = []
-      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
+      this.onFilter()
     },
     toDate: function (newValue) {
-      this.selected = []
-      this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
+      this.onFilter()
     }
   },
   methods: {
     ...mapActions({
       getStudyForms: 'form/getForms',
-      getStudyCaseReports: 'caseReportForm/getCaseReports',
-      getStudyCaseReportForms: 'caseReportForm/getCaseReportForms'
+      getCaseReports: 'caseReportForm/getCaseReports',
+      getCaseReportForms: 'caseReportForm/getCaseReportForms'
     }),
+    onFilter () {
+      this.selected = []
+      this.getCaseReports({
+        paginationOpts: this.paginationOpts,
+        study: this.studyId,
+        caseReportForm: this.caseReportFormFilter,
+        form: this.formFilter,
+        filter: this.filter,
+        from: this.fromDate,
+        to: this.toDate
+      })
+    },
     onExport (format) {
       const accept = format === 'csv' ? 'application/zip' : 'application/json'
       caseReportExportService.downloadCaseReports(this.studyId, accept, this.formFilter, this.filter, this.fromDate, this.toDate)
@@ -413,16 +448,16 @@ export default defineComponent({
         })
     },
     onView (studyCaseReport) {
-      this.showViewStudyCaseReport = true
+      this.showViewCaseReport = true
       this.modelData = studyCaseReport.data
     },
     onConfirmDelete (studyCaseReport) {
-      this.showConfirmDeleteStudyCaseReport = true
-      this.selectedStudyCaseReport = studyCaseReport
+      this.showConfirmDeleteCaseReport = true
+      this.selectedCaseReport = studyCaseReport
     },
     onConfirmDeleteMultiple () {
       if (this.selected.length > 0) {
-        this.showConfirmDeleteStudyCaseReports = true
+        this.showConfirmDeleteCaseReports = true
       }
     },
     onClearDate (name) {
@@ -433,7 +468,7 @@ export default defineComponent({
       }
     },
     getCaseReportFormName (crfId) {
-      return this.studyCaseReportForms.filter(crf => crf._id === crfId).map(crf => crf.name).pop()
+      return this.caseReportForms.filter(crf => crf._id === crfId).map(crf => crf.name).pop()
     },
     getFormName (formId) {
       return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
@@ -444,29 +479,29 @@ export default defineComponent({
     getCaseReportID (caseReport) {
       return caseReport.data && caseReport.data._id ? caseReport.data._id : ''
     },
-    async getTableStudyCaseReports (requestProp) {
+    async getTableCaseReports (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
         this.$store.commit('caseReportForm/setCaseReportPagination', {
           caseReportPaginationOpts: requestProp.pagination
         })
-        await this.getStudyCaseReports({ paginationOpts: requestProp.pagination, study: this.studyId, form: this.formFilter, filter: requestProp.filter, from: this.fromDate, to: this.toDate })
+        await this.getCaseReports({ paginationOpts: requestProp.pagination, study: this.studyId, form: this.formFilter, filter: requestProp.filter, from: this.fromDate, to: this.toDate })
       } else {
-        await this.getStudyCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
+        await this.getCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
       }
       this.paginationOpts.rowsNumber = this.$store.state.caseReportForm.caseReportPaginationOpts.rowsNumber
     },
     setPagination () {
       this.paginationOpts = this.$store.state.caseReportForm.caseReportPaginationOpts
     },
-    deleteStudyCaseReport () {
+    deleteCaseReport () {
       this.$store.dispatch('caseReportForm/deleteCaseReport', {
-        id: this.selectedStudyCaseReport._id,
+        id: this.selectedCaseReport._id,
         study: this.studyId,
         paginationOpts: this.paginationOpts
       })
     },
-    deleteStudyCaseReports () {
+    deleteCaseReports () {
       const ids = this.selected.map(u => u._id)
       this.$store.dispatch('caseReportForm/deleteCaseReports', {
         ids: ids,
