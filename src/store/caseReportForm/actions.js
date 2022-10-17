@@ -81,7 +81,11 @@ export async function createCaseReportForm ({ dispatch }, payload) {
   const result = await caseReportFormService
     .createCaseReportForm(payload.caseReportForm)
     .catch(err => {
-      errorHandler.onError(err, t('error.general'))
+      if (err.code === 400) {
+        errorHandler.onError(err, err.message)
+      } else {
+        errorHandler.onError(err, t('error.general'))
+      }
     })
   if (result) {
     Notify.create({

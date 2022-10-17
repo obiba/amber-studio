@@ -31,7 +31,11 @@ export async function createForm ({ dispatch }, payload) {
   const result = await formService
     .createForm(payload.form)
     .catch(err => {
-      errorHandler.onError(err, t('error.general'))
+      if (err.code === 400) {
+        errorHandler.onError(err, err.message)
+      } else {
+        errorHandler.onError(err, t('error.general'))
+      }
     })
   if (result) {
     Notify.create({
