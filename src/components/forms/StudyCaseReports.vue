@@ -1,19 +1,7 @@
 <template>
   <div>
-    <q-table
-      flat
-      :rows="caseReports"
-      :columns="columns"
-      :filter="filter"
-      row-key="_id"
-      :selection="isReadOnly ? 'none' : 'multiple'"
-      v-model:selected="selected"
-      v-model:pagination='paginationOpts'
-      @request='getTableCaseReports'
-    >
-      <template v-slot:top>
-        <div></div>
-        <q-btn-dropdown
+    <div class="q-ml-md q-mr-d">
+      <q-btn-dropdown
           class="q-mr-md"
           color="primary"
           icon="download"
@@ -42,8 +30,21 @@
           :disable="selected.length === 0"
           :title="$t('study.delete_case_reports_hint')"
           @click="onConfirmDeleteMultiple()" />
+    </div>
+    <q-table
+      flat
+      :rows="caseReports"
+      :columns="columns"
+      :filter="filter"
+      row-key="_id"
+      :selection="isReadOnly ? 'none' : 'multiple'"
+      v-model:selected="selected"
+      v-model:pagination='paginationOpts'
+      @request='getTableCaseReports'
+    >
+      <template v-slot:top>
         <q-select
-          class="q-ma-md"
+          class="q-mr-md"
           v-model="caseReportFormFilter"
           :options="caseReportFormOptions"
           emit-value
@@ -51,14 +52,14 @@
           :label="$t('study.case_report_form')"
           style="min-width: 200px" />
         <q-select
-          class="q-ma-md"
+          class="q-mr-md"
           v-model="formFilter"
           :options="formOptions"
           emit-value
           map-options
           :label="$t('study.form')"
           style="min-width: 200px" />
-        <div class="q-ma-md" style="max-width: 300px">
+        <div class="q-mr-md" style="max-width: 250px">
           <q-input filled v-model="fromDate" :placeholder="$t('from')">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
@@ -86,7 +87,7 @@
             </template>
           </q-input>
         </div>
-        <div class="q-ma-md" style="max-width: 300px">
+        <div class="q-mr-md" style="max-width: 250px">
           <q-input filled v-model="toDate" :placeholder="$t('to')">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
@@ -263,7 +264,7 @@ export default defineComponent({
     this.setPagination()
     if (this.study) {
       this.getCaseReportForms({ study: this.studyId })
-      this.getStudyForms({ study: this.studyId })
+      this.getForms({ study: this.studyId })
       this.getTableCaseReports()
     }
   },
@@ -280,7 +281,6 @@ export default defineComponent({
   },
   data () {
     return {
-      revisionOptions: [],
       selectedCaseReport: {},
       showViewCaseReport: false,
       showConfirmDeleteCaseReport: false,
@@ -410,7 +410,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions({
-      getStudyForms: 'form/getForms',
+      getForms: 'form/getForms',
       getCaseReports: 'caseReportForm/getCaseReports',
       getCaseReportForms: 'caseReportForm/getCaseReportForms'
     }),
