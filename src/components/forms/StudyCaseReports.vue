@@ -428,7 +428,8 @@ export default defineComponent({
     },
     onExport (format) {
       const accept = format === 'csv' ? 'application/zip' : 'application/json'
-      caseReportExportService.downloadCaseReports(this.studyId, accept, this.formFilter, this.filter, this.fromDate, this.toDate)
+      const ids = this.selected.map(u => u._id)
+      caseReportExportService.downloadCaseReports(accept, this.studyId, this.caseReportFormFilter, this.formFilter, this.filter, this.fromDate, this.toDate, ids)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))

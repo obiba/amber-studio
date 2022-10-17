@@ -2,37 +2,32 @@
 import { api } from '../../boot/axios'
 import { LocalStorage } from 'quasar'
 
-export async function downloadCaseReports (study, accept, form, filter, from, to) {
+export async function downloadCaseReports (accept, study, caseReportForm, form, filter, from, to, ids) {
   const query = {
     $limit: 1000000,
-    $skip: 0
+    $skip: 0,
+    study: study
   }
   // use filters
-  const and = {}
-  and['[study]'] = study
   if (filter) {
-    and['[data._id][$search]'] = filter
+    query['data._id[$search]'] = filter
+  }
+  if (caseReportForm && caseReportForm !== '0') {
+    query.caseReportForm = caseReportForm
   }
   if (form && form !== '0') {
-    and['[study]'] = study
-    query['$and[1][form]'] = form
+    query.form = form
   }
   if (from) {
-    and['[updatedAt][$gte]'] = from
+    query['updatedAt[$gte]'] = from
   }
   if (to) {
-    and['[updatedAt][$lte]'] = to
+    query['updatedAt[$lte]'] = to
+  }
+  if (ids && ids.length > 0) {
+    query['_id[$in][]'] = ids
   }
 
-  if (Object.keys(and) === 1) {
-    query.study = study
-  } else {
-    let i = 0
-    for (const [key, value] of Object.entries(and)) {
-      query[`$and[${i}]${key}`] = value
-      i++
-    }
-  }
   const token = LocalStorage.getItem('feathers-jwt')
   return api.get('/case-report-export', {
     params: query,
