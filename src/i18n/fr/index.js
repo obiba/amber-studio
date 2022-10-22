@@ -133,6 +133,13 @@ export default {
       active: 'Actif',
       paused: 'En pause'
     },
+    case_report_form_repeat_policy: {
+      title: 'Enregistrements',
+      hint: 'La stratégie à adopter quand un enregistrement est soumis plusieurs fois (basé sur l\'identifiant personel).',
+      single_reject: 'Enregistrement unique, rejet',
+      single_update: 'Enregistrement unique, mise à jour',
+      multiple: 'Enregistrements multiples'
+    },
     search_case_report_hint: 'Chercher par ID',
     view_case_report_hint: 'Voir le rapport de cas',
     delete_case_report_hint: 'Supprimer le rapport de cas',
@@ -235,10 +242,12 @@ export default {
     tagged_form: 'Formulaire étiquetté avec succès.',
     delete_form_revision: 'Version du formulaire supprimée avec succès.',
     delete_form_revisions: 'Versions des formulaires supprimées avec succès.',
-    create_case_report_form: 'Formulaire de rapport de case ajouté avec succès.',
-    update_case_report_form: 'Formulaire de rapport de case mis à jour avec succès.',
+    create_case_report_form: 'Formulaire de rapport de cas ajouté avec succès.',
+    update_case_report_form: 'Formulaire de rapport de cas mis à jour avec succès.',
     delete_case_report_form: 'Formulaire de rapport de cas supprimé avec succès.',
-    delete_case_report_forms: 'Formulaires de rapport de case supprimés avec succès.'
+    delete_case_report_forms: 'Formulaires de rapport de cas supprimés avec succès.',
+    delete_case_report: 'Rapport de cas supprimé avec succès.',
+    delete_case_reports: 'Rapport de cas supprimés avec succès.'
   },
   form: {
     tr_add: 'Ajouter une traduction',

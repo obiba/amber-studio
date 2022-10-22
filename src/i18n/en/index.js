@@ -133,6 +133,13 @@ export default {
       active: 'Active',
       paused: 'Paused'
     },
+    case_report_form_repeat_policy: {
+      title: 'Repeated records policy',
+      hint: 'The strategy to adopt when a case report is saved (based on the individual\'s ID).',
+      single_reject: 'Single record, reject',
+      single_update: 'Single record, update',
+      multiple: 'Multiple records'
+    },
     search_case_report_hint: 'Search case reports by ID',
     view_case_report_hint: 'View the case report',
     delete_case_report_hint: 'Delete case report',
@@ -238,7 +245,9 @@ export default {
     create_case_report_form: 'Case report form successfully added.',
     update_case_report_form: 'Case report form successfully updated.',
     delete_case_report_form: 'Case report form successfully deleted.',
-    delete_case_report_forms: 'Case report forms successfully deleted.'
+    delete_case_report_forms: 'Case report forms successfully deleted.',
+    delete_case_report: 'Case report successfully deleted.',
+    delete_case_reports: 'Case reports successfully deleted.'
   },
   form: {
     tr_add: 'Add translation',

@@ -60,6 +60,11 @@
           </div>
         </q-td>
       </template>
+      <template v-slot:body-cell-repeatPolicy='props'>
+        <q-td :props='props'>
+          {{ props.row.repeatPolicy ? $t('study.case_report_form_repeat_policy.' + props.row.repeatPolicy) : '?' }}
+        </q-td>
+      </template>
       <template v-slot:body-cell-state='props'>
         <q-td :props='props'>
           {{ $t('study.case_report_form_state.' + props.row.state) }}
@@ -145,6 +150,8 @@
             autogrow
             lazy-rules
           />
+        </q-card-section>
+        <q-card-section>
           <q-select
             v-model="newStudyCaseReportFormData.form"
             :options="formOptions"
@@ -158,6 +165,15 @@
             map-options
             :label="$t('study.form_revision')"
             :disable="!newStudyCaseReportFormData.form" />
+        </q-card-section>
+        <q-card-section>
+          <q-select
+            v-model="newStudyCaseReportFormData.repeatPolicy"
+            :options="repeatOptions"
+            emit-value
+            map-options
+            :label="$t('study.case_report_form_repeat_policy.title')"
+            :hint="$t('study.case_report_form_repeat_policy.hint')" />
         </q-card-section>
         <q-card-section>
           <q-toggle
@@ -224,12 +240,23 @@
             autogrow
             lazy-rules
           />
+        </q-card-section>
+        <q-card-section>
           <q-select
             v-model="selectedStudyCaseReportForm.revision"
             :options="revisionOptions"
             emit-value
             map-options
             :label="$t('study.form_revision')" />
+        </q-card-section>
+        <q-card-section>
+          <q-select
+            v-model="selectedStudyCaseReportForm.repeatPolicy"
+            :options="repeatOptions"
+            emit-value
+            map-options
+            :label="$t('study.case_report_form_repeat_policy.title')"
+            :hint="$t('study.case_report_form_repeat_policy.hint')" />
         </q-card-section>
         <q-card-section>
           <q-toggle
@@ -393,7 +420,8 @@ export default defineComponent({
     return {
       newStudyCaseReportFormData: {
         name: '',
-        description: ''
+        description: '',
+        repeatPolicy: 'single_reject'
       },
       revisionOptions: [],
       selectedStudyCaseReportForm: {},
@@ -470,6 +498,13 @@ export default defineComponent({
           sortable: true
         },
         {
+          name: 'repeatPolicy',
+          align: 'left',
+          label: this.$t('study.case_report_form_repeat_policy.title'),
+          field: 'repeatPolicy',
+          sortable: true
+        },
+        {
           name: 'updatedAt',
           align: 'left',
           label: this.$t('updated_at'),
@@ -509,6 +544,16 @@ export default defineComponent({
         return {
           value: form._id,
           label: form.name
+        }
+      })
+    },
+    repeatOptions () {
+      return [
+        'single_reject', 'single_update', 'multiple'
+      ].map(opt => {
+        return {
+          value: opt,
+          label: this.$t('study.case_report_form_repeat_policy.' + opt)
         }
       })
     },
