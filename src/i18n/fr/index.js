@@ -135,7 +135,7 @@ export default {
     },
     case_report_form_repeat_policy: {
       title: 'Enregistrements',
-      hint: 'La stratégie à adopter quand un enregistrement est soumis plusieurs fois (basé sur l\'identifiant personel).',
+      hint: 'La stratégie à adopter quand un enregistrement est soumis plusieurs fois (basé sur l\'identifiant personel). Plusieurs enregistrements peuvent être accepté, ou un unique enregistrement pour un individu donné. Dans ce dernier cas, un nouvel enregistrement sera rejeté ou mettre à jour l\'enregistrement existant.',
       single_reject: 'Enregistrement unique, rejet',
       single_update: 'Enregistrement unique, mise à jour',
       multiple: 'Enregistrements multiples'

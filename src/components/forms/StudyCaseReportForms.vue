@@ -177,6 +177,7 @@
         </q-card-section>
         <q-card-section>
           <q-toggle
+            class="q-mt-md"
             v-model="newStudyCaseReportFormData.restrictedAccess"
             :label="$t('restricted_access')"
           />
@@ -260,6 +261,7 @@
         </q-card-section>
         <q-card-section>
           <q-toggle
+            class="q-mt-md"
             v-model="selectedStudyCaseReportForm.restrictedAccess"
             :label="$t('restricted_access')"
           />
@@ -421,7 +423,7 @@ export default defineComponent({
       newStudyCaseReportFormData: {
         name: '',
         description: '',
-        repeatPolicy: 'single_reject'
+        repeatPolicy: 'multiple'
       },
       revisionOptions: [],
       selectedStudyCaseReportForm: {},
@@ -549,7 +551,7 @@ export default defineComponent({
     },
     repeatOptions () {
       return [
-        'single_reject', 'single_update', 'multiple'
+        'multiple', 'single_reject', 'single_update'
       ].map(opt => {
         return {
           value: opt,
@@ -608,6 +610,7 @@ export default defineComponent({
       this.newStudyCaseReportFormData = {
         name: '',
         description: '',
+        repeatPolicy: 'multiple',
         restrictedAccess: false,
         permissions: {
           users: [],

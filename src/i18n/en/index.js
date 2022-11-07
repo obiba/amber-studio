@@ -135,7 +135,7 @@ export default {
     },
     case_report_form_repeat_policy: {
       title: 'Repeated records policy',
-      hint: 'The strategy to adopt when a case report is saved (based on the individual\'s ID).',
+      hint: 'The strategy to adopt when a case report is saved (based on the individual\'s ID). Multiple records can be registered, or only a single one for the same individual. In this latter case a new record can be rejected or can update the existing one.',
       single_reject: 'Single record, reject',
       single_update: 'Single record, update',
       multiple: 'Multiple records'
