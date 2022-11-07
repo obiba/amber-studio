@@ -16,6 +16,17 @@ export async function getFormRevisionsDigest (study, form) {
   return feathersClient.service('form-revision-digest').find(formData)
 }
 
+export async function getFormRevision (form, revision) {
+  const formData = {
+    query: {
+      form: form,
+      revision: revision
+    }
+  }
+
+  return feathersClient.service('form-revision').find(formData)
+}
+
 export async function getFormRevisions (opts, form, filter) {
   const formData = { query: { $sort: { revision: -1 } } }
   if (opts) {

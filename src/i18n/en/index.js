@@ -142,6 +142,7 @@ export default {
     },
     search_case_report_hint: 'Search case reports by ID',
     view_case_report_hint: 'View the case report',
+    edit_case_report_hint: 'Edit the case report',
     delete_case_report_hint: 'Delete case report',
     delete_case_report_confirm: 'Please confirm that you want to remove the case report:',
     delete_case_reports_hint: 'Delete selected case reports',
@@ -246,6 +247,7 @@ export default {
     update_case_report_form: 'Case report form successfully updated.',
     delete_case_report_form: 'Case report form successfully deleted.',
     delete_case_report_forms: 'Case report forms successfully deleted.',
+    update_case_report: 'Case report successfully updated.',
     delete_case_report: 'Case report successfully deleted.',
     delete_case_reports: 'Case reports successfully deleted.'
   },

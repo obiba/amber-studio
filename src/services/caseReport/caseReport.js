@@ -44,6 +44,10 @@ export async function getCaseReport (id) {
   return feathersClient.service('case-report').get(id)
 }
 
+export async function updateCaseReport (caseReport, id) {
+  return feathersClient.service('case-report').patch(id, caseReport)
+}
+
 export async function deleteCaseReport (id) {
   return feathersClient.service('case-report').remove(id)
 }

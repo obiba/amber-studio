@@ -155,9 +155,9 @@
             flat
             dense
             round
-            :title="$t('study.view_case_report_hint')"
-            icon="visibility"
-            @click='onView(props.row)'>
+            :title="$t(isReadOnly ? 'study.view_case_report_hint' : 'study.edit_case_report_hint')"
+            :icon="isReadOnly ? 'visibility' : 'edit'"
+            @click='onShow(props.row)'>
           </q-btn>
           <q-btn
             v-if="!isReadOnly"
@@ -174,19 +174,68 @@
       </template>
     </q-table>
 
-    <q-dialog v-model='showViewCaseReport' persistent>
+    <q-dialog v-model='showCaseReport' persistent :maximized="maximizedToggle">
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
+        <q-bar>
+          <q-space />
+          <q-btn dense flat icon="minimize" @click="maximizedToggle = false" :disable="!maximizedToggle">
+          </q-btn>
+          <q-btn dense flat icon="crop_square" @click="maximizedToggle = true" :disable="maximizedToggle">
+          </q-btn>
+          <q-btn dense flat icon="close" v-close-popup>
+          </q-btn>
+        </q-bar>
         <q-card-section>
-          <div class="q-pl-none q-pr-none">
-            <q-scroll-area style="height: 400px">
+          <q-tabs
+            v-model="showTab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
+          >
+            <q-tab name="form" label="form" />
+            <q-tab name="data" label="data" />
+          </q-tabs>
+
+          <q-separator/>
+
+          <q-tab-panels v-model="showTab">
+            <q-tab-panel name="form" class="q-pl-none q-pr-none">
+              <q-btn-dropdown icon="translate" flat size="sm" :label="locale">
+                <q-list>
+                  <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in formRevisionLocales" :key="loc">
+                    <q-item-section class="text-uppercase">{{ loc }}</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
+              <q-separator  class="q-mt-md"/>
+              <BlitzForm :key='remountCounter' :schema='formRevisionBlitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
+            </q-tab-panel>
+
+            <q-tab-panel name="data" class="q-pl-none q-pr-none">
               <div class="bg-black text-white q-pa-md">
                 <pre>{{ modelDataStr }}</pre>
               </div>
-            </q-scroll-area>
-          </div>
+            </q-tab-panel>
+          </q-tab-panels>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('close')" flat v-close-popup />
+          <q-btn v-if="isReadOnly" :label="$t('close')" flat v-close-popup />
+          <q-btn v-if="!isReadOnly" :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            v-if="!isReadOnly"
+            @click='onSave'
+            :label="$t('save')"
+            type='submit'
+            color='positive'
+            v-close-popup
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -251,14 +300,17 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
-// import { formRevisionService } from '../../services/form'
+import { formRevisionService } from '../../services/form'
 import { caseReportExportService } from '../../services/caseReport'
 import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
 import AuthMixin from '../../mixins/AuthMixin'
+import { BlitzForm } from '@blitzar/form'
+import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
 
 export default defineComponent({
   name: 'StudyCaseReports',
+  components: { BlitzForm },
   mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
@@ -270,19 +322,25 @@ export default defineComponent({
   },
   setup () {
     return {
+      remountCounter: 0,
+      showTab: ref('form'),
+      locale: ref('en'),
       tab: ref('definition'),
       selected: ref([]),
       filter: ref(''),
       caseReportFormFilter: ref('0'),
       formFilter: ref('0'),
       fromDate: ref(''),
-      toDate: ref('')
+      toDate: ref(''),
+      maximizedToggle: ref(false)
     }
   },
   data () {
     return {
+      modelData: {},
+      selectedFormRevision: { schema: [] },
       selectedCaseReport: {},
-      showViewCaseReport: false,
+      showCaseReport: false,
       showConfirmDeleteCaseReport: false,
       showConfirmDeleteCaseReports: false,
       paginationOpts: {
@@ -389,6 +447,12 @@ export default defineComponent({
     },
     modelDataStr () {
       return JSON.stringify(this.modelData, null, '  ')
+    },
+    formRevisionLocales () {
+      return Object.keys(this.selectedFormRevision.schema.i18n).filter(loc => this.locale !== loc)
+    },
+    formRevisionBlitzarSchema () {
+      return makeBlitzarQuasarSchemaForm(this.selectedFormRevision.schema, { locale: this.locale, debug: true })
     }
   },
   watch: {
@@ -448,9 +512,30 @@ export default defineComponent({
           }
         })
     },
-    onView (studyCaseReport) {
-      this.showViewCaseReport = true
-      this.modelData = studyCaseReport.data
+    onLocale (newLocale) {
+      this.locale = newLocale
+    },
+    onShow (studyCaseReport) {
+      this.showCaseReport = true
+      this.selectedCaseReport = studyCaseReport
+      this.modelData = {}
+      this.showTab = 'form'
+      this.maximizedToggle = false
+      formRevisionService.getFormRevision(studyCaseReport.form, studyCaseReport.revision)
+        .then(res => {
+          this.selectedFormRevision = res.data[0]
+          this.modelData = studyCaseReport.data
+          this.remountCounter++
+        })
+    },
+    onSave () {
+      const updatedData = { ...this.modelData }
+      this.$store.dispatch('caseReportForm/updateCaseReport', {
+        id: this.selectedCaseReport._id,
+        caseReport: { data: updatedData },
+        study: this.studyId,
+        paginationOpts: this.paginationOpts
+      })
     },
     onConfirmDelete (studyCaseReport) {
       this.showConfirmDeleteCaseReport = true

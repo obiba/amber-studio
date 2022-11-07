@@ -16,6 +16,30 @@ export async function getCaseReports ({ commit }, payload) {
   }
 }
 
+export async function updateCaseReport ({ dispatch }, payload) {
+  const result = await caseReportService
+    .updateCaseReport(payload.caseReport, payload.id)
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.update_case_report'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'caseReportForm/getCaseReports',
+    {
+      paginationOpts: payload.paginationOpts,
+      study: payload.study,
+      form: payload.form
+    },
+    { root: true }
+  )
+}
+
 export async function deleteCaseReport ({ dispatch }, payload) {
   const result = await caseReportService
     .deleteCaseReport(payload.id)

@@ -142,6 +142,7 @@ export default {
     },
     search_case_report_hint: 'Chercher par ID',
     view_case_report_hint: 'Voir le rapport de cas',
+    edit_case_report_hint: 'Editer le rapport de cas',
     delete_case_report_hint: 'Supprimer le rapport de cas',
     delete_case_report_confirm: 'Veuillez confirmer que vous voulez supprimer le rapport de cas:',
     delete_case_reports_hint: 'Supprimer les rapports de case sélectionnés',
@@ -246,6 +247,7 @@ export default {
     update_case_report_form: 'Formulaire de rapport de cas mis à jour avec succès.',
     delete_case_report_form: 'Formulaire de rapport de cas supprimé avec succès.',
     delete_case_report_forms: 'Formulaires de rapport de cas supprimés avec succès.',
+    update_case_report: 'Rapport de cas mis à jour avec succès.',
     delete_case_report: 'Rapport de cas supprimé avec succès.',
     delete_case_reports: 'Rapport de cas supprimés avec succès.'
   },
