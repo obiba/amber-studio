@@ -13,6 +13,16 @@
                 <q-item-label>CSV</q-item-label>
               </q-item-section>
             </q-item>
+            <q-item clickable v-close-popup @click="onExport('zip')">
+              <q-item-section>
+                <q-item-label>CSV (zip)</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="onExport('xlsx')">
+              <q-item-section>
+                <q-item-label>Excel</q-item-label>
+              </q-item-section>
+            </q-item>
             <q-item clickable v-close-popup @click="onExport('json')">
               <q-item-section>
                 <q-item-label>JSON</q-item-label>
@@ -491,7 +501,14 @@ export default defineComponent({
       })
     },
     onExport (format) {
-      const accept = format === 'csv' ? 'application/zip' : 'application/json'
+      let accept = 'application/json'
+      if (format === 'csv') {
+        accept = 'text/csv'
+      } else if (format === 'xlsx') {
+        accept = 'application/vnd.ms-excel'
+      } else if (format === 'zip') {
+        accept = 'application/zip'
+      }
       const ids = this.selected.map(u => u._id)
       caseReportExportService.downloadCaseReports(accept, this.studyId, this.caseReportFormFilter, this.formFilter, this.filter, this.fromDate, this.toDate, ids)
         .then(response => {
@@ -499,7 +516,7 @@ export default defineComponent({
             const url = window.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')
             link.href = url
-            const ext = format === 'csv' ? 'zip' : format
+            const ext = format
             link.setAttribute('download', `case-report-export.${ext}`)
             document.body.appendChild(link)
             link.click()
