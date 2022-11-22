@@ -348,7 +348,7 @@ export default {
     hint: 'Hint',
     hint_hint: 'Help text below the field.',
     mask: 'Mask',
-    mask_hint: 'Text formating using a mask (see documentation for input mask coding).',
+    mask_hint: 'Text formatting using a mask (see documentation for input mask coding).',
     required: 'Required',
     required_hint: 'Whether a value is required. Checked before value validation.',
     multiple: 'Multiple choices',
