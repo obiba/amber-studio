@@ -97,6 +97,7 @@
           icon="quiz"
           :label="$t('study.case_reports')"
           :content-inset-level="1"
+          default-opened
         >
 
           <q-item :to="'/study/' + studyId + '/crfs'" active-class="q-item-no-link-highlighting">
