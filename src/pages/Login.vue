@@ -15,8 +15,8 @@
                   </div>
                 </div>
               </q-card-section>
-              <q-card-section>
-                <q-form v-show="!withToken" @submit="onSubmit" class="q-gutter-md">
+              <q-card-section v-show="!withToken">
+                <q-form @submit="onSubmit" class="q-gutter-md">
 
                   <q-input
                     v-model="email"
@@ -51,17 +51,28 @@
                       class="text-bold q-ml-md"/>
                   </div>
                 </q-form>
-
-                <div v-show="secret">
-                  <div class="col text-subtitle">
-                    {{$t('login.totp')}}
-                  </div>
-                  <div class="text-center">
-                    <img :src="qr"/>
-                  </div>
+              </q-card-section>
+              <q-card-section v-show="secret">
+                <div class="col text-subtitle">
+                  {{$t('login.totp')}}
                 </div>
-
-                <q-form v-show="withToken" @submit="onSubmit" class="q-gutter-md">
+                <div class="text-center q-mt-md">
+                  <img :src="qr"/>
+                </div>
+                <div class="col text-subtitle q-mt-md">
+                  {{$t('login.totp_secret')}}
+                </div>
+                <q-input
+                  dense
+                  v-model="secret"
+                  readonly>
+                  <template v-slot:after>
+                    <q-btn round dense flat icon="content_copy" @click="onCopySecret"/>
+                  </template>
+                </q-input>
+              </q-card-section>
+              <q-card-section v-show="withToken">
+                <q-form @submit="onSubmit" class="q-gutter-md">
 
                   <q-input
                     type="number"
@@ -130,7 +141,7 @@
 import { useI18n } from 'vue-i18n'
 import { defineComponent, watch } from 'vue'
 import { mapState } from 'vuex'
-import { LocalStorage, Notify, useQuasar } from 'quasar'
+import { LocalStorage, Notify, useQuasar, copyToClipboard } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 
@@ -216,6 +227,14 @@ export default defineComponent({
         payload.secret = this.secret
       }
       return payload
+    },
+    onCopySecret () {
+      copyToClipboard(this.secret).then(() => {
+        Notify.create({
+          message: this.$t('login.secret_copied'),
+          color: 'positive'
+        })
+      })
     },
     onSubmit () {
       this.$store

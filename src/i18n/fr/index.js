@@ -10,6 +10,8 @@ export default {
     validate: 'Valider',
     token: 'Code à 6 chiffres',
     totp: 'Scanner ce code QR avec une app d\'authentification multifacteur (Microsoft authenticator est recommandée), puis entrer le code temporaire indiqué.',
+    totp_secret: 'Ou copié ce code secret à ajouter manuellement à l\'application d\'authentification multifacteur.',
+    secret_copied: 'Code secret copié.',
     failed: 'Combinaison courriel/mot de passe incorrecte.',
     failed_token: 'Code incorrect.'
   },
