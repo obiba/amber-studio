@@ -32,22 +32,13 @@
     "en": {
       "locales": {
         "en": "English",
-        "fr": "français",
-        "ar": "العربية"
+        "fr": "français"
       }
     },
     "fr": {
       "locales": {
         "en": "English",
-        "fr": "français",
-        "ar": "العربية"
-      }
-    },
-    "ar": {
-      "locales": {
-        "en": "English",
-        "fr": "français",
-        "ar": "العربية"
+        "fr": "français"
       }
     }
   }
