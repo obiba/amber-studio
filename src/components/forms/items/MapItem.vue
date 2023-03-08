@@ -17,6 +17,7 @@
       <q-input class="q-mb-md" v-model.number="schema.center" :label="$t('form.geo.center')" :hint="$t('form.geo.center_hint')" :disable="readOnly" />
       <q-input class="q-mb-md" v-model.number="schema.zoom" type="number" :label="$t('form.geo.zoom')" :hint="$t('form.geo.zoom_hint')" :disable="readOnly" />
       <q-toggle class="q-mb-md" v-model.number="schema.geoLocation" :label="$t('form.geo.geo_location')" dense :disable="readOnly" />
+      <br/>
       <q-toggle class="q-mb-md" v-model.number="schema.multiple" :label="$t('form.multiple')" dense :disable="readOnly" />
     </div>
   </div>

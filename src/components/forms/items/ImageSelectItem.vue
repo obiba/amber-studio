@@ -167,7 +167,7 @@ export default defineComponent({
       schema.value.areas.push({
         value: val,
         fill: '#cccccc',
-        points: '0,0 10,0 0,10 10,10'
+        points: '0,0 10,0 10,10 0,10'
       })
     }
 
