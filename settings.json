@@ -8,20 +8,6 @@
     "header2": "bg-blue-grey-1",
     "drawer": "bg-grey-9 text-grey-4"
   },
-  "links": [
-    {
-      "title": "main.docs",
-      "caption": "amberdoc.obiba.org",
-      "icon": "school",
-      "link": "https://amberdoc.obiba.org/en/latest/collect-user-guide/"
-    },
-    {
-      "title": "main.forum",
-      "caption": "forum.obiba.org",
-      "icon": "record_voice_over",
-      "link": "https://forum.obiba.org"
-    }
-  ],
   "licenses": [
     {
       "value": "mit",
