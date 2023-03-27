@@ -97,7 +97,7 @@
               <q-item-section @click="onAddTranslation()">{{ $t('form.tr_add_key') }}</q-item-section>
             </q-item>
             <q-item clickable v-close-popup>
-              <q-item-section @click="onConfirmMergeObservedKeys()">{{ $t('form.tr_merge_items') }}</q-item-section>
+              <q-item-section @click="mergeObservedKeys()">{{ $t('form.tr_merge_items') }}</q-item-section>
             </q-item>
           </q-list>
         </q-menu>
@@ -337,7 +337,7 @@ export default defineComponent({
       return this.v$.newTranslationData.$invalid
     },
     formLocales () {
-      return Object.keys(this.value.schema.i18n).length === 0 ? ['en'] : Object.keys(this.value.schema.i18n).sort()
+      return this.value.schema.i18n && Object.keys(this.value.schema.i18n).length > 0 ? Object.keys(this.value.schema.i18n).sort() : ['en']
     }
   },
   mounted () {
