@@ -262,6 +262,8 @@ export default {
     tr_clean_confirm: 'Veuillez confirmer la suppression des clés de traduction n\'apparaissant pas dans les paramètres du formulaire (libellé, description, placeholder, indice et message de validation).',
     tr_delete_selected: 'Supprimer les traductions sélectionnées',
     tr_search_hint: 'Chercher des traductions',
+    tr_locales_hint: 'Selectionner les langues',
+    tr_export_hint: 'Exporter les traductions',
     tr_key: 'Clé',
     tr_value: 'Traduction',
     tr_delete_selected_confirm: 'Veuillez confirmer la suppression des traductions sélectionnées.',

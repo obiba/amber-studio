@@ -49,7 +49,10 @@
           :disable="selected.length === 0"
           :title="$t('form.tr_delete_selected')"
           @click="onConfirmDeleteMultiple()" />
-        <q-btn-dropdown icon="translate" flat>
+        <q-btn-dropdown
+          flat
+          icon="translate"
+          :title="$t('form.tr_locales_hint')">
           <q-list>
             <q-item v-for="loc in locales" :key="loc">
               <q-item-section>

@@ -262,6 +262,8 @@ export default {
     tr_clean_confirm: 'Please confirm the removal of the translation keys which cannot be observed in the item settings (label, description, placeholder, hint and validation message).',
     tr_delete_selected: 'Remove the selected translations',
     tr_search_hint: 'Search translations',
+    tr_locales_hint: 'Select languages',
+    tr_export_hint: 'Export translations',
     tr_key: 'Key',
     tr_value: 'Translation',
     tr_delete_selected_confirm: 'Please confirm that you want to remove all the selected translations.',
