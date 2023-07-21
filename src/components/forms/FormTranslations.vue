@@ -49,15 +49,37 @@
           :disable="selected.length === 0"
           :title="$t('form.tr_delete_selected')"
           @click="onConfirmDeleteMultiple()" />
-        <q-btn-dropdown icon="translate" flat :label="locale">
+        <q-btn-dropdown icon="translate" flat>
           <q-list>
-            <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in locales" :key="loc">
+            <q-item v-for="loc in locales" :key="loc">
               <q-item-section>
                 <q-checkbox @click="onToggleFormLocale(loc)" v-model="formLocales" :val="loc"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label class="text-uppercase">{{loc}}</q-item-label>
                 <q-item-label caption>{{$t('locales.' + loc)}}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+        <q-btn-dropdown
+          flat
+          icon="download"
+          :title="$t('form.tr_export_hint')">
+          <q-list>
+            <q-item clickable v-close-popup @click="onExport('csv')">
+              <q-item-section>
+                <q-item-label>CSV</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="onExport('xlsx')">
+              <q-item-section>
+                <q-item-label>Excel</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="onExport('json')">
+              <q-item-section>
+                <q-item-label>JSON</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -248,6 +270,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
+import { formI18nExportService } from '../../services/form'
 import { locales } from '../../boot/i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
@@ -409,6 +432,34 @@ export default defineComponent({
         })
       }
       return obsKeys
+    },
+    onExport (format) {
+      let accept = 'application/json'
+      if (format === 'csv') {
+        accept = 'text/csv'
+      } else if (format === 'xlsx') {
+        accept = 'application/vnd.ms-excel'
+      } else if (format === 'zip') {
+        accept = 'application/zip'
+      }
+      formI18nExportService.downloadTranslations(accept, this.value._id)
+        .then(response => {
+          if (response.status === 200) {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            const ext = format
+            link.setAttribute('download', `from-i18n-export.${ext}`)
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+          } else {
+            Notify.create({
+              message: 'Form translations export failed.',
+              color: 'negative'
+            })
+          }
+        })
     },
     keyExists (key) {
       return this.rows.map(row => row.key).includes(key)
