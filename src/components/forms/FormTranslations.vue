@@ -452,7 +452,7 @@ export default defineComponent({
             const link = document.createElement('a')
             link.href = url
             const ext = format
-            link.setAttribute('download', `from-i18n-export.${ext}`)
+            link.setAttribute('download', `${this.value.name}-i18n.${ext}`)
             document.body.appendChild(link)
             link.click()
             link.remove()
