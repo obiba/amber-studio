@@ -273,7 +273,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import { formI18nExportService } from '../../services/form'
+import { formI18nService } from '../../services/form'
 import { locales } from '../../boot/i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
@@ -445,7 +445,7 @@ export default defineComponent({
       } else if (format === 'zip') {
         accept = 'application/zip'
       }
-      formI18nExportService.downloadTranslations(accept, this.value._id)
+      formI18nService.downloadTranslations(accept, this.value._id)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))

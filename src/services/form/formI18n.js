@@ -4,7 +4,7 @@ import { LocalStorage } from 'quasar'
 
 export async function downloadTranslations (accept, form) {
   const token = LocalStorage.getItem('feathers-jwt')
-  return api.get(`/form-i18n-export/${form}`, {
+  return api.get(`/form-i18n/${form}`, {
     responseType: 'blob',
     headers: {
       Accept: accept,
