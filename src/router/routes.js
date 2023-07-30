@@ -64,14 +64,36 @@ const routes = [
         component: () => import('pages/StudyForm.vue'),
         meta: { requiresAuth: true, noGuest: true }
       },
-      {
+      { // deprecated
         path: '/study/:id/crfs',
+        redirect: to => {
+          return { path: `/study/${to.params.id}/case-report-forms` }
+        }
+      },
+      {
+        path: '/study/:id/case-report-forms',
         component: () => import('pages/StudyCaseReportForms.vue'),
         meta: { requiresAuth: true, noGuest: true }
       },
-      {
+      { // deprecated
         path: '/study/:id/records',
-        component: () => import('pages/StudyRecords.vue'),
+        redirect: to => {
+          return { path: `/study/${to.params.id}/case-reports` }
+        }
+      },
+      {
+        path: '/study/:id/case-reports',
+        component: () => import('pages/StudyCaseReports.vue'),
+        meta: { requiresAuth: true, noGuest: true }
+      },
+      {
+        path: '/study/:id/interview-designs',
+        component: () => import('pages/StudyInterviewDesigns.vue'),
+        meta: { requiresAuth: true, noGuest: true }
+      },
+      {
+        path: '/study/:id/interviews',
+        component: () => import('pages/StudyInterviews.vue'),
         meta: { requiresAuth: true, noGuest: true }
       }
     ]

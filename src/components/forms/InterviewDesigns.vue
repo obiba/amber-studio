@@ -1,23 +1,23 @@
 <template>
   <div>
     <q-table
-      v-if="hasStudyCaseReportForms"
+      v-if="hasStudyInterviewDesigns"
       flat
-      :rows="studyCaseReportForms"
+      :rows="studyInterviewDesigns"
       :columns="columns"
       :filter="filter"
       row-key="_id"
       :selection="isReadOnly ? 'none' : 'multiple'"
       v-model:selected="selected"
       v-model:pagination='paginationOpts'
-      @request='getTableStudyCaseReportForms'
+      @request='getTableStudyInterviewDesigns'
     >
       <template v-slot:top>
         <q-btn
           v-if="!isReadOnly"
           color="primary"
           icon="add"
-          :title="$t('study.add_case_report_form_hint')"
+          :title="$t('study.add_interview_design_hint')"
           @click="onAdd()"
           class="q-mr-md" />
         <q-btn
@@ -28,7 +28,7 @@
           color="negative"
           icon="delete_outline"
           :disable="selected.length === 0"
-          :title="$t('study.delete_case_report_forms_hint')"
+          :title="$t('study.delete_interview_designs_hint')"
           @click="onConfirmDeleteMultiple()" />
         <q-space />
         <q-input
@@ -36,7 +36,7 @@
           debounce="300"
           v-model="filter"
           :placeholder="$t('search')"
-          :title="$t('study.search_case_report_form_hint')">
+          :title="$t('study.search_interview_design_hint')">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -62,12 +62,12 @@
       </template>
       <template v-slot:body-cell-repeatPolicy='props'>
         <q-td :props='props'>
-          {{ props.row.repeatPolicy ? $t('study.case_report_form_repeat_policy.' + props.row.repeatPolicy) : '?' }}
+          {{ props.row.repeatPolicy ? $t('study.interview_design_repeat_policy.' + props.row.repeatPolicy) : '?' }}
         </q-td>
       </template>
       <template v-slot:body-cell-state='props'>
         <q-td :props='props'>
-          {{ $t('study.case_report_form_state.' + props.row.state) }}
+          {{ $t('study.interview_design_state.' + props.row.state) }}
           <q-icon v-if="props.row.permissions" name="lock"/>
         </q-td>
       </template>
@@ -79,7 +79,7 @@
             flat
             dense
             round
-            :title="$t('study.edit_case_report_form_hint')"
+            :title="$t('study.edit_interview_design_hint')"
             icon="edit"
             @click='onEdit(props.row)'>
           </q-btn>
@@ -90,7 +90,7 @@
             flat
             dense
             round
-            :title="$t('study.start_case_report_form_hint')"
+            :title="$t('study.start_interview_design_hint')"
             icon="play_arrow"
             @click='start(props.row)'>
           </q-btn>
@@ -101,7 +101,7 @@
             flat
             dense
             round
-            :title="$t('study.pause_case_report_form_hint')"
+            :title="$t('study.pause_interview_design_hint')"
             icon="pause"
             @click='pause(props.row)'>
           </q-btn>
@@ -111,7 +111,7 @@
             flat
             dense
             round
-            :title="$t('study.delete_case_report_form_hint')"
+            :title="$t('study.delete_interview_design_hint')"
             icon="delete"
             @click='onConfirmDelete(props.row)'>
           </q-btn>
@@ -123,29 +123,29 @@
       v-else-if="!isReadOnly"
       color="primary"
       icon="add"
-      :label="$t('study.add_case_report_form_hint')"
+      :label="$t('study.add_interview_design_hint')"
       @click="onAdd()"
       class="q-ma-md" />
 
-    <q-dialog v-model='showCreateStudyCaseReportForm' persistent>
+    <q-dialog v-model='showCreateStudyInterviewDesign' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section>
           <q-input
-            v-model='newStudyCaseReportFormData.name'
+            v-model='newStudyInterviewDesignData.name'
             :label="$t('name')"
             lazy-rules
-            @blur="v$.newStudyCaseReportFormData.name.$touch"
-            :error="v$.newStudyCaseReportFormData.name.$error"
+            @blur="v$.newStudyInterviewDesignData.name.$touch"
+            :error="v$.newStudyInterviewDesignData.name.$error"
             :hint="$t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.newStudyCaseReportFormData.name.$errors">
+              <div v-for="error in v$.newStudyInterviewDesignData.name.$errors">
                 {{error.$message}}
               </div>
             </template>
           </q-input>
           <q-input
-            v-model='newStudyCaseReportFormData.description'
+            v-model='newStudyInterviewDesignData.description'
             :label="$t('description')"
             autogrow
             lazy-rules
@@ -153,37 +153,37 @@
         </q-card-section>
         <q-card-section>
           <q-select
-            v-model="newStudyCaseReportFormData.form"
+            v-model="newStudyInterviewDesignData.form"
             :options="formOptions"
             emit-value
             map-options
             :label="$t('study.form')" />
           <q-select
-            v-model="newStudyCaseReportFormData.revision"
+            v-model="newStudyInterviewDesignData.revision"
             :options="revisionOptions"
             emit-value
             map-options
             :label="$t('study.form_revision')"
-            :disable="!newStudyCaseReportFormData.form" />
+            :disable="!newStudyInterviewDesignData.form" />
         </q-card-section>
         <q-card-section>
           <q-select
-            v-model="newStudyCaseReportFormData.repeatPolicy"
+            v-model="newStudyInterviewDesignData.repeatPolicy"
             :options="repeatOptions"
             emit-value
             map-options
-            :label="$t('study.case_report_form_repeat_policy.title')"
-            :hint="$t('study.case_report_form_repeat_policy.hint')" />
+            :label="$t('study.interview_design_repeat_policy.title')"
+            :hint="$t('study.interview_design_repeat_policy.hint')" />
         </q-card-section>
         <q-card-section>
           <q-toggle
             class="q-mt-md"
-            v-model="newStudyCaseReportFormData.restrictedAccess"
+            v-model="newStudyInterviewDesignData.restrictedAccess"
             :label="$t('restricted_access')"
           />
           <q-select
-            v-if="newStudyCaseReportFormData.restrictedAccess"
-            v-model="newStudyCaseReportFormData.permissions.users"
+            v-if="newStudyInterviewDesignData.restrictedAccess"
+            v-model="newStudyInterviewDesignData.permissions.users"
             :options="userSubjectOptions"
             emit-value
             map-options
@@ -191,8 +191,8 @@
             use-chips
             :label="$t('study.form_permitted_users')" />
           <q-select
-            v-if="newStudyCaseReportFormData.restrictedAccess"
-            v-model="newStudyCaseReportFormData.permissions.groups"
+            v-if="newStudyInterviewDesignData.restrictedAccess"
+            v-model="newStudyInterviewDesignData.permissions.groups"
             :options="groupSubjectOptions"
             emit-value
             map-options
@@ -203,8 +203,8 @@
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='saveStudyCaseReportForm(true)'
-            :disable='disableCreateStudyCaseReportForm'
+            @click='saveStudyInterviewDesign(true)'
+            :disable='disableCreateStudyInterviewDesign'
             :label="$t('add')"
             type='submit'
             color='positive'
@@ -218,25 +218,25 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showEditStudyCaseReportForm' persistent>
+    <q-dialog v-model='showEditStudyInterviewDesign' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section>
           <q-input
-            v-model='selectedStudyCaseReportForm.name'
+            v-model='selectedStudyInterviewDesign.name'
             :label="$t('name')"
             lazy-rules
-            @blur="v$.selectedStudyCaseReportForm.name.$touch"
-            :error="v$.selectedStudyCaseReportForm.name.$error"
+            @blur="v$.selectedStudyInterviewDesign.name.$touch"
+            :error="v$.selectedStudyInterviewDesign.name.$error"
             :hint="$t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.selectedStudyCaseReportForm.name.$errors">
+              <div v-for="error in v$.selectedStudyInterviewDesign.name.$errors">
                 {{error.$message}}
               </div>
             </template>
           </q-input>
           <q-input
-            v-model='selectedStudyCaseReportForm.description'
+            v-model='selectedStudyInterviewDesign.description'
             :label="$t('description')"
             autogrow
             lazy-rules
@@ -244,7 +244,7 @@
         </q-card-section>
         <q-card-section>
           <q-select
-            v-model="selectedStudyCaseReportForm.revision"
+            v-model="selectedStudyInterviewDesign.revision"
             :options="revisionOptions"
             emit-value
             map-options
@@ -252,22 +252,22 @@
         </q-card-section>
         <q-card-section>
           <q-select
-            v-model="selectedStudyCaseReportForm.repeatPolicy"
+            v-model="selectedStudyInterviewDesign.repeatPolicy"
             :options="repeatOptions"
             emit-value
             map-options
-            :label="$t('study.case_report_form_repeat_policy.title')"
-            :hint="$t('study.case_report_form_repeat_policy.hint')" />
+            :label="$t('study.interview_design_repeat_policy.title')"
+            :hint="$t('study.interview_design_repeat_policy.hint')" />
         </q-card-section>
         <q-card-section>
           <q-toggle
             class="q-mt-md"
-            v-model="selectedStudyCaseReportForm.restrictedAccess"
+            v-model="selectedStudyInterviewDesign.restrictedAccess"
             :label="$t('restricted_access')"
           />
           <q-select
-            v-if="selectedStudyCaseReportForm.restrictedAccess"
-            v-model="selectedStudyCaseReportForm.permissions.users"
+            v-if="selectedStudyInterviewDesign.restrictedAccess"
+            v-model="selectedStudyInterviewDesign.permissions.users"
             :options="userSubjectOptions"
             emit-value
             map-options
@@ -275,8 +275,8 @@
             use-chips
             :label="$t('study.form_permitted_users')" />
           <q-select
-            v-if="selectedStudyCaseReportForm.restrictedAccess"
-            v-model="selectedStudyCaseReportForm.permissions.groups"
+            v-if="selectedStudyInterviewDesign.restrictedAccess"
+            v-model="selectedStudyInterviewDesign.permissions.groups"
             :options="groupSubjectOptions"
             emit-value
             map-options
@@ -287,8 +287,8 @@
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='saveStudyCaseReportForm(false)'
-            :disable='disableEditStudyCaseReportForm'
+            @click='saveStudyInterviewDesign(false)'
+            :disable='disableEditStudyInterviewDesign'
             :label="$t('update')"
             type='submit'
             color='positive'
@@ -309,7 +309,7 @@
             {{$t('study.add_form_revision_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
-            {{ getFormName(newStudyCaseReportFormData.form) }}
+            {{ getFormName(newStudyInterviewDesignData.form) }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
@@ -329,20 +329,20 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showConfirmDeleteStudyCaseReportForm' persistent>
+    <q-dialog v-model='showConfirmDeleteStudyInterviewDesign' persistent>
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_case_report_form_confirm')}}
+            {{$t('study.delete_interview_design_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
-            {{ getCaseReportFormFullName(selectedStudyCaseReportForm) }}
+            {{ getInterviewDesignFullName(selectedStudyInterviewDesign) }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='deleteStudyCaseReportForm'
+            @click='deleteStudyInterviewDesign'
             :label="$t('delete')"
             type='submit'
             color='positive'
@@ -356,20 +356,20 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showConfirmDeleteStudyCaseReportForms' persistent>
+    <q-dialog v-model='showConfirmDeleteStudyInterviewDesigns' persistent>
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_case_report_forms_confirm')}}
+            {{$t('study.delete_interview_designs_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
-            {{selected.map(g => getCaseReportFormFullName(g)).join(', ')}}
+            {{selected.map(g => getInterviewDesignFullName(g)).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
           <q-btn
-            @click='deleteStudyCaseReportForms'
+            @click='deleteStudyInterviewDesigns'
             :label="$t('delete')"
             type='submit'
             color='positive'
@@ -398,13 +398,13 @@ import { subjectsService } from '../../services/utils'
 import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
-  name: 'StudyCaseReportForms',
+  name: 'StudyInterviewDesigns',
   mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     if (this.studyId) {
       this.getStudyForms({ study: this.studyId })
-      this.getTableStudyCaseReportForms()
+      this.getTableStudyInterviewDesigns()
     }
     subjectsService.getSubjects().then((result) => {
       this.subjects = result
@@ -420,18 +420,18 @@ export default defineComponent({
   },
   data () {
     return {
-      newStudyCaseReportFormData: {
+      newStudyInterviewDesignData: {
         name: '',
         description: '',
         repeatPolicy: 'multiple'
       },
       revisionOptions: [],
-      selectedStudyCaseReportForm: {},
-      showCreateStudyCaseReportForm: false,
-      showEditStudyCaseReportForm: false,
+      selectedStudyInterviewDesign: {},
+      showCreateStudyInterviewDesign: false,
+      showEditStudyInterviewDesign: false,
       showConfirmCreateFormRevision: false,
-      showConfirmDeleteStudyCaseReportForm: false,
-      showConfirmDeleteStudyCaseReportForms: false,
+      showConfirmDeleteStudyInterviewDesign: false,
+      showConfirmDeleteStudyInterviewDesigns: false,
       paginationOpts: {
         sortBy: 'updatedAt',
         descending: true,
@@ -443,14 +443,14 @@ export default defineComponent({
     }
   },
   validations: {
-    newStudyCaseReportFormData: {
+    newStudyInterviewDesignData: {
       name: {
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
       }
     },
-    selectedStudyCaseReportForm: {
+    selectedStudyInterviewDesign: {
       name: {
         required,
         minLength: minLength(2),
@@ -462,7 +462,7 @@ export default defineComponent({
     ...mapState({
       study: state => state.study.study,
       forms: state => state.form.forms,
-      studyCaseReportForms: state => state.caseReportForm ? state.caseReportForm.caseReportForms : []
+      studyInterviewDesigns: state => state.interview ? state.interview.interviewDesigns : []
     }),
     studyId () {
       return this.$route.params.id
@@ -502,7 +502,7 @@ export default defineComponent({
         {
           name: 'repeatPolicy',
           align: 'left',
-          label: this.$t('study.case_report_form_repeat_policy.title'),
+          label: this.$t('study.interview_design_repeat_policy.title'),
           field: 'repeatPolicy',
           sortable: true
         },
@@ -555,7 +555,7 @@ export default defineComponent({
       ].map(opt => {
         return {
           value: opt,
-          label: this.$t('study.case_report_form_repeat_policy.' + opt)
+          label: this.$t('study.interview_design_repeat_policy.' + opt)
         }
       })
     },
@@ -565,23 +565,23 @@ export default defineComponent({
     groupSubjectOptions () {
       return this.getSubjectOptions('group')
     },
-    disableCreateStudyCaseReportForm () {
-      return this.v$.newStudyCaseReportFormData.$invalid || !this.newStudyCaseReportFormData.form || !this.newStudyCaseReportFormData.revision || this.revisionOptions.length === 0
+    disableCreateStudyInterviewDesign () {
+      return this.v$.newStudyInterviewDesignData.$invalid || !this.newStudyInterviewDesignData.form || !this.newStudyInterviewDesignData.revision || this.revisionOptions.length === 0
     },
-    disableEditStudyCaseReportForm () {
-      return this.v$.selectedStudyCaseReportForm.$invalid || !this.selectedStudyCaseReportForm.revision || this.revisionOptions.length === 0
+    disableEditStudyInterviewDesign () {
+      return this.v$.selectedStudyInterviewDesign.$invalid || !this.selectedStudyInterviewDesign.revision || this.revisionOptions.length === 0
     },
-    hasStudyCaseReportForms () {
-      return this.studyCaseReportForms && this.studyCaseReportForms.length > 0
+    hasStudyInterviewDesigns () {
+      return this.studyInterviewDesigns && this.studyInterviewDesigns.length > 0
     }
   },
   watch: {
     study: function (newValue, oldValue) {
-      this.getTableStudyCaseReportForms()
+      this.getTableStudyInterviewDesigns()
     },
-    'newStudyCaseReportFormData.form': function () {
-      if (this.newStudyCaseReportFormData.form) {
-        this.updateRevisionOptions(this.newStudyCaseReportFormData.form)
+    'newStudyInterviewDesignData.form': function () {
+      if (this.newStudyInterviewDesignData.form) {
+        this.updateRevisionOptions(this.newStudyInterviewDesignData.form)
       } else {
         this.revisionOptions = []
       }
@@ -590,9 +590,9 @@ export default defineComponent({
   methods: {
     ...mapActions({
       getStudyForms: 'form/getForms',
-      getStudyCaseReportForms: 'caseReportForm/getCaseReportForms',
-      createStudyCaseReportForm: 'caseReportForm/createCaseReportForm',
-      updateStudyCaseReportForm: 'caseReportForm/updateCaseReportForm',
+      getStudyInterviewDesigns: 'interview/getInterviewDesigns',
+      createStudyInterviewDesign: 'interview/createInterviewDesign',
+      updateStudyInterviewDesign: 'interview/updateInterviewDesign',
       createStudyFormRevision: 'form/createFormRevision'
     }),
     updateRevisionOptions (form) {
@@ -607,7 +607,7 @@ export default defineComponent({
         })
     },
     onAdd () {
-      this.newStudyCaseReportFormData = {
+      this.newStudyInterviewDesignData = {
         name: '',
         description: '',
         repeatPolicy: 'multiple',
@@ -617,26 +617,26 @@ export default defineComponent({
           groups: []
         }
       }
-      this.showCreateStudyCaseReportForm = true
-      this.selectedStudyCaseReportForm = undefined
+      this.showCreateStudyInterviewDesign = true
+      this.selectedStudyInterviewDesign = undefined
     },
-    onEdit (studyCaseReportForm) {
-      this.selectedStudyCaseReportForm = { ...studyCaseReportForm }
-      this.selectedStudyCaseReportForm.permissions = {
-        users: studyCaseReportForm.permissions && studyCaseReportForm.permissions.users ? studyCaseReportForm.permissions.users : [],
-        groups: studyCaseReportForm.permissions && studyCaseReportForm.permissions.groups ? studyCaseReportForm.permissions.groups : []
+    onEdit (studyInterviewDesign) {
+      this.selectedStudyInterviewDesign = { ...studyInterviewDesign }
+      this.selectedStudyInterviewDesign.permissions = {
+        users: studyInterviewDesign.permissions && studyInterviewDesign.permissions.users ? studyInterviewDesign.permissions.users : [],
+        groups: studyInterviewDesign.permissions && studyInterviewDesign.permissions.groups ? studyInterviewDesign.permissions.groups : []
       }
-      this.selectedStudyCaseReportForm.restrictedAccess = this.selectedStudyCaseReportForm.permissions.users.length > 0 || this.selectedStudyCaseReportForm.permissions.groups.length > 0
-      this.updateRevisionOptions(this.selectedStudyCaseReportForm.form)
-      this.showEditStudyCaseReportForm = true
+      this.selectedStudyInterviewDesign.restrictedAccess = this.selectedStudyInterviewDesign.permissions.users.length > 0 || this.selectedStudyInterviewDesign.permissions.groups.length > 0
+      this.updateRevisionOptions(this.selectedStudyInterviewDesign.form)
+      this.showEditStudyInterviewDesign = true
     },
-    onConfirmDelete (studyCaseReportForm) {
-      this.showConfirmDeleteStudyCaseReportForm = true
-      this.selectedStudyCaseReportForm = studyCaseReportForm
+    onConfirmDelete (studyInterviewDesign) {
+      this.showConfirmDeleteStudyInterviewDesign = true
+      this.selectedStudyInterviewDesign = studyInterviewDesign
     },
     onConfirmDeleteMultiple () {
       if (this.selected.length > 0) {
-        this.showConfirmDeleteStudyCaseReportForms = true
+        this.showConfirmDeleteStudyInterviewDesigns = true
       }
     },
     getSubject (id, type) {
@@ -656,41 +656,41 @@ export default defineComponent({
     getFormName (formId) {
       return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
     },
-    getCaseReportFormFullName (caseReportForm) {
-      return this.getFormName(caseReportForm.form) + ':' + (caseReportForm.revision ? caseReportForm.revision : t('study.latest_revision'))
+    getInterviewDesignFullName (interviewDesign) {
+      return this.getFormName(interviewDesign.form) + ':' + (interviewDesign.revision ? interviewDesign.revision : t('study.latest_revision'))
     },
-    async getTableStudyCaseReportForms (requestProp) {
+    async getTableStudyInterviewDesigns (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('caseReportForm/setCaseReportFormPagination', {
-          caseReportFormPaginationOpts: requestProp.pagination
+        this.$store.commit('interview/setInterviewDesignPagination', {
+          interviewDesignPaginationOpts: requestProp.pagination
         })
-        await this.getStudyCaseReportForms({ paginationOpts: requestProp.pagination, study: this.studyId, filter: requestProp.filter })
+        await this.getStudyInterviewDesigns({ paginationOpts: requestProp.pagination, study: this.studyId, filter: requestProp.filter })
       } else {
-        await this.getStudyCaseReportForms({ paginationOpts: this.paginationOpts, study: this.studyId, filter: this.filter })
+        await this.getStudyInterviewDesigns({ paginationOpts: this.paginationOpts, study: this.studyId, filter: this.filter })
       }
-      this.paginationOpts.rowsNumber = this.$store.state.caseReportForm.caseReportFormPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.$store.state.interview.interviewDesignPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.caseReportForm.caseReportFormPaginationOpts
+      this.paginationOpts = this.$store.state.interview.interviewDesignPaginationOpts
     },
-    start (studyCaseReportForm) {
-      this.setState(studyCaseReportForm, 'active')
+    start (studyInterviewDesign) {
+      this.setState(studyInterviewDesign, 'active')
     },
-    pause (studyCaseReportForm) {
-      this.setState(studyCaseReportForm, 'paused')
+    pause (studyInterviewDesign) {
+      this.setState(studyInterviewDesign, 'paused')
     },
-    setState (studyCaseReportForm, state) {
-      const toSave = { ...studyCaseReportForm }
+    setState (studyInterviewDesign, state) {
+      const toSave = { ...studyInterviewDesign }
       toSave.state = state
-      this.updateStudyCaseReportForm({
-        caseReportForm: toSave,
+      this.updateStudyInterviewDesign({
+        interviewDesign: toSave,
         paginationOpts: this.paginationOpts
       })
     },
     async createFormRevision () {
       const toSave = {
-        form: this.newStudyCaseReportFormData.form,
+        form: this.newStudyInterviewDesignData.form,
         study: this.studyId
       }
       await this.createStudyFormRevision({
@@ -698,26 +698,26 @@ export default defineComponent({
       })
       this.updateRevisionOptions()
     },
-    deleteStudyCaseReportForm () {
-      this.$store.dispatch('caseReportForm/deleteCaseReportForm', {
-        id: this.selectedStudyCaseReportForm._id,
+    deleteStudyInterviewDesign () {
+      this.$store.dispatch('interview/deleteInterviewDesign', {
+        id: this.selectedStudyInterviewDesign._id,
         study: this.studyId,
         paginationOpts: this.paginationOpts
       })
     },
-    deleteStudyCaseReportForms () {
+    deleteStudyInterviewDesigns () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('caseReportForm/deleteCaseReportForms', {
+      this.$store.dispatch('interview/deleteInterviewDesigns', {
         ids: ids,
         study: this.studyId,
         paginationOpts: this.paginationOpts
       })
       this.selected = []
     },
-    async saveStudyCaseReportForm (create) {
+    async saveStudyInterviewDesign (create) {
       this.v$.$reset()
       if (create) {
-        const toSave = { ...this.newStudyCaseReportFormData }
+        const toSave = { ...this.newStudyInterviewDesignData }
         toSave.study = this.studyId
         if (toSave.restrictedAccess) {
           // empty permissions means it is not a restricted access
@@ -730,14 +730,14 @@ export default defineComponent({
         if (toSave.revision === t('study.latest_revision')) {
           delete toSave.revision
         }
-        this.createStudyCaseReportForm({
-          caseReportForm: toSave
+        this.createStudyInterviewDesign({
+          interviewDesign: toSave
         })
       } else {
-        const toSave = { ...this.selectedStudyCaseReportForm }
-        if (this.selectedStudyCaseReportForm.restrictedAccess) {
+        const toSave = { ...this.selectedStudyInterviewDesign }
+        if (this.selectedStudyInterviewDesign.restrictedAccess) {
           // empty permissions means it is not a restricted access
-          if (this.selectedStudyCaseReportForm.permissions.users.length === 0 && this.selectedStudyCaseReportForm.permissions.groups.length === 0) {
+          if (this.selectedStudyInterviewDesign.permissions.users.length === 0 && this.selectedStudyInterviewDesign.permissions.groups.length === 0) {
             toSave.permissions = null
           }
         } else {
@@ -747,8 +747,8 @@ export default defineComponent({
         if (toSave.revision === t('study.latest_revision')) {
           delete toSave.revision
         }
-        this.updateStudyCaseReportForm({
-          caseReportForm: toSave,
+        this.updateStudyInterviewDesign({
+          interviewDesign: toSave,
           paginationOpts: this.paginationOpts
         })
       }

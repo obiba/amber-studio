@@ -420,8 +420,8 @@ export default defineComponent({
     ...mapState({
       study: state => state.study.study,
       forms: state => state.form.forms,
-      caseReports: state => state.caseReportForm ? state.caseReportForm.caseReports : [],
-      caseReportForms: state => state.caseReportForm ? state.caseReportForm.caseReportForms : []
+      caseReports: state => state.caseReport ? state.caseReport.caseReports : [],
+      caseReportForms: state => state.caseReport ? state.caseReport.caseReportForms : []
     }),
     studyId () {
       return this.$route.params.id
@@ -485,8 +485,8 @@ export default defineComponent({
   methods: {
     ...mapActions({
       getForms: 'form/getForms',
-      getCaseReports: 'caseReportForm/getCaseReports',
-      getCaseReportForms: 'caseReportForm/getCaseReportForms'
+      getCaseReports: 'caseReport/getCaseReports',
+      getCaseReportForms: 'caseReport/getCaseReportForms'
     }),
     onFilter () {
       this.selected = []
@@ -547,7 +547,7 @@ export default defineComponent({
     },
     onSave () {
       const updatedData = { ...this.modelData }
-      this.$store.dispatch('caseReportForm/updateCaseReport', {
+      this.$store.dispatch('caseReport/updateCaseReport', {
         id: this.selectedCaseReport._id,
         caseReport: { data: updatedData },
         study: this.studyId,
@@ -585,20 +585,20 @@ export default defineComponent({
     async getTableCaseReports (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('caseReportForm/setCaseReportPagination', {
+        this.$store.commit('caseReport/setCaseReportPagination', {
           caseReportPaginationOpts: requestProp.pagination
         })
         await this.getCaseReports({ paginationOpts: requestProp.pagination, study: this.studyId, form: this.formFilter, filter: requestProp.filter, from: this.fromDate, to: this.toDate })
       } else {
         await this.getCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
       }
-      this.paginationOpts.rowsNumber = this.$store.state.caseReportForm.caseReportPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.$store.state.caseReport.caseReportPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.caseReportForm.caseReportPaginationOpts
+      this.paginationOpts = this.$store.state.caseReport.caseReportPaginationOpts
     },
     deleteCaseReport () {
-      this.$store.dispatch('caseReportForm/deleteCaseReport', {
+      this.$store.dispatch('caseReport/deleteCaseReport', {
         id: this.selectedCaseReport._id,
         study: this.studyId,
         paginationOpts: this.paginationOpts
@@ -606,7 +606,7 @@ export default defineComponent({
     },
     deleteCaseReports () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('caseReportForm/deleteCaseReports', {
+      this.$store.dispatch('caseReport/deleteCaseReports', {
         ids: ids,
         study: this.studyId,
         paginationOpts: this.paginationOpts

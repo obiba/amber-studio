@@ -2,13 +2,13 @@
   <q-page>
 
     <div class="q-pa-md">
-      <div class="text-h5 q-mb-md">{{$t('study.case_report_records')}}</div>
+      <div class="text-h5 q-mb-md">{{$t('study.interview_designs')}}</div>
       <div class="note note-info text-body2 text-grey-8">
-        <span v-html="$t('study.case_report_records_hint')"/>
+        <span v-html="$t('study.interview_designs_hint')"/>
       </div>
     </div>
 
-    <study-case-reports/>
+    <interview-designs/>
 
   </q-page>
 </template>
@@ -18,7 +18,7 @@ import { defineComponent, defineAsyncComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    StudyCaseReports: defineAsyncComponent(() => import('src/components/forms/StudyCaseReports.vue'))
+    InterviewDesigns: defineAsyncComponent(() => import('src/components/forms/InterviewDesigns.vue'))
   }
 })
 </script>

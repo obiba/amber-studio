@@ -94,25 +94,45 @@
 
         <q-expansion-item
           v-if="!isGuest"
-          icon="quiz"
+          icon="help_center"
           :label="$t('study.case_reports')"
           :content-inset-level="1"
           default-opened
         >
 
-          <q-item :to="'/study/' + studyId + '/crfs'" active-class="q-item-no-link-highlighting">
+          <q-item :to="'/study/' + studyId + '/case-report-forms'" active-class="q-item-no-link-highlighting">
             <q-item-section>
               <q-item-label>{{$t('study.forms')}}</q-item-label>
             </q-item-section>
           </q-item>
 
-          <q-item :to="'/study/' + studyId + '/records'" active-class="q-item-no-link-highlighting">
+          <q-item :to="'/study/' + studyId + '/case-reports'" active-class="q-item-no-link-highlighting">
             <q-item-section>
               <q-item-label>{{$t('study.records')}}</q-item-label>
             </q-item-section>
           </q-item>
         </q-expansion-item>
 
+        <q-expansion-item
+          v-if="!isGuest"
+          icon="contact_support"
+          :label="$t('study.interviews')"
+          :content-inset-level="1"
+          default-opened
+        >
+
+          <q-item :to="'/study/' + studyId + '/interview-designs'" active-class="q-item-no-link-highlighting">
+            <q-item-section>
+              <q-item-label>{{$t('study.designs')}}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item :to="'/study/' + studyId + '/interviews'" active-class="q-item-no-link-highlighting">
+            <q-item-section>
+              <q-item-label>{{$t('study.records')}}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-expansion-item>
 
         <q-item class="fixed-bottom text-caption">
           <div>

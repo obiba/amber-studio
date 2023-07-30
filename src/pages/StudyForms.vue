@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <study-forms/>
+    <forms/>
 
   </q-page>
 </template>
@@ -18,7 +18,7 @@ import { defineComponent, defineAsyncComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    StudyForms: defineAsyncComponent(() => import('components/forms/StudyForms.vue'))
+    Forms: defineAsyncComponent(() => import('components/forms/Forms.vue'))
   }
 })
 </script>

@@ -5,7 +5,8 @@ import account from './account'
 import admin from './admin'
 import study from './study'
 import form from './form'
-import caseReportForm from './caseReportForm'
+import caseReport from './caseReport'
+import interview from './interview'
 
 const debug = false
 /*
@@ -52,7 +53,8 @@ export default store(function (/* { ssrContext } */) {
       admin,
       study,
       form,
-      caseReportForm
+      caseReport,
+      interview
     },
 
     // enable strict mode (adds overhead!)

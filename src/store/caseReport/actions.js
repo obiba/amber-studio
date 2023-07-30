@@ -30,7 +30,7 @@ export async function updateCaseReport ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'caseReportForm/getCaseReports',
+    'caseReport/getCaseReports',
     {
       paginationOpts: payload.paginationOpts,
       study: payload.study,
@@ -54,7 +54,7 @@ export async function deleteCaseReport ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'caseReportForm/getCaseReports',
+    'caseReport/getCaseReports',
     {
       paginationOpts: payload.paginationOpts,
       study: payload.study,
@@ -78,7 +78,7 @@ export async function deleteCaseReports ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'caseReportForm/getCaseReports',
+    'caseReport/getCaseReports',
     {
       paginationOpts: payload.paginationOpts,
       study: payload.study,
@@ -119,7 +119,7 @@ export async function createCaseReportForm ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'caseReportForm/getCaseReportForms',
+    'caseReport/getCaseReportForms',
     {
       paginationOpts: payload.paginationOpts,
       study: payload.caseReportForm.study
@@ -144,7 +144,7 @@ export async function updateCaseReportForm ({ commit, dispatch }, payload) {
   }
   if (payload.paginationOpts) {
     dispatch(
-      'caseReportForm/getCaseReportForms',
+      'caseReport/getCaseReportForms',
       {
         paginationOpts: payload.paginationOpts,
         study: payload.caseReportForm.study
@@ -168,7 +168,7 @@ export async function deleteCaseReportForm ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'caseReportForm/getCaseReportForms',
+    'caseReport/getCaseReportForms',
     {
       paginationOpts: payload.paginationOpts,
       study: payload.study
@@ -191,7 +191,7 @@ export async function deleteCaseReportForms ({ dispatch }, payload) {
     })
   }
   dispatch(
-    'caseReportForm/getCaseReportForms',
+    'caseReport/getCaseReportForms',
     {
       paginationOpts: payload.paginationOpts,
       study: payload.study
