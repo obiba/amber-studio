@@ -42,14 +42,14 @@
           </template>
         </q-input>
       </template>
-      <template v-slot:body-cell-form='props'>
+      <template v-slot:body-cell-name='props'>
         <q-td :props='props'>
-          <router-link :to="'/study/' + this.studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
+          <router-link :to="'/study/' + studyId + '/interview-design/' + props.row._id">{{ props.row.name }}</router-link>
         </q-td>
       </template>
-      <template v-slot:body-cell-revision='props'>
+      <template v-slot:body-cell-steps='props'>
         <q-td :props='props'>
-          {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
+          {{ props.row.steps ? props.row.steps.length : 0 }}
         </q-td>
       </template>
       <template v-slot:body-cell-permissions='props'>
@@ -153,21 +153,6 @@
         </q-card-section>
         <q-card-section>
           <q-select
-            v-model="newStudyInterviewDesignData.form"
-            :options="formOptions"
-            emit-value
-            map-options
-            :label="$t('study.form')" />
-          <q-select
-            v-model="newStudyInterviewDesignData.revision"
-            :options="revisionOptions"
-            emit-value
-            map-options
-            :label="$t('study.form_revision')"
-            :disable="!newStudyInterviewDesignData.form" />
-        </q-card-section>
-        <q-card-section>
-          <q-select
             v-model="newStudyInterviewDesignData.repeatPolicy"
             :options="repeatOptions"
             emit-value
@@ -189,7 +174,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.form_permitted_users')" />
+            :label="$t('study.interview_design_permitted_users')" />
           <q-select
             v-if="newStudyInterviewDesignData.restrictedAccess"
             v-model="newStudyInterviewDesignData.permissions.groups"
@@ -198,7 +183,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.form_permitted_groups')" />
+            :label="$t('study.interview_design_permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -244,14 +229,6 @@
         </q-card-section>
         <q-card-section>
           <q-select
-            v-model="selectedStudyInterviewDesign.revision"
-            :options="revisionOptions"
-            emit-value
-            map-options
-            :label="$t('study.form_revision')" />
-        </q-card-section>
-        <q-card-section>
-          <q-select
             v-model="selectedStudyInterviewDesign.repeatPolicy"
             :options="repeatOptions"
             emit-value
@@ -273,7 +250,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.form_permitted_users')" />
+            :label="$t('study.interview_design_permitted_users')" />
           <q-select
             v-if="selectedStudyInterviewDesign.restrictedAccess"
             v-model="selectedStudyInterviewDesign.permissions.groups"
@@ -282,7 +259,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.form_permitted_groups')" />
+            :label="$t('study.interview_design_permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -295,33 +272,6 @@
             v-close-popup
           >
            <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model='showConfirmCreateFormRevision' persistent>
-      <q-card>
-        <q-card-section>
-          <div>
-            {{$t('study.add_form_revision_confirm')}}
-          </div>
-          <div class="text-weight-bold text-center q-mt-md">
-            {{ getFormName(newStudyInterviewDesignData.form) }}
-          </div>
-        </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
-          <q-btn
-            @click='createFormRevision'
-            :label="$t('add')"
-            type='submit'
-            color='positive'
-            v-close-popup
-          >
-            <template v-slot:loading>
               <q-spinner-facebook />
             </template>
           </q-btn>
@@ -390,7 +340,6 @@
 import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
-import { formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
@@ -403,7 +352,6 @@ export default defineComponent({
   mounted: function () {
     this.setPagination()
     if (this.studyId) {
-      this.getStudyForms({ study: this.studyId })
       this.getTableStudyInterviewDesigns()
     }
     subjectsService.getSubjects().then((result) => {
@@ -425,11 +373,9 @@ export default defineComponent({
         description: '',
         repeatPolicy: 'multiple'
       },
-      revisionOptions: [],
       selectedStudyInterviewDesign: {},
       showCreateStudyInterviewDesign: false,
       showEditStudyInterviewDesign: false,
-      showConfirmCreateFormRevision: false,
       showConfirmDeleteStudyInterviewDesign: false,
       showConfirmDeleteStudyInterviewDesigns: false,
       paginationOpts: {
@@ -461,7 +407,6 @@ export default defineComponent({
   computed: {
     ...mapState({
       study: state => state.study.study,
-      forms: state => state.form.forms,
       studyInterviewDesigns: state => state.interview ? state.interview.interviewDesigns : []
     }),
     studyId () {
@@ -485,18 +430,10 @@ export default defineComponent({
           sortable: true
         },
         {
-          name: 'form',
-          required: true,
-          label: this.$t('study.form'),
+          name: 'steps',
           align: 'left',
-          field: 'form',
-          sortable: true
-        },
-        {
-          name: 'revision',
-          align: 'left',
-          label: this.$t('revision'),
-          field: 'revision',
+          label: this.$t('interview.steps'),
+          field: 'steps',
           sortable: true
         },
         {
@@ -541,14 +478,6 @@ export default defineComponent({
       }
       return cols
     },
-    formOptions () {
-      return this.forms.map(form => {
-        return {
-          value: form._id,
-          label: form.name
-        }
-      })
-    },
     repeatOptions () {
       return [
         'multiple', 'single_reject', 'single_update'
@@ -566,10 +495,10 @@ export default defineComponent({
       return this.getSubjectOptions('group')
     },
     disableCreateStudyInterviewDesign () {
-      return this.v$.newStudyInterviewDesignData.$invalid || !this.newStudyInterviewDesignData.form || !this.newStudyInterviewDesignData.revision || this.revisionOptions.length === 0
+      return this.v$.newStudyInterviewDesignData.$invalid
     },
     disableEditStudyInterviewDesign () {
-      return this.v$.selectedStudyInterviewDesign.$invalid || !this.selectedStudyInterviewDesign.revision || this.revisionOptions.length === 0
+      return this.v$.selectedStudyInterviewDesign.$invalid
     },
     hasStudyInterviewDesigns () {
       return this.studyInterviewDesigns && this.studyInterviewDesigns.length > 0
@@ -578,34 +507,14 @@ export default defineComponent({
   watch: {
     study: function (newValue, oldValue) {
       this.getTableStudyInterviewDesigns()
-    },
-    'newStudyInterviewDesignData.form': function () {
-      if (this.newStudyInterviewDesignData.form) {
-        this.updateRevisionOptions(this.newStudyInterviewDesignData.form)
-      } else {
-        this.revisionOptions = []
-      }
     }
   },
   methods: {
     ...mapActions({
-      getStudyForms: 'form/getForms',
       getStudyInterviewDesigns: 'interview/getInterviewDesigns',
       createStudyInterviewDesign: 'interview/createInterviewDesign',
-      updateStudyInterviewDesign: 'interview/updateInterviewDesign',
-      createStudyFormRevision: 'form/createFormRevision'
+      updateStudyInterviewDesign: 'interview/updateInterviewDesign'
     }),
-    updateRevisionOptions (form) {
-      formRevisionService.getFormRevisionsDigest(this.studyId, form)
-        .then((response) => {
-          this.revisionOptions = response.data ? response.data.map(rev => rev.revision) : []
-          if (this.revisionOptions.length > 0) {
-            this.revisionOptions.splice(0, 0, t('study.latest_revision'))
-          } else {
-            this.showConfirmCreateFormRevision = true
-          }
-        })
-    },
     onAdd () {
       this.newStudyInterviewDesignData = {
         name: '',
@@ -627,7 +536,6 @@ export default defineComponent({
         groups: studyInterviewDesign.permissions && studyInterviewDesign.permissions.groups ? studyInterviewDesign.permissions.groups : []
       }
       this.selectedStudyInterviewDesign.restrictedAccess = this.selectedStudyInterviewDesign.permissions.users.length > 0 || this.selectedStudyInterviewDesign.permissions.groups.length > 0
-      this.updateRevisionOptions(this.selectedStudyInterviewDesign.form)
       this.showEditStudyInterviewDesign = true
     },
     onConfirmDelete (studyInterviewDesign) {
@@ -652,12 +560,6 @@ export default defineComponent({
           label: s.name
         }
       })
-    },
-    getFormName (formId) {
-      return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
-    },
-    getInterviewDesignFullName (interviewDesign) {
-      return this.getFormName(interviewDesign.form) + ':' + (interviewDesign.revision ? interviewDesign.revision : t('study.latest_revision'))
     },
     async getTableStudyInterviewDesigns (requestProp) {
       if (requestProp) {
@@ -688,16 +590,6 @@ export default defineComponent({
         paginationOpts: this.paginationOpts
       })
     },
-    async createFormRevision () {
-      const toSave = {
-        form: this.newStudyInterviewDesignData.form,
-        study: this.studyId
-      }
-      await this.createStudyFormRevision({
-        formRevision: toSave
-      })
-      this.updateRevisionOptions()
-    },
     deleteStudyInterviewDesign () {
       this.$store.dispatch('interview/deleteInterviewDesign', {
         id: this.selectedStudyInterviewDesign._id,
@@ -726,9 +618,6 @@ export default defineComponent({
           }
         } else {
           toSave.permissions = null
-        }
-        if (toSave.revision === t('study.latest_revision')) {
-          delete toSave.revision
         }
         this.createStudyInterviewDesign({
           interviewDesign: toSave

@@ -97,7 +97,6 @@
           icon="help_center"
           :label="$t('study.case_reports')"
           :content-inset-level="1"
-          default-opened
         >
 
           <q-item :to="'/study/' + studyId + '/case-report-forms'" active-class="q-item-no-link-highlighting">
@@ -118,7 +117,6 @@
           icon="contact_support"
           :label="$t('study.interviews')"
           :content-inset-level="1"
-          default-opened
         >
 
           <q-item :to="'/study/' + studyId + '/interview-designs'" active-class="q-item-no-link-highlighting">

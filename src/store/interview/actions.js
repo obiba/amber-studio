@@ -101,6 +101,17 @@ export async function getInterviewDesigns ({ commit }, payload) {
   }
 }
 
+export async function getInterviewDesign ({ commit }, payload) {
+  const result = await interviewDesignService.getInterviewDesign(payload.id).catch(err => {
+    errorHandler.onError(err, t('error.get_interview_design'))
+  })
+  if (result) {
+    commit('setInterviewDesign', result)
+  } else {
+    commit('setInterviewDesign', { _id: payload.id })
+  }
+}
+
 export async function createInterviewDesign ({ dispatch }, payload) {
   const result = await interviewDesignService
     .createInterviewDesign(payload.interviewDesign)
@@ -135,11 +146,13 @@ export async function updateInterviewDesign ({ commit, dispatch }, payload) {
       errorHandler.onError(err, t('error.general'))
     })
   if (result) {
-    Notify.create({
-      message: t('success.update_interview_design'),
-      color: 'positive',
-      icon: 'fas fa-check'
-    })
+    if (payload.notification) {
+      Notify.create({
+        message: t('success.update_interview_design'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+    }
     commit('setInterviewDesign', result)
   }
   if (payload.paginationOpts) {

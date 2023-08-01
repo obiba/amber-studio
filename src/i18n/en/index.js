@@ -105,7 +105,7 @@ export default {
     instruments: 'Instruments',
     records: 'Records',
     case_report_records: 'Case report records',
-    case_report_records_hint: 'Data records (case reports) are captured through a case report form, which is itself based on a form revision. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/records.html" target="_blank">Records documentation</a> and the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/case-reports/" target="_blank">Case reports cookbook</a>.',
+    case_report_records_hint: 'Data records (case reports) are captured through a case report form, which is itself based on a form revision. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/records.html" target="_blank">Case report records documentation</a> and the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/case-reports/" target="_blank">Case reports cookbook</a>.',
     events: 'Events',
     form: 'Form',
     form_revision: 'Revision',
@@ -154,7 +154,46 @@ export default {
       completed: 'Completed'
     },
     export_case_reports_hint: 'Export case reports',
-    all_forms: '(all)'
+    all_forms: '(all)',
+
+    designs: 'Designs',
+    interview_design: 'Interview design',
+    interview_designs: 'Interview designs',
+    interview_designs_hint: 'An interview design is a sequence of steps which are themselves based on forms with a specific (or the latest) revision. The interviews are to be answered by participants defined in data collection campaigns. The interview can be self-administered by the participant or assisted by an interviewer. Interviews are recorded after each step form is completed. Access to the interview design can be limited to a set of users or groups of users. An interview design can be enabled or disabled at any time. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/itws.html" target="_blank">Interview designs documentation</a> and the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/interviews/" target="_blank">Interviews cookbook</a>.',
+    add_interview_design_hint: 'Add an interview design',
+    interview_records: 'Interview records',
+    interview_records_hint: 'Data records (interviews) are captured through each interview step, which are themself based on a form revision. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/itw-records.html" target="_blank">Interview records documentation</a> and the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/interviews/" target="_blank">Interviews cookbook</a>.',
+    edit_interview_design_hint: 'Edit interview design',
+    start_interview_design_hint: 'Start interview design',
+    pause_interview_design_hint: 'Pause interview design',
+    delete_interview_design_hint: 'Delete interview design',
+    delete_interview_design_confirm: 'Please confirm that you want to remove the interview design:',
+    delete_interview_designs_hint: 'Delete selected interview designs',
+    delete_interview_designs_confirm: 'Please confirm that you want to remove all the selected interview designs:',
+    interview_design_state: {
+      active: 'Active',
+      paused: 'Paused'
+    },
+    interview_design_repeat_policy: {
+      title: 'Repeated records policy',
+      hint: 'The strategy to adopt when an interview is saved (based on the individual\'s ID). Multiple records can be registered, or only a single one for the same individual. In this latter case a new record can be rejected or can update the existing one.',
+      single_reject: 'Single record, reject',
+      single_update: 'Single record, update',
+      multiple: 'Multiple records'
+    },
+    search_interview_hint: 'Search case reports by participant code',
+    view_interview_hint: 'View the interview',
+    edit_interview_hint: 'Edit the interview',
+    delete_interview_hint: 'Delete interview',
+    delete_interview_confirm: 'Please confirm that you want to remove the interview:',
+    delete_interviews_hint: 'Delete selected interviews',
+    delete_interviews_confirm: 'Please confirm that you want to remove all the selected interviews:',
+    interview_state: {
+      in_progress: 'In progress',
+      completed: 'Completed'
+    },
+    export_interviews_hint: 'Export interviews',
+    all_designs: '(all)'
   },
   datasets: {
     title: 'Datasets'
@@ -251,7 +290,14 @@ export default {
     delete_case_report_forms: 'Case report forms successfully deleted.',
     update_case_report: 'Case report successfully updated.',
     delete_case_report: 'Case report successfully deleted.',
-    delete_case_reports: 'Case reports successfully deleted.'
+    delete_case_reports: 'Case reports successfully deleted.',
+    create_interview_design: 'Interview design successfully added.',
+    update_interview_design: 'Interview design successfully updated.',
+    delete_interview_design: 'Interview design successfully deleted.',
+    delete_interview_designs: 'Interview designs successfully deleted.',
+    update_interview: 'Interview successfully updated.',
+    delete_interview: 'Interview successfully deleted.',
+    delete_interviews: 'Interviews successfully deleted.'
   },
   form: {
     tr_add: 'Add translation',
@@ -435,6 +481,11 @@ export default {
     delete_form_revision_hint: 'Delete form revision',
     delete_form_revision_confirm: 'Please confirm that you want to delete the form revision:',
     tag_comment_hint: 'Optional comment about the changes in the form\'s schema.'
+  },
+  interview: {
+    steps: 'Steps',
+    campaigns: 'Campaigns',
+    add_step_hint: 'Add a step'
   },
   license: {
     cc_by_40: 'Creative Commons BY 4.0',

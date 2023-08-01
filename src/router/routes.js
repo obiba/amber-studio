@@ -92,6 +92,11 @@ const routes = [
         meta: { requiresAuth: true, noGuest: true }
       },
       {
+        path: '/study/:id/interview-design/:itwid',
+        component: () => import('pages/StudyInterviewDesign.vue'),
+        meta: { requiresAuth: true, noGuest: true }
+      },
+      {
         path: '/study/:id/interviews',
         component: () => import('pages/StudyInterviews.vue'),
         meta: { requiresAuth: true, noGuest: true }
