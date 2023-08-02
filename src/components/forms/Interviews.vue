@@ -311,7 +311,7 @@
 import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import { formRevisionService } from '../../services/form'
-import { interviewExportService } from '../../services/interview'
+import { interviewService } from '../../services/interview'
 import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
 import AuthMixin from '../../mixins/AuthMixin'
@@ -510,7 +510,7 @@ export default defineComponent({
         accept = 'application/zip'
       }
       const ids = this.selected.map(u => u._id)
-      interviewExportService.downloadInterviews(accept, this.studyId, this.interviewDesignFilter, this.formFilter, this.filter, this.fromDate, this.toDate, ids)
+      interviewService.downloadInterviews(accept, this.studyId, this.interviewDesignFilter, this.formFilter, this.filter, this.fromDate, this.toDate, ids)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))

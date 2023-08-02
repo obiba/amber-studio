@@ -1,4 +1,3 @@
-// import { feathersClient } from '../../boot/feathersClient'
 import { api } from '../../boot/axios'
 import { LocalStorage } from 'quasar'
 
@@ -37,5 +36,4 @@ export async function downloadCaseReports (accept, study, caseReportForm, form, 
       Authorization: `Bearer ${token}`
     }
   })
-  // return feathersClient.service('case-report-export').find(params)
 }

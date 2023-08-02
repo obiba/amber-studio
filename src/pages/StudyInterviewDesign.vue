@@ -67,7 +67,6 @@
           flat
           :rows="interviewDesignData.steps"
           :columns="stepsColumns"
-          :filter="filter"
           row-key="_id"
           :selection="isReadOnly ? 'none' : 'multiple'"
           v-model:selected="selected"
@@ -160,7 +159,7 @@
       </q-tab-panel>
 
       <q-tab-panel name="campaigns">
-
+        <campaigns/>
       </q-tab-panel>
     </q-tab-panels>
 
@@ -409,7 +408,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref, toRaw } from 'vue'
+import { defineComponent, defineAsyncComponent, ref, toRaw } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { formRevisionService } from '../services/form'
@@ -417,6 +416,9 @@ import { t } from '../boot/i18n'
 import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({
+  components: {
+    Campaigns: defineAsyncComponent(() => import('src/components/forms/Campaigns.vue'))
+  },
   mixins: [AuthMixin],
   mounted () {
     if (this.studyId) {
@@ -694,34 +696,8 @@ export default defineComponent({
         this.showConfirmDeleteSteps = true
       }
     },
-    onExport () {
-      const data = JSON.parse(JSON.stringify(this.interviewDesignData))
-      delete data._id
-      delete data.name
-      this.deleteIds(data.items)
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-      const a = document.createElement('a')
-      a.download = this.interviewDesignData.name + '-interview-design.json'
-      a.href = window.URL.createObjectURL(blob)
-      a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
-      a.click()
-      a.remove()
-    },
-    onImport () {
-      this.showImportSchema = true
-      this.importSchemaFile = null
-    },
     onEdit () {
       this.showEditDefinition = true
-    },
-    onTag () {
-      this.showTag = true
-      this.publicationComment = null
-    },
-    onReinstate () {
-      this.interviewDesignData = JSON.parse(JSON.stringify(this.interviewDesign))
-      this.originalStepsStr = JSON.stringify(this.interviewDesignData.steps)
-      this.reload++
     }
   }
 })

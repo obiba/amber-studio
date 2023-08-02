@@ -1,4 +1,4 @@
-import { interviewDesignService, interviewService } from '../../services/interview'
+import { campaignService, interviewDesignService, interviewService } from '../../services/interview'
 import { t } from '../../boot/i18n'
 import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
@@ -208,6 +208,89 @@ export async function deleteInterviewDesigns ({ dispatch }, payload) {
     {
       paginationOpts: payload.paginationOpts,
       study: payload.study
+    },
+    { root: true }
+  )
+}
+
+export async function getCampaigns ({ commit }, payload) {
+  const result = await campaignService.getCampaigns(payload.paginationOpts, payload.interviewDesign, payload.filter).catch(err => {
+    errorHandler.onError(err, t('error.get_campaigns'))
+  })
+  if (result) {
+    commit('setCampaigns', result.data)
+    commit('setCampaignCount', result.total)
+  } else {
+    commit('setCampaigns', [])
+    commit('setCampaignCount', 0)
+  }
+}
+
+export async function createCampaign ({ dispatch }, payload) {
+  const result = await campaignService
+    .createCampaign(payload.campaign)
+    .catch(err => {
+      if (err.code === 400) {
+        errorHandler.onError(err, err.message)
+      } else {
+        errorHandler.onError(err, t('error.general'))
+      }
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.create_campaign'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'interview/getCampaigns',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  )
+}
+
+export async function updateCampaign ({ dispatch }, payload) {
+  const result = await campaignService
+    .updateCampaign(payload.campaign, payload.id || payload.campaign._id)
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.update_campaign'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'interview/getCampaigns',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  )
+}
+
+export async function deleteCampaign ({ dispatch }, payload) {
+  const result = await campaignService
+    .deleteCampaign(payload.id)
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_campaign'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'interview/getCampaigns',
+    {
+      paginationOpts: payload.paginationOpts
     },
     { root: true }
   )

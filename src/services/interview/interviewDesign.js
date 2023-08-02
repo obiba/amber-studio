@@ -13,15 +13,16 @@ export async function getInterviewDesigns (opts, study, filter) {
     formData.query.$limit = 10
   }
   // use filter
-  if (filter) {
-    if (!Number.isNaN(Number(filter))) {
-      formData.query.$and = [
-        { study: study },
-        { revision: filter }
-      ]
-    } else {
-      formData.query.study = study
-    }
+  if (filter && filter.length > 1) {
+    formData.query.$and = [
+      { study: study },
+      {
+        $or: [
+          { name: { $search: filter } },
+          { description: { $search: filter } }
+        ]
+      }
+    ]
   } else {
     formData.query.study = study
   }

@@ -33,3 +33,19 @@ export function setInterviewDesignPagination (state, payload) {
 export function setInterviewDesignCount (state, count) {
   state.interviewDesignPaginationOpts.rowsNumber = count
 }
+
+//
+// Campaigns
+//
+
+export function setCampaigns (state, campaigns) {
+  state.campaigns = [...campaigns]
+}
+
+export function setCampaignPagination (state, payload) {
+  state.campaignPaginationOpts = payload.campaignPaginationOpts
+}
+
+export function setCampaignCount (state, count) {
+  state.campaignPaginationOpts.rowsNumber = count
+}

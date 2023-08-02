@@ -1,4 +1,40 @@
 import { feathersClient } from '../../boot/feathersClient'
+import { api } from '../../boot/axios'
+import { LocalStorage } from 'quasar'
+
+export async function downloadInterviews (accept, study, interviewDesign, filter, from, to, ids) {
+  const query = {
+    $limit: 1000000,
+    $skip: 0,
+    study: study
+  }
+  // use filters
+  if (filter) {
+    query['data._id[$search]'] = filter
+  }
+  if (interviewDesign && interviewDesign !== '0') {
+    query.interviewDesign = interviewDesign
+  }
+  if (from) {
+    query['updatedAt[$gte]'] = from
+  }
+  if (to) {
+    query['updatedAt[$lte]'] = to
+  }
+  if (ids && ids.length > 0) {
+    query['_id[$in][]'] = ids
+  }
+
+  const token = LocalStorage.getItem('feathers-jwt')
+  return api.get('/interview-export', {
+    params: query,
+    responseType: 'blob',
+    headers: {
+      Accept: accept,
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
 
 export async function getInterviews (opts, study, interviewDesign, filter, from, to) {
   const formData = { query: { $sort: { descending: -1 } } }

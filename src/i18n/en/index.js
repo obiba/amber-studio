@@ -295,6 +295,10 @@ export default {
     update_interview_design: 'Interview design successfully updated.',
     delete_interview_design: 'Interview design successfully deleted.',
     delete_interview_designs: 'Interview designs successfully deleted.',
+    create_campaign: 'Campaign successfully added.',
+    update_campaign: 'Campaign successfully updated.',
+    delete_campaign: 'Campaign successfully deleted.',
+    delete_campaigns: 'Campaigns successfully deleted.',
     update_interview: 'Interview successfully updated.',
     delete_interview: 'Interview successfully deleted.',
     delete_interviews: 'Interviews successfully deleted.'
@@ -485,7 +489,18 @@ export default {
   interview: {
     steps: 'Steps',
     campaigns: 'Campaigns',
-    add_step_hint: 'Add a step'
+    add_step_hint: 'Add a step',
+    step_name_hint: 'Unique name that will be used to group collected data for this step.',
+    edit_step_hint: 'Edit step',
+    move_up_step_hint: 'Move step up',
+    move_down_step_hint: 'Move step down',
+    delete_step_hint: 'Delete step',
+    delete_steps_hint: 'Delete selected steps',
+    add_campaign_hint: 'Add a campaign',
+    delete_campaign_hint: 'Delete campaign',
+    delete_campaigns_hint: 'Delete selected campaigns',
+    campaign_investigators: 'Investigators',
+    campaign_investigators_hint: 'Investigators are in charge of managing the participant activity.'
   },
   license: {
     cc_by_40: 'Creative Commons BY 4.0',
