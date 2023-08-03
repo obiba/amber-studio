@@ -496,5 +496,7 @@ export default {
   nothing_here: 'Il n\'y a rien ici...',
   updated_at: 'Mise à jour',
   from: 'Depuis',
-  to: 'Jusqu\'à'
+  to: 'Jusqu\'à',
+  key: 'Clé',
+  value: 'Valeur'
 }

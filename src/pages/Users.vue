@@ -126,7 +126,7 @@
             dense
             round
             :title="$t('users.activate_user_hint')"
-            icon='do_not_disturb_off'
+            icon='play_arrow'
             @click='activeateUser(props.row)'>
           </q-btn>
           <q-btn
@@ -137,7 +137,7 @@
             dense
             round
             :title="$t('users.deactivate_user_hint')"
-            icon='do_not_disturb_on'
+            icon='pause'
             @click='deactiveateUser(props.row)'>
           </q-btn>
           <q-btn

@@ -6,6 +6,9 @@ function cleanToken (token) {
   if (token.startsWith('"') && token.endsWith('"')) {
     return token.substring(1, token.length - 1)
   }
+  if (token.startsWith('\'') && token.endsWith('\'')) {
+    return token.substring(1, token.length - 1)
+  }
   return token
 }
 

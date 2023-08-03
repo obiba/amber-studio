@@ -501,14 +501,27 @@ export default {
     delete_campaigns_hint: 'Delete selected campaigns',
     campaign_investigators: 'Investigators',
     campaign_investigators_hint: 'Investigators are in charge of managing the participant activity.',
+    add_participants: 'Add participants',
+    import_participants: 'Import participants',
     add_participant_hint: 'Add a participant',
     participant_code: 'Code',
     participant_identifier: 'Identifier',
     participant_identifier_hint: 'Identifier of the participant in the study, optional.',
+    participant_active: 'Active',
     participant_valid_from: 'Valid from',
     participant_valid_from_hint: 'Date from which the participant invitation will start. If not provided the invitation is immediately operational.',
     participant_valid_until: 'Valid until',
-    participant_valid_until_hint: 'Date until which the participant invitation will end. If not provided the invitation will be operational until its interview is completed.'
+    participant_valid_until_hint: 'Date until which the participant invitation will end. If not provided the invitation will be operational until its interview is completed.',
+    participant_attributes: 'Attributes',
+    participant_attributes_hint: 'Participant attributes can be used in the interview as a parameter of a skip condition or of a computed field.',
+    add_participant_attribute_hint: 'Add a participant attribute entry',
+    delete_participant_attribute_hint: 'Remove all participant attribute entries',
+    upload_participants: 'Upload participants',
+    upload_participants_hint: 'Upload participantsfrom a text file (.txt, .csv, .tsv).',
+    delete_participants_hint: 'Delete the selected participants',
+    delete_participant_hint: 'Delete the participant',
+    view_participant_hint: 'View the participant details',
+    edit_participant_hint: 'Edit the participant details'
   },
   license: {
     cc_by_40: 'Creative Commons BY 4.0',
@@ -566,5 +579,7 @@ export default {
   nothing_here: 'Oops. Nothing here...',
   updated_at: 'Updated at',
   from: 'From',
-  to: 'To'
+  to: 'To',
+  key: 'Key',
+  value: 'Value'
 }

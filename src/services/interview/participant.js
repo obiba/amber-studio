@@ -1,4 +1,6 @@
 import { feathersClient } from '../../boot/feathersClient'
+import { api } from '../../boot/axios'
+import { LocalStorage } from 'quasar'
 
 export async function getParticipants (opts, campaign, filter) {
   const formData = { query: { $sort: { descending: -1 } } }
@@ -38,7 +40,11 @@ export async function createParticipant (entity) {
 }
 
 export async function updateParticipant (entity, id) {
-  return feathersClient.service('participant').update(id, entity)
+  return feathersClient.service('participant').update(id || entity._id, entity)
+}
+
+export async function patchParticipant (entity, id) {
+  return feathersClient.service('participant').patch(id || entity._id, entity)
 }
 
 export async function deleteParticipant (id) {
@@ -51,6 +57,36 @@ export async function deleteParticipants (ids) {
       _id: {
         $in: ids
       }
+    }
+  })
+}
+
+export async function downloadParticipants (accept, campaign, filter, ids) {
+  const query = {
+    $limit: 1000000,
+    $skip: 0,
+    campaign: campaign
+  }
+  // use filter
+  if (filter && filter.length > 1) {
+    query.$and.push({
+      $or: [
+        { code: { $search: filter } },
+        { identifier: { $search: filter } }
+      ]
+    })
+  }
+  if (ids && ids.length > 0) {
+    query['_id[$in][]'] = ids
+  }
+
+  const token = LocalStorage.getItem('feathers-jwt')
+  return api.get('/participant-export', {
+    params: query,
+    responseType: 'blob',
+    headers: {
+      Accept: accept,
+      Authorization: `Bearer ${token}`
     }
   })
 }
