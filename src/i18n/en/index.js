@@ -500,7 +500,15 @@ export default {
     delete_campaign_hint: 'Delete campaign',
     delete_campaigns_hint: 'Delete selected campaigns',
     campaign_investigators: 'Investigators',
-    campaign_investigators_hint: 'Investigators are in charge of managing the participant activity.'
+    campaign_investigators_hint: 'Investigators are in charge of managing the participant activity.',
+    add_participant_hint: 'Add a participant',
+    participant_code: 'Code',
+    participant_identifier: 'Identifier',
+    participant_identifier_hint: 'Identifier of the participant in the study, optional.',
+    participant_valid_from: 'Valid from',
+    participant_valid_from_hint: 'Date from which the participant invitation will start. If not provided the invitation is immediately operational.',
+    participant_valid_until: 'Valid until',
+    participant_valid_until_hint: 'Date until which the participant invitation will end. If not provided the invitation will be operational until its interview is completed.'
   },
   license: {
     cc_by_40: 'Creative Commons BY 4.0',

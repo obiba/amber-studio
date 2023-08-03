@@ -18,7 +18,7 @@ import { defineComponent, defineAsyncComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    CaseReports: defineAsyncComponent(() => import('src/components/forms/CaseReports.vue'))
+    CaseReports: defineAsyncComponent(() => import('src/components/crfs/CaseReports.vue'))
   }
 })
 </script>

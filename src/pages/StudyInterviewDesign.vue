@@ -417,7 +417,7 @@ import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({
   components: {
-    Campaigns: defineAsyncComponent(() => import('src/components/forms/Campaigns.vue'))
+    Campaigns: defineAsyncComponent(() => import('src/components/interviews/Campaigns.vue'))
   },
   mixins: [AuthMixin],
   mounted () {

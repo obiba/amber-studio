@@ -18,7 +18,7 @@ import { defineComponent, defineAsyncComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    Interviews: defineAsyncComponent(() => import('src/components/forms/Interviews.vue'))
+    Interviews: defineAsyncComponent(() => import('src/components/interviews/Interviews.vue'))
   }
 })
 </script>

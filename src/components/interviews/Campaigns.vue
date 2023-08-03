@@ -74,6 +74,10 @@
             </q-item>
           </q-list>
         </div>
+        <div class="q-mt-md">
+          <div class="text-h6 text-capitalize">{{ $t('participants') }}</div>
+          <participants :campaign="campaign"/>
+        </div>
       </q-tab-panel>
     </q-tab-panels>
 
@@ -214,15 +218,16 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, defineAsyncComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
-import { t } from '../../boot/i18n'
-import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
 import AuthMixin from '../../mixins/AuthMixin'
 
 export default defineComponent({
+  components: {
+    Participants: defineAsyncComponent(() => import('src/components/interviews/Participants.vue'))
+  },
   name: 'StudyCaseReportForms',
   mixins: [AuthMixin],
   mounted () {
@@ -263,51 +268,6 @@ export default defineComponent({
       interviewDesign: state => state.interview.interviewDesign,
       campaigns: state => state.interview.campaigns
     }),
-    campaignsColumns () {
-      const cols = [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left',
-          field: 'name',
-          sortable: true
-        },
-        {
-          name: 'description',
-          align: 'left',
-          label: this.$t('description'),
-          field: 'description',
-          sortable: true
-        },
-        {
-          name: 'investigators',
-          align: 'left',
-          label: this.$t('interview.campaign_investigators'),
-          field: 'investigators'
-        },
-        {
-          name: 'updatedAt',
-          align: 'left',
-          label: this.$t('updated_at'),
-          field: 'updatedAt',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
-        }
-      ]
-      if (!this.isReadOnly) {
-        cols.push({
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        })
-      }
-      return cols
-    },
-    hasCampaigns () {
-      return this.campaigns && this.campaigns.length > 0
-    },
     disableSaveCampaign () {
       return this.v$.campaignData.$invalid || this.campaignData.investigators.length === 0
     },
