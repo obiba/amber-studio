@@ -689,7 +689,7 @@ export default defineComponent({
       reader.onload = evt => {
         const headers = []
         const participants = []
-        const knownHeaders = ['identifier', 'validFrom', 'validUntil']
+        const knownHeaders = ['identifier', 'validFrom', 'validUntil', 'activated']
         evt.target.result.split(/\r\n|\n/)
           .map(line => line.trim())
           .filter(line => line.length > 0)
@@ -704,6 +704,7 @@ export default defineComponent({
                     identifier: null,
                     validFrom: null,
                     validUntil: null,
+                    activated: true,
                     campaign: this.campaign._id,
                     data: {}
                   }
