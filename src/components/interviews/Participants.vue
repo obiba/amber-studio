@@ -546,11 +546,11 @@ export default defineComponent({
       addOptions: [
         {
           value: 'single',
-          label: 'Single'
+          label: t('interview.add_single_participant')
         },
         {
           value: 'multiple',
-          label: 'Multiple'
+          label: t('interview.add_multiple_participants')
         }
       ],
       columns: [
