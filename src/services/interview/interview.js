@@ -4,7 +4,7 @@ import { LocalStorage } from 'quasar'
 
 export async function downloadInterviews (accept, study, interviewDesign, filter, from, to, ids) {
   const query = {
-    $limit: 1000000,
+    $limit: 10000,
     $skip: 0,
     study: study
   }
@@ -86,11 +86,17 @@ export async function deleteInterview (id) {
 }
 
 export async function deleteInterviews (ids) {
-  return feathersClient.service('interview').remove(null, {
-    query: {
-      _id: {
-        $in: ids
+  const promises = []
+  const chunkSize = 10
+  for (let i = 0; i < ids.length; i += chunkSize) {
+    const chunk = ids.slice(i, i + chunkSize)
+    promises.push(feathersClient.service('interview').remove(null, {
+      query: {
+        _id: {
+          $in: chunk
+        }
       }
-    }
-  })
+    }))
+  }
+  return Promise.all(promises)
 }

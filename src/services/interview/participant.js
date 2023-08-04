@@ -52,18 +52,24 @@ export async function deleteParticipant (id) {
 }
 
 export async function deleteParticipants (ids) {
-  return feathersClient.service('participant').remove(null, {
-    query: {
-      _id: {
-        $in: ids
+  const promises = []
+  const chunkSize = 10
+  for (let i = 0; i < ids.length; i += chunkSize) {
+    const chunk = ids.slice(i, i + chunkSize)
+    promises.push(feathersClient.service('participant').remove(null, {
+      query: {
+        _id: {
+          $in: chunk
+        }
       }
-    }
-  })
+    }))
+  }
+  return Promise.all(promises)
 }
 
 export async function downloadParticipants (accept, campaign, filter, ids) {
   const query = {
-    $limit: 1000000,
+    $limit: 10000,
     $skip: 0,
     campaign: campaign
   }

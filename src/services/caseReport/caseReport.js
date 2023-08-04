@@ -53,11 +53,17 @@ export async function deleteCaseReport (id) {
 }
 
 export async function deleteCaseReports (ids) {
-  return feathersClient.service('case-report').remove(null, {
-    query: {
-      _id: {
-        $in: ids
+  const promises = []
+  const chunkSize = 10
+  for (let i = 0; i < ids.length; i += chunkSize) {
+    const chunk = ids.slice(i, i + chunkSize)
+    promises.push(feathersClient.service('case-report').remove(null, {
+      query: {
+        _id: {
+          $in: chunk
+        }
       }
-    }
-  })
+    }))
+  }
+  return Promise.all(promises)
 }

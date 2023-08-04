@@ -71,11 +71,17 @@ export async function deleteFormRevision (id) {
 }
 
 export async function deleteFormRevisions (ids) {
-  return feathersClient.service('form-revision').remove(null, {
-    query: {
-      _id: {
-        $in: ids
+  const promises = []
+  const chunkSize = 10
+  for (let i = 0; i < ids.length; i += chunkSize) {
+    const chunk = ids.slice(i, i + chunkSize)
+    promises.push(feathersClient.service('form-revision').remove(null, {
+      query: {
+        _id: {
+          $in: chunk
+        }
       }
-    }
-  })
+    }))
+  }
+  return Promise.all(promises)
 }

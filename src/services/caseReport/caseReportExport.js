@@ -3,7 +3,7 @@ import { LocalStorage } from 'quasar'
 
 export async function downloadCaseReports (accept, study, caseReportForm, form, filter, from, to, ids) {
   const query = {
-    $limit: 1000000,
+    $limit: 10000,
     $skip: 0,
     study: study
   }
