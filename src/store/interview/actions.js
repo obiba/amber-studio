@@ -214,7 +214,7 @@ export async function deleteInterviewDesigns ({ dispatch }, payload) {
 }
 
 export async function getCampaigns ({ commit }, payload) {
-  const result = await campaignService.getCampaigns(payload.paginationOpts, payload.interviewDesign, payload.filter).catch(err => {
+  const result = await campaignService.getCampaigns(payload.paginationOpts, payload.interviewDesign._id, payload.filter).catch(err => {
     errorHandler.onError(err, t('error.get_campaigns'))
   })
   if (result) {

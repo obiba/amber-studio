@@ -301,7 +301,14 @@ export default {
     delete_campaigns: 'Campaigns successfully deleted.',
     update_interview: 'Interview successfully updated.',
     delete_interview: 'Interview successfully deleted.',
-    delete_interviews: 'Interviews successfully deleted.'
+    delete_interviews: 'Interviews successfully deleted.',
+    create_participant: 'Participant successfully added.',
+    create_participants: 'Participants successfully added (may take a while to complete).',
+    update_participant: 'Participant successfully updated.',
+    activate_participant: 'Participant successfully activated.',
+    pause_participant: 'Participant successfully paused.',
+    delete_participant: 'Participant successfully deleted.',
+    delete_participants: 'Participants successfully deleted.'
   },
   form: {
     tr_add: 'Add translation',
@@ -503,7 +510,9 @@ export default {
     campaign_investigators_hint: 'Investigators are in charge of managing the participant activity.',
     add_participants: 'Add participants',
     import_participants: 'Import participants',
-    add_participant_hint: 'Add a participant',
+    add_participant_hint: 'Add participant(s)',
+    add_participants_count: 'Number of participants',
+    add_participants_count_hint: 'The number of participants to add with the same profile, but without study identifier (for walk-in participants for instance).',
     participant_code: 'Code',
     participant_identifier: 'Identifier',
     participant_identifier_hint: 'Identifier of the participant in the study, optional.',
@@ -519,7 +528,9 @@ export default {
     upload_participants: 'Upload participants',
     upload_participants_hint: 'Upload participantsfrom a text file (.txt, .csv, .tsv).',
     delete_participants_hint: 'Delete the selected participants',
+    delete_participants_confirm: 'Please confirm that you want to remove all the selected participants:',
     delete_participant_hint: 'Delete the participant',
+    delete_participant_confirm: 'Please confirm that you want to remove the participant:',
     view_participant_hint: 'View the participant details',
     edit_participant_hint: 'Edit the participant details'
   },

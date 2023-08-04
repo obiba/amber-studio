@@ -164,12 +164,29 @@
     <q-dialog v-model='showAddParticipant' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section>
+          <q-option-group
+            v-model="addMode"
+            :options="addOptions"
+            color="primary"
+          />
           <q-input
+            v-if="addMode === 'single'"
             v-model='participantData.identifier'
             :label="$t('interview.participant_identifier')"
             :hint="$t('interview.participant_identifier_hint')"
             lazy-rules
           />
+          <div v-if="addMode === 'multiple'">
+            <p class="q-mb-sm q-mt-md">{{ $t('interview.add_participants_count') }}</p>
+            <q-slider
+              v-model="addCount"
+              :min="1"
+              :max="100"
+              :step="1"
+              label
+            />
+            <div class="text-grey-8 text-caption">{{ $t('interview.add_participants_count_hint') }}</div>
+          </div>
         </q-card-section>
         <q-card-section>
           <q-input
@@ -211,7 +228,7 @@
         </q-card-section>
         <q-card-section>
           <p class="q-mb-sm q-mt-md">{{ $t('interview.participant_attributes') }}</p>
-          <p class="text-grey">{{ $t('interview.participant_attributes_hint') }}</p>
+          <p class="text-grey-8 text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
           <div class="row q-col-gutter-md" v-for="(attribute, key) in participantData.attributes" :key="participantData.attributes.indexOf(attribute)">
             <div class="col-4">
               <q-input class="q-mb-md" v-model="attribute.key" :label="$t('key')"/>
@@ -320,7 +337,7 @@
         </q-card-section>
         <q-card-section>
           <p class="q-mb-sm q-mt-md">{{ $t('interview.participant_attributes') }}</p>
-          <p class="text-grey">{{ $t('interview.participant_attributes_hint') }}</p>
+          <p class="text-grey-8 text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
           <div class="row q-col-gutter-md" v-for="(attribute, key) in participantData.attributes" :key="participantData.attributes.indexOf(attribute)">
             <div class="col-4">
               <q-input class="q-mb-md" v-model="attribute.key" :label="$t('key')"/>
@@ -460,7 +477,7 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_participants_confirm')}}
+            {{$t('interview.delete_participants_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             <q-chip v-for="p in selected" :key="p.code">{{ p.code }}</q-chip>
@@ -493,6 +510,7 @@ import { date, Notify } from 'quasar'
 import AuthMixin from '../../mixins/AuthMixin'
 import { participantService } from '../../services/interview'
 import { getFileDelim, cleanToken } from '../forms/items/options'
+import { errorHandler } from '../../boot/errors'
 
 export default defineComponent({
   name: 'Participants',
@@ -523,6 +541,18 @@ export default defineComponent({
         rowsPerPage: 10,
         rowsNumber: 10
       },
+      addMode: ref('single'),
+      addCount: ref(10),
+      addOptions: [
+        {
+          value: 'single',
+          label: 'Single'
+        },
+        {
+          value: 'multiple',
+          label: 'Multiple'
+        }
+      ],
       columns: [
         {
           name: 'code',
@@ -594,10 +624,12 @@ export default defineComponent({
   },
   methods: {
     updateTableParticipants () {
-      participantService.getParticipants(this.paginationOpts, this.campaign._id, this.filter).then(response => {
-        this.participants = response.data
-        this.paginationOpts.rowsNumber = response.total
-      })
+      participantService.getParticipants(this.paginationOpts, this.campaign._id, this.filter)
+        .then(response => {
+          this.participants = response.data
+          this.paginationOpts.rowsNumber = response.total
+        })
+        .catch(err => this.handleError(err))
     },
     async getTableParticipants (requestProp) {
       if (requestProp) {
@@ -646,25 +678,72 @@ export default defineComponent({
     addParticipant () {
       this.participantData.data = this.asParticipantData(this.participantData.attributes)
       delete this.participantData.data.attributes
-      participantService.createParticipant(this.participantData).then(response => {
-        this.updateTableParticipants()
-      })
+      if (this.addMode === 'single') {
+        participantService.createParticipant(this.participantData)
+          .then(() => {
+            Notify.create({
+              message: t('success.create_participant'),
+              color: 'positive',
+              icon: 'fas fa-check'
+            })
+            this.updateTableParticipants()
+          })
+          .catch(err => this.handleError(err))
+      } else {
+        const pTemplate = { ...this.participantData }
+        delete pTemplate.identifier
+        const participants = []
+        for (let i = 0; i < this.addCount; i++) {
+          participants.push(pTemplate)
+        }
+        participantService.createParticipant(participants)
+          .then(() => {
+            Notify.create({
+              message: t('success.create_participants'),
+              color: 'positive',
+              icon: 'fas fa-check'
+            })
+            this.updateTableParticipants()
+          })
+          .catch(err => this.handleError(err))
+      }
+    },
+    handleError (err) {
+      if (err.code === 400) {
+        errorHandler.onError(err, err.message)
+      } else {
+        errorHandler.onError(err, t('error.general'))
+      }
     },
     editParticipant () {
       this.participantData.data = this.asParticipantData(this.participantData.attributes)
       delete this.participantData.data.attributes
-      participantService.patchParticipant(this.participantData).then(response => {
-        this.updateTableParticipants()
-      })
+      participantService.patchParticipant(this.participantData)
+        .then(() => {
+          Notify.create({
+            message: t('success.update_participant'),
+            color: 'positive',
+            icon: 'fas fa-check'
+          })
+          this.updateTableParticipants()
+        })
+        .catch(err => this.handleError(err))
     },
     doActivateParticipant (participant, activated) {
       this.participantData = {
         _id: participant._id,
         activated: activated
       }
-      participantService.patchParticipant(this.participantData).then(response => {
-        this.updateTableParticipants()
-      })
+      participantService.patchParticipant(this.participantData)
+        .then(() => {
+          Notify.create({
+            message: activated ? t('success.activate_participant') : t('success.pause_participant'),
+            color: 'positive',
+            icon: 'fas fa-check'
+          })
+          this.updateTableParticipants()
+        })
+        .catch(err => this.handleError(err))
     },
     activateParticipant (participant) {
       this.doActivateParticipant(participant, true)
@@ -673,14 +752,28 @@ export default defineComponent({
       this.doActivateParticipant(participant, false)
     },
     deleteParticipant () {
-      participantService.deleteParticipant(this.participantData._id).then(response => {
-        this.updateTableParticipants()
-      })
+      participantService.deleteParticipant(this.participantData._id)
+        .then(() => {
+          Notify.create({
+            message: t('success.delete_participant'),
+            color: 'positive',
+            icon: 'fas fa-check'
+          })
+          this.updateTableParticipants()
+        })
+        .catch(err => this.handleError(err))
     },
     deleteParticipants () {
-      participantService.deleteParticipants(this.selected.map(p => p._id)).then(response => {
-        this.updateTableParticipants()
-      })
+      participantService.deleteParticipants(this.selected.map(p => p._id))
+        .then(() => {
+          Notify.create({
+            message: t('success.delete_participants'),
+            color: 'positive',
+            icon: 'fas fa-check'
+          })
+          this.updateTableParticipants()
+        })
+        .catch(err => this.handleError(err))
     },
     importParticipants () {
       const delim = getFileDelim(this.participantsFile)
@@ -725,9 +818,16 @@ export default defineComponent({
             }
           })
         if (participants.length > 0) {
-          participantService.createParticipant(participants).then(response => {
-            this.updateTableParticipants()
-          })
+          participantService.createParticipant(participants)
+            .then(() => {
+              Notify.create({
+                message: t('success.create_participants'),
+                color: 'positive',
+                icon: 'fas fa-check'
+              })
+              this.updateTableParticipants()
+            })
+            .catch(err => this.handleError(err))
         }
       }
       reader.onerror = evt => {
@@ -747,6 +847,8 @@ export default defineComponent({
           }
         ]
       }
+      this.addMode = 'single'
+      this.addCount = 10
       this.showAddParticipant = true
     },
     onImport () {
