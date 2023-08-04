@@ -28,7 +28,7 @@
     <q-tab-panels v-model="tab">
 
       <q-tab-panel v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" class="q-pa-none">
-        <div class="q-mt-md q-mb-md">
+        <div v-if="!isReadOnly" class="q-mt-md q-mb-md">
           <q-btn
             class="text-grey-8"
             size="12px"
@@ -231,10 +231,12 @@ export default defineComponent({
   name: 'StudyCaseReportForms',
   mixins: [AuthMixin],
   mounted () {
-    subjectsService.getSubjects().then((result) => {
-      this.subjects = result
+    Promise.all([
+      subjectsService.getSubjects().then((result) => {
+        this.subjects = result
+      }),
       this.initCampaigns()
-    })
+    ])
   },
   setup () {
     return {
