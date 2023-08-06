@@ -5,81 +5,83 @@
       color="primary"
       icon="add"
       :label="$t('interview.add_campaign_hint')"
-      @click="onAddCampaign()"
-      class="q-mt-md q-mb-md" />
+      @click="onAddCampaign()"/>
 
-    <q-tabs
-      v-if="campaigns"
-      v-model="tab"
-      align="left"
-      inline-label
-      outside-arrows
-      mobile-arrows
-      dense
-      class="text-grey"
-      active-color="info"
-      indicator-color="info"
-    >
-      <q-tab v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" :label="campaign.name" />
-    </q-tabs>
+    <div v-if="campaigns && campaigns.length>0" class="q-mt-md">
 
-    <q-separator />
+      <q-tabs
+        v-model="tab"
+        align="left"
+        inline-label
+        outside-arrows
+        mobile-arrows
+        dense
+        class="text-grey"
+        active-color="info"
+        indicator-color="info"
+      >
+        <q-tab v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" :label="campaign.name" />
+      </q-tabs>
 
-    <q-tab-panels v-model="tab">
+      <q-separator />
 
-      <q-tab-panel v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" class="q-pa-none">
-        <div v-if="!isReadOnly" class="q-mt-md q-mb-md">
-          <q-btn
-            color="secondary"
-            size="12px"
-            flat
-            dense
-            round
-            icon="edit"
-            :title="$t('interview.edit_campaign_hint')"
-            @click='onEditCampaign(campaign)'>
-          </q-btn>
-          <q-btn
-            size="12px"
-            flat
-            dense
-            round
-            color="negative"
-            icon="delete_outline"
-            :title="$t('interview.delete_campaign_hint')"
-            @click='onConfirmDeleteCampaign(campaign)'>
-          </q-btn>
-        </div>
-        <div class="q-mt-md" style="max-width: 350px">
-          <q-list bordered separator>
-            <q-item>
-              <q-item-section>
-                <q-item-label>{{ $t('name') }}</q-item-label>
-                <q-item-label caption>{{ campaign.name }}</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>{{ $t('description') }}</q-item-label>
-                <q-item-label caption>{{ campaign.description }}</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>{{ $t('interview.campaign_investigators') }}</q-item-label>
-                <div>
-                  <q-chip v-for="id in campaign.investigators" icon="person" size="sm" :label="getSubject(id, 'user').name" :key="id"/>
-                </div>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-        <div class="q-mt-md">
-          <div class="text-h6 text-capitalize">{{ $t('participants') }}</div>
-          <participants :campaign="campaign"/>
-        </div>
-      </q-tab-panel>
-    </q-tab-panels>
+      <q-tab-panels v-model="tab">
+
+        <q-tab-panel v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" class="q-pa-none">
+          <div v-if="!isReadOnly" class="q-mt-md q-mb-md">
+            <q-btn
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              icon="edit"
+              :title="$t('interview.edit_campaign_hint')"
+              @click='onEditCampaign(campaign)'>
+            </q-btn>
+            <q-btn
+              size="12px"
+              flat
+              dense
+              round
+              color="negative"
+              icon="delete_outline"
+              :title="$t('interview.delete_campaign_hint')"
+              @click='onConfirmDeleteCampaign(campaign)'>
+            </q-btn>
+          </div>
+          <div class="q-mt-md" style="max-width: 350px">
+            <q-list bordered separator>
+              <q-item>
+                <q-item-section>
+                  <q-item-label>{{ $t('name') }}</q-item-label>
+                  <q-item-label caption>{{ campaign.name }}</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label>{{ $t('description') }}</q-item-label>
+                  <q-item-label caption>{{ campaign.description }}</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label>{{ $t('interview.campaign_investigators') }}</q-item-label>
+                  <div>
+                    <q-chip v-for="id in campaign.investigators" icon="person" size="sm" :label="getSubject(id, 'user').name" :key="id"/>
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
+          <div class="q-mt-md">
+            <div class="text-h6 text-capitalize">{{ $t('participants') }}</div>
+            <participants :campaign="campaign"/>
+          </div>
+        </q-tab-panel>
+      </q-tab-panels>
+
+    </div>
 
     <q-dialog v-model='showAddCampaign' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
@@ -286,7 +288,9 @@ export default defineComponent({
     }),
     async initCampaigns () {
       await this.getCampaigns({ paginationOpts: this.paginationOpts, interviewDesign: this.interviewDesign })
-      this.tab = this.campaigns[0].name
+      if (this.campaigns.length > 0) {
+        this.tab = this.campaigns[0].name
+      }
     },
     getSubject (id, type) {
       if (this.subjects && this.subjects.length > 0) {
@@ -321,19 +325,25 @@ export default defineComponent({
       const toSave = { ...this.campaignData }
       toSave.interviewDesign = this.interviewDesign._id
       this.createCampaign({
-        campaign: toSave
-      })
+        campaign: toSave,
+        interviewDesign: this.interviewDesign
+      }).then(() => { this.tab = this.campaignData.name })
     },
     editCampaign () {
       const toSave = { ...this.campaignData }
       this.updateCampaign({
-        campaign: toSave
+        campaign: toSave,
+        interviewDesign: this.interviewDesign
       })
     },
     removeCampaign () {
+      const idx = this.campaigns.map(campaign => campaign.name).indexOf(this.campaignData.name)
+      const nextidx = idx === this.campaigns.length - 1 ? idx - 1 : idx + 1
+      const nexttab = nextidx < 0 ? undefined : this.campaigns[nextidx].name
       this.deleteCampaign({
-        id: this.campaignData._id
-      })
+        id: this.campaignData._id,
+        interviewDesign: this.interviewDesign
+      }).then(() => { this.tab = nexttab })
     }
   }
 })

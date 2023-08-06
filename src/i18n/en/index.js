@@ -503,6 +503,7 @@ export default {
     delete_step_hint: 'Delete step',
     delete_steps_hint: 'Delete selected steps',
     add_campaign_hint: 'Add a campaign',
+    delete_campaign_confirm: 'Please confirm that you want to remove the campaign:',
     delete_campaign_hint: 'Delete campaign',
     delete_campaigns_hint: 'Delete selected campaigns',
     campaign_investigators: 'Investigators',

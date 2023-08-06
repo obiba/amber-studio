@@ -246,7 +246,8 @@ export async function createCampaign ({ dispatch }, payload) {
   dispatch(
     'interview/getCampaigns',
     {
-      paginationOpts: payload.paginationOpts
+      paginationOpts: payload.paginationOpts,
+      interviewDesign: payload.interviewDesign
     },
     { root: true }
   )
@@ -268,7 +269,8 @@ export async function updateCampaign ({ dispatch }, payload) {
   dispatch(
     'interview/getCampaigns',
     {
-      paginationOpts: payload.paginationOpts
+      paginationOpts: payload.paginationOpts,
+      interviewDesign: payload.interviewDesign
     },
     { root: true }
   )
@@ -290,7 +292,8 @@ export async function deleteCampaign ({ dispatch }, payload) {
   dispatch(
     'interview/getCampaigns',
     {
-      paginationOpts: payload.paginationOpts
+      paginationOpts: payload.paginationOpts,
+      interviewDesign: payload.interviewDesign
     },
     { root: true }
   )
