@@ -43,7 +43,7 @@
       <template v-slot:body-cell-action='props'>
         <q-td :props='props'>
           <q-btn
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -54,7 +54,7 @@
           </q-btn>
           <q-btn
             v-if="!isReadOnly"
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -64,7 +64,7 @@
             @click='onReinstate(props.row)'>
           </q-btn>
           <q-btn
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -75,7 +75,7 @@
           </q-btn>
           <q-btn
             v-if="!isReadOnly"
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -156,7 +156,7 @@
             @click='reinstateFormRevision'
             :label="$t('reinstate')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -183,7 +183,7 @@
             @click='deleteFormRevision'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -210,7 +210,7 @@
             @click='deleteFormRevisions'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>

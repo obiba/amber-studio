@@ -60,7 +60,7 @@
         <div class="col-1">
           <q-btn
             v-if="!readOnly"
-            class="q-mt-sm text-grey-8"
+            class="q-mt-sm text-secondary"
             size="12px"
             flat
             dense

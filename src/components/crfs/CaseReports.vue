@@ -1,188 +1,193 @@
 <template>
-  <div>
-    <div class="q-ml-md q-mr-d">
-      <q-btn-dropdown
-          class="q-mr-md"
-          color="primary"
-          icon="download"
-          :title="$t('study.export_case_reports_hint')"
-          :disable="caseReports.length === 0">
-          <q-list>
-            <q-item clickable v-close-popup @click="onExport('csv')">
-              <q-item-section>
-                <q-item-label>CSV</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item clickable v-close-popup @click="onExport('zip')">
-              <q-item-section>
-                <q-item-label>CSV (zip)</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item clickable v-close-popup @click="onExport('xlsx')">
-              <q-item-section>
-                <q-item-label>Excel</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item clickable v-close-popup @click="onExport('json')">
-              <q-item-section>
-                <q-item-label>JSON</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
-        <q-btn
-          v-if="!isReadOnly"
-          class="q-mr-md"
+  <div v-cloak>
+
+    <q-card class="q-ma-md">
+      <q-card-section>
+        <div class="q-ml-md q-mr-d">
+          <q-btn-dropdown
+              class="q-mr-md"
+              color="primary"
+              icon="download"
+              :title="$t('study.export_case_reports_hint')"
+              :disable="caseReports.length === 0">
+              <q-list>
+                <q-item clickable v-close-popup @click="onExport('csv')">
+                  <q-item-section>
+                    <q-item-label>CSV</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup @click="onExport('zip')">
+                  <q-item-section>
+                    <q-item-label>CSV (zip)</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup @click="onExport('xlsx')">
+                  <q-item-section>
+                    <q-item-label>Excel</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup @click="onExport('json')">
+                  <q-item-section>
+                    <q-item-label>JSON</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+            <q-btn
+              v-if="!isReadOnly"
+              class="q-mr-md"
+              flat
+              round
+              color="negative"
+              icon="delete_outline"
+              :disable="selected.length === 0"
+              :title="$t('study.delete_case_reports_hint')"
+              @click="onConfirmDeleteMultiple()" />
+        </div>
+        <q-table
           flat
-          round
-          color="negative"
-          icon="delete_outline"
-          :disable="selected.length === 0"
-          :title="$t('study.delete_case_reports_hint')"
-          @click="onConfirmDeleteMultiple()" />
-    </div>
-    <q-table
-      flat
-      :rows="caseReports"
-      :columns="columns"
-      :filter="filter"
-      row-key="_id"
-      :selection="isReadOnly ? 'none' : 'multiple'"
-      v-model:selected="selected"
-      v-model:pagination='paginationOpts'
-      @request='getTableCaseReports'
-    >
-      <template v-slot:top>
-        <q-select
-          class="q-mr-md"
-          v-model="caseReportFormFilter"
-          :options="caseReportFormOptions"
-          emit-value
-          map-options
-          :label="$t('study.case_report_form')"
-          style="min-width: 200px" />
-        <q-select
-          class="q-mr-md"
-          v-model="formFilter"
-          :options="formOptions"
-          emit-value
-          map-options
-          :label="$t('study.form')"
-          style="min-width: 200px" />
-        <div class="q-mr-md" style="max-width: 250px">
-          <q-input filled v-model="fromDate" :placeholder="$t('from')">
-            <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="fromDate" mask="YYYY-MM-DD HH:mm">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-              <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-time v-model="fromDate" mask="YYYY-MM-DD HH:mm" format24h>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
-                    </div>
-                  </q-time>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-            <template v-slot:append>
-              <q-icon name="close" class="cursor-pointer" @click="onClearDate('from')">
-              </q-icon>
-            </template>
-          </q-input>
-        </div>
-        <div class="q-mr-md" style="max-width: 250px">
-          <q-input filled v-model="toDate" :placeholder="$t('to')">
-            <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="toDate" mask="YYYY-MM-DD HH:mm">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-              <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-time v-model="toDate" mask="YYYY-MM-DD HH:mm" format24h>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
-                    </div>
-                  </q-time>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-            <template v-slot:append>
-              <q-icon name="close" class="cursor-pointer" @click="onClearDate('to')">
-              </q-icon>
-            </template>
-          </q-input>
-        </div>
-        <q-space />
-        <q-input
-          dense
-          debounce="300"
-          v-model="filter"
-          :placeholder="$t('search')"
-          :title="$t('study.search_case_report_hint')">
-          <template v-slot:append>
-            <q-icon name="search"/>
+          :rows="caseReports"
+          :columns="columns"
+          :filter="filter"
+          row-key="_id"
+          :selection="isReadOnly ? 'none' : 'multiple'"
+          v-model:selected="selected"
+          v-model:pagination='paginationOpts'
+          @request='getTableCaseReports'
+        >
+          <template v-slot:top>
+            <q-select
+              class="q-mr-md"
+              v-model="caseReportFormFilter"
+              :options="caseReportFormOptions"
+              emit-value
+              map-options
+              :label="$t('study.case_report_form')"
+              style="min-width: 200px" />
+            <q-select
+              class="q-mr-md"
+              v-model="formFilter"
+              :options="formOptions"
+              emit-value
+              map-options
+              :label="$t('study.form')"
+              style="min-width: 200px" />
+            <div class="q-mr-md" style="max-width: 250px">
+              <q-input filled v-model="fromDate" :placeholder="$t('from')">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="fromDate" mask="YYYY-MM-DD HH:mm">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-time v-model="fromDate" mask="YYYY-MM-DD HH:mm" format24h>
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+                <template v-slot:append>
+                  <q-icon name="close" class="cursor-pointer" @click="onClearDate('from')">
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+            <div class="q-mr-md" style="max-width: 250px">
+              <q-input filled v-model="toDate" :placeholder="$t('to')">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="toDate" mask="YYYY-MM-DD HH:mm">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-time v-model="toDate" mask="YYYY-MM-DD HH:mm" format24h>
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+                <template v-slot:append>
+                  <q-icon name="close" class="cursor-pointer" @click="onClearDate('to')">
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+            <q-space />
+            <q-input
+              dense
+              debounce="300"
+              v-model="filter"
+              :placeholder="$t('search')"
+              :title="$t('study.search_case_report_hint')">
+              <template v-slot:append>
+                <q-icon name="search"/>
+              </template>
+            </q-input>
           </template>
-        </q-input>
-      </template>
-      <template v-slot:body-cell-caseReportForm='props'>
-        <q-td :props='props'>
-          <router-link :to="'/study/' + studyId + '/crfs'">{{ getCaseReportFormName(props.row.caseReportForm) }}</router-link>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-form='props'>
-        <q-td :props='props'>
-          <router-link :to="'/study/' + studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-revision='props'>
-        <q-td :props='props'>
-          {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-state='props'>
-        <q-td :props='props'>
-          {{ $t('study.case_report_state.' + props.row.state) }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-action='props'>
-        <q-td :props='props'>
-          <q-btn
-            class="text-grey-8"
-            size="12px"
-            flat
-            dense
-            round
-            :title="$t(isReadOnly ? 'study.view_case_report_hint' : 'study.edit_case_report_hint')"
-            :icon="isReadOnly ? 'visibility' : 'edit'"
-            @click='onShow(props.row)'>
-          </q-btn>
-          <q-btn
-            v-if="!isReadOnly"
-            class="text-grey-8"
-            size="12px"
-            flat
-            dense
-            round
-            :title="$t('study.delete_case_report_hint')"
-            icon="delete"
-            @click='onConfirmDelete(props.row)'>
-          </q-btn>
-        </q-td>
-      </template>
-    </q-table>
+          <template v-slot:body-cell-caseReportForm='props'>
+            <q-td :props='props'>
+              <router-link :to="'/study/' + studyId + '/crfs'">{{ getCaseReportFormName(props.row.caseReportForm) }}</router-link>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-form='props'>
+            <q-td :props='props'>
+              <router-link :to="'/study/' + studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-revision='props'>
+            <q-td :props='props'>
+              {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-state='props'>
+            <q-td :props='props'>
+              {{ $t('study.case_report_state.' + props.row.state) }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-action='props'>
+            <q-td :props='props'>
+              <q-btn
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t(isReadOnly ? 'study.view_case_report_hint' : 'study.edit_case_report_hint')"
+                :icon="isReadOnly ? 'visibility' : 'edit'"
+                @click='onShow(props.row)'>
+              </q-btn>
+              <q-btn
+                v-if="!isReadOnly"
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.delete_case_report_hint')"
+                icon="delete"
+                @click='onConfirmDelete(props.row)'>
+              </q-btn>
+            </q-td>
+          </template>
+        </q-table>
+      </q-card-section>
+    </q-card>
 
     <q-dialog v-model='showCaseReport' persistent :maximized="maximizedToggle">
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
@@ -239,7 +244,7 @@
             @click='onSave'
             :label="$t('save')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -266,7 +271,7 @@
             @click='deleteCaseReport'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -293,7 +298,7 @@
             @click='deleteCaseReports'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>

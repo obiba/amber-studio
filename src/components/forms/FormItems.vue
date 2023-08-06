@@ -6,7 +6,7 @@
       <template v-slot:before>
         <div class="q-ma-sm">
           <q-btn
-            class="text-grey-8"
+            color="secondary"
             size="10px"
             flat
             dense
@@ -17,7 +17,7 @@
             @click='selectUpItem'>
           </q-btn>
           <q-btn
-            class="text-grey-8"
+            color="secondary"
             size="10px"
             flat
             dense
@@ -29,7 +29,7 @@
           </q-btn>
           <q-btn
             v-if="!isReadOnly"
-            class="text-grey-8"
+            color="secondary"
             size="10px"
             flat
             dense
@@ -90,7 +90,7 @@
             <div v-if="!isRootSelected" class="q-mt-sm q-ml-md">
               <q-btn
                 v-if="!isReadOnly"
-                class="text-grey-8"
+                color="secondary"
                 size="10px"
                 flat
                 dense
@@ -101,7 +101,7 @@
               </q-btn>
               <q-btn
                 v-if="!isReadOnly"
-                class="text-grey-8"
+                color="secondary"
                 size="10px"
                 flat
                 dense
@@ -112,7 +112,7 @@
               </q-btn>
               <q-btn
                 v-if="!isReadOnly"
-                class="text-grey-8"
+                color="secondary"
                 size="10px"
                 flat
                 dense
@@ -123,7 +123,7 @@
               </q-btn>
               <q-btn
                 v-if="!isReadOnly"
-                class="text-grey-8"
+                color="secondary"
                 size="10px"
                 flat
                 dense
@@ -134,7 +134,7 @@
               </q-btn>
               <q-btn
                 v-if="!isReadOnly"
-                class="text-grey-8"
+                color="secondary"
                 size="10px"
                 flat
                 dense
@@ -146,7 +146,7 @@
               </q-btn>
               <q-btn
                 v-if="!isReadOnly"
-                class="text-grey-8"
+                color="secondary"
                 size="10px"
                 flat
                 dense

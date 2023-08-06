@@ -1,9 +1,9 @@
 <template>
   <q-page>
 
-    <div class="q-pa-md">
+    <div class="q-ma-md">
       <div class="text-h5 q-mb-md">{{$t('study.case_report_records')}}</div>
-      <div class="note note-info text-body2 text-grey-8">
+      <div class="note note-info text-body2 text-secondary">
         <span v-html="$t('study.case_report_records_hint')"/>
       </div>
     </div>

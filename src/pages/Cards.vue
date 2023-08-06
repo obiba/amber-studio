@@ -7,16 +7,16 @@
             src="https://cdn.quasar.dev/img/parallax1.jpg"
           />
           <q-separator></q-separator>
-          <q-card-section class="text-h6 text-grey-8 q-pa-md">
+          <q-card-section class="text-h6 text-secondary q-pa-md">
             Bar XYZ
           </q-card-section>
           <q-separator></q-separator>
 
-          <q-card-section class="text-h6 text-grey-8 q-pa-md">
+          <q-card-section class="text-h6 text-secondary q-pa-md">
             Gas Station
           </q-card-section>
           <q-card-section>
-            <div class="text-h5 q-mt-sm q-mb-xs text-grey-8">Title</div>
+            <div class="text-h5 q-mt-sm q-mb-xs text-secondary">Title</div>
             <div>
               {{ text }}
             </div>

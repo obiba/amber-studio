@@ -1,7 +1,7 @@
 <template>
   <q-page>
 
-    <div class="q-pl-md q-pr-md q-pt-sm q-pb-md">
+    <div class="q-ml-md q-mr-md q-mt-sm q-mb-md">
       <div class="row">
         <div class="col-12">
           <q-breadcrumbs class="q-mt-sm q-mr-md text-h5" :class="isReadOnly ? '' : 'float-left'">
@@ -32,12 +32,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="text-caption text-grey-8 col-12">
+        <div class="text-caption text-secondary col-12">
           {{ studyForm.description }}
         </div>
       </div>
       <div class="row">
-        <div class="text-body2 text-grey-8 col-12">
+        <div class="text-body2 text-secondary col-12">
           <div class="note note-info">
             <span v-html="$t('study.form_hint')"/>
           </div>
@@ -45,100 +45,104 @@
       </div>
     </div>
 
-    <q-tabs
-      v-model="tab"
-      dense
-      class="text-grey"
-      active-color="primary"
-      indicator-color="primary"
-      align="justify"
-    >
-      <q-tab name="schema" :label="$t('form.schema')" />
-      <q-tab name="revisions" :label="$t('form.revisions')" />
-    </q-tabs>
+    <q-card class="q-ma-md">
+      <q-card-section>
 
-    <q-separator />
-
-    <q-tab-panels v-model="tab">
-
-      <q-tab-panel name="schema" class="q-pa-none">
-
-        <div class="q-ma-sm">
-          <q-btn
-            @click='onExport'
-            :label="$t('export')"
-            icon="file_download"
-            flat
-            size="sm">
-            <template v-slot:loading>
-            <q-spinner-facebook />
-            </template>
-          </q-btn>
-          <q-btn
-            v-if="!isReadOnly"
-            @click='onImport'
-            :label="$t('import')"
-            icon="file_upload"
-            flat
-            size="sm">
-            <template v-slot:loading>
-            <q-spinner-facebook />
-            </template>
-          </q-btn>
-          <q-btn
-            v-if="!isReadOnly"
-            @click='onTag'
-            :label="$t('tag')"
-            :disable="disableTag"
-            icon="sell"
-            flat
-            size="sm"
-            >
-            <template v-slot:loading>
-            <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </div>
-
-        <q-separator/>
-
-        <q-splitter
-          v-model="splitterModel"
+        <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
         >
+          <q-tab name="schema" :label="$t('form.schema')" />
+          <q-tab name="revisions" :label="$t('form.revisions')" />
+        </q-tabs>
 
-          <template v-slot:before>
-            <q-tabs
-              v-model="innerTab"
-              vertical
-              class="text-teal"
+        <q-separator />
+
+        <q-tab-panels v-model="tab">
+
+          <q-tab-panel name="schema" class="q-pa-none">
+
+            <div class="q-ma-sm">
+              <q-btn
+                @click='onExport'
+                :label="$t('export')"
+                icon="file_download"
+                flat
+                size="sm">
+                <template v-slot:loading>
+                <q-spinner-facebook />
+                </template>
+              </q-btn>
+              <q-btn
+                v-if="!isReadOnly"
+                @click='onImport'
+                :label="$t('import')"
+                icon="file_upload"
+                flat
+                size="sm">
+                <template v-slot:loading>
+                <q-spinner-facebook />
+                </template>
+              </q-btn>
+              <q-btn
+                v-if="!isReadOnly"
+                @click='onTag'
+                :label="$t('tag')"
+                :disable="disableTag"
+                icon="sell"
+                flat
+                size="sm"
+                >
+                <template v-slot:loading>
+                <q-spinner-facebook />
+                </template>
+              </q-btn>
+            </div>
+
+            <q-separator/>
+
+            <q-splitter
+              v-model="splitterModel"
             >
-              <q-tab name="items" icon="category" :label="$t('form.items')" />
-              <q-tab name="translations" icon="translate" :label="$t('form.translations')" />
-            </q-tabs>
-          </template>
 
-          <template v-slot:after>
-            <q-tab-panels
-              v-model="innerTab"
-            >
-              <q-tab-panel name="items" class="q-pa-none">
-                <form-items :key="reload" v-model="studyFormData" />
-              </q-tab-panel>
+              <template v-slot:before>
+                <q-tabs
+                  v-model="innerTab"
+                  vertical
+                  class="text-teal"
+                >
+                  <q-tab name="items" icon="category" :label="$t('form.items')" />
+                  <q-tab name="translations" icon="translate" :label="$t('form.translations')" />
+                </q-tabs>
+              </template>
 
-              <q-tab-panel name="translations">
-                <form-translations :key="reload" v-model="studyFormData" />
-              </q-tab-panel>
-            </q-tab-panels>
-          </template>
+              <template v-slot:after>
+                <q-tab-panels
+                  v-model="innerTab"
+                >
+                  <q-tab-panel name="items" class="q-pa-none">
+                    <form-items :key="reload" v-model="studyFormData" />
+                  </q-tab-panel>
 
-        </q-splitter>
-      </q-tab-panel>
+                  <q-tab-panel name="translations">
+                    <form-translations :key="reload" v-model="studyFormData" />
+                  </q-tab-panel>
+                </q-tab-panels>
+              </template>
 
-      <q-tab-panel name="revisions">
-        <form-revisions :form="studyFormData" @reinstate="onReinstate"/>
-      </q-tab-panel>
-    </q-tab-panels>
+            </q-splitter>
+          </q-tab-panel>
 
+          <q-tab-panel name="revisions">
+            <form-revisions :form="studyFormData" @reinstate="onReinstate"/>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-card-section>
+    </q-card>
     <q-dialog v-model='showEditDefinition' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section class="row items-center">
@@ -172,7 +176,7 @@
             :disable='disableSave'
             :label="$t('save')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -203,7 +207,7 @@
             :disable='disableImportSchema'
             :label="$t('import')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -233,7 +237,7 @@
             @click='tag'
             :label="$t('tag')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>

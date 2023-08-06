@@ -1,12 +1,13 @@
 {
   "theme": {
     "front": {
-      "bg": "bg-base text-grey-8",
+      "bg": "bg-base text-secondary",
       "card": "bg-white"
     },
-    "header": "bg-white text-grey-8",
+    "header": "bg-white text-secondary",
     "header2": "bg-blue-grey-1",
-    "drawer": "bg-grey-9 text-grey-4"
+    "drawer": "bg-grey-9 text-grey-4",
+    "page": "bg-grey-1"
   },
   "licenses": [
     {

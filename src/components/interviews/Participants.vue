@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-cloak>
     <div
       v-if="!hasParticipants"
       class="q-mt-md">
@@ -105,7 +105,7 @@
         <q-td :props="props">
           <q-btn
             v-if="!isReadOnly"
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -116,7 +116,7 @@
           </q-btn>
           <q-btn
             v-if="!isReadOnly && props.row.activated"
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -127,7 +127,7 @@
           </q-btn>
           <q-btn
             v-if="!isReadOnly && !props.row.activated"
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -137,7 +137,7 @@
             @click='activateParticipant(props.row)'>
           </q-btn>
           <q-btn
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -148,7 +148,7 @@
           </q-btn>
           <q-btn
             v-if="!isReadOnly"
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -185,7 +185,7 @@
               :step="1"
               label
             />
-            <div class="text-grey-8 text-caption">{{ $t('interview.add_participants_count_hint') }}</div>
+            <div class="text-secondary text-caption">{{ $t('interview.add_participants_count_hint') }}</div>
           </div>
         </q-card-section>
         <q-card-section>
@@ -228,7 +228,7 @@
         </q-card-section>
         <q-card-section>
           <p class="q-mb-sm q-mt-md">{{ $t('interview.participant_attributes') }}</p>
-          <p class="text-grey-8 text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
+          <p class="text-secondary text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
           <div class="row q-col-gutter-md" v-for="(attribute, key) in participantData.attributes" :key="participantData.attributes.indexOf(attribute)">
             <div class="col-4">
               <q-input class="q-mb-md" v-model="attribute.key" :label="$t('key')"/>
@@ -239,7 +239,7 @@
             <div class="col-1">
               <q-btn
                 v-if="!readOnly"
-                class="q-mt-md text-grey-8"
+                class="q-mt-md text-secondary"
                 size="12px"
                 flat
                 dense
@@ -276,7 +276,7 @@
             :disable="disableSaveParticipant"
             :label="$t('add')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -337,7 +337,7 @@
         </q-card-section>
         <q-card-section>
           <p class="q-mb-sm q-mt-md">{{ $t('interview.participant_attributes') }}</p>
-          <p class="text-grey-8 text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
+          <p class="text-secondary text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
           <div class="row q-col-gutter-md" v-for="(attribute, key) in participantData.attributes" :key="participantData.attributes.indexOf(attribute)">
             <div class="col-4">
               <q-input class="q-mb-md" v-model="attribute.key" :label="$t('key')"/>
@@ -348,7 +348,7 @@
             <div class="col-1">
               <q-btn
                 v-if="!readOnly"
-                class="q-mt-md text-grey-8"
+                class="q-mt-md text-secondary"
                 size="12px"
                 flat
                 dense
@@ -385,7 +385,7 @@
             :disable="disableSaveParticipant"
             :label="$t('save')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -422,7 +422,7 @@
             :disable="disableImportParticipants"
             :label="$t('import')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -462,7 +462,7 @@
             @click='deleteParticipant'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -489,7 +489,7 @@
             @click='deleteParticipants'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>

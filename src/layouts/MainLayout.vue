@@ -138,7 +138,7 @@
 
     </q-drawer>
 
-    <q-page-container class="bg-white">
+    <q-page-container :class="settings.theme.page">
       <router-view />
     </q-page-container>
 

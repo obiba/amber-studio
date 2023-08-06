@@ -1,7 +1,7 @@
 <template>
   <q-page>
 
-    <div class="q-pl-md q-pr-md q-pt-sm q-pb-md">
+    <div class="q-ml-md q-mr-md q-mt-sm q-mb-md">
       <div class="row">
         <div class="col-12">
           <q-breadcrumbs class="q-mt-sm q-mr-md text-h5" :class="isReadOnly ? '' : 'float-left'">
@@ -32,12 +32,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="text-caption text-grey-8 col-12">
+        <div class="text-caption text-secondary col-12">
           {{ interviewDesign.description }}
         </div>
       </div>
       <div class="row">
-        <div class="text-body2 text-grey-8 col-12">
+        <div class="text-body2 text-secondary col-12">
           <div class="note note-info">
             <span v-html="$t('study.interview_designs_hint')"/>
           </div>
@@ -45,123 +45,128 @@
       </div>
     </div>
 
-    <q-tabs
-      v-model="tab"
-      dense
-      class="text-grey"
-      active-color="primary"
-      indicator-color="primary"
-      align="justify"
-    >
-      <q-tab name="steps" :label="$t('interview.steps')" />
-      <q-tab name="campaigns" :label="$t('interview.campaigns')" />
-    </q-tabs>
+    <q-card class="q-ma-md">
+      <q-card-section class="q-pa-none">
 
-    <q-separator />
-
-    <q-tab-panels v-model="tab">
-
-      <q-tab-panel name="steps" class="q-pa-none">
-        <q-table
-          v-if="hasSteps"
-          flat
-          :rows="interviewDesignData.steps"
-          :columns="stepsColumns"
-          row-key="_id"
-          :selection="isReadOnly ? 'none' : 'multiple'"
-          v-model:selected="selected"
-          v-model:pagination='paginationOpts'
+        <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
         >
-          <template v-slot:top>
+          <q-tab name="steps" :label="$t('interview.steps')" />
+          <q-tab name="campaigns" :label="$t('interview.campaigns')" />
+        </q-tabs>
+
+        <q-separator />
+
+        <q-tab-panels v-model="tab">
+
+          <q-tab-panel name="steps" class="q-pa-none">
+
+            <q-table
+              v-if="hasSteps"
+              flat
+              :rows="interviewDesignData.steps"
+              :columns="stepsColumns"
+              row-key="_id"
+              :selection="isReadOnly ? 'none' : 'multiple'"
+              v-model:selected="selected"
+              v-model:pagination='paginationOpts'
+            >
+              <template v-slot:top>
+                <q-btn
+                  v-if="!isReadOnly"
+                  color="primary"
+                  icon="add"
+                  :title="$t('interview.add_step_hint')"
+                  @click="onAddStep()"
+                  class="q-mr-md" />
+                <q-btn
+                  v-if="!isReadOnly"
+                  class="q-mr-md"
+                  flat
+                  round
+                  color="negative"
+                  icon="delete_outline"
+                  :disable="selected.length === 0"
+                  :title="$t('interview.delete_steps_hint')"
+                  @click="onConfirmDeleteMultipleSteps()" />
+                <q-space />
+              </template>
+              <template v-slot:body-cell-form='props'>
+                <q-td :props='props'>
+                  <router-link :to="'/study/' + this.studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
+                </q-td>
+              </template>
+              <template v-slot:body-cell-revision='props'>
+                <q-td :props='props'>
+                  {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
+                </q-td>
+              </template>
+              <template v-slot:body-cell-action='props'>
+                <q-td :props='props'>
+                  <q-btn
+                    color="secondary"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    :title="$t('interview.move_up_step_hint')"
+                    icon="arrow_upward"
+                    @click='moveUpStep(props.row)'>
+                  </q-btn>
+                  <q-btn
+                    color="secondary"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    :title="$t('interview.move_down_step_hint')"
+                    icon="arrow_downward"
+                    @click='moveDownStep(props.row)'>
+                  </q-btn>
+                  <q-btn
+                    color="secondary"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    :title="$t('interview.edit_step_hint')"
+                    icon="edit"
+                    @click='onEditStep(props.row)'>
+                  </q-btn>
+                  <q-btn
+                    color="secondary"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    :title="$t('interview.delete_step_hint')"
+                    icon="delete"
+                    @click='onConfirmDeleteStep(props.row)'>
+                  </q-btn>
+                </q-td>
+              </template>
+            </q-table>
+
             <q-btn
-              v-if="!isReadOnly"
+              v-else-if="!isReadOnly"
               color="primary"
               icon="add"
-              :title="$t('interview.add_step_hint')"
+              :label="$t('interview.add_step_hint')"
               @click="onAddStep()"
-              class="q-mr-md" />
-            <q-btn
-              v-if="!isReadOnly"
-              class="q-mr-md"
-              flat
-              round
-              color="negative"
-              icon="delete_outline"
-              :disable="selected.length === 0"
-              :title="$t('interview.delete_steps_hint')"
-              @click="onConfirmDeleteMultipleSteps()" />
-            <q-space />
-          </template>
-          <template v-slot:body-cell-form='props'>
-            <q-td :props='props'>
-              <router-link :to="'/study/' + this.studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-revision='props'>
-            <q-td :props='props'>
-              {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-action='props'>
-            <q-td :props='props'>
-              <q-btn
-                class="text-grey-8"
-                size="12px"
-                flat
-                dense
-                round
-                :title="$t('interview.move_up_step_hint')"
-                icon="arrow_upward"
-                @click='moveUpStep(props.row)'>
-              </q-btn>
-              <q-btn
-                class="text-grey-8"
-                size="12px"
-                flat
-                dense
-                round
-                :title="$t('interview.move_down_step_hint')"
-                icon="arrow_downward"
-                @click='moveDownStep(props.row)'>
-              </q-btn>
-              <q-btn
-                class="text-grey-8"
-                size="12px"
-                flat
-                dense
-                round
-                :title="$t('interview.edit_step_hint')"
-                icon="edit"
-                @click='onEditStep(props.row)'>
-              </q-btn>
-              <q-btn
-                class="text-grey-8"
-                size="12px"
-                flat
-                dense
-                round
-                :title="$t('interview.delete_step_hint')"
-                icon="delete"
-                @click='onConfirmDeleteStep(props.row)'>
-              </q-btn>
-            </q-td>
-          </template>
-        </q-table>
+              class="q-ma-md" />
+          </q-tab-panel>
+          <q-tab-panel name="campaigns">
+            <campaigns/>
+          </q-tab-panel>
+        </q-tab-panels>
 
-        <q-btn
-          v-else-if="!isReadOnly"
-          color="primary"
-          icon="add"
-          :label="$t('interview.add_step_hint')"
-          @click="onAddStep()"
-          class="q-ma-md" />
-
-      </q-tab-panel>
-
-      <q-tab-panel name="campaigns">
-        <campaigns/>
-      </q-tab-panel>
-    </q-tab-panels>
+      </q-card-section>
+    </q-card>
 
     <q-dialog v-model='showEditDefinition' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
@@ -196,7 +201,7 @@
             :disable='disableSave'
             :label="$t('save')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -267,7 +272,7 @@
             :disable="disableSaveStep"
             :label="$t('add')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -338,7 +343,7 @@
             :disable="disableSaveStep"
             :label="$t('save')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -365,7 +370,7 @@
             @click='deleteStep'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -392,7 +397,7 @@
             @click='deleteSteps'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>

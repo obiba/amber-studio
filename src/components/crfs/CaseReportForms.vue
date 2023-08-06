@@ -1,123 +1,128 @@
 <template>
-  <div>
-    <q-table
-      v-if="hasStudyCaseReportForms"
-      flat
-      :rows="studyCaseReportForms"
-      :columns="columns"
-      :filter="filter"
-      row-key="_id"
-      :selection="isReadOnly ? 'none' : 'multiple'"
-      v-model:selected="selected"
-      v-model:pagination='paginationOpts'
-      @request='getTableStudyCaseReportForms'
-    >
-      <template v-slot:top>
-        <q-btn
-          v-if="!isReadOnly"
-          color="primary"
-          icon="add"
-          :title="$t('study.add_case_report_form_hint')"
-          @click="onAdd()"
-          class="q-mr-md" />
-        <q-btn
-          v-if="!isReadOnly"
-          class="q-mr-md"
+  <div v-cloak>
+
+    <q-card class="q-ma-md"
+      v-if="hasStudyCaseReportForms">
+      <q-card-section>
+        <q-table
           flat
-          round
-          color="negative"
-          icon="delete_outline"
-          :disable="selected.length === 0"
-          :title="$t('study.delete_case_report_forms_hint')"
-          @click="onConfirmDeleteMultiple()" />
-        <q-space />
-        <q-input
-          dense
-          debounce="300"
-          v-model="filter"
-          :placeholder="$t('search')"
-          :title="$t('study.search_case_report_form_hint')">
-          <template v-slot:append>
-            <q-icon name="search"/>
+          :rows="studyCaseReportForms"
+          :columns="columns"
+          :filter="filter"
+          row-key="_id"
+          :selection="isReadOnly ? 'none' : 'multiple'"
+          v-model:selected="selected"
+          v-model:pagination='paginationOpts'
+          @request='getTableStudyCaseReportForms'
+        >
+          <template v-slot:top>
+            <q-btn
+              v-if="!isReadOnly"
+              color="primary"
+              icon="add"
+              :title="$t('study.add_case_report_form_hint')"
+              @click="onAdd()"
+              class="q-mr-md" />
+            <q-btn
+              v-if="!isReadOnly"
+              class="q-mr-md"
+              flat
+              round
+              color="negative"
+              icon="delete_outline"
+              :disable="selected.length === 0"
+              :title="$t('study.delete_case_report_forms_hint')"
+              @click="onConfirmDeleteMultiple()" />
+            <q-space />
+            <q-input
+              dense
+              debounce="300"
+              v-model="filter"
+              :placeholder="$t('search')"
+              :title="$t('study.search_case_report_form_hint')">
+              <template v-slot:append>
+                <q-icon name="search"/>
+              </template>
+            </q-input>
           </template>
-        </q-input>
-      </template>
-      <template v-slot:body-cell-form='props'>
-        <q-td :props='props'>
-          <router-link :to="'/study/' + this.studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-revision='props'>
-        <q-td :props='props'>
-          {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-permissions='props'>
-        <q-td :props='props'>
-          <div v-if="props.row.permissions">
-            <q-chip v-for="id in props.row.permissions.users" icon="person" size="sm" :label="getSubject(id, 'user').name" :key="id"/>
-            <q-chip v-for="id in props.row.permissions.groups" icon="people" size="sm" :label="getSubject(id, 'group').name" :key="id"/>
-          </div>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-repeatPolicy='props'>
-        <q-td :props='props'>
-          {{ props.row.repeatPolicy ? $t('study.case_report_form_repeat_policy.' + props.row.repeatPolicy) : '?' }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-state='props'>
-        <q-td :props='props'>
-          {{ $t('study.case_report_form_state.' + props.row.state) }}
-          <q-icon v-if="props.row.permissions" name="lock"/>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-action='props'>
-        <q-td :props='props'>
-          <q-btn
-            class="text-grey-8"
-            size="12px"
-            flat
-            dense
-            round
-            :title="$t('study.edit_case_report_form_hint')"
-            icon="edit"
-            @click='onEdit(props.row)'>
-          </q-btn>
-          <q-btn
-            v-if="props.row.state === 'paused'"
-            class="text-grey-8"
-            size="12px"
-            flat
-            dense
-            round
-            :title="$t('study.start_case_report_form_hint')"
-            icon="play_arrow"
-            @click='start(props.row)'>
-          </q-btn>
-          <q-btn
-            v-if="props.row.state === 'active'"
-            class="text-grey-8"
-            size="12px"
-            flat
-            dense
-            round
-            :title="$t('study.pause_case_report_form_hint')"
-            icon="pause"
-            @click='pause(props.row)'>
-          </q-btn>
-          <q-btn
-            class="text-grey-8"
-            size="12px"
-            flat
-            dense
-            round
-            :title="$t('study.delete_case_report_form_hint')"
-            icon="delete"
-            @click='onConfirmDelete(props.row)'>
-          </q-btn>
-        </q-td>
-      </template>
-    </q-table>
+          <template v-slot:body-cell-form='props'>
+            <q-td :props='props'>
+              <router-link :to="'/study/' + this.studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-revision='props'>
+            <q-td :props='props'>
+              {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-permissions='props'>
+            <q-td :props='props'>
+              <div v-if="props.row.permissions">
+                <q-chip v-for="id in props.row.permissions.users" icon="person" size="sm" :label="getSubject(id, 'user').name" :key="id"/>
+                <q-chip v-for="id in props.row.permissions.groups" icon="people" size="sm" :label="getSubject(id, 'group').name" :key="id"/>
+              </div>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-repeatPolicy='props'>
+            <q-td :props='props'>
+              {{ props.row.repeatPolicy ? $t('study.case_report_form_repeat_policy.' + props.row.repeatPolicy) : '?' }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-state='props'>
+            <q-td :props='props'>
+              {{ $t('study.case_report_form_state.' + props.row.state) }}
+              <q-icon v-if="props.row.permissions" name="lock"/>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-action='props'>
+            <q-td :props='props'>
+              <q-btn
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.edit_case_report_form_hint')"
+                icon="edit"
+                @click='onEdit(props.row)'>
+              </q-btn>
+              <q-btn
+                v-if="props.row.state === 'paused'"
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.start_case_report_form_hint')"
+                icon="play_arrow"
+                @click='start(props.row)'>
+              </q-btn>
+              <q-btn
+                v-if="props.row.state === 'active'"
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.pause_case_report_form_hint')"
+                icon="pause"
+                @click='pause(props.row)'>
+              </q-btn>
+              <q-btn
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.delete_case_report_form_hint')"
+                icon="delete"
+                @click='onConfirmDelete(props.row)'>
+              </q-btn>
+            </q-td>
+          </template>
+        </q-table>
+      </q-card-section>
+    </q-card>
 
     <q-btn
       v-else-if="!isReadOnly"
@@ -207,7 +212,7 @@
             :disable='disableCreateStudyCaseReportForm'
             :label="$t('add')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -291,7 +296,7 @@
             :disable='disableEditStudyCaseReportForm'
             :label="$t('update')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -318,7 +323,7 @@
             @click='createFormRevision'
             :label="$t('add')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -345,7 +350,7 @@
             @click='deleteStudyCaseReportForm'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -372,7 +377,7 @@
             @click='deleteStudyCaseReportForms'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>

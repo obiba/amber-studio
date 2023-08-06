@@ -142,7 +142,7 @@
 
     </q-drawer>
 
-    <q-page-container class="bg-white">
+    <q-page-container :class="settings.theme.page">
       <div class="q-pa-md" :class="settings.theme.header2">
         <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
           <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
@@ -157,7 +157,7 @@
           dense
           round>
         </q-btn>
-        <div class="text-caption text-grey-8">
+        <div class="text-caption text-secondary">
           {{ study.description }}
         </div>
       </div>
@@ -202,7 +202,7 @@
             :disable='disableSave'
             :label="$t('save')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>

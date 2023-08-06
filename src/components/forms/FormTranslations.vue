@@ -157,7 +157,7 @@
             :disable='disableAddTranslation'
             :label="$t('add')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -181,7 +181,7 @@
             @click='mergeObservedKeys'
             :label="$t('merge')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -205,7 +205,7 @@
             @click='cleanKeys'
             :label="$t('clean')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -229,7 +229,7 @@
             @click='deleteSelected'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -248,7 +248,7 @@
           </div>
           <div class="q-mt-md">
             <span class="text-weight-bold text-uppercase">{{localeToDelete}}</span>
-            <span class="text-grey-8 q-ml-sm">({{$t('locales.' + localeToDelete)}})</span>
+            <span class="text-secondary q-ml-sm">({{$t('locales.' + localeToDelete)}})</span>
           </div>
         </q-card-section>
         <q-card-actions align='right'>
@@ -257,7 +257,7 @@
             @click='deleteLocale'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>

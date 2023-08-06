@@ -1,77 +1,82 @@
 <template>
-  <div>
-    <q-table
-      v-if="hasStudyForms"
-      flat
-      :rows="studyForms"
-      :columns="columns"
-      :filter="filter"
-      row-key="_id"
-      :selection="isReadOnly ? 'none' : 'multiple'"
-      v-model:selected="selected"
-      v-model:pagination='paginationOpts'
-      @request='getTableStudyForms'
-    >
-      <template v-slot:top>
-        <q-btn
-          v-if="!isReadOnly"
-          color="primary"
-          icon="add"
-          :title="$t('study.add_study_form_hint')"
-          @click="onAdd()"
-          class="q-mr-md" />
-        <q-btn
-          v-if="!isReadOnly"
-          class="q-mr-md"
+  <div v-cloak>
+
+    <q-card class="q-ma-md"
+          v-if="hasStudyForms">
+      <q-card-section>
+        <q-table
           flat
-          round
-          color="negative"
-          icon="delete_outline"
-          :disable="selected.length === 0"
-          :title="$t('study.delete_study_forms_hint')"
-          @click="onConfirmDeleteMultiple()" />
-        <q-space />
-        <q-input
-          dense
-          debounce="300"
-          v-model="filter"
-          :placeholder="$t('search')"
-          :title="$t('study.search_study_form_hint')">
-          <template v-slot:append>
-            <q-icon name="search"/>
+          :rows="studyForms"
+          :columns="columns"
+          :filter="filter"
+          row-key="_id"
+          :selection="isReadOnly ? 'none' : 'multiple'"
+          v-model:selected="selected"
+          v-model:pagination='paginationOpts'
+          @request='getTableStudyForms'
+        >
+          <template v-slot:top>
+            <q-btn
+              v-if="!isReadOnly"
+              color="primary"
+              icon="add"
+              :title="$t('study.add_study_form_hint')"
+              @click="onAdd()"
+              class="q-mr-md" />
+            <q-btn
+              v-if="!isReadOnly"
+              class="q-mr-md"
+              flat
+              round
+              color="negative"
+              icon="delete_outline"
+              :disable="selected.length === 0"
+              :title="$t('study.delete_study_forms_hint')"
+              @click="onConfirmDeleteMultiple()" />
+            <q-space />
+            <q-input
+              dense
+              debounce="300"
+              v-model="filter"
+              :placeholder="$t('search')"
+              :title="$t('study.search_study_form_hint')">
+              <template v-slot:append>
+                <q-icon name="search"/>
+              </template>
+            </q-input>
           </template>
-        </q-input>
-      </template>
-      <template v-slot:body-cell-name='props'>
-        <q-td :props='props'>
-          <router-link :to="'/study/' + studyId + '/form/' + props.row._id">{{ props.row.name }}</router-link>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-action='props'>
-        <q-td :props='props'>
-          <q-btn
-            class="text-grey-8"
-            size="12px"
-            flat
-            dense
-            round
-            :title="$t('study.edit_study_form_hint')"
-            icon="edit"
-            :to="'/study/' + studyId + '/form/' + props.row._id">
-          </q-btn>
-          <q-btn
-            class="text-grey-8"
-            size="12px"
-            flat
-            dense
-            round
-            :title="$t('study.delete_study_form_hint')"
-            icon="delete"
-            @click='onConfirmDelete(props.row)'>
-          </q-btn>
-        </q-td>
-      </template>
-    </q-table>
+          <template v-slot:body-cell-name='props'>
+            <q-td :props='props'>
+              <router-link :to="'/study/' + studyId + '/form/' + props.row._id">{{ props.row.name }}</router-link>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-action='props'>
+            <q-td :props='props'>
+              <q-btn
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.edit_study_form_hint')"
+                icon="edit"
+                :to="'/study/' + studyId + '/form/' + props.row._id">
+              </q-btn>
+              <q-btn
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.delete_study_form_hint')"
+                icon="delete"
+                @click='onConfirmDelete(props.row)'>
+              </q-btn>
+            </q-td>
+          </template>
+        </q-table>
+      </q-card-section>
+    </q-card>
 
     <q-btn
       v-else
@@ -127,7 +132,7 @@
             :disable='disableCreateStudyForm'
             :label="$t('add')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -154,7 +159,7 @@
             @click='deleteStudyForm'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
@@ -181,7 +186,7 @@
             @click='deleteStudyForms'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>

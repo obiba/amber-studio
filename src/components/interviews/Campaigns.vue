@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-cloak>
     <q-btn
       v-if="!isReadOnly"
       color="primary"
@@ -30,7 +30,7 @@
       <q-tab-panel v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" class="q-pa-none">
         <div v-if="!isReadOnly" class="q-mt-md q-mb-md">
           <q-btn
-            class="text-grey-8"
+            color="secondary"
             size="12px"
             flat
             dense
@@ -123,7 +123,7 @@
             :disable="disableSaveCampaign"
             :label="$t('add')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -176,7 +176,7 @@
             :disable="disableSaveCampaign"
             :label="$t('save')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
            <template v-slot:loading>
@@ -203,7 +203,7 @@
             @click='removeCampaign'
             :label="$t('delete')"
             type='submit'
-            color='positive'
+            color='primary'
             v-close-popup
           >
             <template v-slot:loading>
