@@ -56,7 +56,7 @@
           indicator-color="primary"
           align="justify"
         >
-          <q-tab name="steps" :label="$t('interview.steps')" />
+          <q-tab name="design" :label="$t('interview.design')" />
           <q-tab name="campaigns" :label="$t('interview.campaigns')" />
         </q-tabs>
 
@@ -64,101 +64,38 @@
 
         <q-tab-panels v-model="tab">
 
-          <q-tab-panel name="steps" class="q-pa-none">
+          <q-tab-panel name="design" class="q-pa-none">
 
-            <q-table
-              v-if="hasSteps"
-              flat
-              :rows="interviewDesignData.steps"
-              :columns="stepsColumns"
-              row-key="_id"
-              :selection="isReadOnly ? 'none' : 'multiple'"
-              v-model:selected="selected"
-              v-model:pagination='paginationOpts'
+            <q-splitter
+              v-model="splitterModel"
             >
-              <template v-slot:top>
-                <q-btn
-                  v-if="!isReadOnly"
-                  color="primary"
-                  icon="add"
-                  :title="$t('interview.add_step_hint')"
-                  @click="onAddStep()"
-                  class="q-mr-md" />
-                <q-btn
-                  v-if="!isReadOnly"
-                  class="q-mr-md"
-                  flat
-                  round
-                  color="negative"
-                  icon="delete_outline"
-                  :disable="selected.length === 0"
-                  :title="$t('interview.delete_steps_hint')"
-                  @click="onConfirmDeleteMultipleSteps()" />
-                <q-space />
-              </template>
-              <template v-slot:body-cell-form='props'>
-                <q-td :props='props'>
-                  <router-link :to="'/study/' + this.studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
-                </q-td>
-              </template>
-              <template v-slot:body-cell-revision='props'>
-                <q-td :props='props'>
-                  {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
-                </q-td>
-              </template>
-              <template v-slot:body-cell-action='props'>
-                <q-td :props='props'>
-                  <q-btn
-                    color="secondary"
-                    size="12px"
-                    flat
-                    dense
-                    round
-                    :title="$t('interview.move_up_step_hint')"
-                    icon="arrow_upward"
-                    @click='moveUpStep(props.row)'>
-                  </q-btn>
-                  <q-btn
-                    color="secondary"
-                    size="12px"
-                    flat
-                    dense
-                    round
-                    :title="$t('interview.move_down_step_hint')"
-                    icon="arrow_downward"
-                    @click='moveDownStep(props.row)'>
-                  </q-btn>
-                  <q-btn
-                    color="secondary"
-                    size="12px"
-                    flat
-                    dense
-                    round
-                    :title="$t('interview.edit_step_hint')"
-                    icon="edit"
-                    @click='onEditStep(props.row)'>
-                  </q-btn>
-                  <q-btn
-                    color="secondary"
-                    size="12px"
-                    flat
-                    dense
-                    round
-                    :title="$t('interview.delete_step_hint')"
-                    icon="delete"
-                    @click='onConfirmDeleteStep(props.row)'>
-                  </q-btn>
-                </q-td>
-              </template>
-            </q-table>
 
-            <q-btn
-              v-else-if="!isReadOnly"
-              color="primary"
-              icon="add"
-              :label="$t('interview.add_step_hint')"
-              @click="onAddStep()"
-              class="q-ma-md" />
+              <template v-slot:before>
+                <q-tabs
+                  v-model="innerTab"
+                  vertical
+                  class="text-teal"
+                >
+                  <q-tab name="steps" icon="category" :label="$t('interview.steps')" />
+                  <q-tab name="translations" icon="translate" :label="$t('form.translations')" />
+                </q-tabs>
+              </template>
+
+              <template v-slot:after>
+                <q-tab-panels
+                  v-model="innerTab"
+                >
+                  <q-tab-panel name="steps" class="q-pa-none">
+                    <steps v-model="interviewDesignData"/>
+                  </q-tab-panel>
+
+                  <q-tab-panel name="translations">
+                  </q-tab-panel>
+                </q-tab-panels>
+              </template>
+
+            </q-splitter>
+
           </q-tab-panel>
           <q-tab-panel name="campaigns">
             <campaigns/>
@@ -212,202 +149,6 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showAddStep' persistent>
-      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
-        <q-card-section>
-          <q-input
-            v-model='stepData.name'
-            :label="$t('name')"
-            lazy-rules
-            @blur="v$.stepData.name.$touch"
-            :error="v$.stepData.name.$error"
-            :hint="$t('interview.step_name_hint')"
-          >
-            <template v-slot:error>
-              <div v-for="error in v$.stepData.name.$errors">
-                {{error.$message}}
-              </div>
-            </template>
-          </q-input>
-          <q-input
-            v-model='stepData.label'
-            :label="$t('title')"
-            lazy-rules
-            @blur="v$.stepData.label.$touch"
-            :error="v$.stepData.label.$error"
-            :hint="$t('required')"
-          >
-            <template v-slot:error>
-              <div v-for="error in v$.stepData.label.$errors">
-                {{error.$message}}
-              </div>
-            </template>
-          </q-input>
-          <q-input
-            v-model='stepData.description'
-            :label="$t('description')"
-            autogrow
-            lazy-rules
-          />
-        </q-card-section>
-        <q-card-section>
-          <q-select
-            v-model="stepData.form"
-            :options="formOptions"
-            emit-value
-            map-options
-            :label="$t('study.form')" />
-          <q-select
-            v-model="stepData.revision"
-            :options="revisionOptions"
-            emit-value
-            map-options
-            :label="$t('study.form_revision')"
-            :disable="!stepData.form" />
-        </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
-          <q-btn
-            @click='addStep'
-            :disable="disableSaveStep"
-            :label="$t('add')"
-            type='submit'
-            color='primary'
-            v-close-popup
-          >
-           <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model='showEditStep' persistent>
-      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
-        <q-card-section>
-          <q-input
-            v-model='stepData.name'
-            :label="$t('name')"
-            lazy-rules
-            @blur="v$.stepData.name.$touch"
-            :error="v$.stepData.name.$error"
-            :hint="$t('interview.step_name_hint')"
-          >
-            <template v-slot:error>
-              <div v-for="error in v$.stepData.name.$errors">
-                {{error.$message}}
-              </div>
-            </template>
-          </q-input>
-          <q-input
-            v-model='stepData.label'
-            :label="$t('title')"
-            lazy-rules
-            @blur="v$.stepData.label.$touch"
-            :error="v$.stepData.label.$error"
-            :hint="$t('required')"
-          >
-            <template v-slot:error>
-              <div v-for="error in v$.stepData.label.$errors">
-                {{error.$message}}
-              </div>
-            </template>
-          </q-input>
-          <q-input
-            v-model='stepData.description'
-            :label="$t('description')"
-            autogrow
-            lazy-rules
-          />
-        </q-card-section>
-        <q-card-section>
-          <q-select
-            v-model="stepData.form"
-            :options="formOptions"
-            emit-value
-            map-options
-            :label="$t('study.form')" />
-          <q-select
-            v-model="stepData.revision"
-            :options="revisionOptions"
-            emit-value
-            map-options
-            :label="$t('study.form_revision')"
-            :disable="!stepData.form" />
-        </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
-          <q-btn
-            @click='editStep'
-            :disable="disableSaveStep"
-            :label="$t('save')"
-            type='submit'
-            color='primary'
-            v-close-popup
-          >
-           <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model='showConfirmDeleteStep' persistent>
-      <q-card>
-        <q-card-section>
-          <div>
-            {{$t('interview.delete_step_confirm')}}
-          </div>
-          <div class="text-weight-bold text-center q-mt-md">
-            {{ selectedStep.name }}
-          </div>
-        </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
-          <q-btn
-            @click='deleteStep'
-            :label="$t('delete')"
-            type='submit'
-            color='primary'
-            v-close-popup
-          >
-            <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model='showConfirmDeleteSteps' persistent>
-      <q-card>
-        <q-card-section>
-          <div>
-            {{$t('study.delete_steps_confirm')}}
-          </div>
-          <div class="text-weight-bold text-center q-mt-md">
-            {{selected.map(g => g.name).join(', ')}}
-          </div>
-        </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
-          <q-btn
-            @click='deleteSteps'
-            :label="$t('delete')"
-            type='submit'
-            color='primary'
-            v-close-popup
-          >
-            <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
   </q-page>
 </template>
 
@@ -416,19 +157,16 @@ import { mapState, mapActions } from 'vuex'
 import { defineComponent, defineAsyncComponent, ref, toRaw } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
-import { formRevisionService } from '../services/form'
 import { t } from '../boot/i18n'
 import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({
   components: {
+    Steps: defineAsyncComponent(() => import('src/components/interviews/Steps.vue')),
     Campaigns: defineAsyncComponent(() => import('src/components/interviews/Campaigns.vue'))
   },
   mixins: [AuthMixin],
   mounted () {
-    if (this.studyId) {
-      this.getStudyForms({ study: this.studyId })
-    }
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
       if (!this.isReadOnly) {
@@ -451,7 +189,9 @@ export default defineComponent({
   setup () {
     return {
       v$: useVuelidate(),
-      tab: ref('steps'),
+      tab: ref('design'),
+      innerTab: ref('steps'),
+      splitterModel: ref(15),
       selected: ref([]),
       reload: ref(0),
       paginationOpts: {
@@ -466,14 +206,6 @@ export default defineComponent({
       saveIntervalId: null,
       changeDetected: 0,
       showEditDefinition: false,
-      showAddStep: false,
-      showEditStep: false,
-      showConfirmDeleteStep: false,
-      showConfirmDeleteSteps: false,
-      stepData: {
-        name: '',
-        description: ''
-      },
       revisionOptions: [],
       interviewDesignData: {},
       originalStepsStr: null
@@ -486,91 +218,15 @@ export default defineComponent({
         minLength: minLength(2),
         maxLength: maxLength(30)
       }
-    },
-    stepData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      label: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
     }
   },
   computed: {
     ...mapState({
       study: state => state.study.study,
-      forms: state => state.form.forms,
       interviewDesign: state => state.interview.interviewDesign
     }),
-    stepsColumns () {
-      const cols = [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left',
-          field: 'name',
-          sortable: true
-        },
-        {
-          name: 'label',
-          align: 'left',
-          label: this.$t('title'),
-          field: 'label',
-          sortable: true
-        },
-        {
-          name: 'description',
-          align: 'left',
-          label: this.$t('description'),
-          field: 'description',
-          sortable: true
-        },
-        {
-          name: 'form',
-          required: true,
-          label: this.$t('study.form'),
-          align: 'left',
-          field: 'form',
-          sortable: true
-        },
-        {
-          name: 'revision',
-          align: 'left',
-          label: this.$t('revision'),
-          field: 'revision',
-          sortable: true
-        }
-      ]
-      if (!this.isReadOnly) {
-        cols.push({
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        })
-      }
-      return cols
-    },
     studyId () {
       return this.$route.params.id
-    },
-    formOptions () {
-      return this.forms.map(form => {
-        return {
-          value: form._id,
-          label: form.name
-        }
-      })
-    },
-    hasSteps () {
-      return this.interviewDesignData.steps && this.interviewDesignData.steps.length > 0
-    },
-    disableSaveStep () {
-      return this.v$.stepData.$invalid || !this.stepData.form || this.revisionOptions.length === 0
     },
     disableSave () {
       return this.v$.interviewDesignData.$invalid
@@ -585,19 +241,9 @@ export default defineComponent({
       return 'cloud_upload'
     }
   },
-  watch: {
-    'stepData.form': function () {
-      if (this.stepData.form) {
-        this.updateRevisionOptions(this.stepData.form)
-      } else {
-        this.revisionOptions = []
-      }
-    }
-  },
   methods: {
     ...mapActions({
       getStudy: 'study/getStudy',
-      getStudyForms: 'form/getForms',
       getStudyInterviewDesign: 'interview/getInterviewDesign',
       updateStudyInterviewDesign: 'interview/updateInterviewDesign'
     }),
@@ -616,90 +262,6 @@ export default defineComponent({
         this.originalStepsStr = JSON.stringify(this.interviewDesignData.steps)
         this.changeDetected = 0
       })
-    },
-    updateRevisionOptions (form) {
-      formRevisionService.getFormRevisionsDigest(this.studyId, form)
-        .then((response) => {
-          this.revisionOptions = response.data ? response.data.map(rev => {
-            return { value: rev.revision, label: rev.revision }
-          }) : []
-          if (this.revisionOptions.length > 0) {
-            this.revisionOptions.splice(0, 0, { value: null, label: t('study.latest_revision') })
-          } else {
-            this.showConfirmCreateFormRevision = true
-          }
-        })
-    },
-    getFormName (formId) {
-      return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
-    },
-    moveUpStep (step) {
-      const idx = this.interviewDesignData.steps.indexOf(step)
-      if (idx > 0) {
-        this.interviewDesignData.steps.splice(idx, 1)
-        this.interviewDesignData.steps.splice(idx - 1, 0, step)
-      }
-    },
-    moveDownStep (step) {
-      const idx = this.interviewDesignData.steps.indexOf(step)
-      if (idx < this.interviewDesignData.steps.length) {
-        this.interviewDesignData.steps.splice(idx, 1)
-        this.interviewDesignData.steps.splice(idx + 1, 0, step)
-      }
-    },
-    addStep () {
-      const toSave = JSON.parse(JSON.stringify(this.interviewDesignData))
-      if (!toSave.steps) {
-        toSave.steps = []
-      }
-      if (!toSave.steps.find(step => step.name === this.stepData.name)) {
-        toSave.steps.push({ ...this.stepData })
-        this.save(false, toSave)
-      }
-    },
-    editStep () {
-      const toSave = JSON.parse(JSON.stringify(this.interviewDesignData))
-      const idx = toSave.steps.map(step => step._id).indexOf(this.selectedStep._id)
-      if (idx > -1) {
-        toSave.steps.splice(idx, 1, this.stepData)
-        this.save(false, toSave)
-      }
-    },
-    deleteStep () {
-      if (this.selectedStep) {
-        const toSave = toRaw(this.interviewDesignData)
-        toSave.steps = toSave.steps.filter(step => step._id !== this.selectedStep._id)
-        this.save(false)
-      }
-    },
-    deleteSteps () {
-      if (this.selected) {
-        const toSave = toRaw(this.interviewDesignData)
-        const selectedNames = this.selected.map(step => step._id)
-        toSave.steps = toSave.steps.filter(step => !selectedNames.includes(step._id))
-        this.save(false)
-      }
-    },
-    onAddStep () {
-      this.stepData = {
-        name: '',
-        description: ''
-      }
-      this.showAddStep = true
-    },
-    onEditStep (step) {
-      this.stepData = { ...step }
-      this.selectedStep = step
-      this.showEditStep = true
-    },
-    onConfirmDeleteStep (step) {
-      this.selectedStep = step
-      this.showConfirmDeleteStep = true
-    },
-    onConfirmDeleteMultipleSteps () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteSteps = true
-      }
     },
     onEdit () {
       this.showEditDefinition = true

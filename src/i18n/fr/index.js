@@ -497,6 +497,7 @@ export default {
     tag_comment_hint: 'Commentaire optionel à propos des changements dans le formulaire.'
   },
   interview: {
+    design: 'Conception',
     steps: 'Étapes',
     campaigns: 'Campagnes',
     add_step_hint: 'Ajouter une étape',
@@ -504,6 +505,7 @@ export default {
     edit_step_hint: 'Éditer l\'étape',
     move_up_step_hint: 'Monter l\'étape',
     move_down_step_hint: 'Descendre l\'étape',
+    delete_step_confirm: 'Veuillez confirmer la suppression de l\'étape:',
     delete_step_hint: 'Supprimer l\'étape',
     delete_steps_hint: 'Supprimer les étapes sélectionnées',
     add_campaign_hint: 'Ajouter une campagne',

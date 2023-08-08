@@ -493,6 +493,7 @@ export default {
     tag_comment_hint: 'Optional comment about the changes in the form\'s schema.'
   },
   interview: {
+    design: 'Design',
     steps: 'Steps',
     campaigns: 'Campaigns',
     add_step_hint: 'Add a step',
@@ -500,6 +501,7 @@ export default {
     edit_step_hint: 'Edit step',
     move_up_step_hint: 'Move step up',
     move_down_step_hint: 'Move step down',
+    delete_step_confirm: 'Please confirm that you want to remove the step:',
     delete_step_hint: 'Delete step',
     delete_steps_hint: 'Delete selected steps',
     add_campaign_hint: 'Add a campaign',

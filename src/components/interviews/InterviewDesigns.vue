@@ -291,7 +291,7 @@
             {{$t('study.delete_interview_design_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
-            {{ getInterviewDesignFullName(selectedStudyInterviewDesign) }}
+            {{ selectedStudyInterviewDesign.name }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
@@ -318,7 +318,7 @@
             {{$t('study.delete_interview_designs_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
-            {{selected.map(g => getInterviewDesignFullName(g)).join(', ')}}
+            {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
