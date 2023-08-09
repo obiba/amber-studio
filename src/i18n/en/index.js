@@ -504,6 +504,7 @@ export default {
     delete_step_confirm: 'Please confirm that you want to remove the step:',
     delete_step_hint: 'Delete step',
     delete_steps_hint: 'Delete selected steps',
+    no_step_selected: 'No step is selected',
     add_campaign_hint: 'Add a campaign',
     delete_campaign_confirm: 'Please confirm that you want to remove the campaign:',
     delete_campaign_hint: 'Delete campaign',

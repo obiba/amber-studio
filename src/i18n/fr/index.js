@@ -508,6 +508,7 @@ export default {
     delete_step_confirm: 'Veuillez confirmer la suppression de l\'étape:',
     delete_step_hint: 'Supprimer l\'étape',
     delete_steps_hint: 'Supprimer les étapes sélectionnées',
+    no_step_selected: 'Aucune étape n\'est sélectionnée',
     add_campaign_hint: 'Ajouter une campagne',
     delete_campaign_confirm: 'Veuillez confirmer la suppression de la campagne:',
     delete_campaign_hint: 'Supprimer une campagne',

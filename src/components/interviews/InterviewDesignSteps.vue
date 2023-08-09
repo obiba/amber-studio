@@ -344,7 +344,11 @@ export default defineComponent({
       return this.selected?._id === step._id
     },
     onStepSelection (step) {
-      this.selected = step
+      if (this.selected?._id === step._id) {
+        this.selected = null
+      } else {
+        this.selected = step
+      }
     },
     onConfirmDeleteStep () {
       this.showConfirmDeleteStep = true

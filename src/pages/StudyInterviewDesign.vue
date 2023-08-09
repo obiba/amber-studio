@@ -86,10 +86,11 @@
                   v-model="innerTab"
                 >
                   <q-tab-panel name="steps" class="q-pa-none">
-                    <steps v-model="interviewDesignData"/>
+                    <interview-design-steps v-model="interviewDesignData"/>
                   </q-tab-panel>
 
                   <q-tab-panel name="translations">
+                    <interview-design-translations v-model="interviewDesignData"/>
                   </q-tab-panel>
                 </q-tab-panels>
               </template>
@@ -157,12 +158,12 @@ import { mapState, mapActions } from 'vuex'
 import { defineComponent, defineAsyncComponent, ref, toRaw } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
-import { t } from '../boot/i18n'
 import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({
   components: {
-    Steps: defineAsyncComponent(() => import('src/components/interviews/Steps.vue')),
+    InterviewDesignSteps: defineAsyncComponent(() => import('src/components/interviews/InterviewDesignSteps.vue')),
+    InterviewDesignTranslations: defineAsyncComponent(() => import('src/components/interviews/InterviewDesignTranslations.vue')),
     Campaigns: defineAsyncComponent(() => import('src/components/interviews/Campaigns.vue'))
   },
   mixins: [AuthMixin],
@@ -170,7 +171,7 @@ export default defineComponent({
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
       if (!this.isReadOnly) {
-        if (this.changeDetected >= 0 && this.originalStepsStr !== JSON.stringify(this.interviewDesignData.steps)) {
+        if (this.changeDetected >= 0 && this.originalStr !== JSON.stringify(this.asReference())) {
           this.changeDetected++
           // auto save every 4s
           if (this.changeDetected > 2) {
@@ -208,7 +209,7 @@ export default defineComponent({
       showEditDefinition: false,
       revisionOptions: [],
       interviewDesignData: {},
-      originalStepsStr: null
+      originalStr: null
     }
   },
   validations: {
@@ -247,10 +248,13 @@ export default defineComponent({
       getStudyInterviewDesign: 'interview/getInterviewDesign',
       updateStudyInterviewDesign: 'interview/updateInterviewDesign'
     }),
+    asReference () {
+      return { steps: this.interviewDesignData.steps, i18n: this.interviewDesignData.i18n }
+    },
     async initStudyInterviewDesignData () {
       await this.getStudyInterviewDesign({ id: this.$route.params.itwid })
       this.interviewDesignData = JSON.parse(JSON.stringify(this.interviewDesign))
-      this.originalStepsStr = JSON.stringify(this.interviewDesignData.steps)
+      this.originalStr = JSON.stringify(this.asReference())
       await this.getStudy({ id: this.interviewDesign.study })
     },
     async save (notification, interviewDesign) {
@@ -259,7 +263,7 @@ export default defineComponent({
       const toSave = interviewDesign || toRaw(this.interviewDesignData)
       return this.updateStudyInterviewDesign({ interviewDesign: toSave, notification: notification }).then(() => {
         this.interviewDesignData = JSON.parse(JSON.stringify(this.interviewDesign))
-        this.originalStepsStr = JSON.stringify(this.interviewDesignData.steps)
+        this.originalStr = JSON.stringify(this.asReference())
         this.changeDetected = 0
       })
     },
