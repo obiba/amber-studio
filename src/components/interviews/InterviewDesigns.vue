@@ -150,6 +150,20 @@
             </template>
           </q-input>
           <q-input
+            v-model='newStudyInterviewDesignData.label'
+            :label="$t('title')"
+            lazy-rules
+            @blur="v$.newStudyInterviewDesignData.label.$touch"
+            :error="v$.newStudyInterviewDesignData.label.$error"
+            :hint="$t('required')"
+          >
+            <template v-slot:error>
+              <div v-for="error in v$.newStudyInterviewDesignData.label.$errors">
+                {{error.$message}}
+              </div>
+            </template>
+          </q-input>
+          <q-input
             v-model='newStudyInterviewDesignData.description'
             :label="$t('description')"
             autogrow
@@ -221,6 +235,20 @@
           >
             <template v-slot:error>
               <div v-for="error in v$.selectedStudyInterviewDesign.name.$errors">
+                {{error.$message}}
+              </div>
+            </template>
+          </q-input>
+          <q-input
+            v-model='selectedStudyInterviewDesign.label'
+            :label="$t('title')"
+            lazy-rules
+            @blur="v$.selectedStudyInterviewDesign.label.$touch"
+            :error="v$.selectedStudyInterviewDesign.label.$error"
+            :hint="$t('required')"
+          >
+            <template v-slot:error>
+              <div v-for="error in v$.selectedStudyInterviewDesign.label.$errors">
                 {{error.$message}}
               </div>
             </template>
@@ -399,10 +427,20 @@ export default defineComponent({
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
+      },
+      label: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
       }
     },
     selectedStudyInterviewDesign: {
       name: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      label: {
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
@@ -425,6 +463,13 @@ export default defineComponent({
           label: this.$t('name'),
           align: 'left',
           field: 'name',
+          sortable: true
+        },
+        {
+          name: 'label',
+          align: 'left',
+          label: this.$t('title'),
+          field: 'label',
           sortable: true
         },
         {

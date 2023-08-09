@@ -125,6 +125,20 @@
               </template>
             </q-input>
             <q-input
+              v-model='interviewDesignData.label'
+              :label="$t('title')"
+              lazy-rules
+              @blur="v$.interviewDesignData.label.$touch"
+              :error="v$.interviewDesignData.label.$error"
+              :hint="$t('required')"
+            >
+              <template v-slot:error>
+                <div v-for="error in v$.interviewDesignData.label.$errors">
+                  {{error.$message}}
+                </div>
+              </template>
+            </q-input>
+            <q-input
               v-model='interviewDesignData.description'
               :label="$t('description')"
               autogrow
@@ -215,6 +229,11 @@ export default defineComponent({
   validations: {
     interviewDesignData: {
       name: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(30)
+      },
+      label: {
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
