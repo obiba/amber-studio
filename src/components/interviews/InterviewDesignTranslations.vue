@@ -410,6 +410,7 @@ export default defineComponent({
         } else if (this.value.i18n && this.value.i18n.en) {
           obsKeys = Object.keys(this.value.i18n.en)
         }
+        obsKeys = this.appendObservedKeys([this.value], obsKeys)
         this.appendObservedKeys(this.value.steps, obsKeys)
       }
       this.onRowEdit()
