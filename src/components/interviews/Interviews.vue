@@ -66,11 +66,11 @@
               style="min-width: 200px" />
             <q-select
               class="q-mr-md"
-              v-model="formFilter"
-              :options="formOptions"
+              v-model="stateFilter"
+              :options="stateOptions"
               emit-value
               map-options
-              :label="$t('study.form')"
+              :label="$t('state')"
               style="min-width: 200px" />
             <div class="q-mr-md" style="max-width: 250px">
               <q-input filled v-model="fromDate" :placeholder="$t('from')">
@@ -140,14 +140,14 @@
               </template>
             </q-input>
           </template>
-          <template v-slot:body-cell-interviewDesign='props'>
-            <q-td :props='props'>
-              <router-link :to="'/study/' + studyId + '/crfs'">{{ getInterviewDesignName(props.row.interviewDesign) }}</router-link>
+          <template v-slot:body-cell-code="props">
+            <q-td :props="props">
+              <q-chip>{{ props.row.code }}</q-chip>
             </q-td>
           </template>
-          <template v-slot:body-cell-form='props'>
+          <template v-slot:body-cell-interviewDesign='props'>
             <q-td :props='props'>
-              <router-link :to="'/study/' + studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
+              <router-link :to="'/study/' + studyId + '/interview-design/' + props.row.interviewDesign">{{ getInterviewDesignName(props.row.interviewDesign) }}</router-link>
             </q-td>
           </template>
           <template v-slot:body-cell-revision='props'>
@@ -169,7 +169,7 @@
                 dense
                 round
                 :title="$t(isReadOnly ? 'study.view_interview_hint' : 'study.edit_interview_hint')"
-                :icon="isReadOnly ? 'visibility' : 'edit'"
+                icon="visibility"
                 @click='onShow(props.row)'>
               </q-btn>
               <q-btn
@@ -201,56 +201,12 @@
           </q-btn>
         </q-bar>
         <q-card-section>
-          <q-tabs
-            v-model="showTab"
-            dense
-            class="text-grey"
-            active-color="primary"
-            indicator-color="primary"
-            align="justify"
-            narrow-indicator
-          >
-            <q-tab name="form" label="form" />
-            <q-tab name="data" label="data" />
-          </q-tabs>
-
-          <q-separator/>
-
-          <q-tab-panels v-model="showTab">
-            <q-tab-panel name="form" class="q-pl-none q-pr-none">
-              <q-btn-dropdown icon="translate" flat size="sm" :label="locale">
-                <q-list>
-                  <q-item @click="onLocale(loc)" clickable v-close-popup v-for="loc in formRevisionLocales" :key="loc">
-                    <q-item-section class="text-uppercase">{{ loc }}</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-btn-dropdown>
-              <q-separator  class="q-mt-md"/>
-              <BlitzForm :key='remountCounter' :schema='formRevisionBlitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
-            </q-tab-panel>
-
-            <q-tab-panel name="data" class="q-pl-none q-pr-none">
-              <div class="bg-black text-white q-pa-md">
-                <pre>{{ modelDataStr }}</pre>
-              </div>
-            </q-tab-panel>
-          </q-tab-panels>
+          <div class="bg-black text-white q-pa-md">
+            <pre>{{ modelDataStr }}</pre>
+          </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn v-if="isReadOnly" :label="$t('close')" flat v-close-popup />
-          <q-btn v-if="!isReadOnly" :label="$t('cancel')" flat v-close-popup />
-          <q-btn
-            v-if="!isReadOnly"
-            @click='onSave'
-            :label="$t('save')"
-            type='submit'
-            color='primary'
-            v-close-popup
-          >
-           <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
+          <q-btn :label="$t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -315,36 +271,30 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
-import { formRevisionService } from '../../services/form'
 import { interviewService } from '../../services/interview'
 import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
 import AuthMixin from '../../mixins/AuthMixin'
-import { BlitzForm } from '@blitzar/form'
-import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
 
 export default defineComponent({
   name: 'StudyInterviews',
-  components: { BlitzForm },
   mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     if (this.study) {
       this.getInterviewDesigns({ study: this.studyId })
-      this.getForms({ study: this.studyId })
       this.getTableInterviews()
     }
   },
   setup () {
     return {
       remountCounter: 0,
-      showTab: ref('form'),
       locale: ref('en'),
       tab: ref('definition'),
       selected: ref([]),
       filter: ref(''),
       interviewDesignFilter: ref('0'),
-      formFilter: ref('0'),
+      stateFilter: ref('0'),
       fromDate: ref(''),
       toDate: ref(''),
       maximizedToggle: ref(false)
@@ -353,7 +303,6 @@ export default defineComponent({
   data () {
     return {
       modelData: {},
-      selectedFormRevision: { schema: [] },
       selectedInterview: {},
       showInterview: false,
       showConfirmDeleteInterview: false,
@@ -367,11 +316,19 @@ export default defineComponent({
       },
       columns: [
         {
-          name: '_id',
+          name: 'code',
           required: true,
-          label: this.$t('id'),
+          label: t('interview.participant_code'),
           align: 'left',
-          field: row => (row.data && row.data._id) ? row.data._id : '',
+          field: 'code',
+          sortable: true
+        },
+        {
+          name: 'identifier',
+          required: false,
+          label: t('id'),
+          align: 'left',
+          field: 'identifier',
           sortable: true
         },
         {
@@ -383,18 +340,11 @@ export default defineComponent({
           sortable: true
         },
         {
-          name: 'form',
+          name: 'state',
           required: true,
-          label: this.$t('study.form'),
+          label: this.$t('state'),
           align: 'left',
-          field: 'form',
-          sortable: true
-        },
-        {
-          name: 'revision',
-          align: 'left',
-          label: this.$t('revision'),
-          field: 'revision',
+          field: 'state',
           sortable: true
         },
         {
@@ -424,7 +374,6 @@ export default defineComponent({
   computed: {
     ...mapState({
       study: state => state.study.study,
-      forms: state => state.form.forms,
       interviews: state => state.interview ? state.interview.interviews : [],
       interviewDesigns: state => state.interview ? state.interview.interviewDesigns : []
     }),
@@ -444,30 +393,27 @@ export default defineComponent({
       })
       return opts
     },
-    formOptions () {
-      const opts = this.forms.map(form => {
-        return {
-          value: form._id,
-          label: form.name
+    stateOptions () {
+      return [
+        {
+          value: '0',
+          label: t('study.all_states')
+        },
+        {
+          value: 'in_progress',
+          label: t('study.interview_state.in_progress')
+        },
+        {
+          value: 'completed',
+          label: t('study.interview_state.completed')
         }
-      })
-      opts.splice(0, 0, {
-        value: '0',
-        label: t('study.all_designs')
-      })
-      return opts
+      ]
     },
     hasInterviews () {
       return this.interviews && this.interviews.length > 0
     },
     modelDataStr () {
       return JSON.stringify(this.modelData, null, '  ')
-    },
-    formRevisionLocales () {
-      return Object.keys(this.selectedFormRevision.schema.i18n).filter(loc => this.locale !== loc)
-    },
-    formRevisionBlitzarSchema () {
-      return makeBlitzarQuasarSchemaForm(this.selectedFormRevision.schema, { locale: this.locale, debug: true })
     }
   },
   watch: {
@@ -477,7 +423,7 @@ export default defineComponent({
     interviewDesignFilter: function (newValue) {
       this.onFilter()
     },
-    formFilter: function (newValue) {
+    stateFilter: function (newValue) {
       this.onFilter()
     },
     fromDate: function (newValue) {
@@ -489,7 +435,6 @@ export default defineComponent({
   },
   methods: {
     ...mapActions({
-      getForms: 'form/getForms',
       getInterviews: 'interview/getInterviews',
       getInterviewDesigns: 'interview/getInterviewDesigns'
     }),
@@ -499,7 +444,7 @@ export default defineComponent({
         paginationOpts: this.paginationOpts,
         study: this.studyId,
         interviewDesign: this.interviewDesignFilter,
-        form: this.formFilter,
+        state: this.stateFilter,
         filter: this.filter,
         from: this.fromDate,
         to: this.toDate
@@ -515,7 +460,7 @@ export default defineComponent({
         accept = 'application/zip'
       }
       const ids = this.selected.map(u => u._id)
-      interviewService.downloadInterviews(accept, this.studyId, this.interviewDesignFilter, this.formFilter, this.filter, this.fromDate, this.toDate, ids)
+      interviewService.downloadInterviews(accept, this.studyId, this.interviewDesignFilter, this.stateFilter, this.filter, this.fromDate, this.toDate, ids)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -541,14 +486,12 @@ export default defineComponent({
       this.showInterview = true
       this.selectedInterview = studyInterview
       this.modelData = {}
-      this.showTab = 'form'
+      studyInterview.steps.forEach((step) => {
+        this.modelData[step.name] = { ...step.data }
+        delete this.modelData[step.name].__page
+      })
+      this.modelData.participant = studyInterview.data
       this.maximizedToggle = false
-      formRevisionService.getFormRevision(studyInterview.form, studyInterview.revision)
-        .then(res => {
-          this.selectedFormRevision = res.data[0]
-          this.modelData = studyInterview.data
-          this.remountCounter++
-        })
     },
     onSave () {
       const updatedData = { ...this.modelData }
@@ -578,11 +521,8 @@ export default defineComponent({
     getInterviewDesignName (crfId) {
       return this.interviewDesigns.filter(crf => crf._id === crfId).map(crf => crf.name).pop()
     },
-    getFormName (formId) {
-      return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
-    },
     getInterviewFullName (interview) {
-      return this.getInterviewID(interview) + ':' + this.getInterviewDesignName(interview.interviewDesign) + ':' + (interview.revision ? interview.revision : t('study.latest_revision'))
+      return interview.code
     },
     getInterviewID (interview) {
       return interview.data && interview.data._id ? interview.data._id : ''
@@ -593,9 +533,25 @@ export default defineComponent({
         this.$store.commit('interview/setInterviewPagination', {
           interviewPaginationOpts: requestProp.pagination
         })
-        await this.getInterviews({ paginationOpts: requestProp.pagination, study: this.studyId, form: this.formFilter, filter: requestProp.filter, from: this.fromDate, to: this.toDate })
+        await this.getInterviews({
+          paginationOpts: requestProp.pagination,
+          study: this.studyId,
+          interviewDesign: this.interviewDesignFilter,
+          state: this.stateFilter,
+          filter: requestProp.filter,
+          from: this.fromDate,
+          to: this.toDate
+        })
       } else {
-        await this.getInterviews({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
+        await this.getInterviews({
+          paginationOpts: this.paginationOpts,
+          study: this.studyId,
+          interviewDesign: this.interviewDesignFilter,
+          state: this.stateFilter,
+          filter: this.filter,
+          from: this.fromDate,
+          to: this.toDate
+        })
       }
       this.paginationOpts.rowsNumber = this.$store.state.interview.interviewPaginationOpts.rowsNumber
     },

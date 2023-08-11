@@ -192,7 +192,8 @@ export default {
       completed: 'Complétée'
     },
     export_interviews_hint: 'Exporter les entrevues',
-    all_designs: '(toutes)'
+    all_designs: '(toutes)',
+    all_states: '(tous)'
   },
   datasets: {
     title: 'Données'

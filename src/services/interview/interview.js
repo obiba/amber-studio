@@ -2,24 +2,34 @@ import { feathersClient } from '../../boot/feathersClient'
 import { api } from '../../boot/axios'
 import { LocalStorage } from 'quasar'
 
-export async function downloadInterviews (accept, study, interviewDesign, filter, from, to, ids) {
+export async function downloadInterviews (accept, study, interviewDesign, state, filter, from, to, ids) {
   const query = {
     $limit: 10000,
     $skip: 0,
     study: study
   }
   // use filters
-  if (filter) {
-    query['data._id[$search]'] = filter
-  }
   if (interviewDesign && interviewDesign !== '0') {
     query.interviewDesign = interviewDesign
   }
+  if (state && state !== '0') {
+    query.state = state
+  }
+  if (filter) {
+    query.$or = [
+      { code: { $search: filter } },
+      { identifier: { $search: filter } }
+    ]
+  }
   if (from) {
-    query['updatedAt[$gte]'] = from
+    query.updatedAt = {
+      $gte: from
+    }
   }
   if (to) {
-    query['updatedAt[$lte]'] = to
+    query.updatedAt = {
+      $lte: to
+    }
   }
   if (ids && ids.length > 0) {
     query['_id[$in][]'] = ids
@@ -36,7 +46,7 @@ export async function downloadInterviews (accept, study, interviewDesign, filter
   })
 }
 
-export async function getInterviews (opts, study, interviewDesign, filter, from, to) {
+export async function getInterviews (opts, study, interviewDesign, state, filter, from, to) {
   const formData = { query: { $sort: { descending: -1 } } }
   if (opts) {
     // qtable pagination's 'All' sets limit to 0
@@ -49,26 +59,28 @@ export async function getInterviews (opts, study, interviewDesign, filter, from,
     formData.query.$limit = 10
   }
   // use filters
-  formData.query.$and = [{ study: study }]
+  formData.query.study = study
   if (interviewDesign && interviewDesign !== '0') {
-    formData.query.$and.push({ interviewDesign: interviewDesign })
+    formData.query.interviewDesign = interviewDesign
+  }
+  if (state && state !== '0') {
+    formData.query.state = state
   }
   if (filter) {
-    formData.query.$and.push({ code: { $search: filter } })
+    formData.query.$or = [
+      { code: { $search: filter } },
+      { identifier: { $search: filter } }
+    ]
   }
   if (from) {
-    formData.query.$and.push({
-      updatedAt: {
-        $gte: from
-      }
-    })
+    formData.query.updatedAt = {
+      $gte: from
+    }
   }
   if (to) {
-    formData.query.$and.push({
-      updatedAt: {
-        $lte: to
-      }
-    })
+    formData.query.updatedAt = {
+      $lte: to
+    }
   }
   return feathersClient.service('interview').find(formData)
 }

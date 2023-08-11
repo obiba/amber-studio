@@ -4,7 +4,7 @@ import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
 
 export async function getInterviews ({ commit }, payload) {
-  const result = await interviewService.getInterviews(payload.paginationOpts, payload.study, payload.form, payload.interviewDesign, payload.filter, payload.from, payload.to).catch(err => {
+  const result = await interviewService.getInterviews(payload.paginationOpts, payload.study, payload.interviewDesign, payload.state, payload.filter, payload.from, payload.to).catch(err => {
     errorHandler.onError(err, t('error.get_interviews'))
   })
   if (result) {
