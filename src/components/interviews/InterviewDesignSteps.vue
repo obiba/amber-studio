@@ -73,6 +73,11 @@
           </div>
         </div>
         <q-separator/>
+        <div v-if="selected" class="row q-ml-md q-mt-sm">
+          <div class="col-12">
+            <div class="text-weight-bold">{{ $t('interview.step_definition') }}</div>
+          </div>
+        </div>
         <div v-if="selected" class="row q-pa-md q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
             <q-input
@@ -107,14 +112,41 @@
               :options="formOptions"
               emit-value
               map-options
-              :label="$t('study.form')" />
+              :label="$t('study.form')"
+              :disable="isReadOnly" />
             <q-select
               v-model="selected.revision"
               :options="revisionOptions"
               emit-value
               map-options
               :label="$t('study.form_revision')"
-              :disable="!selected.form" />
+              :disable="isReadOnly || !selected.form" />
+          </div>
+        </div>
+        <q-separator/>
+        <div v-if="selected" class="row q-ml-md q-mt-sm">
+          <div class="col-12">
+            <div class="text-weight-bold">{{ $t('interview.step_rendering') }}</div>
+          </div>
+        </div>
+        <div v-if="selected" class="row q-pa-md q-col-gutter-lg">
+          <div class="col-md-6 col-sm-12">
+            <q-input
+              class="q-mb-md"
+              v-model="selected.condition"
+              lazy-rules
+              :label="$t('interview.step_condition')"
+              :hint="$t('interview.step_condition_hint')"
+              :disable="isReadOnly" />
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <q-input
+              class="q-mb-md"
+              v-model="selected.disable"
+              lazy-rules
+              :label="$t('interview.step_disable')"
+              :hint="$t('interview.step_disable_hint')"
+              :disable="isReadOnly" />
           </div>
         </div>
         <div v-else class="q-ma-md text-grey-6">
