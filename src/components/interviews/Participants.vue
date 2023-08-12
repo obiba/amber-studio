@@ -589,6 +589,24 @@ export default defineComponent({
             `${val ? date.formatDate(val, 'YYYY-MM-DD') : '-'}`
         },
         {
+          name: 'initialContact',
+          align: 'left',
+          label: t('interview.participant_initial_contact'),
+          field: 'initialContact',
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm') : '-'}`
+        },
+        {
+          name: 'reminders',
+          align: 'left',
+          label: t('interview.participant_reminders_count'),
+          field: 'reminders',
+          sortable: true,
+          format: val =>
+            `${val ? val.length : '0'}`
+        },
+        {
           name: 'action',
           align: 'left',
           label: t('action')

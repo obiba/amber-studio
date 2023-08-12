@@ -50,29 +50,69 @@
               @click='onConfirmDeleteCampaign(campaign)'>
             </q-btn>
           </div>
-          <div class="q-mt-md" style="max-width: 350px">
-            <q-list bordered separator>
-              <q-item>
-                <q-item-section>
-                  <q-item-label>{{ $t('name') }}</q-item-label>
-                  <q-item-label caption>{{ campaign.name }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item>
-                <q-item-section>
-                  <q-item-label>{{ $t('description') }}</q-item-label>
-                  <q-item-label caption>{{ campaign.description }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item>
-                <q-item-section>
-                  <q-item-label>{{ $t('interview.campaign_investigators') }}</q-item-label>
-                  <div>
-                    <q-chip v-for="id in campaign.investigators" icon="person" size="sm" :label="getSubject(id, 'user').name" :key="id"/>
-                  </div>
-                </q-item-section>
-              </q-item>
-            </q-list>
+          <div class="q-mt-md">
+            <div class="row q-col-gutter-lg">
+              <div class="col-6">
+                <p class="text-weight-bold q-mb-sm">{{ $t('interview.definition') }}</p>
+                <q-list bordered separator>
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label>{{ $t('name') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.name }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label>{{ $t('description') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.description }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_investigators_hint')">
+                      <q-item-label>{{ $t('interview.campaign_investigators') }}</q-item-label>
+                      <div>
+                        <q-chip v-for="sub in investigatorSubjects" icon="person" size="sm" :label="sub.name" :key="sub._id"/>
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+              <div class="col-6">
+                <p class="text-weight-bold q-mb-sm">{{ $t('interview.schedule') }}</p>
+                <q-list bordered separator>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_valid_from_hint')">
+                      <q-item-label>{{ $t('interview.campaign_valid_from') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.validFrom ? date.formatDate(campaign.validFrom, 'YYYY-MM-DD') : '-' }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_valid_until_hint')">
+                      <q-item-label>{{ $t('interview.campaign_valid_until') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.validUntil ? date.formatDate(campaign.validUntil, 'YYYY-MM-DD') : '-' }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_weeks_reminder_hint')">
+                      <q-item-label>{{ $t('interview.campaign_weeks_reminder') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.weeksBetweenReminders }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_reminders_count_hint')">
+                      <q-item-label>{{ $t('interview.campaign_reminders_count') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.numberOfReminders }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_weeks_deactivate_hint')">
+                      <q-item-label>{{ $t('interview.campaign_weeks_deactivate') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.weeksToDeactivate }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+            </div>
           </div>
           <div class="q-mt-md">
             <div class="text-h6 text-capitalize">{{ $t('participants') }}</div>
@@ -117,6 +157,48 @@
             use-chips
             :label="$t('interview.campaign_investigators')"
             :hint="$t('interview.campaign_investigators_hint')" />
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-mb-md q-col-gutter-md">
+            <div class="col-6">
+              <q-input
+                filled
+                v-model="campaignData.validFrom"
+                :label="$t('interview.campaign_valid_from')"
+                :hint="$t('interview.campaign_valid_from_hint')">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy>
+                      <q-date v-model="campaignData.validFrom" mask="YYYY-MM-DD">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+            <div class="col-6">
+              <q-input
+                filled
+                v-model="campaignData.validUntil"
+                :label="$t('interview.campaign_valid_until')"
+                :hint="$t('interview.campaign_valid_until_hint')">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy>
+                      <q-date v-model="campaignData.validUntil" mask="YYYY-MM-DD">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+          </div>
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -170,6 +252,85 @@
             use-chips
             :label="$t('interview.campaign_investigators')"
             :hint="$t('interview.campaign_investigators_hint')" />
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-col-gutter-md">
+            <div class="col-6">
+              <q-input
+                filled
+                v-model="campaignData.validFrom"
+                :label="$t('interview.campaign_valid_from')"
+                :hint="$t('interview.campaign_valid_from_hint')">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy>
+                      <q-date v-model="campaignData.validFrom" mask="YYYY-MM-DD">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+            <div class="col-6">
+              <q-input
+                filled
+                v-model="campaignData.validUntil"
+                :label="$t('interview.campaign_valid_until')"
+                :hint="$t('interview.campaign_valid_until_hint')">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy>
+                      <q-date v-model="campaignData.validUntil" mask="YYYY-MM-DD">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-mt-md q-col-gutter-sm">
+            <div class="col-6">
+              <q-input
+                v-model.number='campaignData.weeksBetweenReminders'
+                type="number"
+                :label="$t('interview.campaign_weeks_reminder')"
+                :hint="$t('interview.campaign_weeks_reminder_hint')"
+                lazy-rules
+              />
+            </div>
+            <div class="col-6">
+              <q-input
+                v-model.number='campaignData.numberOfReminders'
+                type="number"
+                :label="$t('interview.campaign_reminders_count')"
+                :hint="$t('interview.campaign_reminders_count_hint')"
+                lazy-rules
+              />
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-mt-md q-col-gutter-sm">
+            <div class="col-6">
+              <q-input
+                v-model.number='campaignData.weeksToDeactivate'
+                type="number"
+                :label="$t('interview.campaign_weeks_deactivate')"
+                :hint="$t('interview.campaign_weeks_deactivate_hint')"
+                lazy-rules
+              />
+            </div>
+            <div class="col-6">
+            </div>
+          </div>
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -225,6 +386,7 @@ import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
 import AuthMixin from '../../mixins/AuthMixin'
+import { date } from 'quasar'
 
 export default defineComponent({
   components: {
@@ -233,12 +395,10 @@ export default defineComponent({
   name: 'StudyCaseReportForms',
   mixins: [AuthMixin],
   mounted () {
-    Promise.all([
-      subjectsService.getSubjects().then((result) => {
-        this.subjects = result
-      }),
+    subjectsService.getSubjects().then((result) => {
+      this.subjects = result
       this.initCampaigns()
-    ])
+    })
   },
   setup () {
     return {
@@ -254,7 +414,8 @@ export default defineComponent({
       showEditCampaign: ref(false),
       showDeleteCampaign: ref(false),
       campaignData: ref({}),
-      subjects: []
+      subjects: [],
+      date
     }
   },
   validations: {
@@ -277,6 +438,13 @@ export default defineComponent({
     },
     userSubjectOptions () {
       return this.getSubjectOptions('user')
+    },
+    investigatorSubjects () {
+      if (this.tab !== '') {
+        const rval = this.campaigns.find((cmp) => cmp.name === this.tab).investigators.map((id) => this.getSubject(id, 'user'))
+        return rval
+      }
+      return []
     }
   },
   methods: {
@@ -294,7 +462,7 @@ export default defineComponent({
     },
     getSubject (id, type) {
       if (this.subjects && this.subjects.length > 0) {
-        return this.subjects.filter(s => s.type === type && s.id === id).pop()
+        return this.subjects.find(s => s.type === type && s.id === id)
       }
       return { id: id, type: type, name: '?' }
     },
@@ -315,6 +483,8 @@ export default defineComponent({
     },
     onEditCampaign (campaign) {
       this.campaignData = { ...campaign }
+      this.campaignData.validFrom = this.campaignData.validFrom ? date.formatDate(this.campaignData.validFrom, 'YYYY-MM-DD') : null
+      this.campaignData.validUntil = this.campaignData.validUntil ? date.formatDate(this.campaignData.validUntil, 'YYYY-MM-DD') : null
       this.showEditCampaign = true
     },
     onConfirmDeleteCampaign (campaign) {

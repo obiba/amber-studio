@@ -75,7 +75,7 @@
         <q-separator/>
         <div v-if="selected" class="row q-ml-md q-mt-sm">
           <div class="col-12">
-            <div class="text-weight-bold">{{ $t('interview.step_definition') }}</div>
+            <div class="text-weight-bold">{{ $t('interview.definition') }}</div>
           </div>
         </div>
         <div v-if="selected" class="row q-pa-md q-col-gutter-lg">
