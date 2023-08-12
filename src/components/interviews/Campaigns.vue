@@ -76,6 +76,15 @@
                     </q-item-section>
                   </q-item>
                 </q-list>
+                <p class="text-weight-bold q-mt-md q-mb-sm">{{ $t('interview.campaign_security') }}</p>
+                <q-list bordered separator>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_with_password_hint')">
+                      <q-item-label>{{ $t('interview.campaign_with_password') }}</q-item-label>
+                      <q-toggle v-model="campaign.withPassword" disable />
+                    </q-item-section>
+                  </q-item>
+                </q-list>
               </div>
               <div class="col-6">
                 <p class="text-weight-bold q-mb-sm">{{ $t('interview.schedule') }}</p>
@@ -329,6 +338,10 @@
               />
             </div>
             <div class="col-6">
+              <q-toggle
+                v-model="campaignData.withPassword"
+                :label="$t('interview.campaign_with_password')" />
+              <div class="text-caption text-grey-7">{{ $t('interview.campaign_with_password_hint') }}</div>
             </div>
           </div>
         </q-card-section>
@@ -504,7 +517,7 @@ export default defineComponent({
       this.updateCampaign({
         campaign: toSave,
         interviewDesign: this.interviewDesign
-      })
+      }).then(() => { this.tab = this.campaignData.name })
     },
     removeCampaign () {
       const idx = this.campaigns.map(campaign => campaign.name).indexOf(this.campaignData.name)
