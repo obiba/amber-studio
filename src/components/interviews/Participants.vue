@@ -607,6 +607,15 @@ export default defineComponent({
             `${val ? val.length : '0'}`
         },
         {
+          name: 'lastSeen',
+          align: 'left',
+          label: t('users.last_seen'),
+          field: 'lastSeen',
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : '-'}`
+        },
+        {
           name: 'action',
           align: 'left',
           label: t('action')
@@ -904,14 +913,16 @@ export default defineComponent({
       this.participantData = { ...participant }
       this.participantData.validFrom = this.participantData.validFrom ? date.formatDate(this.participantData.validFrom, 'YYYY-MM-DD') : null
       this.participantData.validUntil = this.participantData.validUntil ? date.formatDate(this.participantData.validUntil, 'YYYY-MM-DD') : null
-      // remove internal fields
+      // remove internal fields or fields that are already in the columns
       delete this.participantData._id
+      delete this.participantData.interviewDesign
       delete this.participantData.campaign
       delete this.participantData.study
       delete this.participantData.createdBy
-      delete this.participantData.createdAt
-      delete this.participantData.updatedAt
-      delete this.participantData.__v
+      delete this.participantData.activated
+      delete this.participantData.validFrom
+      delete this.participantData.validUntil
+      delete this.participantData.lastSeen
     },
     onEdit (participant) {
       this.toParticipantData(participant)
