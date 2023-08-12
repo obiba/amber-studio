@@ -144,6 +144,20 @@
               autogrow
               lazy-rules
               class='q-mb-sm'/>
+            <q-input
+              v-model='interviewDesignData.interviewer_instructions'
+              :label="$t('interview.interviewer_instructions')"
+              :hint="$t('interview.interviewer_instructions_hint')"
+              autogrow
+              lazy-rules
+              class='q-mb-sm'/>
+            <q-input
+              v-model='interviewDesignData.participant_instructions'
+              :label="$t('interview.participant_instructions')"
+              :hint="$t('interview.participant_instructions_hint')"
+              autogrow
+              lazy-rules
+              class='q-mb-sm'/>
            </div>
         </q-card-section>
         <q-card-actions align='right'>

@@ -427,7 +427,7 @@ export default defineComponent({
       }
       if (steps) {
         steps.forEach(step => {
-          ['label', 'description', 'hint'].forEach(field => addObsKey(step[field]))
+          ['label', 'description', 'interviewer_instructions', 'participant_instructions'].forEach(field => addObsKey(step[field]))
         })
       }
       return obsKeys

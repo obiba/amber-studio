@@ -89,6 +89,26 @@
               :disable="isReadOnly"
             >
             </q-input>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <q-select
+              v-model="selected.form"
+              :options="formOptions"
+              emit-value
+              map-options
+              :label="$t('study.form')"
+              :disable="isReadOnly" />
+            <q-select
+              v-model="selected.revision"
+              :options="revisionOptions"
+              emit-value
+              map-options
+              :label="$t('study.form_revision')"
+              :disable="isReadOnly || !selected.form" />
+          </div>
+        </div>
+        <div v-if="selected" class="row q-pa-md q-col-gutter-lg">
+          <div class="col-md-6 col-sm-12">
             <q-input
               v-model='selected.label'
               :label="$t('title')"
@@ -107,20 +127,13 @@
             />
           </div>
           <div class="col-md-6 col-sm-12">
-            <q-select
-              v-model="selected.form"
-              :options="formOptions"
-              emit-value
-              map-options
-              :label="$t('study.form')"
+            <q-input
+              v-model.number="selected.time_estimate"
+              class="q-mb-md"
+              type="number"
+              :label="$t('interview.step_time_estimate')"
+              :hint="$t('interview.step_time_estimate_hint')"
               :disable="isReadOnly" />
-            <q-select
-              v-model="selected.revision"
-              :options="revisionOptions"
-              emit-value
-              map-options
-              :label="$t('study.form_revision')"
-              :disable="isReadOnly || !selected.form" />
           </div>
         </div>
         <q-separator/>
