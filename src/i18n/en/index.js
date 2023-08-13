@@ -193,7 +193,9 @@ export default {
     },
     export_interviews_hint: 'Export interviews',
     all_designs: '(all)',
-    all_states: '(all)'
+    all_states: '(all)',
+    campaign: 'Campaign',
+    all_campaigns: '(all)'
   },
   datasets: {
     title: 'Datasets'

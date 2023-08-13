@@ -4,7 +4,7 @@ import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
 
 export async function getInterviews ({ commit }, payload) {
-  const result = await interviewService.getInterviews(payload.paginationOpts, payload.study, payload.interviewDesign, payload.state, payload.filter, payload.from, payload.to).catch(err => {
+  const result = await interviewService.getInterviews(payload.paginationOpts, payload.study, payload.interviewDesign, payload.campaign, payload.state, payload.filter, payload.from, payload.to).catch(err => {
     errorHandler.onError(err, t('error.get_interviews'))
   })
   if (result) {
@@ -214,7 +214,7 @@ export async function deleteInterviewDesigns ({ dispatch }, payload) {
 }
 
 export async function getCampaigns ({ commit }, payload) {
-  const result = await campaignService.getCampaigns(payload.paginationOpts, payload.interviewDesign._id, payload.filter).catch(err => {
+  const result = await campaignService.getCampaigns(payload.paginationOpts, payload.interviewDesign, payload.study, payload.filter).catch(err => {
     errorHandler.onError(err, t('error.get_campaigns'))
   })
   if (result) {

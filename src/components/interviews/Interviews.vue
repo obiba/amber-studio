@@ -66,6 +66,14 @@
               style="min-width: 200px" />
             <q-select
               class="q-mr-md"
+              v-model="campaignFilter"
+              :options="campaignOptions"
+              emit-value
+              map-options
+              :label="$t('study.campaign')"
+              style="min-width: 200px" />
+            <q-select
+              class="q-mr-md"
               v-model="stateFilter"
               :options="stateOptions"
               emit-value
@@ -283,6 +291,7 @@ export default defineComponent({
     this.setPagination()
     if (this.study) {
       this.getInterviewDesigns({ study: this.studyId })
+      this.getCampaigns({ study: this.studyId })
       this.getTableInterviews()
     }
   },
@@ -294,6 +303,7 @@ export default defineComponent({
       selected: ref([]),
       filter: ref(''),
       interviewDesignFilter: ref('0'),
+      campaignFilter: ref('0'),
       stateFilter: ref('0'),
       fromDate: ref(''),
       toDate: ref(''),
@@ -375,21 +385,46 @@ export default defineComponent({
     ...mapState({
       study: state => state.study.study,
       interviews: state => state.interview ? state.interview.interviews : [],
-      interviewDesigns: state => state.interview ? state.interview.interviewDesigns : []
+      interviewDesigns: state => state.interview ? state.interview.interviewDesigns : [],
+      campaigns: state => state.interview ? state.interview.campaigns : []
     }),
     studyId () {
       return this.$route.params.id
     },
     interviewDesignOptions () {
-      const opts = this.interviewDesigns.map(crf => {
+      const opts = this.interviewDesigns.map(itwd => {
         return {
-          value: crf._id,
-          label: crf.name
+          value: itwd._id,
+          label: itwd.name
         }
+      })
+      opts.sort((a, b) => {
+        if (a.label < b.label) return -1
+        if (a.label > b.label) return 1
+        return 0
       })
       opts.splice(0, 0, {
         value: '0',
         label: t('study.all_designs')
+      })
+      return opts
+    },
+    campaignOptions () {
+      const opts = this.campaigns.map(cmp => {
+        const itwd = this.interviewDesigns.find(itwd => itwd._id === cmp.interviewDesign)
+        return {
+          value: cmp._id,
+          label: `${itwd ? itwd.name : '?'} - ${cmp.name}`
+        }
+      })
+      opts.sort((a, b) => {
+        if (a.label < b.label) return -1
+        if (a.label > b.label) return 1
+        return 0
+      })
+      opts.splice(0, 0, {
+        value: '0',
+        label: t('study.all_campaigns')
       })
       return opts
     },
@@ -423,6 +458,9 @@ export default defineComponent({
     interviewDesignFilter: function (newValue) {
       this.onFilter()
     },
+    campaignFilter: function (newValue) {
+      this.onFilter()
+    },
     stateFilter: function (newValue) {
       this.onFilter()
     },
@@ -436,7 +474,8 @@ export default defineComponent({
   methods: {
     ...mapActions({
       getInterviews: 'interview/getInterviews',
-      getInterviewDesigns: 'interview/getInterviewDesigns'
+      getInterviewDesigns: 'interview/getInterviewDesigns',
+      getCampaigns: 'interview/getCampaigns'
     }),
     onFilter () {
       this.selected = []
@@ -444,6 +483,7 @@ export default defineComponent({
         paginationOpts: this.paginationOpts,
         study: this.studyId,
         interviewDesign: this.interviewDesignFilter,
+        campaign: this.campaignFilter,
         state: this.stateFilter,
         filter: this.filter,
         from: this.fromDate,

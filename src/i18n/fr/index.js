@@ -193,7 +193,9 @@ export default {
     },
     export_interviews_hint: 'Exporter les entrevues',
     all_designs: '(toutes)',
-    all_states: '(tous)'
+    all_states: '(tous)',
+    campaign: 'Campagne',
+    all_campaigns: '(toutes)'
   },
   datasets: {
     title: 'Données'

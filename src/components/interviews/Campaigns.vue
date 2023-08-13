@@ -468,7 +468,7 @@ export default defineComponent({
       deleteCampaign: 'interview/deleteCampaign'
     }),
     async initCampaigns () {
-      await this.getCampaigns({ paginationOpts: this.paginationOpts, interviewDesign: this.interviewDesign })
+      await this.getCampaigns({ paginationOpts: this.paginationOpts, interviewDesign: this.interviewDesign._id })
       if (this.campaigns.length > 0) {
         this.tab = this.campaigns[0].name
       }

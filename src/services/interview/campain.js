@@ -1,6 +1,6 @@
 import { feathersClient } from '../../boot/feathersClient'
 
-export async function getCampaigns (opts, interviewDesign, filter) {
+export async function getCampaigns (opts, interviewDesign, study, filter) {
   const formData = { query: { $sort: { descending: -1 } } }
   if (opts) {
     // qtable pagination's 'All' sets limit to 0
@@ -25,6 +25,9 @@ export async function getCampaigns (opts, interviewDesign, filter) {
     ]
   } else {
     formData.query.interviewDesign = interviewDesign
+  }
+  if (study) {
+    formData.query.study = study
   }
   return feathersClient.service('campaign').find(formData)
 }
