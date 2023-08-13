@@ -350,6 +350,16 @@ export default defineComponent({
           sortable: true
         },
         {
+          name: 'campaign',
+          required: true,
+          label: this.$t('study.campaign'),
+          align: 'left',
+          field: 'campaign',
+          sortable: true,
+          format: val =>
+            this.campaigns.find(cmp => cmp._id === val).name
+        },
+        {
           name: 'state',
           required: true,
           label: this.$t('state'),
@@ -558,8 +568,8 @@ export default defineComponent({
         this.toDate = ''
       }
     },
-    getInterviewDesignName (crfId) {
-      return this.interviewDesigns.filter(crf => crf._id === crfId).map(crf => crf.name).pop()
+    getInterviewDesignName (id) {
+      return this.interviewDesigns.filter(itwd => itwd._id === id).map(itwd => itwd.name).pop()
     },
     getInterviewFullName (interview) {
       return interview.code
