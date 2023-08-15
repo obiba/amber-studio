@@ -6,7 +6,6 @@
 FROM node:lts-alpine as develop-stage
 WORKDIR /app
 COPY package*.json ./
-RUN yarn global add @quasar/cli
 COPY . .
 
 # build stage
@@ -14,7 +13,7 @@ FROM develop-stage as build-stage
 ARG AMBER_URL
 ARG RECAPTCHA_SITE_KEY
 RUN yarn
-RUN quasar build
+RUN yarn quasar build
 
 # production stage
 FROM nginx:alpine as production-stage
