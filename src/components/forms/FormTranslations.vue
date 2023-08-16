@@ -54,17 +54,24 @@
           icon="translate"
           :title="$t('form.tr_locales_hint')">
           <q-list>
-            <q-item v-for="loc in locales" :key="loc">
+            <q-item v-for="loc in allLocales" :key="loc">
               <q-item-section>
                 <q-checkbox @click="onToggleFormLocale(loc)" v-model="formLocales" :val="loc"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label class="text-uppercase">{{loc}}</q-item-label>
-                <q-item-label caption>{{$t('locales.' + loc)}}</q-item-label>
+                <q-item-label caption>{{$t('locales.' + loc) === 'locales.' + loc ? '' : $t('locales.' + loc)}}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
+        <q-btn
+          v-if="!isReadOnly"
+          flat
+          icon="file_upload"
+          :title="$t('form.tr_import_hint')"
+          @click="onImportTranslations()"
+          class="q-mr-md" />
         <q-btn-dropdown
           flat
           icon="download"
@@ -123,6 +130,9 @@
             </q-item>
             <q-item clickable v-close-popup>
               <q-item-section @click="mergeObservedKeys()">{{ $t('form.tr_merge_items') }}</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup>
+              <q-item-section @click="onImportTranslations()">{{ $t('form.tr_import') }}</q-item-section>
             </q-item>
           </q-list>
         </q-menu>
@@ -248,7 +258,6 @@
           </div>
           <div class="q-mt-md">
             <span class="text-weight-bold text-uppercase">{{localeToDelete}}</span>
-            <span class="text-secondary q-ml-sm">({{$t('locales.' + localeToDelete)}})</span>
           </div>
         </q-card-section>
         <q-card-actions align='right'>
@@ -261,6 +270,43 @@
             v-close-popup
           >
             <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model='showImportTranslations' persistent>
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
+        <q-card-section>
+          <q-file
+            dense
+            bottom-slots
+            clearable
+            v-model="translationsFile"
+            accept=".txt,.csv,.tsv"
+            :label="$t('form.tr_import_file')">
+            <template v-slot:prepend>
+              <q-icon name="add" @click.stop />
+            </template>
+
+            <template v-slot:hint>
+              {{ $t('form.tr_import_hint') }}
+            </template>
+          </q-file>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='importTranslations'
+            :disable="disableImportTranslations"
+            :label="$t('import')"
+            type='submit'
+            color='primary'
+            v-close-popup
+          >
+           <template v-slot:loading>
               <q-spinner-facebook />
             </template>
           </q-btn>
@@ -290,7 +336,9 @@ export default defineComponent({
       locales: locales,
       v$: useVuelidate(),
       selected: ref([]),
-      filter: ref('')
+      filter: ref(''),
+      showImportTranslations: ref(false),
+      translationsFile: ref(null)
     }
   },
   data () {
@@ -362,8 +410,20 @@ export default defineComponent({
     disableAddTranslation () {
       return this.v$.newTranslationData.$invalid
     },
+    disableImportTranslations () {
+      return this.translationsFile === null
+    },
     formLocales () {
       return this.value.schema.i18n && Object.keys(this.value.schema.i18n).length > 0 ? Object.keys(this.value.schema.i18n).sort() : ['en']
+    },
+    allLocales () {
+      const allLocales = [...this.locales]
+      this.formLocales.forEach((loc) => {
+        if (!allLocales.includes(loc)) {
+          allLocales.push(loc)
+        }
+      })
+      return allLocales
     }
   },
   mounted () {
@@ -509,6 +569,35 @@ export default defineComponent({
           color: 'negative'
         })
       }
+    },
+    onImportTranslations () {
+      this.translationsFile = null
+      this.showImportTranslations = true
+    },
+    importTranslations () {
+      const that = this
+      const toSave = this.value
+      this.$papa.parse(this.translationsFile, {
+        header: true,
+        complete: function (results, file) {
+          if (results.errors.length === 0 && results.meta.fields.includes('key')) {
+            const locales = results.meta.fields.filter((f) => f !== 'key')
+            if (!toSave.schema.i18n) {
+              toSave.schema.i18n = {}
+            }
+            // array of row objects
+            results.data.forEach((row) => {
+              locales.forEach((locale) => {
+                if (!toSave.schema.i18n[locale]) {
+                  toSave.schema.i18n[locale] = {}
+                }
+                toSave.schema.i18n[locale][row.key] = row[locale]
+              })
+            })
+            that.initRows()
+          }
+        }
+      })
     },
     onConfirmClean () {
       this.showConfirmClean = true

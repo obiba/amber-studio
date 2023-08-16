@@ -32,7 +32,8 @@ module.exports = configure(function (ctx) {
       'vuelidate',
       'recaptcha',
       'errors',
-      'settings'
+      'settings',
+      'csv'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
