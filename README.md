@@ -10,13 +10,13 @@
 ## Install the dependencies
 
 ```bash
-npm install
+yarn
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 
 ```bash
-quasar dev
+yarn quasar dev
 ```
 
 Note that the Amber server is expected to run at [http://localhost:3030](http://localhost:3030).
@@ -24,7 +24,7 @@ Note that the Amber server is expected to run at [http://localhost:3030](http://
 ### Build the app for production
 
 ```bash
-quasar build
+yarn quasar build
 ```
 
 Environment variable for building the app in production:
