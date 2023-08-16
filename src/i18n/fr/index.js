@@ -310,7 +310,8 @@ export default {
     delete_participants: 'Participants supprimés avec succès.',
     update_interview: 'Entrevue mis à jour avec succès.',
     delete_interview: 'Entrevue supprimée avec succès.',
-    delete_interviews: 'Entrevues supprimée avec succès.'
+    delete_interviews: 'Entrevues supprimée avec succès.',
+    reset_participant_password: 'Mot de passe du participant réinitialisé avec succès.'
   },
   form: {
     tr_add: 'Ajouter une traduction',
@@ -572,7 +573,10 @@ export default {
     delete_participant_hint: 'Supprimer un participant',
     delete_participant_confirm: 'Veuillez confirmer la suppression du participant:',
     view_participant_hint: 'Voir les détails du participant',
-    edit_participant_hint: 'Éditer les détails du participant'
+    edit_participant_hint: 'Éditer les détails du participant',
+    pause_participant_hint: 'Mettre le participant en pause',
+    activate_participant_hint: 'Activater le participant',
+    reset_participant_password_hint: 'Réinitialiser le mot de passe du participant'
   },
   license: {
     cc_by_40: 'Creative Commons BY 4.0',

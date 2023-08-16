@@ -310,7 +310,8 @@ export default {
     delete_participants: 'Participants successfully deleted.',
     update_interview: 'Interview successfully updated.',
     delete_interview: 'Interview successfully deleted.',
-    delete_interviews: 'Interviews successfully deleted.'
+    delete_interviews: 'Interviews successfully deleted.',
+    reset_participant_password: 'Participant password reset successful.'
   },
   form: {
     tr_add: 'Add translation',
@@ -568,7 +569,10 @@ export default {
     delete_participant_hint: 'Delete the participant',
     delete_participant_confirm: 'Please confirm that you want to remove the participant:',
     view_participant_hint: 'View the participant details',
-    edit_participant_hint: 'Edit the participant details'
+    edit_participant_hint: 'Edit the participant details',
+    pause_participant_hint: 'Pause the participant',
+    activate_participant_hint: 'Activate the participant',
+    reset_participant_password_hint: 'Reset the participant\'s password'
   },
   license: {
     cc_by_40: 'Creative Commons BY 4.0',

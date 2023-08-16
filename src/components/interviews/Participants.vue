@@ -104,6 +104,17 @@
       <template v-slot:body-cell-action="props">
         <q-td :props="props">
           <q-btn
+            v-if="campaign.withPassword && !isReadOnly"
+            color="secondary"
+            size="12px"
+            flat
+            dense
+            round
+            :title="$t('interview.reset_participant_password_hint')"
+            icon='replay'
+            @click='resetPassword(props.row)'>
+          </q-btn>
+          <q-btn
             v-if="!isReadOnly"
             color="secondary"
             size="12px"
@@ -749,6 +760,22 @@ export default defineComponent({
         .then(() => {
           Notify.create({
             message: t('success.update_participant'),
+            color: 'positive',
+            icon: 'fas fa-check'
+          })
+          this.updateTableParticipants()
+        })
+        .catch(err => this.handleError(err))
+    },
+    resetPassword (participant) {
+      this.participantData = {
+        _id: participant._id,
+        password: ''
+      }
+      participantService.patchParticipant(this.participantData)
+        .then(() => {
+          Notify.create({
+            message: t('success.reset_participant_password'),
             color: 'positive',
             icon: 'fas fa-check'
           })
