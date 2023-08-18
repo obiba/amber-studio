@@ -63,11 +63,6 @@
               </div>
             </q-td>
           </template>
-          <template v-slot:body-cell-repeatPolicy='props'>
-            <q-td :props='props'>
-              {{ props.row.repeatPolicy ? $t('study.interview_design_repeat_policy.' + props.row.repeatPolicy) : '?' }}
-            </q-td>
-          </template>
           <template v-slot:body-cell-state='props'>
             <q-td :props='props'>
               {{ $t('study.interview_design_state.' + props.row.state) }}
@@ -171,15 +166,6 @@
           />
         </q-card-section>
         <q-card-section>
-          <q-select
-            v-model="newStudyInterviewDesignData.repeatPolicy"
-            :options="repeatOptions"
-            emit-value
-            map-options
-            :label="$t('study.interview_design_repeat_policy.title')"
-            :hint="$t('study.interview_design_repeat_policy.hint')" />
-        </q-card-section>
-        <q-card-section>
           <q-toggle
             class="q-mt-md"
             v-model="newStudyInterviewDesignData.restrictedAccess"
@@ -259,15 +245,6 @@
             autogrow
             lazy-rules
           />
-        </q-card-section>
-        <q-card-section>
-          <q-select
-            v-model="selectedStudyInterviewDesign.repeatPolicy"
-            :options="repeatOptions"
-            emit-value
-            map-options
-            :label="$t('study.interview_design_repeat_policy.title')"
-            :hint="$t('study.interview_design_repeat_policy.hint')" />
         </q-card-section>
         <q-card-section>
           <q-toggle
@@ -403,8 +380,7 @@ export default defineComponent({
     return {
       newStudyInterviewDesignData: {
         name: '',
-        description: '',
-        repeatPolicy: 'multiple'
+        description: ''
       },
       selectedStudyInterviewDesign: {},
       showCreateStudyInterviewDesign: false,
@@ -487,13 +463,6 @@ export default defineComponent({
           sortable: true
         },
         {
-          name: 'repeatPolicy',
-          align: 'left',
-          label: this.$t('study.interview_design_repeat_policy.title'),
-          field: 'repeatPolicy',
-          sortable: true
-        },
-        {
           name: 'updatedAt',
           align: 'left',
           label: this.$t('updated_at'),
@@ -528,16 +497,6 @@ export default defineComponent({
       }
       return cols
     },
-    repeatOptions () {
-      return [
-        'multiple', 'single_reject', 'single_update'
-      ].map(opt => {
-        return {
-          value: opt,
-          label: this.$t('study.interview_design_repeat_policy.' + opt)
-        }
-      })
-    },
     userSubjectOptions () {
       return this.getSubjectOptions('user')
     },
@@ -569,7 +528,6 @@ export default defineComponent({
       this.newStudyInterviewDesignData = {
         name: '',
         description: '',
-        repeatPolicy: 'multiple',
         restrictedAccess: false,
         permissions: {
           users: [],
