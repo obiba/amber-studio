@@ -454,7 +454,10 @@ export default defineComponent({
     },
     investigatorSubjects () {
       if (this.tab !== '') {
-        const rval = this.campaigns.find((cmp) => cmp.name === this.tab).investigators.map((id) => this.getSubject(id, 'user'))
+        const rval = this.campaigns
+          .find((cmp) => cmp.name === this.tab).investigators
+          .map((id) => this.getSubject(id, 'user'))
+          .filter((sub) => sub !== undefined)
         return rval
       }
       return []
