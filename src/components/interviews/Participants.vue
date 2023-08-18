@@ -104,7 +104,7 @@
       <template v-slot:body-cell-action="props">
         <q-td :props="props">
           <q-btn
-            v-if="campaign.withPassword && !isReadOnly"
+            v-if="campaign.withPassword"
             color="secondary"
             size="12px"
             flat
@@ -115,7 +115,6 @@
             @click='resetPassword(props.row)'>
           </q-btn>
           <q-btn
-            v-if="!isReadOnly"
             color="secondary"
             size="12px"
             flat
@@ -126,7 +125,7 @@
             @click='onEdit(props.row)'>
           </q-btn>
           <q-btn
-            v-if="!isReadOnly && props.row.activated"
+            v-if="props.row.activated"
             color="secondary"
             size="12px"
             flat
@@ -137,7 +136,7 @@
             @click='pauseParticipant(props.row)'>
           </q-btn>
           <q-btn
-            v-if="!isReadOnly && !props.row.activated"
+            v-if="!props.row.activated"
             color="secondary"
             size="12px"
             flat
