@@ -120,7 +120,7 @@
 <script>
 import { ref, computed, watch, defineComponent } from 'vue'
 import OptionsItem from './OptionsItem.vue'
-import { getFileDelim, cleanToken } from './options'
+import * as Papa from 'papaparse'
 
 export default defineComponent({
   name: 'ImageSelectItem',
@@ -190,33 +190,34 @@ export default defineComponent({
 
     watch(areasFile, async (newValue) => {
       if (newValue !== null) {
-        const delim = getFileDelim(newValue)
-        const reader = new FileReader()
-        reader.readAsText(newValue, 'UTF-8')
-        reader.onload = evt => {
-          evt.target.result.split(/\r\n|\n/)
-            .map(line => line.trim())
-            .filter(line => line.length > 0)
-            .forEach(line => {
-              const tokens = line.split(delim).map(token => cleanToken(token))
-              if (tokens.length > 0 && tokens[0].length > 0) {
-                if (!schema.value.areas) {
-                  schema.value.areas = []
-                }
-                const val = tokens[0]
-                const fill = tokens[1]
-                tokens.splice(0, 2)
-                schema.value.areas.push({
-                  value: val,
-                  fill: fill,
-                  points: tokens.join(delim)
-                })
+        Papa.parse(newValue, {
+          header: false,
+          delimiter: newValue.name.endsWith('.tsv') ? '\t' : ',',
+          complete: function (results, file) {
+            if (results.errors.length === 0) {
+              console.error(results.error)
+            }
+            if (results.data.length > 0) {
+              if (!schema.value.areas) {
+                schema.value.areas = []
               }
-            })
-        }
-        reader.onerror = evt => {
-          console.error(evt)
-        }
+              results.data
+                .filter((row) => row.length > 2 && row[0].trim().length > 0)
+                .forEach((row) => {
+                  const val = row[0]
+                  const fill = row[1]
+                  row.splice(0, 2)
+                  schema.value.areas.push({
+                    value: val,
+                    fill: fill,
+                    points: row.join(',')
+                  })
+                })
+            } else {
+              console.error(results.error)
+            }
+          }
+        })
       }
     })
 

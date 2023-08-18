@@ -576,24 +576,33 @@ export default defineComponent({
     importTranslations () {
       const that = this
       const toSave = this.value
+      const delim = this.translationsFile.name.endsWith('.tsv') ? '\t' : ','
       this.$papa.parse(this.translationsFile, {
         header: true,
+        delimiter: delim,
         complete: function (results, file) {
-          if (results.errors.length === 0 && results.meta.fields.includes('key')) {
+          if (results.errors.length === 0) {
+            console.error(results.error)
+          }
+          if (results.data.length > 0 && results.meta.fields.includes('key')) {
             const locales = results.meta.fields.filter((f) => f !== 'key')
             if (!toSave.i18n) {
               toSave.i18n = {}
             }
             // array of row objects
-            results.data.forEach((row) => {
-              locales.forEach((locale) => {
-                if (!toSave.i18n[locale]) {
-                  toSave.i18n[locale] = {}
-                }
-                toSave.i18n[locale][row.key] = row[locale]
+            results.data
+              .filter((row) => row.key.trim().length > 0)
+              .forEach((row) => {
+                locales.forEach((locale) => {
+                  if (!toSave.i18n[locale]) {
+                    toSave.i18n[locale] = {}
+                  }
+                  toSave.i18n[locale][row.key] = row[locale]
+                })
               })
-            })
             that.initRows()
+          } else {
+            console.error(results.error)
           }
         }
       })

@@ -68,7 +68,7 @@
 
 <script>
 import { ref, computed, watch, defineComponent } from 'vue'
-import { getFileDelim, cleanToken } from './options'
+import * as Papa from 'papaparse'
 
 export default defineComponent({
   name: 'Options',
@@ -123,31 +123,31 @@ export default defineComponent({
 
     watch(optionsFile, async (newValue) => {
       if (newValue !== null) {
-        const delim = getFileDelim(newValue)
-        const reader = new FileReader()
-        reader.readAsText(newValue, 'UTF-8')
-        reader.onload = evt => {
-          evt.target.result.split(/\r\n|\n/)
-            .map(line => line.trim())
-            .filter(line => line.length > 0)
-            .forEach(line => {
-              const tokens = line.split(delim).map(token => cleanToken(token))
-              if (tokens.length > 0 && tokens[0].length > 0) {
-                if (!schema.value.options) {
-                  schema.value.options = []
-                }
-                const val = tokens[0]
-                tokens.splice(0, 1)
-                schema.value.options.push({
-                  value: val,
-                  label: tokens.length > 0 ? tokens.join(delim) : val
-                })
+        Papa.parse(newValue, {
+          header: false,
+          delimiter: newValue.name.endsWith('.tsv') ? '\t' : ',',
+          complete: function (results, file) {
+            if (results.errors.length === 0) {
+              console.error(results.error)
+            }
+            if (results.data.length > 0) {
+              if (!schema.value.options) {
+                schema.value.options = []
               }
-            })
-        }
-        reader.onerror = evt => {
-          console.error(evt)
-        }
+              results.data
+                .filter((row) => row.length > 0 && row[0].trim().length > 0)
+                .forEach((row) => {
+                  const val = row.shift().trim()
+                  schema.value.options.push({
+                    value: val,
+                    label: row.length > 0 ? row.join(results.meta.delimiter) : val
+                  })
+                })
+            } else {
+              console.error(results.error)
+            }
+          }
+        })
       }
     })
 

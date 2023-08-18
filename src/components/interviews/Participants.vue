@@ -520,7 +520,6 @@ import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
 import AuthMixin from '../../mixins/AuthMixin'
 import { participantService } from '../../services/interview'
-import { getFileDelim, cleanToken } from '../forms/items/options'
 import { errorHandler } from '../../boot/errors'
 
 export default defineComponent({
@@ -662,6 +661,7 @@ export default defineComponent({
   },
   methods: {
     updateTableParticipants () {
+      this.selected = []
       participantService.getParticipants(this.paginationOpts, this.campaign._id, this.filter)
         .then(response => {
           this.participants = response.data
@@ -830,63 +830,63 @@ export default defineComponent({
         .catch(err => this.handleError(err))
     },
     importParticipants () {
-      const delim = getFileDelim(this.participantsFile)
-      const reader = new FileReader()
-      reader.readAsText(this.participantsFile, 'UTF-8')
-      reader.onload = evt => {
-        const headers = []
-        const participants = []
-        const knownHeaders = ['identifier', 'validFrom', 'validUntil', 'activated']
-        evt.target.result.split(/\r\n|\n/)
-          .map(line => line.trim())
-          .filter(line => line.length > 0)
-          .forEach(line => {
-            const tokens = line.split(delim).map(token => cleanToken(token))
-            if (tokens.length > 0) {
-              if (headers.length === 0) {
-                tokens.forEach(token => headers.push(token))
-              } else {
-                try {
-                  const pobj = {
-                    identifier: null,
-                    validFrom: null,
-                    validUntil: null,
-                    activated: true,
-                    campaign: this.campaign._id,
-                    data: {}
-                  }
-                  tokens.forEach((token, index) => {
-                    const key = headers[index]
-                    const value = token && token.length > 0 ? token : null
-                    if (knownHeaders.includes(key)) {
-                      pobj[key] = value
-                    } else {
-                      pobj.data[key] = value
-                    }
-                  })
-                  participants.push(pobj)
-                } catch (e) {
-                  console.error(e)
-                }
+      const knownHeaders = ['identifier', 'validFrom', 'validUntil', 'activated']
+      const campaignId = this.campaign._id
+      const that = this
+      const delim = this.participantsFile.name.endsWith('.tsv') ? '\t' : ','
+      this.$papa.parse(this.participantsFile, {
+        header: true,
+        delimiter: delim,
+        complete: function (results, file) {
+          if (results.errors.length === 0) {
+            console.error(results.error)
+          }
+          if (results.data.length > 0) {
+            const participants = []
+            // array of row objects
+            results.data.forEach((row) => {
+              const pobj = {
+                identifier: null,
+                validFrom: null,
+                validUntil: null,
+                activated: true,
+                campaign: campaignId,
+                data: {}
               }
-            }
-          })
-        if (participants.length > 0) {
-          participantService.createParticipant(participants)
-            .then(() => {
-              Notify.create({
-                message: t('success.create_participants'),
-                color: 'positive',
-                icon: 'fas fa-check'
-              })
-              this.updateTableParticipants()
+              let valid = false // we need at least one not empty data entry
+              Object.keys(row)
+                .forEach((key) => {
+                  if (row[key].length > 0) {
+                    if (knownHeaders.includes(key)) {
+                      pobj[key] = row[key]
+                    } else {
+                      pobj.data[key] = row[key]
+                    }
+                    valid = true
+                  }
+                })
+              if (valid) {
+                participants.push(pobj)
+              }
             })
-            .catch(err => this.handleError(err))
+            if (participants.length > 0) {
+              participantService.createParticipant(participants)
+                .then(() => {
+                  Notify.create({
+                    message: t('success.create_participants'),
+                    color: 'positive',
+                    icon: 'fas fa-check'
+                  })
+                  that.updateTableParticipants()
+                })
+                .catch(err => {
+                  that.updateTableParticipants() // some may have passed
+                  that.handleError(err)
+                })
+            }
+          }
         }
-      }
-      reader.onerror = evt => {
-        console.error(evt)
-      }
+      })
     },
     onAddParticipant () {
       this.participantData = {
