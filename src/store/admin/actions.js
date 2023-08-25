@@ -1,5 +1,5 @@
 import userService from '../../services/user'
-import groupService from '../../services/group'
+import { groupService, taskService } from '../../services/group'
 import { t } from '../../boot/i18n'
 import { errorHandler } from '../../boot/errors'
 import { Notify } from 'quasar'
@@ -244,6 +244,85 @@ export async function deleteGroups ({ dispatch }, payload) {
   }
   dispatch(
     'admin/getGroups',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  )
+}
+
+export async function getTasks ({ commit }, payload) {
+  const result = await taskService.getTasks(payload.paginationOpts, payload.filter).catch(err => {
+    errorHandler.onError(err, t('error.get_tasks'))
+  })
+  if (result) {
+    commit('setTasks', result.data)
+    commit('setTaskCount', result.total)
+  } else {
+    commit('setTasks', [])
+    commit('setTaskCount', 0)
+  }
+}
+
+export async function createTask ({ dispatch }, payload) {
+  const result = await taskService
+    .createTask(payload.task)
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.create_task'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'admin/getTasks',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  )
+}
+
+export async function deleteTask ({ dispatch }, payload) {
+  const result = await taskService
+    .deleteTask(payload.id)
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_task'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'admin/getTasks',
+    {
+      paginationOpts: payload.paginationOpts
+    },
+    { root: true }
+  )
+}
+
+export async function deleteTasks ({ dispatch }, payload) {
+  const result = await taskService
+    .deleteTasks(payload.ids)
+    .catch((err) => {
+      errorHandler.onError(err, t('error.general'))
+    })
+  if (result) {
+    Notify.create({
+      message: t('success.delete_tasks'),
+      color: 'positive',
+      icon: 'fas fa-check'
+    })
+  }
+  dispatch(
+    'admin/getTasks',
     {
       paginationOpts: payload.paginationOpts
     },

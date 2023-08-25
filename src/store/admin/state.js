@@ -18,6 +18,14 @@ export default function () {
       rowsNumber: 0
     },
     group: {},
-    groupUsers: []
+    groupUsers: [],
+    tasks: [],
+    taskPaginationOpts: {
+      sortBy: 'createdTask',
+      descending: true,
+      page: 1,
+      rowsPerPage: 10,
+      rowsNumber: 0
+    }
   }
 }

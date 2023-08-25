@@ -34,6 +34,11 @@ const routes = [
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
+        path: '/tasks',
+        component: () => import('pages/Tasks.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
         path: '/studies',
         component: () => import('pages/Studies.vue'),
         meta: { requiresAuth: true, noGuest: true }

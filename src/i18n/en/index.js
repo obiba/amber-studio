@@ -79,6 +79,27 @@ export default {
     search_users: 'Search',
     search_users_hint: 'Search users to add by email or name'
   },
+  tasks: {
+    title: 'Tasks',
+    add_task_hint: 'Add a new task',
+    delete_tasks: 'Delete Tasks',
+    delete_tasks_hint: 'Delete selected tasks',
+    delete_tasks_confirm: 'Please confirm that you want to remove all the selected tasks:',
+    delete_task_hint: 'Delete task',
+    delete_task_confirm: 'Please confirm that you want to remove the task:',
+    search_hint: 'Search by type, state or error message',
+    error: 'Error',
+    types: {
+      'participants-init': 'Participants initialization',
+      'participants-reminder': 'Participants reminders',
+      'participants-expired': 'Participants expired'
+    },
+    states: {
+      in_progress: 'In progress',
+      completed: 'Completed',
+      aborted: 'Aborted'
+    }
+  },
   studies: {
     title: 'Studies',
     edit_study_hint: 'Edit study',
@@ -257,7 +278,8 @@ export default {
     get_form_revisions: 'There was an error while retrieving form\'s versions.',
     get_case_report_forms: 'There was an error while retrieving the case report forms.',
     get_case_reports: 'There was an error while retrieving the case reports.',
-    form_revision_has_case_reports: 'The form {name} with revision {revision} cannot be removed because case reports are still associated to it.'
+    form_revision_has_case_reports: 'The form {name} with revision {revision} cannot be removed because case reports are still associated to it.',
+    get_tasks: 'There was an error while retrieving tasks.'
   },
   success: {
     create_account: 'Account successfully created. Please check your email to verify your account.',
@@ -311,7 +333,10 @@ export default {
     update_interview: 'Interview successfully updated.',
     delete_interview: 'Interview successfully deleted.',
     delete_interviews: 'Interviews successfully deleted.',
-    reset_participant_password: 'Participant password reset successful.'
+    reset_participant_password: 'Participant password reset successful.',
+    create_task: 'Task successfully added.',
+    delete_task: 'Task successfully deleted.',
+    delete_tasks: 'Tasks successfully deleted.'
   },
   form: {
     tr_add: 'Add translation',
@@ -618,6 +643,7 @@ export default {
   permissions: 'Permissions',
   restricted_access: 'Restricted access',
   state: 'State',
+  type: 'Type',
   date: 'Date',
   status: 'Status',
   members: 'Members',

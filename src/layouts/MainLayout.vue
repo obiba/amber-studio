@@ -119,6 +119,15 @@
           </q-item-section>
         </q-item>
 
+        <q-item v-if="isAdministrator" to="/tasks" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="tasks" class="q-ml-sm"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('tasks.title')}}</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <!--q-item v-if="isAdministrator" to="/settings" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="settings"/>

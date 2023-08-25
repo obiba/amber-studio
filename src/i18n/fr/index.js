@@ -79,6 +79,27 @@ export default {
     search_users: 'Chercher',
     search_users_hint: 'Chercher les utilisateurs à ajouter par email ou nom'
   },
+  tasks: {
+    title: 'Tâches',
+    add_task_hint: 'Ajouter une tâche',
+    delete_tasks: 'Supprimer les tâches',
+    delete_tasks_hint: 'Supprimer les tâches sélectionnées',
+    delete_tasks_confirm: 'Veuillez confirmer la suppression de toutes les tâches sélectionnées :',
+    delete_task_hint: 'Supprimer la tâche',
+    delete_task_confirm: 'Veuillez confirmer la suppression de la tâche :',
+    search_hint: 'Chercher par type, état ou message d\'erreur',
+    error: 'Erreur',
+    types: {
+      'participants-init': 'Initialisation des participants',
+      'participants-reminder': 'Rappels aux participants',
+      'participants-expired': 'Expiration des participants'
+    },
+    states: {
+      in_progress: 'En cours',
+      completed: 'Complétée',
+      aborted: 'Annulée'
+    }
+  },
   studies: {
     title: 'Études',
     edit_study_hint: 'Éditer l\'étude',
@@ -257,7 +278,8 @@ export default {
     get_form_revisions: 'Erreur à la récupération des versions du formulaire.',
     get_case_report_forms: 'Erreur à la récupération des formulaires de rapport de cas.',
     get_case_reports: 'Erreur à la récupération des rapport de cas.',
-    form_revision_has_case_reports: 'Le formulaire {name} dans la version {revision} ne peut être supprimé car des rapports de cas sont toujours associés.'
+    form_revision_has_case_reports: 'Le formulaire {name} dans la version {revision} ne peut être supprimé car des rapports de cas sont toujours associés.',
+    get_tasks: 'Erreur à la récupération des tâches.'
   },
   success: {
     create_account: 'Compte créé avec succès. Un courriel de vérification d\'adresse a été envoyé.',
@@ -311,7 +333,10 @@ export default {
     update_interview: 'Entrevue mis à jour avec succès.',
     delete_interview: 'Entrevue supprimée avec succès.',
     delete_interviews: 'Entrevues supprimée avec succès.',
-    reset_participant_password: 'Mot de passe du participant réinitialisé avec succès.'
+    reset_participant_password: 'Mot de passe du participant réinitialisé avec succès.',
+    create_task: 'Tâche ajoutée avec succès.',
+    delete_task: 'Tâche supprimée avec succès.',
+    delete_tasks: 'Tâches supprimées avec succès.'
   },
   form: {
     tr_add: 'Ajouter une traduction',
@@ -622,6 +647,7 @@ export default {
   permissions: 'Permissions',
   restricted_access: 'Accès restreint',
   state: 'État',
+  type: 'Type',
   date: 'Date',
   status: 'Statuts',
   members: 'Membres',

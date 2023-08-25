@@ -1,3 +1,4 @@
-import * as group from './group.js'
+import * as groupService from './group.js'
+import * as taskService from './task.js'
 
-export default Object.assign({}, group)
+export { groupService, taskService }

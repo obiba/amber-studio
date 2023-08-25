@@ -33,3 +33,15 @@ export function setGroupPagination (state, payload) {
 export function setGroupCount (state, count) {
   state.groupPaginationOpts.rowsNumber = count
 }
+
+export function setTasks (state, tasks) {
+  state.tasks = [...tasks]
+}
+
+export function setTaskPagination (state, payload) {
+  state.taskPaginationOpts = payload.taskPaginationOpts
+}
+
+export function setTaskCount (state, count) {
+  state.taskPaginationOpts.rowsNumber = count
+}
