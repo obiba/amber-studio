@@ -598,10 +598,10 @@ export default defineComponent({
             `${val ? date.formatDate(val, 'YYYY-MM-DD') : '-'}`
         },
         {
-          name: 'initialContact',
+          name: 'initAt',
           align: 'left',
           label: t('interview.participant_initial_contact'),
-          field: 'initialContact',
+          field: 'initAt',
           sortable: true,
           format: val =>
             `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm') : '-'}`
