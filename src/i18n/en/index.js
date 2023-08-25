@@ -92,7 +92,8 @@ export default {
     types: {
       'participants-init': 'Participants initialization',
       'participants-reminder': 'Participants reminders',
-      'participants-expired': 'Participants expired'
+      'participants-expired': 'Participants expired',
+      'participants-summary': 'Participants summary'
     },
     states: {
       in_progress: 'In progress',

@@ -92,7 +92,8 @@ export default {
     types: {
       'participants-init': 'Initialisation des participants',
       'participants-reminder': 'Rappels aux participants',
-      'participants-expired': 'Expiration des participants'
+      'participants-expired': 'Expiration des participants',
+      'participants-summary': 'Résumé sur les participants'
     },
     states: {
       in_progress: 'En cours',

@@ -178,7 +178,7 @@ import { ref } from 'vue'
 import { settings } from '../boot/settings'
 import { date } from 'quasar'
 
-const types = ['participants-init', 'participants-reminder', 'participants-expired']
+const types = ['participants-init', 'participants-reminder', 'participants-expired', 'participants-summary']
 
 export default {
   mounted: function () {
