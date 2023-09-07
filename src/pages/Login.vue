@@ -75,6 +75,7 @@
                 <q-form @submit="onSubmit" class="q-gutter-md">
 
                   <q-input
+                    ref="token"
                     type="number"
                     v-model="token"
                     :label="$t('login.token')"
@@ -254,6 +255,7 @@ export default defineComponent({
           err = Object.assign({}, err)
           if (type === 'bad-request' && err.message === 'Token required.') {
             this.withToken = true
+            this.$nextTick(() => this.$refs.token.focus())
           } else if (type === 'bad-request' && err.message === 'Invalid token.') {
             Notify.create({
               message: this.$t('login.failed_token'),
