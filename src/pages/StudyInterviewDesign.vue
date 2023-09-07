@@ -183,7 +183,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, defineAsyncComponent, ref, toRaw } from 'vue'
+import { defineComponent, defineAsyncComponent, ref, toRaw, nextTick} from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import AuthMixin from '../mixins/AuthMixin'
@@ -199,13 +199,15 @@ export default defineComponent({
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
       if (!this.isReadOnly) {
-        if (this.changeDetected >= 0 && this.originalStr !== JSON.stringify(this.asReference())) {
-          this.changeDetected++
-          // auto save every 4s
-          if (this.changeDetected > 2) {
-            this.save(false)
+        nextTick().then(() => {
+          if (this.changeDetected >= 0 && this.originalStr !== JSON.stringify(this.asReference())) {
+            this.changeDetected++
+            // auto save every 4s
+            if (this.changeDetected > 2) {
+              this.save(false)
+            }
           }
-        }
+        })
       }
     }, 2000)
     this.initStudyInterviewDesignData()

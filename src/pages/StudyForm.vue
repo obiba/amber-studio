@@ -270,13 +270,15 @@ export default defineComponent({
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
       if (!this.isReadOnly) {
-        if (this.changeDetected >= 0 && this.originalSchemaStr !== JSON.stringify(this.studyFormData.schema)) {
-          this.changeDetected++
-          // auto save every 4s
-          if (this.changeDetected > 2) {
-            this.save(false)
+        nextTick().then(() => {
+          if (this.changeDetected >= 0 && this.originalSchemaStr !== JSON.stringify(this.studyFormData.schema)) {
+            this.changeDetected++
+            // auto save every 4s
+            if (this.changeDetected > 2) {
+              this.save(false)
+            }
           }
-        }
+        })
       }
     }, 2000)
     this.initStudyFormData()
