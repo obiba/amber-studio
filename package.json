@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
-    "@obiba/quasar-app-extension-amber": "^1.0.2",
+    "@obiba/quasar-app-extension-amber": "^1.1.4",
     "@quasar/app": "^3.3.3",
     "@quasar/quasar-app-extension-qcalendar": "^4.0.0-beta.16",
     "@quasar/quasar-app-extension-qmarkdown": "^2.0.0-beta.10",
