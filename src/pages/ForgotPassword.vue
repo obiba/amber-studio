@@ -18,6 +18,7 @@
               <q-card-section>
                 <q-form @submit="forgotPassword">
                   <q-input
+                    autofocus
                     v-model="resetEmail"
                     :label="$t('email')"
                     type="email"

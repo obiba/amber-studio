@@ -15,10 +15,11 @@
                   </div>
                 </div>
               </q-card-section>
-              <q-card-section v-show="!withToken">
+              <q-card-section v-if="!withToken">
                 <q-form @submit="onSubmit" class="q-gutter-md">
 
                   <q-input
+                    autofocus
                     v-model="email"
                     :label="$t('email')"
                     lazy-rules>
@@ -52,7 +53,7 @@
                   </div>
                 </q-form>
               </q-card-section>
-              <q-card-section v-show="secret">
+              <q-card-section v-if="secret">
                 <div class="col text-subtitle">
                   {{$t('login.totp')}}
                 </div>
@@ -71,11 +72,11 @@
                   </template>
                 </q-input>
               </q-card-section>
-              <q-card-section v-show="withToken">
+              <q-card-section v-if="withToken">
                 <q-form @submit="onSubmit" class="q-gutter-md">
 
                   <q-input
-                    ref="token"
+                    autofocus
                     type="number"
                     v-model="token"
                     :label="$t('login.token')"
@@ -255,7 +256,6 @@ export default defineComponent({
           err = Object.assign({}, err)
           if (type === 'bad-request' && err.message === 'Token required.') {
             this.withToken = true
-            this.$nextTick(() => this.$refs.token.focus())
           } else if (type === 'bad-request' && err.message === 'Invalid token.') {
             Notify.create({
               message: this.$t('login.failed_token'),

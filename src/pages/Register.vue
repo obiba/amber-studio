@@ -19,6 +19,7 @@
                 <q-form @submit="onSubmit" class="q-gutter-md">
 
                   <q-input
+                    autofocus
                     v-model="formData.email"
                     :label="$t('email')"
                     :hint="$t('email_hint')"
