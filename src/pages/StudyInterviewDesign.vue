@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-
+    <pre>{{this.interviewDesignData.steps}}</pre>
     <q-card class="q-ma-md">
       <q-card-section class="q-pa-none">
 
@@ -291,12 +291,11 @@ export default defineComponent({
       await this.getStudy({ id: this.interviewDesign.study })
     },
     async save (notification, interviewDesign) {
+      console.log('HHHH')
       this.v$.$reset()
       this.changeDetected = -1
       const toSave = interviewDesign || toRaw(this.interviewDesignData)
       return this.updateStudyInterviewDesign({ interviewDesign: toSave, notification: notification }).then(() => {
-        this.interviewDesignData = JSON.parse(JSON.stringify(this.interviewDesign))
-        this.originalStr = JSON.stringify(this.asReference())
         this.changeDetected = 0
       })
     },
