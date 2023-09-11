@@ -44,7 +44,6 @@
         </div>
       </div>
     </div>
-    <pre>{{this.interviewDesignData.steps}}</pre>
     <q-card class="q-ma-md">
       <q-card-section class="q-pa-none">
 
