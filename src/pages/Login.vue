@@ -45,6 +45,7 @@
                       color="primary"
                       :disable="disableSubmit"/>
                     <q-btn
+                      v-if="settings.register_enabled"
                       :label="$t('login.register')"
                       flat
                       to="/register"

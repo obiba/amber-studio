@@ -64,6 +64,7 @@ module.exports = configure(function (ctx) {
         API: ctx.dev ? 'http://localhost:3030' : process.env.AMBER_URL,
         RECAPTCHA_SITE_KEY: ctx.dev ? '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u' : process.env.RECAPTCHA_SITE_KEY,
         SETTINGS: ctx.dev ? settingsJson : (process.env.SETTINGS ? process.env.SETTINGS : settingsJson),
+        REGISTER_ENABLED: ctx.dev ? true : (process.env.REGISTER_ENABLED === undefined ? true : process.env.REGISTER_ENABLED),
         VERSION: version
       },
 

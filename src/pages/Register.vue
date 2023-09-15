@@ -206,6 +206,11 @@ export default defineComponent({
       }
     }
   },
+  mounted () {
+    if (!this.settings.register_enabled) {
+      this.$router.push('/')
+    }
+  },
   computed: {
     ...mapState({
       submitting: state => state.auth.showLoading,
