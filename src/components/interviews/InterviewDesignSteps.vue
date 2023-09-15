@@ -105,6 +105,16 @@
               map-options
               :label="$t('study.form_revision')"
               :disable="isReadOnly || !selected.form" />
+              <q-btn
+                v-if="selected.form"
+                color="secondary"
+                icon="article"
+                no-caps
+                size="sm"
+                class="q-mt-md"
+                :to="'/study/' + studyId + '/form/' + selected.form">
+                  {{ $t('interview.go_to_form') }}
+              </q-btn>
           </div>
         </div>
         <div v-if="selected" class="row q-pa-md q-col-gutter-lg">

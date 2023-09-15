@@ -601,7 +601,8 @@ export default {
     edit_participant_hint: 'Edit the participant details',
     pause_participant_hint: 'Pause the participant',
     activate_participant_hint: 'Activate the participant',
-    reset_participant_password_hint: 'Reset the participant\'s password'
+    reset_participant_password_hint: 'Reset the participant\'s password',
+    go_to_form: 'Go to form'
   },
   license: {
     cc_by_40: 'Creative Commons BY 4.0',
