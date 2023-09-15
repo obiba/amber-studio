@@ -555,6 +555,8 @@ export default {
     delete_campaign_confirm: 'Please confirm that you want to remove the campaign:',
     delete_campaign_hint: 'Delete campaign',
     delete_campaigns_hint: 'Delete selected campaigns',
+    campaign_visit: 'Amber Visit',
+    campaign_visit_hint: 'Address of the Amber Visit application to use for this campaign. Not required if there is only one Amber Visit application.',
     campaign_investigators: 'Investigators',
     campaign_investigators_hint: 'Investigators will receive scheduled email notifications to invite participants, and are allowed to enter the participant answers on their behalf. At least one is required.',
     campaign_security: 'Security',

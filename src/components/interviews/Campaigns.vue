@@ -64,7 +64,7 @@
                   <q-item>
                     <q-item-section>
                       <q-item-label>{{ $t('description') }}</q-item-label>
-                      <q-item-label caption>{{ campaign.description }}</q-item-label>
+                      <q-item-label caption>{{ campaign.description || '-' }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item>
@@ -73,6 +73,15 @@
                       <div>
                         <q-chip v-for="sub in investigatorSubjects" icon="person" size="sm" :label="sub.name" :key="sub._id"/>
                       </div>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_visit_hint')">
+                      <q-item-label>{{ $t('interview.campaign_visit') }}</q-item-label>
+                      <q-item-label caption>
+                        <a v-if="campaign.visitUrl" :href="campaign.visitUrl" target="_blank">{{ campaign.visitUrl }}</a>
+                        <span v-else>-</span>
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -250,6 +259,21 @@
             autogrow
             lazy-rules
           />
+          <q-input
+            v-model='campaignData.visitUrl'
+            :label="$t('interview.campaign_visit')"
+            :hint="$t('interview.campaign_visit_hint')"
+            placeholder="https://"
+            @blur="v$.campaignData.name.$touch"
+            :error="v$.campaignData.name.$error"
+            lazy-rules
+          >
+            <template v-slot:error>
+              <div v-for="error in v$.campaignData.visitUrl.$errors">
+                {{error.$message}}
+              </div>
+            </template>
+          </q-input>
         </q-card-section>
         <q-card-section>
           <q-select
@@ -437,6 +461,9 @@ export default defineComponent({
         required,
         minLength: minLength(2),
         maxLength: maxLength(30)
+      },
+      visitUrl: {
+        url: (value) => !value || /^https?:\/\/.*/.test(value)
       }
     }
   },
