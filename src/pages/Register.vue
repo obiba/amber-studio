@@ -226,6 +226,11 @@ export default defineComponent({
           label: this.$t('locales.' + loc)
         }
       })
+        .sort((loc1, loc2) => {
+          if (loc1.label > loc2.label) return 1
+          if (loc1.label < loc2.label) return -1
+          return 0
+        })
     },
     hasLocales () {
       return locales.length > 1
