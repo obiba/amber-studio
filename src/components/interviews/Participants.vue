@@ -769,7 +769,7 @@ export default defineComponent({
     resetPassword (participant) {
       this.participantData = {
         _id: participant._id,
-        password: ''
+        password: null
       }
       participantService.patchParticipant(this.participantData)
         .then(() => {
