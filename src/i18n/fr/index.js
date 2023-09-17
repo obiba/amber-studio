@@ -540,7 +540,7 @@ export default {
     participant_instructions: 'Instructions pour le participant',
     participant_instructions_hint: 'Explications optionnelles de la procédure, le format markdown est supporté.',
     add_step_hint: 'Ajouter une étape',
-    step_name_hint: 'Nom unique qui servira pour groupes les données collectées durant cette étape.',
+    step_name_hint: 'Nom unique qui servira pour groupes les données collectées durant cette étape. Notez que "participant" est un nom réservé.',
     step_rendering: 'Rendu',
     step_time_estimate: 'Estimation de temps',
     step_time_estimate_hint: 'Temps estimé pour répondre aux questions de cette étape, en minutes, optionnel.',

@@ -317,7 +317,16 @@ export default defineComponent({
       name: {
         required,
         minLength: minLength(2),
-        maxLength: maxLength(30)
+        maxLength: maxLength(30),
+        nameUnique (value) {
+          if (this.steps) {
+            return !this.steps.find(step => step.name === value)
+          }
+          return true
+        },
+        nameReserved (value) {
+          return value !== 'participant'
+        }
       },
       label: {
         required,
