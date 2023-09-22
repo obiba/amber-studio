@@ -76,6 +76,15 @@
                     </q-item-section>
                   </q-item>
                   <q-item>
+                    <q-item-section :title="$t('interview.campaign_supporters_hint')">
+                      <q-item-label>{{ $t('interview.campaign_supporters') }}</q-item-label>
+                      <div>
+                        <q-chip v-for="sub in supporterSubjects" icon="person" size="sm" :label="sub.name" :key="sub._id"/>
+                        <span v-if="supporterSubjects.length === 0">-</span>
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
                     <q-item-section :title="$t('interview.campaign_visit_hint')">
                       <q-item-label>{{ $t('interview.campaign_visit') }}</q-item-label>
                       <q-item-label caption>
@@ -175,6 +184,17 @@
             use-chips
             :label="$t('interview.campaign_investigators')"
             :hint="$t('interview.campaign_investigators_hint')" />
+        </q-card-section>
+        <q-card-section>
+          <q-select
+            v-model="campaignData.supporters"
+            :options="userSubjectOptions"
+            emit-value
+            map-options
+            multiple
+            use-chips
+            :label="$t('interview.campaign_supporters')"
+            :hint="$t('interview.campaign_supporters_hint')" />
         </q-card-section>
         <q-card-section>
           <div class="row q-mb-md q-col-gutter-md">
@@ -285,6 +305,17 @@
             use-chips
             :label="$t('interview.campaign_investigators')"
             :hint="$t('interview.campaign_investigators_hint')" />
+        </q-card-section>
+        <q-card-section>
+          <q-select
+            v-model="campaignData.supporters"
+            :options="userSubjectOptions"
+            emit-value
+            map-options
+            multiple
+            use-chips
+            :label="$t('interview.campaign_supporters')"
+            :hint="$t('interview.campaign_supporters_hint')" />
         </q-card-section>
         <q-card-section>
           <div class="row q-col-gutter-md">
@@ -486,6 +517,19 @@ export default defineComponent({
           .map((id) => this.getSubject(id, 'user'))
           .filter((sub) => sub !== undefined)
         return rval
+      }
+      return []
+    },
+    supporterSubjects () {
+      if (this.tab !== '') {
+        const supporters = this.campaigns
+          .find((cmp) => cmp.name === this.tab).supporters
+        if (supporters) {
+          const rval = supporters
+            .map((id) => this.getSubject(id, 'user'))
+            .filter((sub) => sub !== undefined)
+          return rval
+        }
       }
       return []
     }

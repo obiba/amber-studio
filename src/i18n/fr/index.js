@@ -563,6 +563,8 @@ export default {
     campaign_visit_hint: 'Addresse de l\'application Amber Visit à utiliser pour cette campagne. Non requis s\'il y a une seule application Amber Visit.',
     campaign_investigators: 'Investigateurs',
     campaign_investigators_hint: 'Les investigateurs recevront des courriels les invitant à faire le suivi des participants, et ils pourront saisir les réponses des participants. Au moins un est requis.',
+    campaign_supporters: 'Enquêteurs de soutien',
+    campaign_supporters_hint: 'Les enquêteurs sont les personnes de contact pour les participants, et ils pourront saisir les réponses des participants. Au moins un est requis.',
     campaign_security: 'Sécurité',
     campaign_with_password: 'Mot de passe de participant',
     campaign_with_password_hint: 'Le participant doit entrer un mot de passe à la première connexion.',

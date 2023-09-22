@@ -559,6 +559,8 @@ export default {
     campaign_visit_hint: 'Address of the Amber Visit application to use for this campaign. Not required if there is only one Amber Visit application.',
     campaign_investigators: 'Investigators',
     campaign_investigators_hint: 'Investigators will receive scheduled email notifications to invite participants, and are allowed to enter the participant answers on their behalf. At least one is required.',
+    campaign_supporters: 'Support interviewers',
+    campaign_supporters_hint: 'Interviewers are the contact persons for the participants, and are allowed to enter the participant answers on their behalf.',
     campaign_security: 'Security',
     campaign_with_password: 'Participant password',
     campaign_with_password_hint: 'Participant is requested to set a password at first connection.',
