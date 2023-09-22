@@ -144,6 +144,13 @@
               :label="$t('interview.step_time_estimate')"
               :hint="$t('interview.step_time_estimate_hint')"
               :disable="isReadOnly" />
+            <q-input
+              v-model.number="selected.time_estimate_max"
+              class="q-mb-md"
+              type="number"
+              :label="$t('interview.step_time_estimate_max')"
+              :hint="$t('interview.step_time_estimate_max_hint')"
+              :disable="isReadOnly" />
           </div>
         </div>
         <q-separator/>
