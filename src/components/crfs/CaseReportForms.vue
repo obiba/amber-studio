@@ -194,7 +194,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.form_permitted_users')" />
+            :label="$t('study.permitted_users')" />
           <q-select
             v-if="newStudyCaseReportFormData.restrictedAccess"
             v-model="newStudyCaseReportFormData.permissions.groups"
@@ -203,7 +203,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.form_permitted_groups')" />
+            :label="$t('study.permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -278,7 +278,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.form_permitted_users')" />
+            :label="$t('study.permitted_users')" />
           <q-select
             v-if="selectedStudyCaseReportForm.restrictedAccess"
             v-model="selectedStudyCaseReportForm.permissions.groups"
@@ -287,7 +287,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.form_permitted_groups')" />
+            :label="$t('study.permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />

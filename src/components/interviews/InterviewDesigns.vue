@@ -179,7 +179,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.interview_design_permitted_users')" />
+            :label="$t('study.permitted_users')" />
           <q-select
             v-if="newStudyInterviewDesignData.restrictedAccess"
             v-model="newStudyInterviewDesignData.permissions.groups"
@@ -188,7 +188,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.interview_design_permitted_groups')" />
+            :label="$t('study.permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -260,7 +260,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.interview_design_permitted_users')" />
+            :label="$t('study.permitted_users')" />
           <q-select
             v-if="selectedStudyInterviewDesign.restrictedAccess"
             v-model="selectedStudyInterviewDesign.permissions.groups"
@@ -269,7 +269,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.interview_design_permitted_groups')" />
+            :label="$t('study.permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />

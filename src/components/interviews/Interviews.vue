@@ -357,7 +357,7 @@ export default defineComponent({
           field: 'campaign',
           sortable: true,
           format: val =>
-            this.campaigns.find(cmp => cmp._id === val).name
+            this.campaigns.find(cmp => cmp._id === val)?.name
         },
         {
           name: 'state',
