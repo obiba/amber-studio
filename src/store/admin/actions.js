@@ -277,13 +277,15 @@ export async function createTask ({ dispatch }, payload) {
       icon: 'fas fa-check'
     })
   }
-  dispatch(
-    'admin/getTasks',
-    {
-      paginationOpts: payload.paginationOpts
-    },
-    { root: true }
-  )
+  if (payload.paginationOpts) {
+    dispatch(
+      'admin/getTasks',
+      {
+        paginationOpts: payload.paginationOpts
+      },
+      { root: true }
+    )
+  }
 }
 
 export async function deleteTask ({ dispatch }, payload) {

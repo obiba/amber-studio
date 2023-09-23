@@ -73,6 +73,34 @@
                       <div>
                         <q-chip v-for="sub in investigatorSubjects" icon="person" size="sm" :label="sub.name" :key="sub._id"/>
                       </div>
+                      <div v-if="!isReadOnly" class="q-mt-sm">
+                        <q-btn-dropdown
+                          color="primary"
+                          split
+                          icon="send"
+                          :label="$t('interview.campaign_notifications')"
+                          size="sm">
+                          <q-list>
+                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-init')">
+                              <q-item-section>
+                                <q-item-label>{{$t('tasks.types.participants-init')}}</q-item-label>
+                              </q-item-section>
+                            </q-item>
+
+                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-reminder')">
+                              <q-item-section>
+                                <q-item-label>{{$t('tasks.types.participants-reminder')}}</q-item-label>
+                              </q-item-section>
+                            </q-item>
+
+                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-summary')">
+                              <q-item-section>
+                                <q-item-label>{{$t('tasks.types.participants-summary')}}</q-item-label>
+                              </q-item-section>
+                            </q-item>
+                          </q-list>
+                        </q-btn-dropdown>
+                      </div>
                     </q-item-section>
                   </q-item>
                   <q-item>
@@ -601,6 +629,22 @@ export default defineComponent({
         id: this.campaignData._id,
         interviewDesign: this.interviewDesign
       }).then(() => { this.tab = nexttab })
+    },
+    onParticipantsTask (type) {
+      const campaign = this.campaigns.find((cmp) => cmp.name === this.tab)
+      this.$store.dispatch('admin/createTask', {
+        task: {
+          type: type,
+          arguments: {
+            interviewDesign: {
+              _id: this.interviewDesign._id
+            },
+            campaign: {
+              _id: campaign._id
+            }
+          }
+        }
+      })
     }
   }
 })

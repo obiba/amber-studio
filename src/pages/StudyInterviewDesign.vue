@@ -48,6 +48,7 @@
 
       <q-card-section v-if="!isReadOnly">
         <div class="text-h5 q-mb-md">{{ $t('interview.design') }}</div>
+        <q-separator/>
         <q-splitter
           v-model="splitterModel"
         >
