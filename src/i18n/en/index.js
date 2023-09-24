@@ -238,7 +238,8 @@ export default {
     powered_by: 'Powered by'
   },
   chart: {
-    cumulated_records: 'Cumulated count of records',
+    cumulated_case_reports: 'Cumulated count of case reports',
+    cumulated_interviews: 'Cumulated count of interviews',
     zoom: 'Zoom',
     reset_zoom: 'Reset zoom',
     restore: 'Restore'

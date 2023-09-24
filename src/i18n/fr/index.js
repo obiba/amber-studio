@@ -238,7 +238,8 @@ export default {
     powered_by: 'Propulsé par'
   },
   chart: {
-    cumulated_records: 'Nombre cumulé d\'enregistrements',
+    cumulated_records: 'Nombre cumulé de rapports de cas',
+    cumulated_interviews: 'Nombre cumulé d\'entrevues',
     zoom: 'Zoom',
     reset_zoom: 'Réinitialiser le zoom',
     restore: 'Restaurer'

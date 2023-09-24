@@ -2,7 +2,7 @@
   <div>
     <q-card>
       <q-card-section>
-        <div ref="chart" id="chartId" style="height: 400px"></div>
+        <div ref="chart" :id="chartId" style="height: 400px"></div>
       </q-card-section>
     </q-card>
   </div>
@@ -15,6 +15,14 @@ import * as echarts from 'echarts'
 export default defineComponent({
   name: 'RecordsChart',
   props: {
+    chartId: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
     aggregations: {
       type: Object,
       required: false
@@ -30,7 +38,7 @@ export default defineComponent({
   },
   methods: {
     init () {
-      this.chart = echarts.init(document.getElementById('chartId'))
+      this.chart = echarts.init(document.getElementById(this.chartId))
       const valuesByDate = {}
       for (const agg of this.aggregations) {
         valuesByDate[`${agg._id.year}-${agg._id.month}-${agg._id.day}`] = agg.count
@@ -61,7 +69,7 @@ export default defineComponent({
         },
         title: {
           left: 'center',
-          text: this.$t('chart.cumulated_records')
+          text: this.title
         },
         animation: false,
         toolbox: {
