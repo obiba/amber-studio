@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="row q-col-gutter-sm q-mt-md q-mb-md">
-      <div class="col-md-6 col-sm-12 col-xs-12">
+      <div v-if="case_reports_aggregations.length>0" class="col-md-6 col-sm-12 col-xs-12">
         <div class="row q-col-gutter-sm q-mb-md">
           <div v-for="(item, index) in caseReportItems" :key="index" class="col-md-6 col-sm-6 col-xs-12">
             <q-item :style="`background-color: ${item.color1}`" class="q-pa-none">
@@ -49,12 +49,11 @@
           </div>
         </div>
         <records-chart
-          v-if="case_reports_aggregations.length>0"
           chartId="case-reports"
           :title="$t('chart.cumulated_case_reports')"
           :aggregations="case_reports_aggregations"/>
       </div>
-      <div class="col-md-6 col-sm-12 col-xs-12">
+      <div v-if="interviews_aggregations.length>0" class="col-md-6 col-sm-12 col-xs-12">
         <div class="row q-col-gutter-sm q-mb-md">
           <div v-for="(item, index) in interviewItems" :key="index" class="col-md-6 col-sm-6 col-xs-12">
             <q-item :style="`background-color: ${item.color1}`" class="q-pa-none">
@@ -79,7 +78,6 @@
           </div>
         </div>
         <records-chart
-          v-if="interviews_aggregations.length>0"
           chartId="interviews"
           :title="$t('chart.cumulated_interviews')"
           :aggregations="interviews_aggregations"/>
