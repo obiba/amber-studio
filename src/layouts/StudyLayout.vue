@@ -97,15 +97,22 @@
           icon="help_center"
           :label="$t('study.case_reports')"
           :content-inset-level="1"
+          default-opened
         >
 
           <q-item :to="'/study/' + studyId + '/case-report-forms'" active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="design_services" size="xs" />
+            </q-item-section>
             <q-item-section>
               <q-item-label>{{$t('study.forms')}}</q-item-label>
             </q-item-section>
           </q-item>
 
           <q-item :to="'/study/' + studyId + '/case-reports'" active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="record_voice_over" size="xs" />
+            </q-item-section>
             <q-item-section>
               <q-item-label>{{$t('study.records')}}</q-item-label>
             </q-item-section>
@@ -117,15 +124,22 @@
           icon="contact_support"
           :label="$t('study.interviews')"
           :content-inset-level="1"
+          default-opened
         >
 
           <q-item :to="'/study/' + studyId + '/interview-designs'" active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="design_services" size="xs" />
+            </q-item-section>
             <q-item-section>
               <q-item-label>{{$t('study.designs')}}</q-item-label>
             </q-item-section>
           </q-item>
 
           <q-item :to="'/study/' + studyId + '/interviews'" active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="record_voice_over" size="xs" />
+            </q-item-section>
             <q-item-section>
               <q-item-label>{{$t('study.records')}}</q-item-label>
             </q-item-section>

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <q-card>
+    <q-card flat>
       <q-card-section>
-        <div ref="chart" :id="chartId" style="height: 400px"></div>
+        <div ref="chart" :id="chartId" :style="`height: ${height}`"></div>
       </q-card-section>
     </q-card>
   </div>
@@ -26,6 +26,11 @@ export default defineComponent({
     aggregations: {
       type: Object,
       required: false
+    },
+    height: {
+      type: String,
+      required: false,
+      default: '400px'
     }
   },
   setup () {
@@ -35,6 +40,11 @@ export default defineComponent({
   },
   mounted () {
     this.init()
+  },
+  watch: {
+    aggregations () {
+      this.init()
+    }
   },
   methods: {
     init () {

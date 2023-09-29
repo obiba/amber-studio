@@ -19,11 +19,25 @@
         class="text-grey"
         active-color="info"
         indicator-color="info"
+        @update:model-value="getCampaignMetrics"
       >
         <q-tab v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" :label="campaign.name" />
       </q-tabs>
 
       <q-separator />
+
+      <div class="q-mt-md">
+        <div class="row q-col-gutter-lg">
+          <div class="col-6">
+            <records-chart
+              v-if="counts.interviews && counts.interviews.total > 0"
+              chartId="interviews"
+              :title="$t('chart.cumulated_interviews')"
+              :aggregations="counts.interviews_agg"
+              height="400px"/>
+          </div>
+        </div>
+      </div>
 
       <q-tab-panels v-model="tab">
 
@@ -480,13 +494,14 @@ import { mapState, mapActions } from 'vuex'
 import { defineComponent, defineAsyncComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
-import { subjectsService } from '../../services/utils'
+import { subjectsService, metricsService } from '../../services/utils'
 import AuthMixin from '../../mixins/AuthMixin'
 import { date } from 'quasar'
 
 export default defineComponent({
   components: {
-    Participants: defineAsyncComponent(() => import('src/components/interviews/Participants.vue'))
+    Participants: defineAsyncComponent(() => import('src/components/interviews/Participants.vue')),
+    RecordsChart: defineAsyncComponent(() => import('components/dashboard/RecordsChart'))
   },
   name: 'StudyCaseReportForms',
   mixins: [AuthMixin],
@@ -511,7 +526,8 @@ export default defineComponent({
       showDeleteCampaign: ref(false),
       campaignData: ref({}),
       subjects: [],
-      date
+      date,
+      counts: ref({})
     }
   },
   validations: {
@@ -573,6 +589,7 @@ export default defineComponent({
       await this.getCampaigns({ paginationOpts: this.paginationOpts, interviewDesign: this.interviewDesign._id })
       if (this.campaigns.length > 0) {
         this.tab = this.campaigns[0].name
+        this.getCampaignMetrics()
       }
     },
     getSubject (id, type) {
@@ -588,6 +605,23 @@ export default defineComponent({
           label: s.name
         }
       })
+    },
+    getCampaignMetrics () {
+      const name = this.tab
+      const campaign = this.campaigns.find((cmp) => cmp.name === name)
+      if (campaign) {
+        metricsService.getMetrics({
+          type: 'interview',
+          query: {
+            interview: {
+              interviewDesign: this.interviewDesign._id,
+              campaign: campaign._id
+            }
+          }
+        }).then((result) => {
+          this.counts = result.counts ? result.counts : {}
+        })
+      }
     },
     onAddCampaign () {
       this.campaignData = {
