@@ -508,7 +508,6 @@ export default defineComponent({
   mounted () {
     subjectsService.getSubjects().then((result) => {
       this.subjects = result
-      this.initCampaigns()
     })
   },
   setup () {
@@ -540,6 +539,11 @@ export default defineComponent({
       visitUrl: {
         url: (value) => !value || /^https?:\/\/.*/.test(value)
       }
+    }
+  },
+  watch: {
+    study () {
+      this.initCampaigns()
     }
   },
   computed: {
@@ -621,6 +625,8 @@ export default defineComponent({
         }).then((result) => {
           this.counts = result.counts ? result.counts : {}
         })
+      } else {
+        this.counts = {}
       }
     },
     onAddCampaign () {
@@ -646,7 +652,10 @@ export default defineComponent({
       this.createCampaign({
         campaign: toSave,
         interviewDesign: this.interviewDesign
-      }).then(() => { this.tab = this.campaignData.name })
+      }).then(() => {
+        this.tab = this.campaignData.name
+        this.getCampaignMetrics()
+      })
     },
     editCampaign () {
       const toSave = { ...this.campaignData }
@@ -662,7 +671,10 @@ export default defineComponent({
       this.deleteCampaign({
         id: this.campaignData._id,
         interviewDesign: this.interviewDesign
-      }).then(() => { this.tab = nexttab })
+      }).then(() => {
+        this.tab = nexttab
+        this.getCampaignMetrics()
+      })
     },
     onParticipantsTask (type) {
       const campaign = this.campaigns.find((cmp) => cmp.name === this.tab)
