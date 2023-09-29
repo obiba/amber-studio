@@ -115,6 +115,8 @@ export default {
     design: 'Design',
     title: 'Study',
     definition: 'Definition',
+    services: 'Services',
+    services_hint: 'Data collection services used by the study (all services when not specified).',
     forms: 'Forms',
     forms_hint: 'A form defines how to collect data. It is made of a schema (questions, sections, computed fields etc.) and of revisions (each revision is a snapshot of the form at a given point of time). A form (or a form revision) cannot be deleted when there are associated records. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/forms.html" target="_blank">Forms documentation</a>.',
     form_hint: 'The form schema is a sequence of items: see the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/items/index.html" target="_blank">Form items documentation</a>. See also the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/form-builder/" target="_blank">Form builder cookbook</a> for standard operation procedures and best practices. Data collection is based on form revisions, allowing the safe edition of the form and the tracking of form changes in the records.',

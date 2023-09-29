@@ -134,6 +134,16 @@
               lazy-rules
               class='q-ma-sm'
             />
+            <q-select
+              v-model="newStudyData.services"
+              :label="$t('study.services')"
+              :hint="$t('study.services_hint')"
+              :options="servicesOptions"
+              multiple
+              emit-value
+              map-options
+              clearable
+            />
           </div>
         </q-card-section>
         <q-card-actions align='right'>
@@ -319,6 +329,11 @@ export default {
         })
       }
       return cols
+    },
+    servicesOptions () {
+      return [
+        { label: this.$t('study.case_reports'), value: 'case-reports' },
+        { label: this.$t('study.interviews'), value: 'interviews' }]
     }
   },
   methods: {

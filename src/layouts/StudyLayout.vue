@@ -93,7 +93,7 @@
         <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{$t('study.data_collection')}}</q-item-label>
 
         <q-expansion-item
-          v-if="!isGuest"
+          v-if="!isGuest && hasCaseReports"
           icon="help_center"
           :label="$t('study.case_reports')"
           :content-inset-level="1"
@@ -120,7 +120,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          v-if="!isGuest"
+          v-if="!isGuest && hasInterviews"
           icon="contact_support"
           :label="$t('study.interviews')"
           :content-inset-level="1"
@@ -206,6 +206,16 @@
               autogrow
               lazy-rules
               class='q-mb-sm'
+            />
+            <q-select
+              v-model="studyData.services"
+              :label="$t('study.services')"
+              :hint="$t('study.services_hint')"
+              :options="servicesOptions"
+              multiple
+              emit-value
+              map-options
+              clearable
             />
           </div>
         </q-card-section>
@@ -323,6 +333,17 @@ export default defineComponent({
     },
     disableSave () {
       return this.v$.studyData.$invalid
+    },
+    servicesOptions () {
+      return [
+        { label: this.$t('study.case_reports'), value: 'case-reports' },
+        { label: this.$t('study.interviews'), value: 'interviews' }]
+    },
+    hasCaseReports () {
+      return !this.study.services || this.study.services.length === 0 || this.study.services?.includes('case-reports')
+    },
+    hasInterviews () {
+      return !this.study.services || this.study.services.length === 0 || this.study.services?.includes('interviews')
     }
   },
   methods: {
