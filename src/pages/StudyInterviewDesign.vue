@@ -182,7 +182,7 @@ export default defineComponent({
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
       if (!this.isReadOnly) {
-        if (this.changeDetected >= 0 && this.originalStr !== JSON.stringify(this.asReference())) {
+        if (this.changeDetected >= 0 && this.hasInterviewDesignChanged()) {
           this.changeDetected++
           // auto save every 4s
           if (this.changeDetected > 2) {
@@ -220,7 +220,7 @@ export default defineComponent({
       showEditDefinition: false,
       revisionOptions: [],
       interviewDesignData: {},
-      originalStr: null
+      originalInterviewDesign: { steps: [], i18n: {} }
     }
   },
   validations: {
@@ -267,18 +267,26 @@ export default defineComponent({
     asReference () {
       return { steps: this.interviewDesignData.steps, i18n: this.interviewDesignData.i18n }
     },
+    initOriginalInterviewDesign () {
+      this.originalInterviewDesign.steps = JSON.parse(JSON.stringify(this.interviewDesignData.steps))
+      this.originalInterviewDesign.i18n = JSON.parse(JSON.stringify(this.interviewDesignData.i18n))
+    },
     async initStudyInterviewDesignData () {
       await this.getStudyInterviewDesign({ id: this.$route.params.itwid })
       this.interviewDesignData = JSON.parse(JSON.stringify(this.interviewDesign))
-      this.originalStr = JSON.stringify(this.asReference())
+      this.initOriginalInterviewDesign()
       await this.getStudy({ id: this.interviewDesign.study })
     },
+    hasInterviewDesignChanged () {
+      return JSON.stringify(this.originalInterviewDesign.steps) !== JSON.stringify(this.interviewDesignData.steps) ||
+        JSON.stringify(this.originalInterviewDesign.i18n) !== JSON.stringify(this.interviewDesignData.i18n)
+    },
     async save (notification, interviewDesign) {
-      console.log('HHHH')
       this.v$.$reset()
       this.changeDetected = -1
       const toSave = interviewDesign || toRaw(this.interviewDesignData)
       return this.updateStudyInterviewDesign({ interviewDesign: toSave, notification: notification }).then(() => {
+        this.initOriginalInterviewDesign()
         this.changeDetected = 0
       })
     },
