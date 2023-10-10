@@ -83,68 +83,56 @@
 
         <q-item v-if="!isGuest" :to="'/study/' + studyId + '/forms'" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
-            <q-icon name="file_copy"/>
+            <q-icon name="list_alt"/>
           </q-item-section>
           <q-item-section>
             <q-item-label>{{$t('study.forms')}}</q-item-label>
           </q-item-section>
         </q-item>
 
+        <q-item v-if="!isGuest && hasCaseReports" :to="'/study/' + studyId + '/case-report-forms'" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="insert_drive_file" size="xs" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('study.case_report_forms')}}</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item
+          v-if="!isGuest && hasInterviews"
+          :to="'/study/' + studyId + '/interview-designs'" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="file_copy" size="xs" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('study.interview_designs')}}</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{$t('study.data_collection')}}</q-item-label>
 
-        <q-expansion-item
+        <q-item
           v-if="!isGuest && hasCaseReports"
-          icon="help_center"
-          :label="$t('study.case_reports')"
-          :content-inset-level="1"
-          default-opened
-        >
+          :to="'/study/' + studyId + '/case-reports'" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="help_center" size="xs" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('study.case_reports')}}</q-item-label>
+          </q-item-section>
+        </q-item>
 
-          <q-item :to="'/study/' + studyId + '/case-report-forms'" active-class="q-item-no-link-highlighting">
-            <q-item-section avatar>
-              <q-icon name="design_services" size="xs" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{$t('study.forms')}}</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item :to="'/study/' + studyId + '/case-reports'" active-class="q-item-no-link-highlighting">
-            <q-item-section avatar>
-              <q-icon name="record_voice_over" size="xs" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{$t('study.records')}}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-expansion-item>
-
-        <q-expansion-item
+        <q-item
           v-if="!isGuest && hasInterviews"
-          icon="contact_support"
-          :label="$t('study.interviews')"
-          :content-inset-level="1"
-          default-opened
-        >
-
-          <q-item :to="'/study/' + studyId + '/interview-designs'" active-class="q-item-no-link-highlighting">
-            <q-item-section avatar>
-              <q-icon name="design_services" size="xs" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{$t('study.designs')}}</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item :to="'/study/' + studyId + '/interviews'" active-class="q-item-no-link-highlighting">
-            <q-item-section avatar>
-              <q-icon name="record_voice_over" size="xs" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{$t('study.records')}}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-expansion-item>
+          :to="'/study/' + studyId + '/interviews'" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="quiz" size="xs" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('study.interviews')}}</q-item-label>
+          </q-item-section>
+        </q-item>
 
         <q-item class="fixed-bottom text-caption">
           <div>
