@@ -676,5 +676,10 @@ export default {
   from: 'From',
   to: 'To',
   key: 'Key',
-  value: 'Value'
+  value: 'Value',
+  delimiter: 'Delimiter',
+  delimiter_hint: 'Delimiter used to separate the values.',
+  comma: 'Comma',
+  semicolon: 'Semicolon',
+  tabulation: 'Tabulation'
 }

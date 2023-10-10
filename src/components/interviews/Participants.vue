@@ -427,6 +427,13 @@
               {{ $t('interview.upload_participants_hint') }}
             </template>
           </q-file>
+          <q-select
+            v-model="delimiter"
+            :options="delimiters"
+            emit-value
+            map-options
+            :label="$t('delimiter')"
+            :hint="$t('delimiter_hint')" />
         </q-card-section>
         <q-card-actions align='right'>
           <q-btn :label="$t('cancel')" flat v-close-popup />
@@ -544,6 +551,7 @@ export default defineComponent({
       showConfirmDeleteParticipants: ref(false),
       participantData: ref({}),
       participants: ref([]),
+      delimiter: ref(','),
       filter: ref(''),
       selected: ref([]),
       paginationOpts: {
@@ -563,6 +571,20 @@ export default defineComponent({
         {
           value: 'multiple',
           label: t('interview.add_multiple_participants')
+        }
+      ],
+      delimiters: [
+        {
+          value: ',',
+          label: t('comma')
+        },
+        {
+          value: ';',
+          label: t('semicolon')
+        },
+        {
+          value: '\t',
+          label: t('tabulation')
         }
       ],
       columns: [
@@ -835,10 +857,10 @@ export default defineComponent({
       const knownHeaders = ['identifier', 'validFrom', 'validUntil', 'activated']
       const campaignId = this.campaign._id
       const that = this
-      const delim = this.participantsFile.name.endsWith('.tsv') ? '\t' : ','
+      // const delim = this.participantsFile.name.endsWith('.tsv') ? '\t' : ','
       this.$papa.parse(this.participantsFile, {
         header: true,
-        delimiter: delim,
+        delimiter: this.delimiter,
         complete: function (results, file) {
           if (results.errors.length === 0) {
             console.error(results.error)
@@ -858,7 +880,7 @@ export default defineComponent({
               let valid = false // we need at least one not empty data entry
               Object.keys(row)
                 .forEach((key) => {
-                  if (row[key].length > 0) {
+                  if (key !== 'code' && row[key].length > 0) {
                     if (knownHeaders.includes(key)) {
                       pobj[key] = row[key]
                     } else {

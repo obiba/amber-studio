@@ -680,5 +680,10 @@ export default {
   from: 'Depuis',
   to: 'Jusqu\'à',
   key: 'Clé',
-  value: 'Valeur'
+  value: 'Valeur',
+  delimiter: 'Délimiteur',
+  delimiter_hint: 'Caractère délimiteur de colonne',
+  comma: 'Virgule',
+  semicolon: 'Point-virgule',
+  tabulation: 'Tabulation'
 }
