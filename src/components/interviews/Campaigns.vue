@@ -95,9 +95,9 @@
                           :label="$t('interview.campaign_notifications')"
                           size="sm">
                           <q-list>
-                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-init')">
+                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-activate')">
                               <q-item-section>
-                                <q-item-label>{{$t('tasks.types.participants-init')}}</q-item-label>
+                                <q-item-label>{{$t('tasks.types.participants-activate')}}</q-item-label>
                               </q-item-section>
                             </q-item>
 
@@ -107,9 +107,21 @@
                               </q-item-section>
                             </q-item>
 
+                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-reminder-expire')">
+                              <q-item-section>
+                                <q-item-label>{{$t('tasks.types.participants-reminder-expire')}}</q-item-label>
+                              </q-item-section>
+                            </q-item>
+
                             <q-item clickable v-close-popup @click="onParticipantsTask('participants-summary')">
                               <q-item-section>
                                 <q-item-label>{{$t('tasks.types.participants-summary')}}</q-item-label>
+                              </q-item-section>
+                            </q-item>
+
+                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-deactivate')">
+                              <q-item-section>
+                                <q-item-label>{{$t('tasks.types.participants-deactivate')}}</q-item-label>
                               </q-item-section>
                             </q-item>
                           </q-list>
@@ -171,6 +183,12 @@
                     <q-item-section :title="$t('interview.campaign_reminders_count_hint')">
                       <q-item-label>{{ $t('interview.campaign_reminders_count') }}</q-item-label>
                       <q-item-label caption>{{ campaign.numberOfReminders }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_weeks_reminder_before_expire_hint')">
+                      <q-item-label>{{ $t('interview.campaign_weeks_reminder_before_expire') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.weeksReminderBeforeDeactivation }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item>
@@ -427,6 +445,15 @@
           <div class="row q-mt-md q-col-gutter-sm">
             <div class="col-6">
               <q-input
+                v-model.number='campaignData.weeksReminderBeforeDeactivation'
+                type="number"
+                :label="$t('interview.campaign_weeks_reminder_before_expire')"
+                :hint="$t('interview.campaign_weeks_reminder_before_expire_hint')"
+                lazy-rules
+              />
+            </div>
+            <div class="col-6">
+              <q-input
                 v-model.number='campaignData.weeksToDeactivate'
                 type="number"
                 :label="$t('interview.campaign_weeks_deactivate')"
@@ -434,11 +461,17 @@
                 lazy-rules
               />
             </div>
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-mt-md q-col-gutter-sm">
             <div class="col-6">
               <q-toggle
                 v-model="campaignData.withPassword"
                 :label="$t('interview.campaign_with_password')" />
               <div class="text-caption text-grey-7">{{ $t('interview.campaign_with_password_hint') }}</div>
+            </div>
+            <div class="col-6">
             </div>
           </div>
         </q-card-section>

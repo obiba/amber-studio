@@ -90,9 +90,10 @@ export default {
     search_hint: 'Chercher par type, état ou message d\'erreur',
     error: 'Erreur',
     types: {
-      'participants-init': 'Initialisation des participants',
+      'participants-activate': 'Initialisation des participants',
       'participants-reminder': 'Rappels aux participants',
-      'participants-expired': 'Expiration des participants',
+      'participants-reminder-expire': 'Rappel aux participants avant expiration ',
+      'participants-deactivate': 'Expiration des participants',
       'participants-summary': 'Résumé sur les participants'
     },
     states: {
@@ -580,6 +581,8 @@ export default {
     campaign_valid_until_hint: 'Date d\'échéance des invitations. Si non renseignée les invitations seront opérationnelles indéfiniment.',
     campaign_weeks_reminder: 'Semaines entre rappels',
     campaign_weeks_reminder_hint: 'Nombre de semaines à attendre entre rappels, à compter du contact initial.',
+    campaign_weeks_reminder_before_expire: 'Nombre de semaines avant expiration',
+    campaign_weeks_reminder_before_expire_hint: 'Nombre de semaines à attendre avant d\'envoyer un rappel avant l\'expiration de l\'invitation, à compter du contact initial.',
     campaign_reminders_count: 'Nombre de rappels',
     campaign_reminders_count_hint: 'Nombre de rappels à envoyer aux enquêteurs jusqu\'à ce que l\'entrevue soit complétée ou l\'invitation soit désactivée.',
     campaign_weeks_deactivate: 'Semaines avant désactivation',

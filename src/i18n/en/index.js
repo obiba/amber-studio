@@ -90,9 +90,10 @@ export default {
     search_hint: 'Search by type, state or error message',
     error: 'Error',
     types: {
-      'participants-init': 'Participants initialization',
+      'participants-activate': 'Participants initialization',
       'participants-reminder': 'Participants reminders',
-      'participants-expired': 'Participants expired',
+      'participants-reminder-expire': 'Participants reminder before expiration',
+      'participants-deactivate': 'Participants expiration',
       'participants-summary': 'Participants summary'
     },
     states: {
@@ -578,7 +579,9 @@ export default {
     campaign_weeks_reminder_hint: 'Number of weeks to wait between reminders, from the initial participant contact.',
     campaign_reminders_count: 'Number of reminders',
     campaign_reminders_count_hint: 'Number of reminders to send to investigators until an interview is completed or an invitation is deactivated.',
-    campaign_weeks_deactivate: 'Weeks to deactivate',
+    campaign_weeks_reminder_before_expire: 'Weeks reminder before expire',
+    campaign_weeks_reminder_before_expire_hint: 'Number of weeks to wait before sending a reminder that a participant account will expire.',
+    campaign_weeks_deactivate: 'Weeks to expiration',
     campaign_weeks_deactivate_hint: 'Number of weeks to wait before deactivating a participant, from the initial participant contact.',
     add_participants: 'Add participants',
     import_participants: 'Import participants',
