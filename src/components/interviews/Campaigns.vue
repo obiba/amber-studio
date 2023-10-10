@@ -28,7 +28,7 @@
 
       <div class="q-mt-md">
         <div class="row q-col-gutter-lg">
-          <div class="col-6">
+          <div class="col-12 col-md-6">
             <records-chart
               v-if="counts.interviews && counts.interviews.total > 0"
               chartId="interviews"
@@ -66,7 +66,7 @@
           </div>
           <div class="q-mt-md">
             <div class="row q-col-gutter-lg">
-              <div class="col-6">
+              <div class="col-12 col-md-6">
                 <p class="text-weight-bold q-mb-sm">{{ $t('interview.definition') }}</p>
                 <q-list bordered separator>
                   <q-item>
@@ -146,7 +146,7 @@
                   </q-item>
                 </q-list>
               </div>
-              <div class="col-6">
+              <div class="col-12 col-md-6">
                 <p class="text-weight-bold q-mb-sm">{{ $t('interview.schedule') }}</p>
                 <q-list bordered separator>
                   <q-item>
