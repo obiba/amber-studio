@@ -107,7 +107,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import snarkdown from 'snarkdown'
+import { marked } from 'marked'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
 import { settings } from '../../boot/settings'
@@ -428,7 +428,7 @@ export default defineComponent({
       return makeSchemaFormTr({ i18n: this.i18n ? this.i18n : {} }, { locale: this.locale })(key)
     },
     md (text) {
-      return text ? snarkdown(text) : text
+      return text ? marked.parse(this.tr(text), { headerIds: false, mangle: false }) : text
     },
     onLocale (newLocale) {
       this.locale = newLocale

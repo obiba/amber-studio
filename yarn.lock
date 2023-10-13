@@ -1168,12 +1168,12 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.7-obiba":
-  version "1.0.7"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.7-obiba#15c6153e04fb9ea7bc6f60b8c01ce4a2c068efef"
+"@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.11-obiba":
+  version "1.0.11"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.11-obiba#48ef33b501c9bb6b0a0386e000de2cc8b5fc485e"
   dependencies:
-    "@blitzar/types" "^1.0.7"
-    "@blitzar/utils" "^1.0.7"
+    "@blitzar/types" "^1.0.10"
+    "@blitzar/utils" "^1.0.10"
     case-anything "^2.1.2"
     copy-anything "^2.0.3"
     filter-anything "^2.2.1"
@@ -1181,32 +1181,31 @@
     map-anything "^1.0.4"
     merge-anything "^4.0.2"
     nestify-anything "^1.0.3"
-    snarkdown "^2.0.0"
 
-"@blitzar/types@^1.0.7", "@blitzar/types@^1.1.21":
-  version "1.1.21"
-  resolved "https://registry.yarnpkg.com/@blitzar/types/-/types-1.1.21.tgz#099365b0541e2e51321f9c73c6cb53f180e93c6a"
-  integrity sha512-XbRixxr+bty6wWcVnLTtpUdQyfjhEHiMXYTKPbaeoorqNExLExQdNSBKOFh37vK1VhcIxgIGYy1XdYC/D12LVg==
+"@blitzar/types@^1.0.10", "@blitzar/types@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@blitzar/types/-/types-1.2.4.tgz#dbe732e034510b7459acb26f9c8105f57e8adebe"
+  integrity sha512-uLFfwxfvzl/2BbQfM9y66NyaGYtXbgxnQqUPMcUmyoimsz4pvTEuJ6hnIpnhYOLYhC8qPL845hq8HBrU33PfqA==
   dependencies:
     ts-toolbelt "^9.6.0"
 
-"@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.7-obiba":
-  version "1.0.7"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.7-obiba#80d3ff6a6c9b795bd39306cdb6f243d0f63f90c4"
+"@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.11-obiba":
+  version "1.0.11"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.11-obiba#50d89515d88f2b36fe4395ff8a0bb4bbd784dbd2"
 
-"@blitzar/utils@^1.0.7":
-  version "1.1.21"
-  resolved "https://registry.yarnpkg.com/@blitzar/utils/-/utils-1.1.21.tgz#139ee73bf4dfe58d8d0bca15d83b481e49eecb92"
-  integrity sha512-tn5rshcGMMse7R0fPoelKpshTuWZvSt9AdJFrlB5UlTKFv+Gl1z1xQcHfSbinsqEWJmj4ZOCIOXEGsOOfMftzg==
+"@blitzar/utils@^1.0.10":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@blitzar/utils/-/utils-1.2.4.tgz#c627b9c90d785c03aa6bfcce444a92d459515e2d"
+  integrity sha512-NpO7Hvw08VsF/dYDFkWkwg2iUW4MjdOSGlaV9t+Ar1KE1RrU0AKSFNntzsQWTp6NcpbH0S+b4w2whNS0X567mQ==
   dependencies:
-    "@blitzar/types" "^1.1.21"
-    commafy-anything "^2.1.0"
-    flatten-anything "^2.0.4"
+    "@blitzar/types" "^1.2.4"
+    commafy-anything "^2.1.2"
+    flatten-anything "^2.0.7"
     is-what "^4.1.7"
 
-"@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.7-obiba":
-  version "1.0.7"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.7-obiba#5a1a54681cc8e2049d5fd7f3402d772bc15162c9"
+"@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.11-obiba":
+  version "1.0.11"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.11-obiba#9ae15797028cb3ef0cdad212e840c6feb0e9a9fb"
   dependencies:
     commafy-anything "^2.1.0"
     flatten-anything "^2.0.4"
@@ -1546,18 +1545,19 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@obiba/quasar-app-extension-amber@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@obiba/quasar-app-extension-amber/-/quasar-app-extension-amber-1.1.4.tgz#01831499342be94bbcaa7dfe6d5716d0b0e04e32"
-  integrity sha512-m+luR9xvK0aNugAv7jK+6kz4vVuBOjNJiJ6pHu03P+Ahd9dTJ7OR/Fe0MLyj3l4fnf7GfnMqY0MBqDeWyfwdIw==
+"@obiba/quasar-app-extension-amber@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@obiba/quasar-app-extension-amber/-/quasar-app-extension-amber-1.1.5.tgz#c54d6f8a9bfaef4366ace9b27342e330b6c6e435"
+  integrity sha512-VxLTw88Mx7t9XSoW5WLzhdB1omJJKIfDUX9DhfIJAh94pX5/F/RyzH5OMqPeM5rVB1071CPOcOUbuvaF5WeMNQ==
   dependencies:
-    "@obiba/quasar-ui-amber" "^1.1.4"
+    "@obiba/quasar-ui-amber" "^1.1.5"
 
-"@obiba/quasar-ui-amber@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@obiba/quasar-ui-amber/-/quasar-ui-amber-1.1.4.tgz#4984712da4af1a2b95801c8e6adadb902a5ff23c"
-  integrity sha512-026FUsgUSfX0FY2uC2InI9r4PWFq1aDVFpczRUtpCXNO94e/Ejrf5ulxrdg95yl/WWg8wXlDwktjld4Axj1YTA==
+"@obiba/quasar-ui-amber@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@obiba/quasar-ui-amber/-/quasar-ui-amber-1.1.5.tgz#857ffbd03375cc3ac6e71785c722c15aceb333d7"
+  integrity sha512-SQ+x62EtAUqlksagWAW1hY/Mn52hz1ieZSwmfaXWiqta5nouVkyRFrDAZnY667SdiNukMjML9NVNzdBPJxgrNA==
   dependencies:
+    dompurify "^3.0.6"
     vue3-openlayers "^0.1.63"
 
 "@petamoriken/float16@^3.4.7":
@@ -3421,7 +3421,7 @@ colorette@^2.0.10:
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.16.tgz#713b9af84fdb000139f04546bd4a93f62a5085da"
   integrity sha512-hUewv7oMjCp+wkBv5Rm0v87eJhq4woh5rSR+42YSQJKecCqgIqNkZ6lAlQms/BwHPJA5NKMRlpxPRv0n8HQW6g==
 
-commafy-anything@^2.1.0:
+commafy-anything@^2.1.0, commafy-anything@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/commafy-anything/-/commafy-anything-2.1.2.tgz#67f3eeaf6e983b8a793dc791a839d0ed3a4839be"
   integrity sha512-10EDlgJRsQKhQ0f07+3t3Noi89JTcwURAU3G+/mDzpZcIYeIIk84eLiukYc2/OJiiXeY1PWVl4qEn8HbP1v2rw==
@@ -4197,6 +4197,11 @@ dompurify@^2.2.0:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.3.6.tgz#2e019d7d7617aacac07cbbe3d88ae3ad354cf875"
   integrity sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==
+
+dompurify@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.0.6.tgz#925ebd576d54a9531b5d76f0a5bef32548351dae"
+  integrity sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==
 
 domutils@^2.5.2, domutils@^2.8.0:
   version "2.8.0"
@@ -5097,7 +5102,7 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.5.tgz#76c8584f4fc843db64702a6bd04ab7a8bd666da3"
   integrity sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==
 
-flatten-anything@^2.0.4:
+flatten-anything@^2.0.4, flatten-anything@^2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/flatten-anything/-/flatten-anything-2.0.7.tgz#a79e81a36fc1b4327e72b7015ee4a8a8473ecd7a"
   integrity sha512-fsqRneoHoc6o5R+4CzMA8cYqUWz9EHmqygkJSu09MFbA8c3VGIoPjg96UI7IFtkHsoJFmCQZC83ITsJyuoJ+Lg==
@@ -6805,6 +6810,11 @@ markdown-it@^12.3.2:
     linkify-it "^3.0.1"
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
+
+marked@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-9.1.1.tgz#16d6f6bbaa433176c8ab16d3bfd11ca94e36e5c4"
+  integrity sha512-ZmXkUGH54U4rEy3GL9vYj8+S1PHJx/zz5pc4Frn7UdGiNREKT12fWBJ5a5ffjFtghx9C9912vEg9Zra1Nf7CnA==
 
 mdn-data@2.0.14:
   version "2.0.14"
@@ -8916,11 +8926,6 @@ slice-ansi@^4.0.0:
     ansi-styles "^4.0.0"
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
-
-snarkdown@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/snarkdown/-/snarkdown-2.0.0.tgz#b1feb4db91b9f94a8ebbd7a50f3e99aee18b1e03"
-  integrity sha512-MgL/7k/AZdXCTJiNgrO7chgDqaB9FGM/1Tvlcenenb7div6obaDATzs16JhFyHHBGodHT3B7RzRc5qk8pFhg3A==
 
 sockjs@^0.3.21, sockjs@^0.3.24:
   version "0.3.24"
