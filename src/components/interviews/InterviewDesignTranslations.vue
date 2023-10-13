@@ -106,11 +106,11 @@
           </template>
         </q-input>
       </template>
-      <template v-slot:body-cell='props'>
+      <template v-slot:body-cell='props' style="min-width: 200px; max-width: 300px; text-wrap: wrap;">
         <q-td :props="props">
           {{ props.value }}
           <q-popup-edit v-model="props.row[props.col.name]" @hide="onRowEdit">
-            <q-input v-model="props.row[props.col.name]" dense autofocus />
+            <q-input type="textarea" v-model="props.row[props.col.name]" dense autofocus />
           </q-popup-edit>
         </q-td>
       </template>
