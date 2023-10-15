@@ -98,7 +98,10 @@ pre {
   margin-top: 10px;
   color: #c10015;
   font-size: smaller;
-  // display: none;
+}
+
+div[error="true"] {
+  color: #c10015;
 }
 
 .text-smaller,
