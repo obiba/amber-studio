@@ -191,6 +191,17 @@
                 icon="delete"
                 @click='onConfirmDelete(props.row)'>
               </q-btn>
+              <q-btn
+                v-if="!isReadOnly && props.row.state === 'completed'"
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.reopen_interview_hint')"
+                icon="replay"
+                @click='onReopen(props.row)'>
+              </q-btn>
             </q-td>
           </template>
         </q-table>
@@ -560,6 +571,14 @@ export default defineComponent({
       if (this.selected.length > 0) {
         this.showConfirmDeleteInterviews = true
       }
+    },
+    onReopen (studyInterview) {
+      this.$store.dispatch('interview/updateInterview', {
+        id: studyInterview._id,
+        interview: { state: 'in_progress' },
+        study: this.studyId,
+        paginationOpts: this.paginationOpts
+      })
     },
     onClearDate (name) {
       if (name === 'from') {

@@ -209,6 +209,7 @@ export default {
     view_interview_hint: 'View the interview',
     edit_interview_hint: 'Edit the interview',
     delete_interview_hint: 'Delete interview',
+    reopen_interview_hint: 'Reopen interview',
     delete_interview_confirm: 'Please confirm that you want to remove the interview:',
     delete_interviews_hint: 'Delete selected interviews',
     delete_interviews_confirm: 'Please confirm that you want to remove all the selected interviews:',
