@@ -95,6 +95,12 @@
                           :label="$t('interview.campaign_notifications')"
                           size="sm">
                           <q-list>
+                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-info-activate')">
+                              <q-item-section>
+                                <q-item-label>{{$t('tasks.types.participants-info-activate')}}</q-item-label>
+                              </q-item-section>
+                            </q-item>
+
                             <q-item clickable v-close-popup @click="onParticipantsTask('participants-activate')">
                               <q-item-section>
                                 <q-item-label>{{$t('tasks.types.participants-activate')}}</q-item-label>
@@ -107,9 +113,9 @@
                               </q-item-section>
                             </q-item>
 
-                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-reminder-expire')">
+                            <q-item clickable v-close-popup @click="onParticipantsTask('participants-info-expire')">
                               <q-item-section>
-                                <q-item-label>{{$t('tasks.types.participants-reminder-expire')}}</q-item-label>
+                                <q-item-label>{{$t('tasks.types.participants-info-expire')}}</q-item-label>
                               </q-item-section>
                             </q-item>
 
@@ -174,6 +180,12 @@
                     </q-item-section>
                   </q-item>
                   <q-item>
+                    <q-item-section :title="$t('interview.campaign_weeks_info_before_activate_hint')">
+                      <q-item-label>{{ $t('interview.campaign_weeks_info_before_activate') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.weeksInfoBeforeActivation }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
                     <q-item-section :title="$t('interview.campaign_weeks_reminder_hint')">
                       <q-item-label>{{ $t('interview.campaign_weeks_reminder') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksBetweenReminders }}</q-item-label>
@@ -186,9 +198,9 @@
                     </q-item-section>
                   </q-item>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_weeks_reminder_before_expire_hint')">
-                      <q-item-label>{{ $t('interview.campaign_weeks_reminder_before_expire') }}</q-item-label>
-                      <q-item-label caption>{{ campaign.weeksReminderBeforeDeactivation }}</q-item-label>
+                    <q-item-section :title="$t('interview.campaign_weeks_info_before_expire_hint')">
+                      <q-item-label>{{ $t('interview.campaign_weeks_info_before_expire') }}</q-item-label>
+                      <q-item-label caption>{{ campaign.weeksInfoBeforeDeactivation }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item>
@@ -423,6 +435,21 @@
           <div class="row q-mt-md q-col-gutter-sm">
             <div class="col-6">
               <q-input
+                v-model.number='campaignData.weeksInfoBeforeActivation'
+                type="number"
+                :label="$t('interview.campaign_weeks_info_before_activate')"
+                :hint="$t('interview.campaign_weeks_info_before_activate_hint')"
+                lazy-rules
+              />
+            </div>
+            <div class="col-6">
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-mt-md q-col-gutter-sm">
+            <div class="col-6">
+              <q-input
                 v-model.number='campaignData.weeksBetweenReminders'
                 type="number"
                 :label="$t('interview.campaign_weeks_reminder')"
@@ -445,10 +472,10 @@
           <div class="row q-mt-md q-col-gutter-sm">
             <div class="col-6">
               <q-input
-                v-model.number='campaignData.weeksReminderBeforeDeactivation'
+                v-model.number='campaignData.weeksInfoBeforeDeactivation'
                 type="number"
-                :label="$t('interview.campaign_weeks_reminder_before_expire')"
-                :hint="$t('interview.campaign_weeks_reminder_before_expire_hint')"
+                :label="$t('interview.campaign_weeks_info_before_expire')"
+                :hint="$t('interview.campaign_weeks_info_before_expire_hint')"
                 lazy-rules
               />
             </div>
