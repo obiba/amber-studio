@@ -8,12 +8,14 @@ export default {
     forgot_password: 'Mot de passe oublié ?',
     register: 'Enregistrement',
     validate: 'Valider',
-    token: 'Code à 6 chiffres',
+    token: 'Jeton à 6 chiffres',
     totp: 'Scanner ce code QR avec une app d\'authentification multifacteur (Microsoft authenticator est recommandée), puis entrer le code temporaire indiqué.',
-    totp_secret: 'Ou copié ce code secret à ajouter manuellement à l\'application d\'authentification multifacteur.',
+    totp_secret: 'Ou copier ce code secret à ajouter manuellement à l\'application d\'authentification multifacteur.',
     secret_copied: 'Code secret copié.',
+    email_otp: 'Ou envoyer le jeton temporaire à votre adresse courriel.',
+    send_email_token: 'Envoyer le jeton',
     failed: 'Combinaison courriel/mot de passe incorrecte.',
-    failed_token: 'Code incorrect.'
+    failed_token: 'Jeton incorrect.'
   },
   register: {
     title: 'Créer un compte',
