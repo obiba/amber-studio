@@ -95,8 +95,11 @@ pre {
 }
 
 .blitz-field__error {
-  margin-top: 10px;
   color: #c10015;
+}
+
+.blitz-field > .blitz-field__error {
+  margin-top: 10px;
   font-size: smaller;
 }
 

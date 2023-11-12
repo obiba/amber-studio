@@ -11,9 +11,9 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@blitzar/form": "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.11-obiba",
-    "@blitzar/types": "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.11-obiba",
-    "@blitzar/utils": "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.11-obiba",
+    "@blitzar/form": "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.12-obiba",
+    "@blitzar/types": "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.12-obiba",
+    "@blitzar/utils": "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.12-obiba",
     "@feathersjs/authentication-client": "^4.5.11",
     "@feathersjs/client": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
@@ -34,6 +34,7 @@
     "quasar": "^2.12.1",
     "secure-ls": "^1.2.6",
     "uuid": "^8.3.2",
+    "vue": "^3.0.0",
     "vue-i18n": "^9.1.7",
     "vue-papa-parse": "^3.1.0",
     "vue-recaptcha-v3": "^2.0.1",

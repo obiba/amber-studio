@@ -1168,9 +1168,9 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.11-obiba":
+"@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.12-obiba":
   version "1.0.11"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.11-obiba#48ef33b501c9bb6b0a0386e000de2cc8b5fc485e"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.12-obiba#3959e8b9b5adb14aa792b361934e8cebfc7a530f"
   dependencies:
     "@blitzar/types" "^1.0.10"
     "@blitzar/utils" "^1.0.10"
@@ -1189,9 +1189,9 @@
   dependencies:
     ts-toolbelt "^9.6.0"
 
-"@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.11-obiba":
-  version "1.0.11"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.11-obiba#50d89515d88f2b36fe4395ff8a0bb4bbd784dbd2"
+"@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.12-obiba":
+  version "1.0.12"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.12-obiba#3d609f8b3197d9d58aec2384b971a94973c6f6bc"
 
 "@blitzar/utils@^1.0.10":
   version "1.2.4"
@@ -1203,9 +1203,9 @@
     flatten-anything "^2.0.7"
     is-what "^4.1.7"
 
-"@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.11-obiba":
-  version "1.0.11"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.11-obiba#9ae15797028cb3ef0cdad212e840c6feb0e9a9fb"
+"@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.12-obiba":
+  version "1.0.12"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.12-obiba#6414c5bfdf92faeb9a675bfd70d321b1b93e163c"
   dependencies:
     commafy-anything "^2.1.0"
     flatten-anything "^2.0.4"
