@@ -56,7 +56,7 @@ const routes = [
     children: [
       {
         path: '/study/:id',
-        component: () => import('pages/StudyForms.vue'),
+        component: () => import('pages/Study.vue'),
         meta: { requiresAuth: true, noGuest: true }
       },
       {

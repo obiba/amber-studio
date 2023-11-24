@@ -112,39 +112,45 @@ export default defineComponent({
     items () {
       const cards = []
       if (this.isAdministrator) {
-        cards.push({
-          title: 'users.title',
-          icon: 'person',
-          value: this.counts.users ? this.counts.users : '-',
-          color1: '#5064b5',
-          color2: '#3e51b5',
-          link: '/users'
-        },
-        {
-          title: 'groups.title',
-          icon: 'people',
-          value: this.counts.groups ? this.counts.groups : '-',
-          color1: '#5064b5',
-          color2: '#3e51b5',
-          link: '/groups'
-        })
+        if (this.counts.users !== undefined && this.counts.groups !== undefined) {
+          cards.push({
+            title: 'users.title',
+            icon: 'person',
+            value: this.counts.users ? this.counts.users : '-',
+            color1: '#5064b5',
+            color2: '#3e51b5',
+            link: '/users'
+          },
+          {
+            title: 'groups.title',
+            icon: 'people',
+            value: this.counts.groups ? this.counts.groups : '-',
+            color1: '#5064b5',
+            color2: '#3e51b5',
+            link: '/groups'
+          })
+        }
       }
-      cards.push(
-        {
+      if (this.counts.studies !== undefined) {
+        cards.push({
           title: 'studies.title',
           icon: 'inventory',
           value: this.counts.studies ? this.counts.studies : '-',
           color1: '#f37169',
           color2: '#f34636',
           link: '/studies'
-        },
-        {
-          title: 'study.forms',
-          icon: 'speaker_notes',
-          value: this.counts.forms ? this.counts.forms : '-',
-          color1: '#ea6a7f',
-          color2: '#ea4b64'
         })
+      }
+      if (this.counts.forms !== undefined) {
+        cards.push(
+          {
+            title: 'study.forms',
+            icon: 'speaker_notes',
+            value: this.counts.forms ? this.counts.forms : '-',
+            color1: '#ea6a7f',
+            color2: '#ea4b64'
+          })
+      }
       return cards
     },
     caseReportItems () {

@@ -116,6 +116,7 @@ export default {
     search_hint: 'Search by name or description'
   },
   study: {
+    dashboard: 'Study Dashboard',
     design: 'Design',
     title: 'Study',
     definition: 'Definition',

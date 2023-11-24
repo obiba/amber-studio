@@ -116,6 +116,7 @@ export default {
     search_hint: 'Chercher par nom ou description'
   },
   study: {
+    dashboard: 'Tableau de bord de l\'étude',
     design: 'Conception',
     title: 'Étude',
     definition: 'Définition',

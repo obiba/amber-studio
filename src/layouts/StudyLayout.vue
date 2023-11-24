@@ -79,6 +79,15 @@
           </q-item-section>
         </q-item>
 
+        <q-item :to="'/study/' + studyId" active-class="q-item-no-link-highlighting">
+          <q-item-section avatar>
+            <q-icon name="dashboard"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{$t('main.dashboard')}}</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{$t('study.design')}}</q-item-label>
 
         <q-item v-if="!isGuest" :to="'/study/' + studyId + '/forms'" active-class="q-item-no-link-highlighting">
