@@ -63,7 +63,7 @@ export default {
     roles_filter: 'Rôles',
     search_hint: 'Chercher par nom ou courriel',
     reset_2fa: 'Réinitialiser 2FA',
-    required_2fa: 'L\'authentification à deux facteurs (2FA) est requise'
+    required_2fa: 'L\'authentification à deux facteurs (2FA) avec une application mobile d\'authentification est requise (à défault le courriel sera utilisé pour envoyer un jeton temporaire).'
   },
   groups: {
     title: 'Groupes',
