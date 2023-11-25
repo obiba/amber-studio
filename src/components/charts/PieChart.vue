@@ -1,15 +1,11 @@
 <template>
-  <div>
-    <q-card flat>
-      <q-card-section class="text-h6">
-        {{ title }}
-      </q-card-section>
-      <q-card-section>
-        <div ref="piechart" :id="chartId" :style="`height: ${height}`"></div>
-      </q-card-section>
-      <q-resize-observer @resize="onResize"/>
-    </q-card>
-  </div>
+  <q-card class="q-mb-sm">
+    <div class="q-pa-sm">
+      <div class="text-caption text-center text-weight-bold q-mb-md">{{ title }}</div>
+      <div ref="piechart" :id="chartId" :style="`height: ${height}`"></div>
+    </div>
+    <q-resize-observer @resize="onResize"/>
+  </q-card>
 </template>
 
 <script>
@@ -34,7 +30,7 @@ export default defineComponent({
     height: {
       type: String,
       required: false,
-      default: '400px'
+      default: '250px'
     }
   },
   setup () {

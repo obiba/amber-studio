@@ -33,14 +33,14 @@
               chartId="interviews"
               :title="$t('chart.cumulated_interviews')"
               :aggregations="counts.interviews_agg"
-              height="400px"/>
+              height="300px"/>
           </div>
           <div class="col-12 col-md-6">
             <pie-chart
               chartId="interviewsState"
               :title="$t('chart.interview_states')"
               :frequencies="interviewStateFrequencies"
-              height="400px"/>
+              height="250px"/>
           </div>
         </div>
       </div>
