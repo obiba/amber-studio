@@ -117,6 +117,8 @@ export default {
   },
   study: {
     dashboard: 'Tableau de bord de l\'étude',
+    my_campaigns: 'Mes campagnes',
+    metrics: 'Métriques',
     design: 'Conception',
     title: 'Étude',
     definition: 'Définition',
@@ -219,7 +221,8 @@ export default {
     delete_interviews_confirm: 'Veuillez confirmer la suppression des entrevues sélectionnées:',
     interview_state: {
       in_progress: 'En cours',
-      completed: 'Complétée'
+      completed: 'Complétée',
+      not_started: 'Non commencée'
     },
     export_interviews_hint: 'Exporter les entrevues',
     all_designs: '(toutes)',
@@ -248,6 +251,7 @@ export default {
   chart: {
     cumulated_records: 'Nombre cumulé de rapports de cas',
     cumulated_interviews: 'Nombre cumulé d\'entrevues',
+    interview_states: 'État des entrevues',
     zoom: 'Zoom',
     reset_zoom: 'Réinitialiser le zoom',
     restore: 'Restaurer'

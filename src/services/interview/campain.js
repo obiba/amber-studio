@@ -32,6 +32,12 @@ export async function getCampaigns (opts, interviewDesign, study, filter) {
   return feathersClient.service('campaign').find(formData)
 }
 
+export async function getCampaignsByStudy (study) {
+  const formData = { query: { $sort: { descending: -1 } } }
+  formData.query.study = study
+  return feathersClient.service('campaign').find(formData)
+}
+
 export async function getCampaign (id) {
   return feathersClient.service('campaign').get(id)
 }

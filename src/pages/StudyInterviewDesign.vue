@@ -269,7 +269,7 @@ export default defineComponent({
     },
     initOriginalInterviewDesign () {
       this.originalInterviewDesign.steps = JSON.parse(JSON.stringify(this.interviewDesignData.steps))
-      this.originalInterviewDesign.i18n = JSON.parse(JSON.stringify(this.interviewDesignData.i18n))
+      this.originalInterviewDesign.i18n = this.interviewDesignData.i18n ? JSON.parse(JSON.stringify(this.interviewDesignData.i18n)) : undefined
     },
     async initStudyInterviewDesignData () {
       await this.getStudyInterviewDesign({ id: this.$route.params.itwid })

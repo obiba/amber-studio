@@ -1,6 +1,9 @@
 <template>
   <div>
     <q-card flat>
+      <q-card-section class="text-h6">
+        {{ title }}
+      </q-card-section>
       <q-card-section>
         <div ref="chart" :id="chartId" :style="`height: ${height}`"></div>
       </q-card-section>
@@ -76,10 +79,6 @@ export default defineComponent({
         tooltip: {
           trigger: 'axis',
           position: (pt) => [pt[0], '10%']
-        },
-        title: {
-          left: 'center',
-          text: this.title
         },
         animation: false,
         toolbox: {

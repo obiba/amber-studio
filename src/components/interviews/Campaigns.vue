@@ -26,14 +26,20 @@
 
       <q-separator />
 
-      <div class="q-mt-md">
+      <div v-if="counts.interviews && counts.interviews.total > 0" class="q-mt-md">
         <div class="row q-col-gutter-lg">
           <div class="col-12 col-md-6">
             <records-chart
-              v-if="counts.interviews && counts.interviews.total > 0"
               chartId="interviews"
               :title="$t('chart.cumulated_interviews')"
               :aggregations="counts.interviews_agg"
+              height="400px"/>
+          </div>
+          <div class="col-12 col-md-6">
+            <pie-chart
+              chartId="interviewsState"
+              :title="$t('chart.interview_states')"
+              :frequencies="interviewStateFrequencies"
               height="400px"/>
           </div>
         </div>
@@ -561,7 +567,8 @@ import { date } from 'quasar'
 export default defineComponent({
   components: {
     Participants: defineAsyncComponent(() => import('src/components/interviews/Participants.vue')),
-    RecordsChart: defineAsyncComponent(() => import('components/dashboard/RecordsChart'))
+    RecordsChart: defineAsyncComponent(() => import('components/dashboard/RecordsChart')),
+    PieChart: defineAsyncComponent(() => import('components/charts/PieChart'))
   },
   name: 'StudyCaseReportForms',
   mixins: [AuthMixin],
@@ -640,6 +647,28 @@ export default defineComponent({
         }
       }
       return []
+    },
+    interviewStateFrequencies () {
+      let itwFreqs = []
+      if (this.counts.interviews_freq) {
+        itwFreqs = this.counts.interviews_freq.map((f) => {
+          return {
+            name: this.$t(`study.interview_state.${f._id}`),
+            value: f.count
+          }
+        })
+      }
+      if (this.counts.participants_freq) {
+        const totalItw = this.counts.interviews_freq
+          ? this.counts.interviews_freq.map((f) => f.count).reduce((a, b) => a + b, 0)
+          : 0
+        const totalPart = this.counts.participants_freq.map((f) => f.count).reduce((a, b) => a + b, 0)
+        itwFreqs.push({
+          name: this.$t('study.interview_state.not_started'),
+          value: totalPart - totalItw
+        })
+      }
+      return itwFreqs
     }
   },
   methods: {
@@ -652,7 +681,9 @@ export default defineComponent({
     async initCampaigns () {
       await this.getCampaigns({ paginationOpts: this.paginationOpts, interviewDesign: this.interviewDesign._id })
       if (this.campaigns.length > 0) {
-        this.tab = this.campaigns[0].name
+        this.tab = this.$route.query.c
+          ? (this.campaigns.find(c => c._id === this.$route.query.c) || this.campaigns[0]).name
+          : this.campaigns[0].name
         this.getCampaignMetrics()
       }
     },
@@ -678,6 +709,10 @@ export default defineComponent({
           type: 'interview',
           query: {
             interview: {
+              interviewDesign: this.interviewDesign._id,
+              campaign: campaign._id
+            },
+            participant: {
               interviewDesign: this.interviewDesign._id,
               campaign: campaign._id
             }

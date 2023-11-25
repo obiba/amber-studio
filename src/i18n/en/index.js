@@ -117,6 +117,8 @@ export default {
   },
   study: {
     dashboard: 'Study Dashboard',
+    my_campaigns: 'My Campaigns',
+    metrics: 'Metrics',
     design: 'Design',
     title: 'Study',
     definition: 'Definition',
@@ -219,7 +221,8 @@ export default {
     delete_interviews_confirm: 'Please confirm that you want to remove all the selected interviews:',
     interview_state: {
       in_progress: 'In progress',
-      completed: 'Completed'
+      completed: 'Completed',
+      not_started: 'Not started'
     },
     export_interviews_hint: 'Export interviews',
     all_designs: '(all)',
@@ -248,6 +251,7 @@ export default {
   chart: {
     cumulated_case_reports: 'Cumulated count of case reports',
     cumulated_interviews: 'Cumulated count of interviews',
+    interview_states: 'Interview states',
     zoom: 'Zoom',
     reset_zoom: 'Reset zoom',
     restore: 'Restore'

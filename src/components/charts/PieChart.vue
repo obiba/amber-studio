@@ -1,11 +1,11 @@
 <template>
   <div>
-    <q-card>
+    <q-card flat>
       <q-card-section class="text-h6">
-        Pie Chart
+        {{ title }}
       </q-card-section>
       <q-card-section>
-        <div ref="piechart" id="pieChart" style="height: 300px;"></div>
+        <div ref="piechart" :id="chartId" :style="`height: ${height}`"></div>
       </q-card-section>
       <q-resize-observer @resize="onResize"/>
     </q-card>
@@ -13,17 +13,51 @@
 </template>
 
 <script>
-import * as echarts from 'echarts';
+import { defineComponent, ref } from 'vue'
+import * as echarts from 'echarts'
 
-export default {
-  name: "PieChart",
-  data() {
+export default defineComponent({
+  name: 'PieChart',
+  props: {
+    chartId: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    frequencies: {
+      type: Object,
+      required: false
+    },
+    height: {
+      type: String,
+      required: false,
+      default: '400px'
+    }
+  },
+  setup () {
     return {
-      model: false,
-      options: {
+      chart: ref(null)
+    }
+  },
+  mounted () {
+    this.init()
+  },
+  watch: {
+    frequencies () {
+      this.init()
+    }
+  },
+  methods: {
+    init () {
+      const elem = document.getElementById(this.chartId)
+      this.chart = echarts.init(elem)
+
+      const option = {
         tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
+          trigger: 'item'
         },
         legend: {
           top: 'bottom',
@@ -32,7 +66,6 @@ export default {
         },
         series: [
           {
-            name: 'Access source',
             type: 'pie',
             radius: ['40%', '70%'],
             center: ['50%', '35%'],
@@ -46,52 +79,23 @@ export default {
               show: false,
               position: 'center'
             },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: '40',
-                fontWeight: 'bold'
-              }
-            },
             labelLine: {
               show: false
             },
-            data: [
-              {value: 1048, name: 'Search Engine'},
-              {value: 735, name: 'Direct access'},
-              {value: 580, name: 'Email marketing'},
-              {value: 484, name: 'Affiliate Advertising'},
-              {value: 300, name: 'Video ad'}
-            ]
+            data: this.frequencies
           }
         ]
-      },
-      pie_chart: null
-    }
-  },
-  mounted() {
-    this.init();
-  },
-  watch: {
-    '$q.dark.isActive': function () {
-      this.init();
-    }
-  },
-  methods: {
-    init() {
-      let pieChart = document.getElementById('pieChart');
-      echarts.dispose(pieChart);
-      let theme = this.model ? 'dark' : 'light';
-      this.pie_chart = echarts.init(pieChart, theme);
-      this.pie_chart.setOption(this.options)
+      }
+
+      this.chart.setOption(option)
     },
-    onResize() {
-      if (this.pie_chart) {
-        this.pie_chart.resize();
+    onResize () {
+      if (this.chart) {
+        this.chart.resize()
       }
     }
   }
-}
+})
 </script>
 
 <style scoped>
