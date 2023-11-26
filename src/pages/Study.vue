@@ -5,12 +5,26 @@
       <div class="text-h5 q-mb-md">{{ $t('study.dashboard') }}</div>
       <div v-if="myCampaigns.length" class="q-mb-md">
         <div class="text-h6 q-mb-md">{{ $t('study.my_campaigns') }}</div>
-        <div v-for="campaign in myCampaigns" :key="campaign._id" class="q-mb-md">
-          <q-btn
-            color="primary"
-            icon-right="arrow_forward"
-            :to="`/study/${studyId}/interview-design/${campaign.interviewDesign}?c=${campaign._id}`">{{ getCampaignLabel(campaign) }}
-          </q-btn>
+        <div class="row q-col-gutter-lg">
+          <div class="col-12 col-md-3">
+            <q-list bordered separator>
+              <q-item v-for="campaign in myCampaigns" :key="campaign._id">
+                <q-item-section>
+                  <q-item-label overline>{{ getCampaignLabel(campaign) }}</q-item-label>
+                  <q-item-label caption>{{  campaign.description }}</q-item-label>
+                </q-item-section>
+                <q-item-section side top>
+                  <q-btn
+                    color="purple"
+                    round
+                    size="sm"
+                    icon="arrow_forward"
+                    :to="`/study/${campaign.study}/interview-design/${campaign.interviewDesign}?c=${campaign._id}`">
+                  </q-btn>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
         </div>
       </div>
       <div v-if="hasMetrics">
@@ -25,7 +39,7 @@
 <script>
 import { defineComponent, defineAsyncComponent } from 'vue'
 import { metricsService } from '../services/utils'
-import { interviewDesignService, campaignService } from 'src/services/interview'
+import { interviewDesignService, campaignService } from '../services/interview'
 import AuthMixin from '../mixins/AuthMixin'
 
 export default defineComponent({
@@ -85,7 +99,7 @@ export default defineComponent({
   },
   methods: {
     getCampaignLabel (campaign) {
-      return `${this.interviewDesigns.find(itwd => itwd._id === campaign.interviewDesign).name} - ${campaign.name}`
+      return `${this.interviewDesigns.find(itwd => itwd._id === campaign.interviewDesign).name} / ${campaign.name}`
     }
   }
 })
