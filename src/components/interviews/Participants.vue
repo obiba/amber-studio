@@ -99,7 +99,7 @@
       <template v-slot:body-cell-code="props">
         <q-td :props="props">
           <q-chip v-if="campaign.visitUrl && props.row.activated">
-            <a :href="`${campaign.visitUrl}${campaign.visitUrl.endsWith('/') ? '' : '/'}login?code=${props.row.code}`" target="_blank">{{ props.row.code }}</a>
+            <a :href="`${campaign.visitUrl}${campaign.visitUrl.endsWith('/') ? '' : '/'}go/${props.row.code}`" target="_blank">{{ props.row.code }}</a>
           </q-chip>
           <q-chip v-else>{{ props.row.code }}</q-chip>
         </q-td>
