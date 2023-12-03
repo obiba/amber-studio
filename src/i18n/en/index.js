@@ -235,7 +235,7 @@ export default {
   },
   main: {
     brand: 'Amber Studio',
-    brand_caption: 'Case reporting system',
+    brand_caption: 'Case reporting and interview management system',
     organisation: 'OBiBa',
     profile: 'Profile',
     my_profile: 'My profile',

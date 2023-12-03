@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="col text-center">
-            <img src="icons/apple-icon-60x60.png"/>
+            <img :src="settings.theme.logo"/>
         </div>
         <div class="colcol text-center q-mb-lg">
             <div class="text-h6">
@@ -14,9 +14,15 @@
     </div>
 </template>
 <script>
+import { settings } from '../boot/settings'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'Banner'
+  name: 'Banner',
+  setup () {
+    return {
+      settings
+    }
+  }
 })
 </script>
