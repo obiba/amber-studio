@@ -3,6 +3,8 @@ export default {
     title: 'Compte utilisateur'
   },
   login: {
+    brand: 'Amber Studio',
+    brand_caption: 'Système de rapport de cas et de gestion d\'entrevues',
     title: 'Identifiez vous pour commencer une session',
     submit: 'Connexion',
     forgot_password: 'Mot de passe oublié ?',
@@ -235,7 +237,6 @@ export default {
   },
   main: {
     brand: 'Amber Studio',
-    brand_caption: 'Système de rapport de cas et de gestion d\'entrevues',
     organisation: 'OBiBa',
     profile: 'Profile',
     my_profile: 'Mon profile',
