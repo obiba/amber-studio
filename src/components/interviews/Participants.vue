@@ -971,8 +971,6 @@ export default defineComponent({
       delete this.participantData.study
       delete this.participantData.createdBy
       delete this.participantData.activated
-      delete this.participantData.validFrom
-      delete this.participantData.validUntil
       delete this.participantData.lastSeen
     },
     onEdit (participant) {
@@ -984,6 +982,9 @@ export default defineComponent({
     },
     onView (participant) {
       this.toParticipantData(participant)
+      // remove internal fields or fields that are already in the columns
+      delete this.participantData.validFrom
+      delete this.participantData.validUntil
       this.showViewParticipant = true
     },
     onConfirmDelete (participant) {
