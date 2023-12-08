@@ -99,7 +99,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="!isGuest && hasCaseReports" :to="'/study/' + studyId + '/case-report-forms'" active-class="q-item-no-link-highlighting">
+        <q-item v-if="!isGuest && hasCaseReportService" :to="'/study/' + studyId + '/case-report-forms'" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="insert_drive_file" size="xs" />
           </q-item-section>
@@ -109,7 +109,7 @@
         </q-item>
 
         <q-item
-          v-if="!isGuest && hasInterviews"
+          v-if="!isGuest && hasInterviewService"
           :to="'/study/' + studyId + '/interview-designs'" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="file_copy" size="xs" />
@@ -122,7 +122,7 @@
         <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{$t('study.data_collection')}}</q-item-label>
 
         <q-item
-          v-if="!isGuest && hasCaseReports"
+          v-if="!isGuest && hasCaseReportService"
           :to="'/study/' + studyId + '/case-reports'" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="help_center" size="xs" />
@@ -133,7 +133,7 @@
         </q-item>
 
         <q-item
-          v-if="!isGuest && hasInterviews"
+          v-if="!isGuest && hasInterviewService"
           :to="'/study/' + studyId + '/interviews'" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="quiz" size="xs" />
@@ -336,10 +336,10 @@ export default defineComponent({
         { label: this.$t('study.case_reports'), value: 'case-reports' },
         { label: this.$t('study.interviews'), value: 'interviews' }]
     },
-    hasCaseReports () {
+    hasCaseReportService () {
       return !this.study.services || this.study.services.length === 0 || this.study.services?.includes('case-reports')
     },
-    hasInterviews () {
+    hasInterviewService () {
       return !this.study.services || this.study.services.length === 0 || this.study.services?.includes('interviews')
     }
   },

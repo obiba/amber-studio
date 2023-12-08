@@ -127,6 +127,8 @@ export default {
     services: 'Services',
     services_hint: 'Services de collecte de données disponibles pour cette étude (tous services quand non précisé).',
     forms: 'Formulaires',
+    form_create: 'Cette étude est vide, créer un formulaire pour commencer.',
+    form_use: 'Vous pouvez maintenant utiliser un formulaire existant.',
     forms_hint: 'Un formulaire définit comment collecter les données. Il est constitué d\'un schéma (questions, sections, champs calculés etc.) et de versions de formulaire (chaque version est un instantané du formulaire à un moment donné). Un formulaire (ou une version de formulaire) ne peut être supprimée quand des enregistrements y sont associés. Voir la <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/forms.html" target="_blank">Documentation des formulaires [en]</a>.',
     form_hint: 'Le schéma du formulaire est une suite d\'éléments: voir la <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/items/index.html" target="_blank">Documentation des éléments de formulaire [en]</a>. Voir également les <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/form-builder/index.html" target="_blank">Recettes pour bâtir un formulaire [en]</a>, décrivant procédures standards et bonnes pratiques. La saisie de données se fait à partir d\'une version de formulaire, permettant ainsi l\'édition du formulaire sans affecter la collecte de données et le suivi des changements de formulaire dans les enregistrements.',
     data_collection: 'Collecte de données',
@@ -293,7 +295,8 @@ export default {
     get_form_revisions: 'Erreur à la récupération des versions du formulaire.',
     get_case_report_forms: 'Erreur à la récupération des formulaires de rapport de cas.',
     get_case_reports: 'Erreur à la récupération des rapport de cas.',
-    form_revision_has_case_reports: 'Le formulaire {name} dans la version {revision} ne peut être supprimé car des rapports de cas sont toujours associés.',
+    form_remove_error: 'Le formulaire {name} ne peut être supprimé car des éléments ({count} "{type}") lui sont toujours associés.',
+    form_revision_remove_error: 'Le formulaire {name} dans la version {revision} ne peut être supprimé car des éléments ({count} "{type}") lui sont toujours associés.',
     get_tasks: 'Erreur à la récupération des tâches.'
   },
   success: {

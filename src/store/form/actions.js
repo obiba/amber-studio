@@ -87,7 +87,7 @@ export async function deleteForm ({ dispatch }, payload) {
     .deleteForm(payload.id)
     .catch((err) => {
       errorHandler.onError(err, {
-        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        FormRemoveError: t('error.form_remove_error', err.data),
         default: t('error.general')
       })
     })
@@ -113,7 +113,7 @@ export async function deleteForms ({ dispatch }, payload) {
     .deleteForms(payload.ids)
     .catch((err) => {
       errorHandler.onError(err, {
-        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        FormRemoveError: t('error.form_remove_error', err.data),
         default: t('error.general')
       })
     })
@@ -167,7 +167,7 @@ export async function deleteFormRevision ({ dispatch }, payload) {
     .deleteFormRevision(payload.id)
     .catch((err) => {
       errorHandler.onError(err, {
-        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        FormRevisionRemoveError: t('error.form_revision_remove_error', err.data),
         default: t('error.general')
       })
     })
@@ -193,7 +193,7 @@ export async function deleteFormRevisions ({ dispatch }, payload) {
     .deleteFormRevisions(payload.ids)
     .catch((err) => {
       errorHandler.onError(err, {
-        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        FormRevisionRemoveError: t('error.form_revision_remove_error', err.data),
         default: t('error.general')
       })
     })

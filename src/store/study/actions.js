@@ -79,7 +79,8 @@ export async function deleteStudy ({ dispatch }, payload) {
     .deleteStudy(payload.id)
     .catch((err) => {
       errorHandler.onError(err, {
-        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        FormRemoveError: t('error.form_remove_error', err.data),
+        FormRevisionRemoveError: t('error.form_revision_remove_error', err.data),
         default: t('error.general')
       })
     })
@@ -104,7 +105,8 @@ export async function deleteStudies ({ dispatch }, payload) {
     .deleteStudies(payload.ids)
     .catch((err) => {
       errorHandler.onError(err, {
-        FormRevisionHasCaseReports: t('error.form_revision_has_case_reports', err.data),
+        FormRemoveError: t('error.form_remove_error', err.data),
+        FormRevisionRemoveError: t('error.form_revision_remove_error', err.data),
         default: t('error.general')
       })
     })

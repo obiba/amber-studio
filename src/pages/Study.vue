@@ -31,6 +31,36 @@
         <div class="text-h6 q-mb-md">{{ $t('study.metrics') }}</div>
         <dashboard-counts v-if="!isGuest" :counts="counts"/>
       </div>
+      <div v-else>
+        <div class="note note-info text-body2 text-secondary">
+          <div v-if="hasForms">
+            <div>{{ $t('study.form_use') }}</div>
+            <q-btn
+              v-if="hasCaseReportService"
+              color="primary"
+              icon-right="arrow_forward"
+              :label="$t('study.case_report_forms')"
+              :to="`/study/${this.studyId}/case-report-forms`"
+              class="q-mt-md q-mr-md" />
+            <q-btn
+              v-if="hasInterviewService"
+              color="primary"
+              icon-right="arrow_forward"
+              :label="$t('study.interview_designs')"
+              :to="`/study/${this.studyId}/interview-designs`"
+              class="q-mt-md" />
+          </div>
+          <div v-else class="q-mt-md">
+            <div>{{ $t('study.form_create') }}</div>
+            <q-btn
+              color="primary"
+              icon-right="arrow_forward"
+              :label="$t('study.forms')"
+              :to="`/study/${this.studyId}/forms`"
+              class="q-mt-md" />
+          </div>
+        </div>
+      </div>
     </div>
 
   </q-page>
@@ -38,6 +68,7 @@
 
 <script>
 import { defineComponent, defineAsyncComponent } from 'vue'
+import { mapState } from 'vuex'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import AuthMixin from '../mixins/AuthMixin'
@@ -89,12 +120,24 @@ export default defineComponent({
     })
   },
   computed: {
+    ...mapState({
+      study: state => state.study.study
+    }),
     studyId () {
       return this.$route.params.id
     },
     hasMetrics () {
       return (this.counts.case_reports_agg && this.counts.case_reports_agg.length) ||
         (this.counts.interviews_agg && this.counts.interviews_agg.length)
+    },
+    hasForms () {
+      return this.counts.forms > 0
+    },
+    hasCaseReportService () {
+      return this.study && (!this.study.services || this.study.services.length === 0 || this.study.services?.includes('case-reports'))
+    },
+    hasInterviewService () {
+      return this.study && (!this.study.services || this.study.services.length === 0 || this.study.services?.includes('interviews'))
     }
   },
   methods: {

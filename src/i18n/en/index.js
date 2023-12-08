@@ -127,6 +127,8 @@ export default {
     services: 'Services',
     services_hint: 'Data collection services used by the study (all services when not specified).',
     forms: 'Forms',
+    form_create: 'This study is empty, start by creating a form.',
+    form_use: 'You can now use the forms.',
     forms_hint: 'A form defines how to collect data. It is made of a schema (questions, sections, computed fields etc.) and of revisions (each revision is a snapshot of the form at a given point of time). A form (or a form revision) cannot be deleted when there are associated records. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/forms.html" target="_blank">Forms documentation</a>.',
     form_hint: 'The form schema is a sequence of items: see the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/items/index.html" target="_blank">Form items documentation</a>. See also the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/form-builder/" target="_blank">Form builder cookbook</a> for standard operation procedures and best practices. Data collection is based on form revisions, allowing the safe edition of the form and the tracking of form changes in the records.',
     data_collection: 'Data collection',
@@ -293,7 +295,8 @@ export default {
     get_form_revisions: 'There was an error while retrieving form\'s versions.',
     get_case_report_forms: 'There was an error while retrieving the case report forms.',
     get_case_reports: 'There was an error while retrieving the case reports.',
-    form_revision_has_case_reports: 'The form {name} with revision {revision} cannot be removed because case reports are still associated to it.',
+    form_remove_error: 'The form {name} cannot be removed because some items ({count} "{type}") are still associated to it.',
+    form_revision_remove_error: 'The form {name} with revision {revision} cannot be removed because some items ({count} "{type}") are still associated to it.',
     get_tasks: 'There was an error while retrieving tasks.'
   },
   success: {
