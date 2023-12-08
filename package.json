@@ -56,7 +56,12 @@
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-vue": "^7.0.0",
     "eslint-webpack-plugin": "^2.4.0",
-    "quasar-app-extension-qhierarchy": "^1.0.0-alpha.1"
+    "quasar-app-extension-qhierarchy": "^1.0.0-alpha.1",
+    "yarn-audit-fix": "^10.0.7"
+  },
+  "resolutions": {
+    "secure-ls/**/crypto-js": "4.2.0",
+    "@quasar/app/**/minimist": "1.2.6"
   },
   "browserslist": [
     "last 10 Chrome versions",
