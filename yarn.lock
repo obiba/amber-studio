@@ -1224,9 +1224,9 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.12-obiba":
-  version "1.0.11"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.12-obiba#3959e8b9b5adb14aa792b361934e8cebfc7a530f"
+"@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.13-obiba":
+  version "1.0.13"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.13-obiba#c10080e51b97b14676e6318d87cfb334fae82171"
   dependencies:
     "@blitzar/types" "^1.0.10"
     "@blitzar/utils" "^1.0.10"
@@ -1245,9 +1245,9 @@
   dependencies:
     ts-toolbelt "^9.6.0"
 
-"@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.12-obiba":
-  version "1.0.12"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.12-obiba#3d609f8b3197d9d58aec2384b971a94973c6f6bc"
+"@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.13-obiba":
+  version "1.0.13"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.13-obiba#42aa64faf25336514f632b09b4604b891618ad8e"
 
 "@blitzar/utils@^1.0.10":
   version "1.2.4"
@@ -1259,9 +1259,9 @@
     flatten-anything "^2.0.7"
     is-what "^4.1.7"
 
-"@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.12-obiba":
-  version "1.0.12"
-  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.12-obiba#6414c5bfdf92faeb9a675bfd70d321b1b93e163c"
+"@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.13-obiba":
+  version "1.0.13"
+  resolved "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.13-obiba#a59abcd58bde579b97980dea8f96313098b89ec1"
   dependencies:
     commafy-anything "^2.1.0"
     flatten-anything "^2.0.4"
@@ -3380,9 +3380,9 @@ canvg@^3.0.6:
     svg-pathdata "^6.0.3"
 
 case-anything@^2.1.2:
-  version "2.1.10"
-  resolved "https://registry.yarnpkg.com/case-anything/-/case-anything-2.1.10.tgz#d18a6ca968d54ec3421df71e3e190f3bced23410"
-  integrity sha512-JczJwVrCP0jPKh05McyVsuOg6AYosrB9XWZKbQzXeDAm2ClE/PJE/BcrrQrVyGYH7Jg8V/LDupmyL4kFlVsVFQ==
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/case-anything/-/case-anything-2.1.13.tgz#0cdc16278cb29a7fcdeb072400da3f342ba329e9"
+  integrity sha512-zlOQ80VrQ2Ue+ymH5OuM/DlDq64mEm+B9UTdHULv5osUMD6HalNTblf2b1u/m6QecjsnOkBpqVZ+XPwIVsy7Ng==
 
 caw@^2.0.1:
   version "2.0.1"
@@ -6343,10 +6343,15 @@ is-what@^3.14.1:
   resolved "https://registry.yarnpkg.com/is-what/-/is-what-3.14.1.tgz#e1222f46ddda85dead0fd1c9df131760e77755c1"
   integrity sha512-sNxgpk9793nzSs7bA6JQJGeIuRBQhAaNGG77kzYQgMkrID+lS6SlK07K5LaptscDlSaIgH+GPFzf+d75FVxozA==
 
-is-what@^4.1.6, is-what@^4.1.7:
+is-what@^4.1.6:
   version "4.1.7"
   resolved "https://registry.yarnpkg.com/is-what/-/is-what-4.1.7.tgz#c41dc1d2d2d6a9285c624c2505f61849c8b1f9cc"
   integrity sha512-DBVOQNiPKnGMxRMLIYSwERAS5MVY1B7xYiGnpgctsOFvVDz9f9PFXXxMcTOHuoqYp4NK9qFYQaIC1NRRxLMpBQ==
+
+is-what@^4.1.7:
+  version "4.1.16"
+  resolved "https://registry.yarnpkg.com/is-what/-/is-what-4.1.16.tgz#1ad860a19da8b4895ad5495da3182ce2acdd7a6f"
+  integrity sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==
 
 is-windows@^1.0.1:
   version "1.0.2"
