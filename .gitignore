@@ -137,5 +137,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 
-.yarn/*
 .yarnrc
