@@ -19,7 +19,6 @@
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/rest-client": "^4.5.11",
     "@feathersjs/vuex": "^4.0.1-pre.7",
-    "@feathersjs/vuex-commons": "0.0.2-pre.16",
     "@quasar/app-webpack": "^3.12.3",
     "@quasar/cli": "^2.3.0",
     "@quasar/extras": "^1.16.9",
