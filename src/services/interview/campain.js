@@ -13,9 +13,10 @@ export async function getCampaigns (opts, interviewDesign, study, filter) {
     formData.query.$limit = 10
   }
   // use filter
+  const itwid = interviewDesign._id ? interviewDesign._id : interviewDesign
   if (filter && filter.length > 1) {
     formData.query.$and = [
-      { interviewDesign: interviewDesign },
+      { interviewDesign: itwid },
       {
         $or: [
           { name: { $search: filter } },
@@ -24,7 +25,7 @@ export async function getCampaigns (opts, interviewDesign, study, filter) {
       }
     ]
   } else {
-    formData.query.interviewDesign = interviewDesign
+    formData.query.interviewDesign = itwid
   }
   if (study) {
     formData.query.study = study
