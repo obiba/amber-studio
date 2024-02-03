@@ -13,7 +13,7 @@ export async function getCampaigns (opts, interviewDesign, study, filter) {
     formData.query.$limit = 10
   }
   // use filter
-  const itwid = interviewDesign._id ? interviewDesign._id : interviewDesign
+  const itwid = interviewDesign?._id ? interviewDesign._id : interviewDesign
   if (filter && filter.length > 1) {
     formData.query.$and = [
       { interviewDesign: itwid },
