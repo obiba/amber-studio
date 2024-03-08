@@ -95,10 +95,10 @@ export default {
     error: 'Error',
     types: {
       'participants-info-activate': 'Participants information before initialization',
-      'participants-init': 'Participants initialization',
+      'participants-activate': 'Participants initialization',
       'participants-reminder': 'Participants reminders',
       'participants-info-expire': 'Participants information before expiration',
-      'participants-expired': 'Participants expiration',
+      'participants-deactivate': 'Participants expiration',
       'participants-summary': 'Participants summary'
     },
     states: {
