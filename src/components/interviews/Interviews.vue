@@ -456,6 +456,10 @@ export default defineComponent({
           label: t('study.all_states')
         },
         {
+          value: 'initiated',
+          label: t('study.interview_state.initiated')
+        },
+        {
           value: 'in_progress',
           label: t('study.interview_state.in_progress')
         },

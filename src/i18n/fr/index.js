@@ -224,6 +224,7 @@ export default {
     delete_interviews_hint: 'Supprimer les entrevues sélectionnées',
     delete_interviews_confirm: 'Veuillez confirmer la suppression des entrevues sélectionnées:',
     interview_state: {
+      initiated: 'Initialisée',
       in_progress: 'En cours',
       completed: 'Complétée',
       not_started: 'Non commencée'
