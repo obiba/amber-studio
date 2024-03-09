@@ -635,7 +635,12 @@ export default {
     pause_participant_hint: 'Mettre le participant en pause',
     activate_participant_hint: 'Activater le participant',
     reset_participant_password_hint: 'Réinitialiser le mot de passe du participant',
-    go_to_form: 'Aller au formulaire'
+    go_to_form: 'Aller au formulaire',
+    eligibility: 'Éligibilité',
+    participant_eligibility: 'Éligibilité du participant',
+    any_eligibility: '(tous)',
+    eligible: 'Éligible',
+    not_eligible: 'Non éligible'
   },
   license: {
     cc_by_40: 'Creative Commons BY 4.0',

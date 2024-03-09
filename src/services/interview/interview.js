@@ -46,7 +46,7 @@ export async function downloadInterviews (accept, study, interviewDesign, state,
   })
 }
 
-export async function getInterviews (opts, study, interviewDesign, campaign, state, filter, from, to) {
+export async function getInterviews (opts, study, interviewDesign, campaign, state, participantValid, filter, from, to) {
   const formData = { query: { $sort: { descending: -1 } } }
   if (opts) {
     // qtable pagination's 'All' sets limit to 0
@@ -68,6 +68,9 @@ export async function getInterviews (opts, study, interviewDesign, campaign, sta
   }
   if (state && state !== '0') {
     formData.query.state = state
+  }
+  if (participantValid !== undefined) {
+    formData.query.participantValid = participantValid
   }
   if (filter) {
     formData.query.$or = [

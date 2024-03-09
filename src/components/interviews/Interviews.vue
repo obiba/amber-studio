@@ -63,7 +63,8 @@
               emit-value
               map-options
               :label="$t('study.interview_design')"
-              style="min-width: 200px" />
+              style="min-width: 150px"
+              @update:model-value="onFilter" />
             <q-select
               class="q-mr-md"
               v-model="campaignFilter"
@@ -71,7 +72,8 @@
               emit-value
               map-options
               :label="$t('study.campaign')"
-              style="min-width: 200px" />
+              style="min-width: 150px"
+              @update:model-value="onFilter" />
             <q-select
               class="q-mr-md"
               v-model="stateFilter"
@@ -79,7 +81,17 @@
               emit-value
               map-options
               :label="$t('state')"
-              style="min-width: 200px" />
+              style="min-width: 150px"
+              @update:model-value="onFilter" />
+            <q-select
+              class="q-mr-md"
+              v-model="eligibleFilter"
+              :options="eligibleOptions"
+              emit-value
+              map-options
+              :label="$t('interview.participant_eligibility')"
+              style="min-width: 150px"
+              @update:model-value="onFilter"/>
             <div class="q-mr-md" style="max-width: 250px">
               <q-input filled v-model="fromDate" :placeholder="$t('from')">
                 <template v-slot:prepend>
@@ -168,6 +180,13 @@
               {{ $t('study.interview_state.' + props.row.state) }}
             </q-td>
           </template>
+          <template v-slot:body-cell-participantValid='props'>
+            <q-td :props='props'>
+              <q-icon v-if="props.row.participantValid" name="done"
+                size="sm"
+                color="secondary"/>
+            </q-td>
+          </template>
           <template v-slot:body-cell-action='props'>
             <q-td :props='props'>
               <q-btn
@@ -192,7 +211,7 @@
                 @click='onConfirmDelete(props.row)'>
               </q-btn>
               <q-btn
-                v-if="!isReadOnly && props.row.state === 'completed'"
+                v-if="!isReadOnly && props.row.state === 'completed' && props.row.valid"
                 color="secondary"
                 size="12px"
                 flat
@@ -316,6 +335,7 @@ export default defineComponent({
       interviewDesignFilter: ref('0'),
       campaignFilter: ref('0'),
       stateFilter: ref('0'),
+      eligibleFilter: ref('0'),
       fromDate: ref(''),
       toDate: ref(''),
       maximizedToggle: ref(false)
@@ -387,13 +407,13 @@ export default defineComponent({
           format: val =>
             `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
         },
-        /* {
-          name: 'state',
+        {
+          name: 'participantValid',
           align: 'left',
-          label: this.$t('state'),
-          field: 'state',
-          sortable: true
-        }, */
+          label: this.$t('interview.eligibility'),
+          field: 'participantValid',
+          sortable: false
+        },
         {
           name: 'action',
           align: 'left',
@@ -469,6 +489,22 @@ export default defineComponent({
         }
       ]
     },
+    eligibleOptions () {
+      return [
+        {
+          value: '0',
+          label: t('interview.any_eligibility')
+        },
+        {
+          value: 'true',
+          label: t('interview.eligible')
+        },
+        {
+          value: 'false',
+          label: t('interview.not_eligible')
+        }
+      ]
+    },
     hasInterviews () {
       return this.interviews && this.interviews.length > 0
     },
@@ -479,15 +515,6 @@ export default defineComponent({
   watch: {
     study: function (newValue, oldValue) {
       this.getTableInterviews()
-    },
-    interviewDesignFilter: function (newValue) {
-      this.onFilter()
-    },
-    campaignFilter: function (newValue) {
-      this.onFilter()
-    },
-    stateFilter: function (newValue) {
-      this.onFilter()
     },
     fromDate: function (newValue) {
       this.onFilter()
@@ -510,6 +537,7 @@ export default defineComponent({
         interviewDesign: this.interviewDesignFilter,
         campaign: this.campaignFilter,
         state: this.stateFilter,
+        participantValid: this.eligibleFilter === 'true' ? true : this.eligibleFilter === 'false' ? false : undefined,
         filter: this.filter,
         from: this.fromDate,
         to: this.toDate

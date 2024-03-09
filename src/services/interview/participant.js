@@ -2,7 +2,7 @@ import { feathersClient } from '../../boot/feathersClient'
 import { api } from '../../boot/axios'
 import { LocalStorage } from 'quasar'
 
-export async function getParticipants (opts, campaign, filter) {
+export async function getParticipants (opts, campaign, filter, valid) {
   const formData = { query: { $sort: { descending: -1 } } }
   if (opts) {
     // qtable pagination's 'All' sets limit to 0
@@ -14,19 +14,16 @@ export async function getParticipants (opts, campaign, filter) {
   } else {
     formData.query.$limit = 10
   }
+  formData.query.campaign = campaign
   // use filter
   if (filter && filter.length > 1) {
-    formData.query.$and = [
-      { campaign: campaign },
-      {
-        $or: [
-          { code: { $search: filter } },
-          { identifier: { $search: filter } }
-        ]
-      }
+    formData.query.$or = [
+      { code: { $search: filter } },
+      { identifier: { $search: filter } }
     ]
-  } else {
-    formData.query.campaign = campaign
+  }
+  if (valid !== undefined) {
+    formData.query.valid = valid
   }
   return feathersClient.service('participant').find(formData)
 }

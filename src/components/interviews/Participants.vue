@@ -85,6 +85,15 @@
           </q-list>
         </q-btn-dropdown>
         <q-space />
+        <q-select
+          class="q-mr-md"
+          v-model="eligibleFilter"
+          :options="eligibleOptions"
+          emit-value
+          map-options
+          :label="$t('interview.participant_eligibility')"
+          style="min-width: 150px"
+          @update:model-value="updateTableParticipants"/>
         <q-input
           dense
           debounce="300"
@@ -102,6 +111,13 @@
             <a :href="`${campaign.visitUrl}${campaign.visitUrl.endsWith('/') ? '' : '/'}go/${props.row.code}`" target="_blank">{{ props.row.code }}</a>
           </q-chip>
           <q-chip v-else>{{ props.row.code }}</q-chip>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-valid='props'>
+        <q-td :props='props'>
+          <q-icon v-if="props.row.valid" name="done"
+            size="sm"
+            color="secondary"/>
         </q-td>
       </template>
       <template v-slot:body-cell-action="props">
@@ -552,6 +568,7 @@ export default defineComponent({
       participantData: ref({}),
       participants: ref([]),
       delimiter: ref(','),
+      eligibleFilter: ref('0'),
       filter: ref(''),
       selected: ref([]),
       paginationOpts: {
@@ -641,6 +658,13 @@ export default defineComponent({
             `${val ? val.length : '0'}`
         },
         {
+          name: 'valid',
+          align: 'left',
+          label: t('interview.eligibility'),
+          field: 'valid',
+          sortable: false
+        },
+        {
           name: 'lastSeen',
           align: 'left',
           label: t('users.last_seen'),
@@ -681,12 +705,29 @@ export default defineComponent({
     },
     participantDataStr () {
       return JSON.stringify(this.participantData, null, '  ')
+    },
+    eligibleOptions () {
+      return [
+        {
+          value: '0',
+          label: t('interview.any_eligibility')
+        },
+        {
+          value: 'true',
+          label: t('interview.eligible')
+        },
+        {
+          value: 'false',
+          label: t('interview.not_eligible')
+        }
+      ]
     }
   },
   methods: {
     updateTableParticipants () {
       this.selected = []
-      participantService.getParticipants(this.paginationOpts, this.campaign._id, this.filter)
+      const valid = this.eligibleFilter === '0' ? undefined : this.eligibleFilter === 'true'
+      participantService.getParticipants(this.paginationOpts, this.campaign._id, this.filter, valid)
         .then(response => {
           this.participants = response.data
           this.paginationOpts.rowsNumber = response.total
