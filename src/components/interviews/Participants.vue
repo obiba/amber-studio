@@ -1,29 +1,6 @@
 <template>
   <div v-cloak>
-    <div
-      v-if="!hasParticipants"
-      class="q-mt-md">
-      <q-btn-dropdown
-        icon="add"
-        color="primary"
-        :label="$t('interview.add_participants')">
-        <q-list>
-          <q-item clickable v-close-popup @click="onAddParticipant()">
-            <q-item-section>
-              <q-item-label>{{ $t('interview.add_participant_hint') }}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="onImport()">
-            <q-item-section>
-              <q-item-label>{{ $t('interview.import_participants') }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
-    </div>
-
     <q-table
-      v-if="hasParticipants"
       ref="tableRef"
       flat
       :rows="participants"
@@ -67,6 +44,7 @@
         <q-btn-dropdown
           flat
           icon="download"
+          :disable="!hasParticipants"
           :title="$t('export')">
           <q-list>
             <q-item clickable v-close-popup @click="onExport('csv')">
