@@ -64,7 +64,7 @@ export async function deleteParticipants (ids) {
   return Promise.all(promises)
 }
 
-export async function downloadParticipants (accept, campaign, filter, ids) {
+export async function downloadParticipants (accept, campaign, filter, valid, ids) {
   const query = {
     $limit: 10000,
     $skip: 0,
@@ -78,6 +78,9 @@ export async function downloadParticipants (accept, campaign, filter, ids) {
         { identifier: { $search: filter } }
       ]
     })
+  }
+  if (valid !== undefined) {
+    query.valid = valid
   }
   if (ids && ids.length > 0) {
     query['_id[$in][]'] = ids

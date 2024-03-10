@@ -24,12 +24,14 @@
 
     <q-table
       v-if="hasParticipants"
+      ref="tableRef"
       flat
       :rows="participants"
       :columns="columns"
       :filter="filter"
       row-key="code"
       :selection="isReadOnly ? 'none' : 'multiple'"
+      :rows-per-page-options="[10, 25, 50, 100, 0]"
       v-model:selected="selected"
       v-model:pagination="paginationOpts"
       @request="getTableParticipants"
@@ -93,7 +95,7 @@
           map-options
           :label="$t('interview.participant_eligibility')"
           style="min-width: 150px"
-          @update:model-value="updateTableParticipants"/>
+          @update:model-value="onFilter"/>
         <q-input
           dense
           debounce="300"
@@ -558,6 +560,7 @@ export default defineComponent({
   },
   setup () {
     return {
+      tableRef: ref(),
       showEditParticipant: ref(false),
       showViewParticipant: ref(false),
       showImportParticipants: ref(false),
@@ -571,13 +574,13 @@ export default defineComponent({
       eligibleFilter: ref('0'),
       filter: ref(''),
       selected: ref([]),
-      paginationOpts: {
+      paginationOpts: ref({
         sortBy: 'createdAt',
         descending: true,
         page: 1,
         rowsPerPage: 10,
         rowsNumber: 10
-      },
+      }),
       addMode: ref('single'),
       addCount: ref(10),
       addOptions: [
@@ -724,6 +727,9 @@ export default defineComponent({
     }
   },
   methods: {
+    onFilter () {
+      this.tableRef.requestServerInteraction()
+    },
     updateTableParticipants () {
       this.selected = []
       const valid = this.eligibleFilter === '0' ? undefined : this.eligibleFilter === 'true'
@@ -982,7 +988,8 @@ export default defineComponent({
         accept = 'application/vnd.ms-excel'
       }
       const ids = this.selected.map(u => u._id)
-      participantService.downloadParticipants(accept, this.campaign._id, this.filter, ids)
+      const valid = this.eligibleFilter === '0' ? undefined : this.eligibleFilter === 'true'
+      participantService.downloadParticipants(accept, this.campaign._id, this.filter, valid, ids)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))
