@@ -2,7 +2,7 @@ import { feathersClient } from '../../boot/feathersClient'
 import { api } from '../../boot/axios'
 import { LocalStorage } from 'quasar'
 
-export async function downloadInterviews (accept, study, interviewDesign, state, filter, from, to, ids) {
+export async function downloadInterviews (accept, study, interviewDesign, campaign, state, participantValid, filter, from, to, ids) {
   const query = {
     $limit: 10000,
     $skip: 0,
@@ -12,8 +12,14 @@ export async function downloadInterviews (accept, study, interviewDesign, state,
   if (interviewDesign && interviewDesign !== '0') {
     query.interviewDesign = interviewDesign
   }
+  if (campaign && campaign !== '0') {
+    query.campaign = campaign
+  }
   if (state && state !== '0') {
     query.state = state
+  }
+  if (participantValid !== undefined) {
+    query.participantValid = participantValid
   }
   if (filter) {
     query.$or = [

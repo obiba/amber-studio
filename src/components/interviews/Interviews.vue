@@ -553,7 +553,8 @@ export default defineComponent({
         accept = 'application/zip'
       }
       const ids = this.selected.map(u => u._id)
-      interviewService.downloadInterviews(accept, this.studyId, this.interviewDesignFilter, this.stateFilter, this.filter, this.fromDate, this.toDate, ids)
+      const participantValid = this.eligibleFilter === 'true' ? true : this.eligibleFilter === 'false' ? false : undefined
+      interviewService.downloadInterviews(accept, this.studyId, this.interviewDesignFilter, this.campaignFilter, this.stateFilter, participantValid, this.filter, this.fromDate, this.toDate, ids)
         .then(response => {
           if (response.status === 200) {
             const url = window.URL.createObjectURL(new Blob([response.data]))
