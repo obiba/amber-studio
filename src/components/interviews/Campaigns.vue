@@ -585,7 +585,7 @@ export default defineComponent({
       paginationOpts: {
         descending: true,
         page: 1,
-        rowsPerPage: 10
+        rowsPerPage: 100
       },
       showAddCampaign: ref(false),
       showEditCampaign: ref(false),
