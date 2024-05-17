@@ -190,12 +190,23 @@
           <template v-slot:body-cell-action='props'>
             <q-td :props='props'>
               <q-btn
+                v-if="!isReadOnly"
                 color="secondary"
                 size="12px"
                 flat
                 dense
                 round
-                :title="$t(isReadOnly ? 'study.view_interview_hint' : 'study.edit_interview_hint')"
+                :title="$t('study.edit_interview_filling_date_hint')"
+                icon="access_time_filled"
+                @click='onShowEditFillingDate(props.row)'>
+              </q-btn>
+              <q-btn
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('study.view_interview_data_hint')"
                 icon="visibility"
                 @click='onShow(props.row)'>
               </q-btn>
@@ -303,6 +314,43 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model='showEditFillingDate' persistent>
+      <q-card style="width: 400px; max-width: 80vw;">
+        <q-card-section>
+          <div class="q-mb-sm">
+            <q-chip>{{ selectedInterview.code }}</q-chip>
+          </div>
+          <q-input filled v-model="selectedFillingDate" :label="$t('study.interview_filling_date')" :hint="$t('study.interview_filling_date_hint')">
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="selectedFillingDate" mask="YYYY-MM-DD">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='onEditFillingDate'
+            :label="$t('save')"
+            type='submit'
+            color='primary'
+            v-close-popup
+          >
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </div>
 </template>
 
@@ -345,9 +393,11 @@ export default defineComponent({
     return {
       modelData: {},
       selectedInterview: {},
+      selectedFillingDate: null,
       showInterview: false,
       showConfirmDeleteInterview: false,
       showConfirmDeleteInterviews: false,
+      showEditFillingDate: false,
       paginationOpts: {
         sortBy: 'updatedAt',
         descending: true,
@@ -406,6 +456,15 @@ export default defineComponent({
           sortable: true,
           format: val =>
             `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
+        },
+        {
+          name: 'fillingDate',
+          align: 'left',
+          label: this.$t('study.interview_filling_date'),
+          field: 'fillingDate',
+          sortable: true,
+          format: val =>
+            `${val ? date.formatDate(val, 'YYYY-MM-DD') : ''}`
         },
         {
           name: 'participantValid',
@@ -586,6 +645,19 @@ export default defineComponent({
       })
       this.modelData.participant = studyInterview.data
       this.maximizedToggle = false
+    },
+    onShowEditFillingDate (studyInterview) {
+      this.showEditFillingDate = true
+      this.selectedInterview = studyInterview
+      this.selectedFillingDate = studyInterview.fillingDate ? date.formatDate(studyInterview.fillingDate, 'YYYY-MM-DD') : null
+    },
+    onEditFillingDate () {
+      this.$store.dispatch('interview/updateInterview', {
+        id: this.selectedInterview._id,
+        interview: { fillingDate: new Date(this.selectedFillingDate) },
+        study: this.studyId,
+        paginationOpts: this.paginationOpts
+      })
     },
     onSave () {
       const updatedData = { ...this.modelData }
