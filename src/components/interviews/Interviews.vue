@@ -222,7 +222,7 @@
                 @click='onConfirmDelete(props.row)'>
               </q-btn>
               <q-btn
-                v-if="!isReadOnly && props.row.state === 'completed' && props.row.valid"
+                v-if="!isReadOnly && props.row.state === 'completed' && props.row.participantValid"
                 color="secondary"
                 size="12px"
                 flat
