@@ -90,6 +90,7 @@ export default {
     delete_tasks_hint: 'Supprimer les tâches sélectionnées',
     delete_tasks_confirm: 'Veuillez confirmer la suppression de toutes les tâches sélectionnées :',
     delete_task_hint: 'Supprimer la tâche',
+    view_task_hint: 'Voir la tâche',
     delete_task_confirm: 'Veuillez confirmer la suppression de la tâche :',
     search_hint: 'Chercher par type, état ou message d\'erreur',
     error: 'Erreur',

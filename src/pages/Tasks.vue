@@ -71,6 +71,17 @@
           <template v-slot:body-cell-action='props'>
             <q-td :props='props'>
               <q-btn
+                v-if="props.row.logs && props.row.logs.length > 0"
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                :title="$t('tasks.view_task_hint')"
+                icon='visibility'
+                @click='viewTask(props.row)'>
+              </q-btn>
+              <q-btn
                 color="secondary"
                 size="12px"
                 flat
@@ -86,8 +97,8 @@
       </q-card-section>
     </q-card>
 
-    <q-dialog v-model='showCreateTask' persistent>
-      <q-card>
+    <q-dialog v-model='showCreateTask'>
+      <q-card style="width: 400px;">
         <q-card-section>
           <q-select
             v-model="newTaskData.type"
@@ -115,7 +126,7 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showConfirmDeleteTask' persistent>
+    <q-dialog v-model='showConfirmDeleteTask'>
       <q-card>
         <q-card-section>
           <div>
@@ -142,7 +153,41 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model='showConfirmDeleteTasks' persistent>
+    <q-dialog v-model='showViewTask'>
+      <q-card>
+        <q-card-section>
+          <div class="text-weight-bold q-mb-md">
+            {{$t(`tasks.types.${selectedTask.type}`)}}
+          </div>
+          <div>
+            <q-toggle
+              v-model="logFilterDebug"
+              label="debug" />
+          </div>
+          <q-list separator>
+            <q-item v-for="log in filteredSelectedTaskLogs" :key="log._id">
+              <q-item-section style="max-width: 80px">
+                <span>
+                  <q-chip
+                    :color="log.level === 'error' ? 'negative' : log.level === 'debug' ? '' : 'primary'"
+                    :text-color="log.level === 'debug' ? '' : 'white'"
+                    :title="log.timestamp">{{log.level}}
+                  </q-chip>
+                </span>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-caption">{{log.message}}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('close')" flat color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model='showConfirmDeleteTasks'>
       <q-card>
         <q-card-section>
           <div>
@@ -246,7 +291,9 @@ export default {
       selectedTask: {},
       showCreateTask: false,
       showConfirmDeleteTask: false,
+      showViewTask: false,
       showConfirmDeleteTasks: false,
+      logFilterDebug: false,
       paginationOpts: {
         sortBy: 'createdAt',
         descending: false,
@@ -268,6 +315,12 @@ export default {
           label: this.$t(`tasks.types.${opt}`)
         }
       })
+    },
+    filteredSelectedTaskLogs () {
+      if (this.logFilterDebug) {
+        return this.selectedTask.logs
+      }
+      return this.selectedTask.logs.filter(log => log.level !== 'debug')
     }
   },
   methods: {
@@ -305,6 +358,10 @@ export default {
     confirmDeleteTask (task) {
       this.showConfirmDeleteTask = true
       this.selectedTask = task
+    },
+    viewTask (task) {
+      this.selectedTask = task
+      this.showViewTask = true
     },
     confirmDeleteTasks () {
       if (this.selected.length > 0) {
