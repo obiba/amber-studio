@@ -10,7 +10,7 @@ export async function getCampaigns (opts, interviewDesign, study, filter) {
       formData.query.$sort[opts.sortBy] = opts.descending ? 1 : -1
     }
   } else {
-    formData.query.$limit = 10
+    formData.query.$limit = 100
   }
   // use filter
   const itwid = interviewDesign?._id ? interviewDesign._id : interviewDesign
