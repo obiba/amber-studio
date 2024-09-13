@@ -87,6 +87,12 @@
         <q-card class="q-mt-md" v-if="isVariable">
           <q-card-section class="bg-grey-3">
             <q-btn
+              icon="edit"
+              flat
+              size="sm"
+              :label="$t('form.preview_data_edit')"
+              @click="editModelData()"/>
+            <q-btn
               icon="backspace"
               flat
               size="sm"
@@ -102,6 +108,35 @@
         </q-card>
       </q-tab-panel>
     </q-tab-panels>
+
+    <q-dialog v-model='showEditModelData' persistent :maximized="maximizedToggle">
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
+        <q-card-section>
+          <q-input
+            v-model="modelDataStrEdit"
+            type="textarea"
+            autogrow
+            rows="10"
+            :label="$t('form.preview_data')"
+            :hint="$t('form.preview_data_hint')" />
+        </q-card-section>
+        <q-card-actions align='right'>
+          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='onApplyModelData'
+            :label="$t('apply')"
+            type='submit'
+            color='primary'
+            v-close-popup
+          >
+           <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </div>
 </template>
 
@@ -187,6 +222,8 @@ export default defineComponent({
         'computed', 'map'
       ],
       modelData: ref({}),
+      showEditModelData: ref(false),
+      modelDataStrEdit: ref(''),
       optionsFile: ref(null),
       optionsCount: ref(5),
       imageFile: ref(null),
@@ -432,6 +469,19 @@ export default defineComponent({
     },
     onLocale (newLocale) {
       this.locale = newLocale
+    },
+    editModelData () {
+      this.modelDataStrEdit = this.modelDataStr
+      this.showEditModelData = true
+    },
+    onApplyModelData () {
+      try {
+        this.modelData = JSON.parse(this.modelDataStrEdit)
+        this.showEditModelData = false
+        this.remountCounter++
+      } catch (e) {
+        console.error(e)
+      }
     },
     clearModelData () {
       this.modelData = {}

@@ -1,6 +1,6 @@
 {
   "name": "amber-studio",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Amber Studio for managing Amber server",
   "productName": "Amber Studio",
   "author": "Yannick Marcon <yannick.marcon@obiba.org>",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
-    "@obiba/quasar-app-extension-amber": "^1.1.5",
+    "@obiba/quasar-app-extension-amber": "1.1.6",
     "@quasar/quasar-app-extension-qcalendar": "^4.0.0-beta.16",
     "@quasar/quasar-app-extension-qmarkdown": "^2.0.0-beta.10",
     "eslint": "^7.14.0",

@@ -164,6 +164,8 @@
             <q-input
               class="q-mb-md"
               v-model="selected.condition"
+              type="textarea"
+              autogrow
               lazy-rules
               :label="$t('interview.step_condition')"
               :hint="$t('interview.step_condition_hint')"
@@ -173,6 +175,8 @@
             <q-input
               class="q-mb-md"
               v-model="selected.disable"
+              type="textarea"
+              autogrow
               lazy-rules
               :label="$t('interview.step_disable')"
               :hint="$t('interview.step_disable_hint')"
