@@ -65,7 +65,8 @@ export default {
     roles_filter: 'Roles',
     search_hint: 'Search by name or email',
     reset_2fa: 'Reset 2FA',
-    required_2fa: 'Two-factor authentication with an authenticator app (2FA) is required (if not, the email address will be used to send a temporary token).'
+    required_2fa: 'Two-factor authentication with an authenticator app (2FA) is required (if not, the email address will be used to send a temporary token).',
+    with_2fa: 'Two-factor authentication (2FA) is enabled (highly recommended).',
   },
   groups: {
     title: 'Groups',

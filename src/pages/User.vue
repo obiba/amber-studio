@@ -127,7 +127,13 @@
             >
             </q-select>
           </div>
-          <div class='col-12 col-md-6'>
+          <div class='col-12 col-md-12'>
+            <q-toggle
+              v-model="profileData.with2fa"
+              :label="$t('users.with_2fa')"
+            />
+          </div>
+          <div v-if="profileData.with2fa" class='col-12 col-md-12'>
             <q-toggle
               v-model="profileData.totp2faRequired"
               :label="$t('users.required_2fa')"
@@ -149,7 +155,7 @@
         </q-btn>
 
         <q-btn
-          v-show="currentUser.totp2faRequired"
+          v-show="profileData.with2fa && currentUser.totp2faRequired"
           @click='resetTotp2FA'
           :disable='disableTotp2FA'
           :label="$t('users.reset_2fa')"
@@ -282,7 +288,8 @@ export default defineComponent({
         phone: user.phone,
         language: user.language,
         role: user.role,
-        totp2faRequired: user.totp2faRequired
+        totp2faRequired: user.totp2faRequired,
+        with2fa: user.with2fa !== false, // default to true if not set
       }
     },
     async initData () {
