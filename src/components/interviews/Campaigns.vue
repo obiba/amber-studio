@@ -159,6 +159,15 @@
                       </q-item-label>
                     </q-item-section>
                   </q-item>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_completion_hint')">
+                      <q-item-label>{{ $t('interview.campaign_completion') }}</q-item-label>
+                      <q-item-label caption>
+                        <a v-if="campaign.completionUrl" :href="campaign.completionUrl" target="_blank">{{ campaign.completionUrl }}</a>
+                        <span v-else>-</span>
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
                 </q-list>
                 <p class="text-weight-bold q-mt-md q-mb-sm">{{ $t('interview.campaign_security') }}</p>
                 <q-list bordered separator>
@@ -368,6 +377,21 @@
           >
             <template v-slot:error>
               <div v-for="error in v$.campaignData.visitUrl.$errors">
+                {{error.$message}}
+              </div>
+            </template>
+          </q-input>
+          <q-input
+            v-model='campaignData.completionUrl'
+            :label="$t('interview.campaign_completion')"
+            :hint="$t('interview.campaign_completion_hint')"
+            placeholder="https://"
+            @blur="v$.campaignData.name.$touch"
+            :error="v$.campaignData.name.$error"
+            lazy-rules
+          >
+            <template v-slot:error>
+              <div v-for="error in v$.campaignData.completionUrl.$errors">
                 {{error.$message}}
               </div>
             </template>
@@ -605,6 +629,9 @@ export default defineComponent({
         maxLength: maxLength(30)
       },
       visitUrl: {
+        url: (value) => !value || /^https?:\/\/.*/.test(value)
+      },
+      completionUrl: {
         url: (value) => !value || /^https?:\/\/.*/.test(value)
       }
     }
