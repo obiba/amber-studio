@@ -21,7 +21,7 @@
         indicator-color="info"
         @update:model-value="getCampaignMetrics"
       >
-        <q-tab v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" :label="campaign.name" />
+        <q-tab v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" :label="campaign.name" no-caps />
       </q-tabs>
 
       <q-separator />
@@ -80,8 +80,6 @@
                       <q-item-label>{{ $t('name') }}</q-item-label>
                       <q-item-label caption>{{ campaign.name }}</q-item-label>
                     </q-item-section>
-                  </q-item>
-                  <q-item>
                     <q-item-section>
                       <q-item-label>{{ $t('description') }}</q-item-label>
                       <q-item-label caption>{{ campaign.description || '-' }}</q-item-label>
@@ -140,8 +138,6 @@
                         </q-btn-dropdown>
                       </div>
                     </q-item-section>
-                  </q-item>
-                  <q-item>
                     <q-item-section :title="$t('interview.campaign_supporters_hint')">
                       <q-item-label>{{ $t('interview.campaign_supporters') }}</q-item-label>
                       <div>
@@ -158,8 +154,6 @@
                         <span v-else>-</span>
                       </q-item-label>
                     </q-item-section>
-                  </q-item>
-                  <q-item>
                     <q-item-section :title="$t('interview.campaign_completion_hint')">
                       <q-item-label>{{ $t('interview.campaign_completion') }}</q-item-label>
                       <q-item-label caption>
@@ -187,8 +181,6 @@
                       <q-item-label>{{ $t('interview.campaign_valid_from') }}</q-item-label>
                       <q-item-label caption>{{ campaign.validFrom ? date.formatDate(campaign.validFrom, 'YYYY-MM-DD') : '-' }}</q-item-label>
                     </q-item-section>
-                  </q-item>
-                  <q-item>
                     <q-item-section :title="$t('interview.campaign_valid_until_hint')">
                       <q-item-label>{{ $t('interview.campaign_valid_until') }}</q-item-label>
                       <q-item-label caption>{{ campaign.validUntil ? date.formatDate(campaign.validUntil, 'YYYY-MM-DD') : '-' }}</q-item-label>
@@ -199,14 +191,10 @@
                       <q-item-label>{{ $t('interview.campaign_weeks_info_before_activate') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksInfoBeforeActivation }}</q-item-label>
                     </q-item-section>
-                  </q-item>
-                  <q-item>
                     <q-item-section :title="$t('interview.campaign_weeks_reminder_hint')">
                       <q-item-label>{{ $t('interview.campaign_weeks_reminder') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksBetweenReminders }}</q-item-label>
                     </q-item-section>
-                  </q-item>
-                  <q-item>
                     <q-item-section :title="$t('interview.campaign_reminders_count_hint')">
                       <q-item-label>{{ $t('interview.campaign_reminders_count') }}</q-item-label>
                       <q-item-label caption>{{ campaign.numberOfReminders }}</q-item-label>
@@ -217,11 +205,40 @@
                       <q-item-label>{{ $t('interview.campaign_weeks_info_before_expire') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksInfoBeforeDeactivation }}</q-item-label>
                     </q-item-section>
-                  </q-item>
-                  <q-item>
                     <q-item-section :title="$t('interview.campaign_weeks_deactivate_hint')">
                       <q-item-label>{{ $t('interview.campaign_weeks_deactivate') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksToDeactivate }}</q-item-label>
+                    </q-item-section>
+                    <q-item-section />
+                  </q-item>
+                </q-list>
+                <p class="text-weight-bold q-mt-md q-mb-sm">{{ $t('interview.campaign_walkin_participants') }}</p>
+                <q-list bordered separator>
+                  <q-item>
+                    <q-item-section :title="$t('interview.campaign_with_walkin_participants_hint')">
+                      <q-item-label>{{ $t('interview.campaign_with_walkin_participants') }}</q-item-label>
+                      <q-toggle v-model="campaign.walkInEnabled" disable />
+                    </q-item-section>
+                  </q-item>
+                  <q-item v-if="campaign.walkInEnabled && campaign.walkInData">
+                    <q-item-section :title="$t('interview.campaign_walkin_url_parameters_hint')">
+                      <q-item-label>{{ $t('interview.campaign_walkin_url_parameters') }}</q-item-label>
+                      <q-item-label caption>{{ getWalkInParameters(campaign).join(', ') || '-' }}</q-item-label>
+                    </q-item-section>
+                    <q-item-section :title="$t('interview.campaign_walkin_participant_attributes_hint')">
+                      <q-item-label>{{ $t('interview.campaign_walkin_participant_attributes') }}</q-item-label>
+                      <q-item-label caption>{{ getWalkInAttributesArray(campaign).map((entry) => `${entry.key}=${entry.value}`).join('; ') }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item v-if="campaign.walkInEnabled">
+                    <q-item-section :title="$t('interview.campaign_walkin_visit_hint')">
+                      <q-item-label v-if="hasWalkInParameters(campaign)">{{ $t('interview.campaign_external_visit') }}</q-item-label>
+                      <q-item-label v-else>{{ $t('interview.campaign_walkin_visit') }}</q-item-label>
+                      <q-item-label caption>
+                        <span v-if="campaign.visitUrl && hasWalkInParameters(campaign)">{{ makeWalkInUrl(campaign) }}</span>
+                        <a v-else-if="campaign.visitUrl" :href="makeWalkInUrl(campaign)" target="_blank" >{{ makeWalkInUrl(campaign) }}</a>
+                        <span v-else>-</span>
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -344,7 +361,7 @@
     </q-dialog>
 
     <q-dialog v-model='showEditCampaign' persistent>
-      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'width: 1000px; max-width: 80vw'">
         <q-card-section>
           <q-input
             v-model='campaignData.name'
@@ -465,7 +482,7 @@
           <div class="row q-mt-md q-col-gutter-sm">
             <div class="col-6">
               <q-input
-                v-model.number='campaignData.weeksInfoBeforeActivation'
+                v-model.number="campaignData.weeksInfoBeforeActivation"
                 type="number"
                 :label="$t('interview.campaign_weeks_info_before_activate')"
                 :hint="$t('interview.campaign_weeks_info_before_activate_hint')"
@@ -480,7 +497,7 @@
           <div class="row q-mt-md q-col-gutter-sm">
             <div class="col-6">
               <q-input
-                v-model.number='campaignData.weeksBetweenReminders'
+                v-model.number="campaignData.weeksBetweenReminders"
                 type="number"
                 :label="$t('interview.campaign_weeks_reminder')"
                 :hint="$t('interview.campaign_weeks_reminder_hint')"
@@ -489,7 +506,7 @@
             </div>
             <div class="col-6">
               <q-input
-                v-model.number='campaignData.numberOfReminders'
+                v-model.number="campaignData.numberOfReminders"
                 type="number"
                 :label="$t('interview.campaign_reminders_count')"
                 :hint="$t('interview.campaign_reminders_count_hint')"
@@ -502,7 +519,7 @@
           <div class="row q-mt-md q-col-gutter-sm">
             <div class="col-6">
               <q-input
-                v-model.number='campaignData.weeksInfoBeforeDeactivation'
+                v-model.number="campaignData.weeksInfoBeforeDeactivation"
                 type="number"
                 :label="$t('interview.campaign_weeks_info_before_expire')"
                 :hint="$t('interview.campaign_weeks_info_before_expire_hint')"
@@ -511,7 +528,7 @@
             </div>
             <div class="col-6">
               <q-input
-                v-model.number='campaignData.weeksToDeactivate'
+                v-model.number="campaignData.weeksToDeactivate"
                 type="number"
                 :label="$t('interview.campaign_weeks_deactivate')"
                 :hint="$t('interview.campaign_weeks_deactivate_hint')"
@@ -529,6 +546,58 @@
               <div class="text-caption text-grey-7">{{ $t('interview.campaign_with_password_hint') }}</div>
             </div>
             <div class="col-6">
+              <q-toggle
+                v-model="campaignData.walkInEnabled"
+                :label="$t('interview.campaign_with_walkin_participants')" />
+              <div class="text-caption text-grey-7">{{ $t('interview.campaign_with_walkin_participants_hint') }}</div>
+              <div v-if="campaignData.walkInEnabled">
+                <q-input
+                  v-model="campaignData.walkinParamsStr"
+                  :label="$t('interview.campaign_walkin_url_parameters')"
+                  :hint="$t('interview.campaign_walkin_url_parameters_hint')"
+                />
+                <p class="q-mb-xs q-mt-md">{{ $t('interview.campaign_walkin_participant_attributes') }}</p>
+                <p class="text-secondary text-caption">{{ $t('interview.campaign_walkin_participant_attributes_hint') }}</p>
+                <div class="row q-col-gutter-md" v-for="(attribute, key) in campaignData.walkinAttributes" :key="campaignData.walkinAttributes.indexOf(attribute)">
+                  <div class="col-4">
+                    <q-input class="q-mb-md" v-model="attribute.key" :label="$t('key')"/>
+                  </div>
+                  <div class="col-7">
+                    <q-input class="q-mb-md" v-model="attribute.value" :label="$t('value')"/>
+                  </div>
+                  <div class="col-1">
+                    <q-btn
+                      v-if="!readOnly"
+                      class="q-mt-md text-secondary"
+                      size="12px"
+                      flat
+                      dense
+                      round
+                      icon='delete'
+                      @click='deleteWalkInAttribute(key)'>
+                    </q-btn>
+                  </div>
+                </div>
+                <div class="row q-col-gutter-sm">
+                  <div class="col-4">
+                    <q-btn
+                      color="primary"
+                      icon="add"
+                      :title="$t('interview.add_participant_attribute_hint')"
+                      @click="addWalkInAttribute()"
+                      class="q-mr-sm"
+                    />
+                    <q-btn
+                      flat
+                      round
+                      color="negative"
+                      icon="delete_outline"
+                      :title="$t('interview.delete_participant_attributes_hint')"
+                      @click="deleteWalkInAttributes()"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </q-card-section>
@@ -755,15 +824,36 @@ export default defineComponent({
     onAddCampaign () {
       this.campaignData = {
         name: '',
-        investigators: []
+        investigators: [],
+        walkinParamsStr: '',
+        walkinAttributes: [],
       }
       this.showAddCampaign = true
     },
     onEditCampaign (campaign) {
-      this.campaignData = { ...campaign }
+      this.campaignData = { ...campaign, walkinParamsStr: '', walkinAttributes: {} }
       this.campaignData.validFrom = this.campaignData.validFrom ? date.formatDate(this.campaignData.validFrom, 'YYYY-MM-DD') : null
       this.campaignData.validUntil = this.campaignData.validUntil ? date.formatDate(this.campaignData.validUntil, 'YYYY-MM-DD') : null
+      this.campaignData.walkinParamsStr = this.getWalkInParameters(campaign).join(', ')
+      this.campaignData.walkinAttributes = this.getWalkInAttributesArray(campaign)
       this.showEditCampaign = true
+    },
+    deleteWalkInAttribute (idx) {
+      this.campaignData.walkinAttributes.splice(idx, 1)
+    },
+    addWalkInAttribute () {
+      this.campaignData.walkinAttributes.push({
+        key: '',
+        value: ''
+      })
+    },
+    deleteWalkInAttributes () {
+      this.campaignData.walkinAttributes = [
+        {
+          key: '',
+          value: ''
+        }
+      ]
     },
     onConfirmDeleteCampaign (campaign) {
       this.campaignData = { ...campaign }
@@ -782,6 +872,22 @@ export default defineComponent({
     },
     editCampaign () {
       const toSave = { ...this.campaignData }
+      toSave.walkInData = {}
+      if (toSave.walkInEnabled) {
+        toSave.walkinParamsStr.replaceAll(',', ' ').split(' ').forEach((param) => {
+          const key = param.trim()
+          if (key && key.length > 0) {
+            toSave.walkInData[key] = null // null means it will be replaced by the walk-in participant
+          }
+        })
+        toSave.walkinAttributes.forEach((attr) => {
+          if (attr.key && attr.key.trim().length > 0 && attr.value) {
+            toSave.walkInData[attr.key.replaceAll(' ', '_')] = attr.value
+          }
+        })
+      }
+      delete toSave.walkinParamsStr
+      delete toSave.walkinAttributes
       this.updateCampaign({
         campaign: toSave,
         interviewDesign: this.interviewDesign
@@ -798,6 +904,56 @@ export default defineComponent({
         this.tab = nexttab
         this.getCampaignMetrics()
       })
+    },
+    makeWalkInUrl (campaign) {
+      if (campaign.visitUrl && campaign.walkInEnabled) {
+        const baseUrl = campaign.visitUrl.replace(/\/$/, '')
+        let queryParams = `campaign=${campaign._id}`
+        if (campaign.walkInData) {
+          Object.entries(campaign.walkInData).forEach(([key, value]) => {
+            if (value === null) {
+              const val = `{{%${key}%}}`
+              queryParams = `${queryParams}&${key}=${val}`
+            }
+          })
+        }
+        return `${baseUrl}/go?${queryParams}`
+      }
+      return campaign.visitUrl
+    },
+    hasWalkInParameters (campaign) {
+      // has any walk-in data with null values
+      if (!campaign || !campaign.walkInData) return false
+      if (Object.keys(campaign.walkInData).length === 0) return false
+      for (const key in campaign.walkInData) {
+        if (campaign.walkInData[key] === null) {
+          return true
+        }
+      }
+      // if all values are not null, return false
+      return false
+    },
+    getWalkInParameters (campaign) {
+      if (!campaign || !campaign.walkInData) return []
+      if (Object.keys(campaign.walkInData).length === 0) return []
+      const params = []
+      for (const key in campaign.walkInData) {
+        if (campaign.walkInData[key] === null) {
+          params.push(key)
+        }
+      }
+      return params
+    },
+    getWalkInAttributesArray (campaign) {
+      if (!campaign || !campaign.walkInData) return []
+      if (Object.keys(campaign.walkInData).length === 0) return []
+      const attributes = []
+      for (const key in campaign.walkInData) {
+        if (campaign.walkInData[key] !== null) {
+          attributes.push({ key: key, value: campaign.walkInData[key] })
+        }
+      }
+      return attributes
     },
     onParticipantsTask (type) {
       const campaign = this.campaigns.find((cmp) => cmp.name === this.tab)

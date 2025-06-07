@@ -100,6 +100,13 @@
             color="secondary"/>
         </q-td>
       </template>
+      <template v-slot:body-cell-walkin='props'>
+        <q-td :props='props'>
+          <q-icon v-if="!props.row.createdBy" name="done"
+            size="sm"
+            color="secondary"/>
+        </q-td>
+      </template>
       <template v-slot:body-cell-action="props">
         <q-td :props="props">
           <q-btn
@@ -345,7 +352,7 @@
           </q-input>
         </q-card-section>
         <q-card-section>
-          <p class="q-mb-sm q-mt-md">{{ $t('interview.participant_attributes') }}</p>
+          <p class="q-mb-xs q-mt-md">{{ $t('interview.participant_attributes') }}</p>
           <p class="text-secondary text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
           <div class="row q-col-gutter-md" v-for="(attribute, key) in participantData.attributes" :key="participantData.attributes.indexOf(attribute)">
             <div class="col-4">
@@ -646,6 +653,13 @@ export default defineComponent({
           sortable: false
         },
         {
+          name: 'walkin',
+          align: 'left',
+          label: t('interview.participant_walkin'),
+          field: 'createdBy',
+          sortable: false
+        },
+        {
           name: 'lastSeen',
           align: 'left',
           label: t('users.last_seen'),
@@ -748,7 +762,7 @@ export default defineComponent({
       attributes
         .filter(attribute => attribute.key !== undefined && attribute.key.trim() !== '')
         .forEach(attribute => {
-          data[attribute.key] = attribute.value
+          data[attribute.key.replaceAll(' ', '_')] = attribute.value
         })
       return data
     },
