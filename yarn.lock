@@ -1804,9 +1804,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.13-obiba":
+"@blitzar/form@git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/form":
   version: 1.0.13
-  resolution: "@blitzar/form@https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.13-obiba"
+  resolution: "@blitzar/form@https://github.com/obiba/blitzar.git#workspace=packages%2Fform&commit=1e8f61d1a7cd87163ac5f7f90c651c237ac10ac4"
   dependencies:
     "@blitzar/types": "npm:^1.0.10"
     "@blitzar/utils": "npm:^1.0.10"
@@ -1817,14 +1817,14 @@ __metadata:
     map-anything: "npm:^1.0.4"
     merge-anything: "npm:^4.0.2"
     nestify-anything: "npm:^1.0.3"
-  checksum: 10c0/4fc2701405d51d12cf7dacff50432d136ad75b2d42fcc2c76972179061886f46f71ce219d232724c65f89efc9a69a36194b4050bfceff29f9f93abb3d2ace627
+  checksum: 10c0/eec7bdfe4859dedd29facff7772e2eb8b3cef9186c92ad54002e72fe97299c2f26ccfe6353c51944712d2f46ab2d4e746c3eb488da5b63d137bc8f9922b98f6a
   languageName: node
   linkType: hard
 
-"@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.13-obiba":
+"@blitzar/types@git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/types":
   version: 1.0.13
-  resolution: "@blitzar/types@https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.13-obiba"
-  checksum: 10c0/47a28bfe0e21cbfe73bc2b4ac04ae33d535866222ee2c309ee07d1e24c926ce2df11a28958c1a2bbfd70ef52f3ed2e6cd3e728d2809a268247391c95840e135e
+  resolution: "@blitzar/types@https://github.com/obiba/blitzar.git#workspace=packages%2Ftypes&commit=1e8f61d1a7cd87163ac5f7f90c651c237ac10ac4"
+  checksum: 10c0/dbf1972429a4104f7e3d4277e7e92965e6782937fbf01103a9d9a216cb566eb81ce116ccebd5384a168978bbc075d43df833a1d24472b6069f16943ae715f7e3
   languageName: node
   linkType: hard
 
@@ -1837,14 +1837,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.13-obiba":
+"@blitzar/utils@git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/utils":
   version: 1.0.13
-  resolution: "@blitzar/utils@https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.13-obiba"
+  resolution: "@blitzar/utils@https://github.com/obiba/blitzar.git#workspace=packages%2Futils&commit=1e8f61d1a7cd87163ac5f7f90c651c237ac10ac4"
   dependencies:
     commafy-anything: "npm:^2.1.0"
     flatten-anything: "npm:^2.0.4"
     is-what: "npm:^3.14.1"
-  checksum: 10c0/5362f69fc33acc7f61a7f2d638503b8a2cdce1c70115010179408d8a7ed32f19cd2803365a9035c101045bbf452ee7a1980b278524ac2e9dd3225afe52b2b39a
+  checksum: 10c0/e2ad0460434c48282caf01ec59e37f7467d992dc288ba7aa4f15a8de8645ebace595e727986be9c058706be1a3f996c3a75771bd321d9438c12da7c165bf3540
   languageName: node
   linkType: hard
 
@@ -3757,9 +3757,9 @@ __metadata:
   resolution: "amber-studio@workspace:."
   dependencies:
     "@babel/eslint-parser": "npm:^7.13.14"
-    "@blitzar/form": "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.13-obiba"
-    "@blitzar/types": "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.13-obiba"
-    "@blitzar/utils": "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.13-obiba"
+    "@blitzar/form": "git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/form"
+    "@blitzar/types": "git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/types"
+    "@blitzar/utils": "git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/utils"
     "@feathersjs/authentication-client": "npm:^4.5.11"
     "@feathersjs/client": "npm:^4.5.11"
     "@feathersjs/feathers": "npm:^4.5.11"

@@ -1,6 +1,6 @@
 {
   "name": "amber-studio",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Amber Studio for managing Amber server",
   "productName": "Amber Studio",
   "author": "Yannick Marcon <yannick.marcon@obiba.org>",
@@ -11,9 +11,9 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@blitzar/form": "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.13-obiba",
-    "@blitzar/types": "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.13-obiba",
-    "@blitzar/utils": "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.13-obiba",
+    "@blitzar/form": "git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/form",
+    "@blitzar/types": "git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/types",
+    "@blitzar/utils": "git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/utils",
     "@feathersjs/authentication-client": "^4.5.11",
     "@feathersjs/client": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
