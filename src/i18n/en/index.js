@@ -620,6 +620,8 @@ export default {
     campaign_external_visit: 'Amber Visit URL for externally managed participants',
     campaign_walkin_visit: 'Amber Visit URL for walk-in participants',
     campaign_walkin_visit_hint: 'URL of the Amber Visit application to use for walk-in participants.',
+    campaign_notify_on_interview_completion: 'Notify on interview completion',
+    campaign_notify_on_interview_completion_hint: 'Send a notification to investigators when a participant completes their interview.',
     participant_walkin: 'Self-registered',
     add_participants: 'Add participants',
     import_participants: 'Import participants',

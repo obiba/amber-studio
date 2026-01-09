@@ -147,6 +147,12 @@
                     </q-item-section>
                   </q-item>
                   <q-item>
+                    <q-item-section :title="$t('interview.campaign_notify_on_interview_completion_hint')">
+                      <q-item-label>{{ $t('interview.campaign_notify_on_interview_completion') }}</q-item-label>
+                      <q-toggle v-model="campaign.notifyOnInterviewCompletion" disable />
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
                     <q-item-section :title="$t('interview.campaign_visit_hint')">
                       <q-item-label>{{ $t('interview.campaign_visit') }}</q-item-label>
                       <q-item-label caption>
@@ -415,26 +421,36 @@
           </q-input>
         </q-card-section>
         <q-card-section>
-          <q-select
-            v-model="campaignData.investigators"
-            :options="userSubjectOptions"
-            emit-value
-            map-options
-            multiple
-            use-chips
-            :label="$t('interview.campaign_investigators')"
-            :hint="$t('interview.campaign_investigators_hint')" />
+          <div class="row q-mt-md q-col-gutter-sm">
+            <div class="col-6">
+              <q-select
+                v-model="campaignData.investigators"
+                :options="userSubjectOptions"
+                emit-value
+                map-options
+                multiple
+                use-chips
+                :label="$t('interview.campaign_investigators')"
+                :hint="$t('interview.campaign_investigators_hint')" />
+            </div>
+            <div class="col-6">
+              <q-select
+                v-model="campaignData.supporters"
+                :options="userSubjectOptions"
+                emit-value
+                map-options
+                multiple
+                use-chips
+                :label="$t('interview.campaign_supporters')"
+                :hint="$t('interview.campaign_supporters_hint')" />
+            </div>
+          </div>
         </q-card-section>
         <q-card-section>
-          <q-select
-            v-model="campaignData.supporters"
-            :options="userSubjectOptions"
-            emit-value
-            map-options
-            multiple
-            use-chips
-            :label="$t('interview.campaign_supporters')"
-            :hint="$t('interview.campaign_supporters_hint')" />
+          <q-toggle
+            v-model="campaignData.notifyOnInterviewCompletion"
+            :label="$t('interview.campaign_notify_on_interview_completion')" />
+          <div class="text-caption text-grey-7">{{ $t('interview.campaign_notify_on_interview_completion_hint') }}</div>
         </q-card-section>
         <q-card-section>
           <div class="row q-col-gutter-md">
@@ -836,6 +852,7 @@ export default defineComponent({
       this.campaignData.validUntil = this.campaignData.validUntil ? date.formatDate(this.campaignData.validUntil, 'YYYY-MM-DD') : null
       this.campaignData.walkinParamsStr = this.getWalkInParameters(campaign).join(', ')
       this.campaignData.walkinAttributes = this.getWalkInAttributesArray(campaign)
+      this.campaignData.notifyOnInterviewCompletion = !!this.campaignData.notifyOnInterviewCompletion
       this.showEditCampaign = true
     },
     deleteWalkInAttribute (idx) {
