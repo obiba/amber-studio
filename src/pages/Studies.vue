@@ -66,7 +66,7 @@
             </template>
             <template v-slot:body-cell-forms='props'>
               <q-td :props='props'>
-                <q-badge color="primary">{{ props.row.forms.length }}</q-badge>
+                <q-badge color="primary">{{ props.row.forms?.length || 0 }}</q-badge>
               </q-td>
             </template>
             <template v-slot:body-cell-action='props'>
