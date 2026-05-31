@@ -285,19 +285,27 @@ import logoInline from '@/assets/logo.svg?inline' // Inline base64
 
 **Webpack Plugins → Vite Equivalents:**
 
-Current webpack plugins in use (need to check `quasar.conf.js`):
+Current webpack plugins in use (based on `quasar.conf.js` analysis):
 
-| Webpack Plugin | Vite Equivalent | Action Required |
-|----------------|-----------------|-----------------|
-| `DefinePlugin` | `define` in config | Update to Vite's define syntax |
-| `CopyPlugin` | `vite-plugin-static-copy` | Install if needed |
-| `CompressionPlugin` | Built-in or `vite-plugin-compression` | Check if needed |
-| ESLint webpack plugin | `vite-plugin-eslint` | May need to install |
+| Webpack Plugin | Current Usage | Vite Equivalent | Action Required |
+|----------------|---------------|-----------------|-----------------|
+| `DefinePlugin` (implicit via `build.env`) | Yes - defining API, RECAPTCHA_SITE_KEY, SETTINGS, etc. | `define` in config | Update to Vite's define syntax |
+| `webpack-chain` alias configuration | Yes - Vue alias resolution | Vite `resolve.alias` | Update alias syntax |
+| Workbox Plugin (PWA) | Yes - configured in `pwa.workboxPluginMode` | `vite-plugin-pwa` | Install and configure |
+| No explicit CopyPlugin | N/A | `vite-plugin-static-copy` | Install only if needed |
+| No explicit CompressionPlugin | N/A | Built-in or `vite-plugin-compression` | Install only if needed |
+| No ESLint webpack plugin | N/A | `vite-plugin-eslint` | May need to install |
+
+**Key Findings from quasar.conf.js:**
+- Uses `build.env` to inject environment variables (API, RECAPTCHA_SITE_KEY, SETTINGS, VERSION, REGISTER_ENABLED)
+- Uses `chainWebpack` to configure Vue alias resolution
+- PWA mode configured with WorkboxPlugin in GenerateSW mode
+- No custom webpack plugins detected beyond Quasar's defaults
 
 **Action Items:**
-1. Review current `quasar.conf.js` for webpack plugins
-2. Identify Vite equivalents
-3. Document any custom webpack plugins that need alternative solutions
+1. ✅ Review current `quasar.conf.js` for webpack plugins - COMPLETED
+2. Identify Vite equivalents - documented above
+3. Document any custom webpack plugins that need alternative solutions - none found beyond defaults
 
 #### 2.5 Build Optimization Options
 
@@ -974,6 +982,8 @@ Priority order:
 4. **Prepare fallback implementations** for critical extensions
 5. **Budget time for custom implementation** if extension unavailable
 
+**Note:** Extension verification is currently pending and scheduled for completion before Phase 2 kickoff. The three community extensions marked "To verify" will be checked for Quasar 3 compatibility as part of the Phase 2 preparation checklist. This ensures we have confirmed compatibility or prepared fallback implementations before beginning the actual migration work.
+
 ---
 
 ## Static Import Conversion Strategy
@@ -1184,6 +1194,26 @@ export default defineConfig({
 ---
 
 ## Environment Variable Migration
+
+### Current Usage Inventory
+
+**Process.env usage in codebase:**
+- Total occurrences: **10** (found via `grep -r "process\.env" src/ --include="*.js" --include="*.vue"`)
+
+**Locations and variables used:**
+1. `src/boot/feathersClient.js` - `process.env.API`
+2. `src/boot/axios.js` - `process.env.API`
+3. `src/boot/recaptcha.js` - `process.env.RECAPTCHA_SITE_KEY`
+4. `src/boot/settings.js` - `process.env.SETTINGS`, `process.env.VERSION`, `process.env.REGISTER_ENABLED`
+5. `src/store/index.js` - `process.env.DEBUGGING`
+6. `src/router/index.js` - `process.env.MODE`, `process.env.VUE_ROUTER_MODE`, `process.env.VUE_ROUTER_BASE`
+
+**Environment variables defined in quasar.conf.js build.env:**
+- `API` - Backend API URL (dev: http://localhost:3030, prod: from AMBER_URL env var)
+- `RECAPTCHA_SITE_KEY` - reCAPTCHA site key
+- `SETTINGS` - JSON configuration from settings.json
+- `REGISTER_ENABLED` - Derived from RECAPTCHA_SITE_KEY presence
+- `VERSION` - From package.json version
 
 ### Search and Replace Operations
 
