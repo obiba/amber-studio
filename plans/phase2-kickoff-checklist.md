@@ -86,12 +86,11 @@
 ### 2. Team Preparation
 
 - [ ] **Review Phase 1 documents**
-  - [ ] migration-strategy.md
-  - [ ] pinia-architecture.md
-  - [ ] feathersvuex-migration.md
-  - [ ] component-setup-syntax.md
-  - [ ] static-import-strategy.md
-  - [ ] phase1-summary.md
+  - [ ] MIGRATION-STRATEGY.md (consolidated migration guide)
+  - [ ] STATE-MANAGEMENT.md (consolidated Pinia + Feathers-Pinia guide)
+  - [ ] COMPONENT-MIGRATION.md (component conversion patterns)
+  - [ ] IMPLEMENTATION-GUIDE.md (quick reference)
+  - [ ] phase1-summary.md (overview and decisions)
 
 - [ ] **Align on migration approach**
   - [ ] All team members understand the plan

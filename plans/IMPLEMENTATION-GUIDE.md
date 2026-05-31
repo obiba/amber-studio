@@ -15,15 +15,13 @@ All planning documents are in `plans/` directory:
 
 | Document | Purpose | Key Content | Lines |
 |----------|---------|-------------|-------|
-| **migration-strategy.md** | Overall strategy | Breaking changes, Vite config, decision log | 1,492 |
-| **pinia-architecture.md** | Store migration | 7 stores analyzed, setup syntax patterns | 1,421 |
-| **feathersvuex-migration.md** | Auth migration | Feathers-Pinia approach, auth flow | 477 |
-| **component-setup-syntax.md** | Component conversion | 73 components, 12 patterns, priority list | 1,087 |
-| **static-import-strategy.md** | Import conversion | 68 dynamic imports, manual chunking | 636 |
+| **MIGRATION-STRATEGY.md** | Overall strategy | Breaking changes, Vite config, static imports, environment vars | 1,348 |
+| **STATE-MANAGEMENT.md** | Store & auth migration | 7 stores, FeathersVuex→Feathers-Pinia, setup patterns | ~1,900 |
+| **COMPONENT-MIGRATION.md** | Component conversion | 73 components, 12 patterns, priority list | 1,087 |
 | **phase1-summary.md** | Summary | All decisions, GO/NO-GO, metrics | 875 |
 | **phase2-kickoff-checklist.md** | Phase 2 prep | Prerequisites, tasks, success criteria | 427 |
 
-**Total Planning:** 6,415 lines across 7 documents
+**Total Planning:** ~5,637 lines across 5 documents (+ 3 archived)
 
 ---
 
@@ -67,7 +65,7 @@ All planning documents are in `plans/` directory:
 ## Critical Decisions Made
 
 ### Decision 1: Use Feathers-Pinia
-**File:** `plans/feathersvuex-migration.md`
+**File:** `plans/STATE-MANAGEMENT.md`
 
 - **Choice:** Official Feathers-Pinia library (NOT custom implementation)
 - **Why:** Actively maintained, Vue 3 native, official successor
@@ -75,7 +73,7 @@ All planning documents are in `plans/` directory:
 - **Pattern:** Convert AuthMixin → `useAuth()` composable
 
 ### Decision 2: All Static Imports
-**File:** `plans/static-import-strategy.md`
+**File:** `plans/MIGRATION-STRATEGY.md`
 
 - **Choice:** Convert ALL dynamic imports to static
 - **Why:** Required for Vite compatibility, no exceptions
@@ -83,7 +81,7 @@ All planning documents are in `plans/` directory:
 - **Pattern:** `() => import()` → `import Component from 'path'`
 
 ### Decision 3: Setup Syntax Everywhere
-**File:** `plans/component-setup-syntax.md`
+**File:** `plans/COMPONENT-MIGRATION.md`
 
 - **Choice:** All 73 components use `<script setup>`
 - **Why:** Aligns with Vue 3 best practices, simpler code
@@ -91,7 +89,7 @@ All planning documents are in `plans/` directory:
 - **Key pattern:** `data() → ref()`, `computed → computed()`, `methods → functions`
 
 ### Decision 4: Pinia with Setup Syntax
-**File:** `plans/pinia-architecture.md`
+**File:** `plans/STATE-MANAGEMENT.md`
 
 - **Choice:** All stores use setup syntax (not options)
 - **Why:** Consistency with components, cleaner code
@@ -370,9 +368,9 @@ src/boot/
 ### Phase 2 Tasks (in order)
 
 1. **Dependencies Update**
-   - Upgrade Quasar 2.14.3 → 3.x
+   - Upgrade Quasar 2.14.3 → 2.19.3
    - Install @quasar/app-vite (replace app-webpack)
-   - Upgrade extensions to v3
+   - Upgrade extensions
    - Install Pinia, remove Vuex
 
 2. **Vite Configuration**
@@ -481,34 +479,34 @@ src/boot/
 ## Where to Ask Questions During Implementation
 
 ### If stuck on Quasar 3:
-- Reference: `plans/migration-strategy.md` (lines 42-178)
+- Reference: `plans/MIGRATION-STRATEGY.md` (Breaking Changes section)
 - Official: https://quasar.dev/start/upgrade-guide
 
 ### If stuck on Vite:
-- Reference: `plans/migration-strategy.md` (lines 180-375)
+- Reference: `plans/MIGRATION-STRATEGY.md` (Vite Configuration section)
 - Official: https://vitejs.dev/guide/
 
 ### If stuck on Pinia:
-- Reference: `plans/pinia-architecture.md`
+- Reference: `plans/STATE-MANAGEMENT.md` (Pinia Architecture section)
 - Official: https://pinia.vuejs.org/
 
 ### If stuck on Feathers-Pinia:
-- Reference: `plans/feathersvuex-migration.md`
+- Reference: `plans/STATE-MANAGEMENT.md` (FeathersVuex Migration section)
 - Official: https://feathers-pinia.pages.dev/
 
 ### If stuck on setup syntax:
-- Reference: `plans/component-setup-syntax.md`
+- Reference: `plans/COMPONENT-MIGRATION.md`
 - Official: https://vuejs.org/api/sfc-script-setup.html
 
 ### If stuck on static imports:
-- Reference: `plans/static-import-strategy.md`
-- Manual chunking example: lines 1094-1139
+- Reference: `plans/MIGRATION-STRATEGY.md` (Static Import Strategy section)
+- Manual chunking example in Vite Configuration section
 
 ---
 
 ## Summary: What You Need to Know
 
-1. **All planning is done** - 6,415 lines across 7 documents
+1. **All planning is done** - ~5,637 lines across 5 documents (+ 3 archived)
 2. **All decisions are made** - Feathers-Pinia, static imports, setup syntax, manual chunking
 3. **All patterns are documented** - 12 component patterns, store patterns, import patterns
 4. **All files are analyzed** - 73 components, 7 stores, 68 imports, 10 boot files
