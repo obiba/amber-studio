@@ -1,6 +1,6 @@
 # Implementation Guide for Claude
 
-**Purpose:** This document provides a quick reference for implementing the Quasar 3 + Vite + Pinia migration based on the Phase 1 planning documents.
+**Purpose:** This document provides a quick reference for implementing the Quasar 2.19.3 + Vite + Pinia migration based on the Phase 1 planning documents.
 
 **Created:** 2026-05-31  
 **For:** Phase 2+ Implementation
@@ -367,13 +367,6 @@ src/boot/
 
 **Location:** See `plans/phase2-kickoff-checklist.md` for full details
 
-### ⚠️ CRITICAL: Before Starting Phase 2
-
-**BLOCKER:** Verify extension compatibility
-- [ ] Check `@obiba/quasar-app-extension-amber` v1.2.0 exists
-- [ ] Check qcalendar, qmarkdown, qhierarchy v3 compatibility
-- [ ] Document fallback plans if not available
-
 ### Phase 2 Tasks (in order)
 
 1. **Dependencies Update**
@@ -437,7 +430,7 @@ src/boot/
 
 ## Success Criteria (When Are We Done?)
 
-### Phase 2 Success (Quasar 3 + Vite Setup)
+### Phase 2 Success (Quasar 2.19.3 + Vite Setup)
 - ✅ Project builds with Vite (dev & prod)
 - ✅ All extensions work
 - ✅ All pages load

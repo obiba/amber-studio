@@ -1,6 +1,6 @@
 # Phase 2: Foundation - Kick-off Checklist
 
-**Phase:** Foundation (Quasar 3 + Vite Setup)  
+**Phase:** Foundation (Quasar 2.19.3 + Vite Setup)  
 **Duration:** 2 weeks (estimated)  
 **Prerequisites:** Phase 1 Complete ✅  
 **Date:** 2026-05-31
@@ -146,7 +146,7 @@
 
 ## Phase 2: Task Breakdown
 
-### Week 1: Quasar 3 + Vite Setup
+### Week 1: Quasar 2.19.3 + Vite Setup
 
 **Task 2.1: Dependency Updates (1-2 days)**
 - [ ] Remove unused extensions from package.json
@@ -155,7 +155,7 @@
   - [ ] Remove quasar-app-extension-qhierarchy
 - [ ] Remove unused extensions from quasar.extensions.json
 - [ ] Update package.json dependencies
-- [ ] Install Quasar 3 and Vite
+- [ ] Install Quasar 2.19.3 and Vite
 - [ ] Upgrade @obiba/quasar-app-extension-amber to v1.2.0
 - [ ] Resolve dependency conflicts
 - [ ] Test clean install
@@ -247,7 +247,7 @@
 
 ### Medium Risk: Configuration Issues
 **If configuration doesn't work:**
-1. Review Quasar 3 documentation
+1. Review Quasar 2.19.3 documentation
 2. Check Quasar Discord/forums
 3. Test minimal configuration
 4. Incrementally add features

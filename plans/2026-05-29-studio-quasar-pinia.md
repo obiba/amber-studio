@@ -2,10 +2,10 @@
 
 **Project:** Amber Studio  
 **Current Stack:** Quasar 2.14.3, Vue 3, Vuex 4, Webpack  
-**Target Stack:** Quasar 3, Vue 3, Pinia, Vite  
+**Target Stack:** Quasar 2.19.3, Vue 3, Pinia, Vite  
 **Estimation Date:** May 29, 2026  
 **Last Updated:** May 31, 2026  
-**Approach:** All-at-Once Migration (Quasar 3 + Vite + Pinia simultaneously)
+**Approach:** All-at-Once Migration (Quasar 2.19.3 + Vite + Pinia simultaneously)
 
 ---
 
@@ -114,12 +114,12 @@
 **Timeline:** 6-8 weeks (30-40 days)  
 **Risk Level:** High (comprehensive changes)  
 **Deployment:** Single production deployment  
-**Strategy:** Migrate Quasar 3 + Vite + Pinia + Setup Syntax simultaneously
+**Strategy:** Migrate Quasar 2.19.3 + Vite + Pinia + Setup Syntax simultaneously
 
 ### Phase 1: Planning & Architecture (3-4 days)
 
 #### 1.1 Migration Strategy Document (1 day)
-- Review Quasar v3 migration guide
+- Review Quasar 2.19.3 migration guide
 - Review Vite migration requirements
 - Review Pinia migration patterns
 - Identify breaking changes relevant to codebase
@@ -209,7 +209,7 @@
 **Deliverable:** Codebase with 100% static imports
 
 #### 2.4 Boot Files Migration (1 day)
-Update 10 boot files for Quasar 3 + Vite:
+Update 10 boot files for Quasar 2.19.3 + Vite:
 - axios.js (LoadingBar usage, Vite env vars)
 - feathers.js (potential composable changes, Vite env vars)
 - i18n.js (Quasar language pack imports, Vite compatibility)
@@ -219,7 +219,7 @@ Update 10 boot files for Quasar 3 + Vite:
 - Remove Vuex initialization
 - Add Pinia initialization
 
-**Deliverable:** All boot files migrated to Quasar 3 + Vite + Pinia
+**Deliverable:** All boot files migrated to Quasar 2.19.3 + Vite + Pinia
 
 #### 2.5 Asset Import Updates (0.5 days)
 - Update all asset imports for Vite (use explicit file extensions)
@@ -372,7 +372,7 @@ Update 10 boot files for Quasar 3 + Vite:
 
 **Deliverable:** AuthMixin converted to composable
 
-### Phase 5: Quasar 3 Component Updates (3-4 days)
+### Phase 5: Quasar 2.19.3 Component Updates (3-4 days)
 
 #### 5.1 Plugin & Composable Updates (1 day)
 - Update Notify plugin usage (12 files)
@@ -382,7 +382,7 @@ Update 10 boot files for Quasar 3 + Vite:
 - Update $q global usage (dark mode, screen checks)
 - Update AppFullscreen plugin usage
 
-**Deliverable:** All plugins/composables updated for Quasar 3
+**Deliverable:** All plugins/composables updated for Quasar 2.19.3
 
 #### 5.2 Component API Updates - High Priority (1.5 days)
 Fix breaking changes in most-used components:
@@ -623,7 +623,7 @@ Fix remaining 52 unique Quasar components:
 
 **Week 7-8: Component Migration Part 2 & Quasar Updates**
 - Complete Phase 4.5-4.7 (Pages Batch 3, Components, Mixins)
-- Complete Phase 5 (Quasar 3 Component Updates)
+- Complete Phase 5 (Quasar 2.19.3 Component Updates)
 - **Milestone:** All components using setup syntax, all Quasar components updated
 
 **Week 9-10: Testing, Cleanup & Deployment**
@@ -640,7 +640,7 @@ Fix remaining 52 unique Quasar components:
 
 #### 1. All-at-Once Migration Complexity (Risk Score: 9/10)
 
-**Risk:** Migrating Quasar 3 + Vite + Pinia + Setup Syntax simultaneously increases complexity and risk
+**Risk:** Migrating Quasar 2.19.3 + Vite + Pinia + Setup Syntax simultaneously increases complexity and risk
 
 **Mitigation:**
 - Rigorous testing at each phase
@@ -690,7 +690,7 @@ Fix remaining 52 unique Quasar components:
 
 #### 4. Custom Extension Compatibility (Risk Score: 7/10)
 
-**Risk:** @obiba/quasar-app-extension-amber v1.2.0 may not be fully compatible with Quasar 3 + Vite
+**Risk:** @obiba/quasar-app-extension-amber v1.2.0 may not be fully compatible with Quasar 2.19.3 + Vite
 
 **Mitigation:**
 - Test v1.2.0 compatibility early (Week 1-2)
@@ -771,7 +771,7 @@ Fix remaining 52 unique Quasar components:
 
 ### External Dependencies
 1. **@obiba/quasar-app-extension-amber v1.2.0** - Must be available and compatible
-2. **Quasar 3 stable release** - Available
+2. **Quasar 2.19.3 stable release** - Available
 3. **Quasar extensions v3 compatibility** - Needs verification
 4. **Feathers-Pinia library** - Needs research/implementation
 
@@ -861,7 +861,7 @@ Fix remaining 52 unique Quasar components:
 - **Weekly:** Progress report with % complete and blockers
 - **End of Phase 2:** Demo Vite build and updated dependencies
 - **End of Phase 3:** Demo Pinia stores with setup syntax
-- **End of Phase 5:** Demo migrated components and Quasar 3 features
+- **End of Phase 5:** Demo migrated components and Quasar 2.19.3 features
 - **Pre-deployment:** Final walkthrough and sign-off
 - **Post-deployment:** Success metrics and lessons learned
 
@@ -908,7 +908,7 @@ Fix remaining 52 unique Quasar components:
 - **Maintainability:** Modern, consistent codebase with setup syntax throughout
 - **Developer experience:** Much faster development cycle with Vite HMR
 - **Future-proofing:** Official Vue patterns (Pinia, Composition API, setup syntax)
-- **Community support:** Active development on Quasar 3, Pinia, Vite
+- **Community support:** Active development on Quasar 2.19.3, Pinia, Vite
 - **Performance:** Optimized production builds with Vite
 - **Recruitment:** Easier to onboard developers familiar with modern Vue patterns
 - **Code quality:** Consistent patterns reduce bugs and confusion
@@ -937,13 +937,13 @@ Fix remaining 52 unique Quasar components:
 **Cons:**  
 - Longer total timeline (25-35 days vs 30-40 days)
 - Multiple production deployments
-- Temporary mixed patterns (webpack + Quasar 3, or Vuex + Pinia)
+- Temporary mixed patterns (webpack + Quasar 2.19.3, or Vuex + Pinia)
 - More coordination overhead
 - May need to convert components to setup syntax twice (once for Pinia, once at end)
 
 **Verdict:** Rejected due to requirement for all-at-once migration and setup syntax requirement
 
-### Alternative 2: Quasar 3 + Vite Only, Keep Vuex
+### Alternative 2: Quasar 2.19.3 + Vite Only, Keep Vuex
 **Pros:**  
 - Lower risk, faster (15-20 days)
 - Vuex still supported
@@ -964,7 +964,7 @@ Fix remaining 52 unique Quasar components:
 - Can do setup syntax with Pinia migration
 
 **Cons:**  
-- Still need Quasar 3 + Vite migration later
+- Still need Quasar 2.19.3 + Vite migration later
 - Two major migration projects
 - Doesn't meet "all-at-once" requirement
 
@@ -991,7 +991,7 @@ After successful migration, consider these follow-up initiatives:
 
 ### 1. TypeScript Migration (Optional, 15-20 days)
 - Pinia has excellent TypeScript support
-- Quasar 3 has improved TypeScript definitions
+- Quasar 2.19.3 has improved TypeScript definitions
 - Setup syntax works great with TypeScript
 - Would provide better type safety and IDE support
 
@@ -1026,7 +1026,7 @@ After successful migration, consider these follow-up initiatives:
 ## Appendix
 
 ### Useful Resources
-- [Quasar v3 Migration Guide](https://quasar.dev/start/upgrade-guide)
+- [Quasar 2.19.3 Migration Guide](https://quasar.dev/start/upgrade-guide)
 - [Vite Migration Guide](https://vitejs.dev/guide/migration.html)
 - [Pinia Documentation](https://pinia.vuejs.org/)
 - [Vue 3 Setup Syntax](https://vuejs.org/api/sfc-script-setup.html)

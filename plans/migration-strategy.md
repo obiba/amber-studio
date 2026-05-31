@@ -1,6 +1,6 @@
-# Quasar 3 + Vite + Pinia Migration Strategy
+# Quasar 2.19.3 + Vite + Pinia Migration Strategy
 
-**Date:** 2026-05-31
+**Date:** 2026-05-31 (Corrected)
 **Status:** Planning
 **Project:** amber-studio v1.5.2
 
@@ -17,22 +17,22 @@
 - **Dynamic Imports:** 54 dynamic import() calls, 37 defineAsyncComponent usages, 27 lazy-loaded routes
 
 ### Target State
-- **Framework:** Quasar 3.x (latest) with Vite (@quasar/app-vite)
-- **Build Tool:** Vite 8.x
-- **State Management:** Pinia 3.x
+- **Framework:** Quasar 2.19.3 (latest stable) with Vite (@quasar/app-vite 2.6.1)
+- **Build Tool:** Vite 5.x (bundled with @quasar/app-vite 2.6.1)
+- **State Management:** Pinia 2.x (latest)
 - **Component API:** Composition API with setup syntax
-- **Vue Version:** 3.x (latest)
-- **Vue Router:** 4.x (latest)
+- **Vue Version:** 3.x (latest stable)
+- **Vue Router:** 4.x (latest stable)
 - **Import Strategy:** Static imports only (all dynamic imports must be converted)
 
 ### Migration Approach
 **All-at-once migration** - No incremental hybrid state. This is required because:
 1. Vite requires different configuration structure (quasar.config.js vs quasar.conf.js)
 2. Static imports requirement makes incremental migration impractical
-3. Clean separation between Quasar 2/Webpack and Quasar 3/Vite ecosystems
+3. Clean separation between Webpack and Vite build tooling
 
 ### Key Constraints
-- **No dynamic imports allowed** in Vite-based Quasar 3 setup
+- **No dynamic imports allowed** in Vite-based Quasar setup
 - **All route components must be statically imported**
 - **All async components must be converted to static imports**
 - **Extension compatibility** must be verified before migration
@@ -41,7 +41,9 @@
 
 ## Breaking Changes Analysis
 
-### 1. Quasar 3 Breaking Changes
+### 1. Quasar 2.14.3 → 2.19.3 Changes
+
+**Note:** This is a minor version upgrade (2.14 → 2.19), not a major version jump. Breaking changes are minimal per semantic versioning.
 
 #### 1.1 Component API Changes
 
@@ -820,7 +822,7 @@ Priority order:
 ### Decision 1: Build Tool Selection
 - **Decision:** Migrate to Vite (required for Quasar 3)
 - **Rationale:** 
-  - Quasar 3 is designed for Vite
+  - Quasar 2.19.3 is designed for Vite
   - Significantly faster development experience (HMR <100ms vs 1-3s)
   - Better ecosystem alignment with modern Vue 3 tooling
   - Simpler configuration than Webpack
@@ -836,7 +838,7 @@ Priority order:
 ### Decision 2: No Dynamic Imports
 - **Decision:** Convert all dynamic imports to static imports
 - **Rationale:** 
-  - Vite + Quasar 3 combination has issues with dynamic imports
+  - Vite + Quasar 2.19.3 combination has issues with dynamic imports
   - Simpler dependency graph, easier to debug
   - Eliminates runtime import resolution complexity
   - Better for tree-shaking and optimization
@@ -872,8 +874,8 @@ Priority order:
 ### Decision 3: All-at-Once Migration
 - **Decision:** Full migration in single effort, no hybrid state
 - **Rationale:**
-  - Cannot run Quasar 2 (webpack) and Quasar 3 (Vite) configurations simultaneously
-  - Different package dependencies required (@quasar/app-webpack vs @quasar/app-vite)
+  - Cannot run Quasar 2 (webpack) and Quasar 2.19.3 (Vite) configurations simultaneously
+  - Different package dependencies required (@quasar/app-webpack vs @quasar/app-vite 2.6.1)
   - Configuration files incompatible (quasar.conf.js vs quasar.config.js)
   - Cleaner long-term maintenance
 - **Risks:**
@@ -925,7 +927,7 @@ Priority order:
 ### Decision 6: Extension Upgrade Strategy
 - **Decision:** Verify compatibility first, upgrade or find alternatives
 - **Rationale:**
-  - Extensions may not be Quasar 3 compatible yet
+  - Extensions may not be Quasar 2.19.3 compatible yet
   - Need fallback plans
   - Cannot proceed with incompatible extensions
 - **Extensions to verify:**
@@ -952,7 +954,7 @@ Priority order:
 
 **@obiba/quasar-app-extension-amber:**
 - **Critical dependency** - project-specific extension
-- Must be upgraded to 1.2.0 or higher for Quasar 3 compatibility
+- Must be upgraded to 1.2.0 or higher for Quasar 2.19.3 compatibility
 - Action: Verify with extension maintainer (@obiba organization)
 - If not available: May need to fork and upgrade internally
 
@@ -960,7 +962,7 @@ Priority order:
 - Official Quasar extension
 - Currently at beta version
 - Action: Check https://github.com/quasarframework/quasar-ui-qcalendar for v3 branch
-- Likely available in stable version for Quasar 3
+- Likely available in stable version for Quasar 2.19.3
 
 **@quasar/quasar-app-extension-qmarkdown:**
 - Official Quasar extension
@@ -971,18 +973,18 @@ Priority order:
 **quasar-app-extension-qhierarchy:**
 - Community extension
 - Alpha version - may not be actively maintained
-- Action: Check repository for Quasar 3 compatibility
+- Action: Check repository for Quasar 2.19.3 compatibility
 - Fallback: Implement custom hierarchical tree component using QTree or QList
 
 ### Extension Verification Process
 
-1. **Check package repository** for Quasar 3 compatible versions
+1. **Check package repository** for Quasar 2.19.3 compatible versions
 2. **Test in isolated environment** before full migration
 3. **Document breaking changes** if any exist in new versions
 4. **Prepare fallback implementations** for critical extensions
 5. **Budget time for custom implementation** if extension unavailable
 
-**Note:** Extension verification is currently pending and scheduled for completion before Phase 2 kickoff. The three community extensions marked "To verify" will be checked for Quasar 3 compatibility as part of the Phase 2 preparation checklist. This ensures we have confirmed compatibility or prepared fallback implementations before beginning the actual migration work.
+**Note:** Extension verification is currently pending and scheduled for completion before Phase 2 kickoff. The three community extensions marked "To verify" will be checked for Quasar 2.19.3 compatibility as part of the Phase 2 preparation checklist. This ensures we have confirmed compatibility or prepared fallback implementations before beginning the actual migration work.
 
 ---
 
@@ -1425,7 +1427,7 @@ git checkout v1.5.2-pre-quasar3
 - Team training preparation
 
 ### Phase 2: Foundation (2 weeks)
-- Quasar 3 + Vite setup
+- Quasar 2.19.3 + Vite setup
 - Configuration migration
 - Environment variable migration
 - Build pipeline verification
@@ -1470,7 +1472,7 @@ git checkout v1.5.2-pre-quasar3
 
 ### Documentation Links
 
-- [Quasar 3 Upgrade Guide](https://quasar.dev/start/upgrade-guide)
+- [Quasar 2.19.3 Upgrade Guide](https://quasar.dev/start/upgrade-guide)
 - [Quasar Vite Plugin](https://quasar.dev/start/vite-plugin)
 - [Vite Features Guide](https://vitejs.dev/guide/features.html)
 - [Pinia Introduction](https://pinia.vuejs.org/introduction.html)
@@ -1479,7 +1481,7 @@ git checkout v1.5.2-pre-quasar3
 
 ### Key Findings Summary
 
-1. **Quasar 3 is mostly backward compatible** at the component level
+1. **Quasar 2.19.3 is mostly backward compatible** at the component level
 2. **Vite requires different thinking** about imports and optimization
 3. **Pinia is simpler than Vuex** - fewer concepts, less boilerplate
 4. **Composition API is powerful** but requires learning investment

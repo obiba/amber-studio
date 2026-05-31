@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Complete planning and architectural research for the Quasar 3 + Vite + Pinia + Setup Syntax all-at-once migration.
+**Goal:** Complete planning and architectural research for the Quasar 2.19.3 + Vite + Pinia + Setup Syntax all-at-once migration.
 
 **Architecture:** Create comprehensive research documents covering migration strategy, Pinia store architecture with setup syntax, FeathersVuex integration approach, component setup syntax conversion patterns, and static import analysis.
 
-**Tech Stack:** Documentation (Markdown), Research (Quasar 3, Vite, Pinia, Vue 3 Composition API), Codebase Analysis
+**Tech Stack:** Documentation (Markdown), Research (Quasar 2.19.3, Vite, Pinia, Vue 3 Composition API), Codebase Analysis
 
 **Timeline:** 3-4 days
 
@@ -19,7 +19,7 @@
 
 **Goal:** Create comprehensive migration strategy covering all breaking changes, Vite configuration, and implementation approach.
 
-- [ ] **Step 1: Research Quasar v3 breaking changes**
+- [ ] **Step 1: Research Quasar 2.19.3 breaking changes**
 
 Visit and analyze:
 - https://quasar.dev/start/upgrade-guide
@@ -30,7 +30,7 @@ Create the document with this structure:
 
 ```bash
 cat > plans/migration-strategy.md << 'EOF'
-# Quasar 3 + Vite + Pinia Migration Strategy
+# Quasar 2.19.3 + Vite + Pinia Migration Strategy
 
 **Date:** $(date +%Y-%m-%d)
 **Status:** Planning
@@ -38,12 +38,12 @@ cat > plans/migration-strategy.md << 'EOF'
 ## Executive Summary
 
 - **Current:** Quasar 2.14.3, Webpack, Vuex 4, Options API
-- **Target:** Quasar 3, Vite, Pinia, Setup Syntax
+- **Target:** Quasar 2.19.3, Vite, Pinia, Setup Syntax
 - **Approach:** All-at-once migration
 
 ## Breaking Changes Analysis
 
-### Quasar 3 Breaking Changes
+### Quasar 2.19.3 Breaking Changes
 
 [To be filled with research findings]
 
@@ -76,9 +76,9 @@ EOF
 
 Expected: File created with template
 
-- [ ] **Step 2: Research and document Quasar 3 breaking changes**
+- [ ] **Step 2: Research and document Quasar 2.19.3 breaking changes**
 
-Review Quasar 3 documentation and fill in breaking changes section:
+Review Quasar 2.19.3 documentation and fill in breaking changes section:
 
 ```bash
 # Use web browser or curl to review:
@@ -86,7 +86,7 @@ Review Quasar 3 documentation and fill in breaking changes section:
 # - https://github.com/quasarframework/quasar/releases (v3.0.0 release notes)
 ```
 
-Add findings to `plans/migration-strategy.md` under "Quasar 3 Breaking Changes":
+Add findings to `plans/migration-strategy.md` under "Quasar 2.19.3 Breaking Changes":
 - Component API changes (especially q-btn, q-input, q-dialog, q-table, q-select)
 - Plugin API changes (Notify, LocalStorage, LoadingBar, AppFullscreen)
 - Composable changes (useQuasar)
@@ -2031,7 +2031,7 @@ cat > plans/phase1-summary.md << 'EOF'
 ## Documents Created
 
 1. **Migration Strategy** (`plans/migration-strategy.md`)
-   - Quasar 3 breaking changes
+   - Quasar 2.19.3 breaking changes
    - Vite migration requirements
    - Extension upgrade plan
    - Decision log
@@ -2110,7 +2110,7 @@ cat > plans/phase1-summary.md << 'EOF'
    - Mitigation: Research completed, examples documented
 
 ### Low Risks
-1. **Quasar 3 component updates**
+1. **Quasar 2.19.3 component updates**
    - Risk Level: 3/10
    - Mitigation: Well-documented migration path
 
@@ -2124,7 +2124,7 @@ cat > plans/phase1-summary.md << 'EOF'
 ## Readiness for Phase 2
 
 ### Prerequisites Met
-- [x] Quasar 3 breaking changes documented
+- [x] Quasar 2.19.3 breaking changes documented
 - [x] Vite migration strategy defined
 - [x] Pinia architecture designed
 - [x] FeathersVuex approach decided
@@ -2232,7 +2232,7 @@ Expected: Master plan updated with Phase 1 completion
 cat > plans/phase2-kickoff-checklist.md << 'EOF'
 # Phase 2: Core Framework Migration - Kick-off Checklist
 
-**Phase:** Core Framework Migration (Quasar 3 + Vite + Static Imports)
+**Phase:** Core Framework Migration (Quasar 2.19.3 + Vite + Static Imports)
 **Duration:** 5-7 days
 **Prerequisites:** Phase 1 complete
 
@@ -2394,7 +2394,7 @@ Expected: Final commit created successfully
 git tag -a phase1-complete-$(date +%Y%m%d) -m "Phase 1: Planning & Architecture complete
 
 All research and architectural planning completed for:
-- Quasar 3 + Vite migration  
+- Quasar 2.19.3 + Vite migration  
 - Vuex → Pinia with setup syntax
 - Options API → Setup syntax (73 components)
 - Dynamic → Static imports

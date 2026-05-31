@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Phase 1 has successfully completed comprehensive planning and architecture documentation for the Quasar 3 + Vite + Pinia migration. All 5 planning documents have been created with detailed analysis, patterns, and migration strategies.
+Phase 1 has successfully completed comprehensive planning and architecture documentation for the Quasar 2.19.3 + Vite + Pinia migration. All 5 planning documents have been created with detailed analysis, patterns, and migration strategies.
 
 **Phase 1 Deliverables:**
 1. ✅ Migration Strategy Document (`migration-strategy.md`)
@@ -34,8 +34,8 @@ Phase 1 has successfully completed comprehensive planning and architecture docum
 
 **Migration Targets:**
 - Vue 3.x (Composition API with `<script setup>`)
-- Quasar 3.x with Vite
-- Pinia 3.x (7 stores)
+- Quasar 2.19.3 with Vite
+- Pinia 2.x (7 stores)
 - Feathers-Pinia (official replacement)
 - Static imports only (no dynamic imports)
 
@@ -125,7 +125,7 @@ Phase 1 has successfully completed comprehensive planning and architecture docum
 
 **Decision:** Convert all dynamic imports to static, use Vite `manualChunks`  
 **Rationale:**
-- Vite + Quasar 3 has issues with dynamic imports
+- Vite + Quasar 2.19.3 has issues with dynamic imports
 - Simpler dependency graph, easier debugging
 - Better tree-shaking with static analysis
 - Eliminates runtime import resolution complexity
@@ -464,14 +464,14 @@ src/
 **Goals:**
 - Remove unused extensions (qcalendar, qmarkdown, qhierarchy)
 - Upgrade @obiba/amber to v1.2.0
-- Install Quasar 3 + Vite
+- Install Quasar 2.19.3 + Vite
 - Migrate configuration files
 - Convert environment variables
 - Set up build pipeline
 
 **Deliverables:**
 - Unused extensions removed (cleaner dependencies)
-- Working Quasar 3 + Vite build
+- Working Quasar 2.19.3 + Vite build
 - @obiba/amber v1.2.0 upgraded
 - Updated configuration
 - Dev server running with Vite
@@ -555,7 +555,7 @@ src/
 - `plans/phase2-kickoff-checklist.md` (updated with extension verification)
 
 **External Documentation:**
-- [Quasar 3 Upgrade Guide](https://quasar.dev/start/upgrade-guide)
+- [Quasar 2.19.3 Upgrade Guide](https://quasar.dev/start/upgrade-guide)
 - [Vite Features Guide](https://vitejs.dev/guide/features.html)
 - [Pinia Documentation](https://pinia.vuejs.org/)
 - [Feathers-Pinia Documentation](https://feathers-pinia.pages.dev/)

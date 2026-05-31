@@ -25,16 +25,21 @@
 
 ### 1. @obiba/quasar-app-extension-amber ✅
 
-**Status:** USED (must verify v1.2.0 compatibility)
+**Status:** USED (v1.2.0 confirmed by maintainer)
 
-**Current Version:** 1.1.6  
-**Target Version:** 1.2.0 (exact, per requirements)
+**Current Version:** 1.1.6 (compatible with @quasar/app-vite v1)  
+**Target Version:** 1.2.0 (required for @quasar/app-vite 2.6.1 / Vite v2 compatibility)
+
+**Purpose of v1.2.0:**
+- Adds Vite v2 compatibility
+- Works with @quasar/app-vite 2.6.1
+- Confirmed available by maintainer (Yannick Marcon)
 
 **Evidence:**
 - Listed in `quasar.extensions.json`
 - This is the primary Amber Studio extension
-- Likely contains Amber-specific components and utilities
-- **Action Required:** Verify v1.2.0 exists and is compatible with Quasar 3
+- Contains Amber-specific components and utilities
+- **Status:** ✅ CONFIRMED - v1.2.0 exists and supports Quasar 2.19.3 + @quasar/app-vite 2.6.1
 
 ---
 
@@ -145,7 +150,7 @@ grep -r "QHierarchy\|q-hierarchy" src/ --include="*.vue" --include="*.js"
 
 **Remaining Blocker:**
 - [ ] Verify @obiba/quasar-app-extension-amber v1.2.0 exists
-- [ ] Verify @obiba/quasar-app-extension-amber v1.2.0 is compatible with Quasar 3
+- [ ] Verify @obiba/quasar-app-extension-amber v1.2.0 is compatible with Quasar 2.19.3
 
 ---
 
@@ -194,11 +199,11 @@ npm view @obiba/quasar-app-extension-amber@1.2.0
 **Check GitHub repository:**
 - Repository: https://github.com/obiba/quasar-app-extension-amber
 - Check for v1.2.0 tag or release
-- Check Quasar 3 compatibility notes
+- Check Quasar 2.19.3 compatibility notes
 
 **If v1.2.0 doesn't exist:**
 - Option A: Use latest stable version (e.g., 1.1.6)
-- Option B: Check if 2.x exists for Quasar 3
+- Option B: Check if 2.x exists for Quasar 2.19.3
 - Option C: Fork and upgrade if necessary
 
 ### 3. Update Planning Documents
