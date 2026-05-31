@@ -7,43 +7,36 @@
 
 ---
 
-## Critical Blocker: Extension Compatibility
+## Extension Compatibility: VERIFIED ✅
 
-**⚠️ MUST BE COMPLETED BEFORE STARTING PHASE 2 IMPLEMENTATION**
+**Status:** All extensions verified, unused extensions identified for removal
 
-### Extension Verification Checklist
+### Extension Verification Results
 
-- [ ] **@obiba/quasar-app-extension-amber** (CRITICAL)
+- [x] **@obiba/quasar-app-extension-amber** ✅ **VERIFIED**
   - Current: v1.1.6
-  - Required: v1.2.0+
-  - Action: Contact @obiba maintainer OR verify 1.2.0 exists
-  - Fallback: Fork and upgrade internally
-  - Decision: [ GO / NO-GO / FALLBACK ]
+  - Target: v1.2.0 (exact)
+  - Status: **CONFIRMED** by maintainer (Yannick Marcon)
+  - Decision: **GO** - Upgrade to v1.2.0 during Phase 2
 
-- [ ] **@quasar/quasar-app-extension-qcalendar**
+- [x] **@quasar/quasar-app-extension-qcalendar** ❌ **NOT USED**
   - Current: v4.0.0-beta.16
-  - Required: Quasar v3 compatible version
-  - Action: Check https://github.com/quasarframework/quasar-ui-qcalendar
-  - Fallback: Implement custom calendar component
-  - Decision: [ GO / NO-GO / FALLBACK ]
+  - Usage: 0 occurrences in codebase
+  - Decision: **REMOVE** - No QCalendar component usage found
 
-- [ ] **@quasar/quasar-app-extension-qmarkdown**
+- [x] **@quasar/quasar-app-extension-qmarkdown** ❌ **NOT USED**
   - Current: v2.0.0-beta.10
-  - Required: Quasar v3 compatible version
-  - Action: Check https://github.com/quasarframework/quasar-ui-qmarkdown
-  - Fallback: Use `marked` library directly (v9.1.1 already installed)
-  - Decision: [ GO / NO-GO / FALLBACK ]
+  - Usage: 0 occurrences in codebase (only i18n text mentions markdown)
+  - Decision: **REMOVE** - No QMarkdown component usage found
 
-- [ ] **quasar-app-extension-qhierarchy**
+- [x] **quasar-app-extension-qhierarchy** ❌ **NOT USED**
   - Current: v1.0.0-alpha.1
-  - Required: Quasar v3 compatible version
-  - Action: Check GitHub repo for v3 updates
-  - Fallback: Implement custom tree component using QTree
-  - Decision: [ GO / NO-GO / FALLBACK ]
+  - Usage: Uses native `q-tree` component instead (FormItems.vue)
+  - Decision: **REMOVE** - No QHierarchy component usage found
 
-**Extension Status:** [ ALL VERIFIED / BLOCKERS EXIST ]
+**Extension Status:** ✅ **ALL VERIFIED** - 1 to upgrade, 3 to remove
 
-**If blockers exist:** Document fallback plan and implementation timeline
+**See:** `plans/extension-usage-verification.md` for detailed analysis
 
 ---
 
@@ -156,9 +149,14 @@
 ### Week 1: Quasar 3 + Vite Setup
 
 **Task 2.1: Dependency Updates (1-2 days)**
+- [ ] Remove unused extensions from package.json
+  - [ ] Remove @quasar/quasar-app-extension-qcalendar
+  - [ ] Remove @quasar/quasar-app-extension-qmarkdown
+  - [ ] Remove quasar-app-extension-qhierarchy
+- [ ] Remove unused extensions from quasar.extensions.json
 - [ ] Update package.json dependencies
 - [ ] Install Quasar 3 and Vite
-- [ ] Update Quasar extensions (if compatible)
+- [ ] Upgrade @obiba/quasar-app-extension-amber to v1.2.0
 - [ ] Resolve dependency conflicts
 - [ ] Test clean install
 
@@ -183,7 +181,7 @@
 - [ ] Update boot file imports
 - [ ] Verify all boot files work with Vite
 - [ ] Test Quasar plugins
-- [ ] Test extension boot files
+- [ ] Test @obiba/amber extension boot file
 
 **Task 2.5: Asset Import Updates (1 day)**
 - [ ] Update asset import syntax
@@ -212,7 +210,7 @@
 ### Functionality
 - [ ] All pages accessible via routing
 - [ ] All Quasar plugins functional (Notify, Dialog, etc.)
-- [ ] All extensions loaded correctly
+- [ ] @obiba/amber extension loaded correctly
 - [ ] No console errors in dev mode
 - [ ] No console errors in production build
 
@@ -233,11 +231,11 @@
 ## Risk Mitigation
 
 ### High Risk: Extension Incompatibility
-**If extensions don't work:**
-1. Check for v3 compatible versions
-2. Contact extension maintainers
-3. Implement fallback solutions
-4. Document workarounds
+**Risk Status: MITIGATED** ✅
+- Only 1 extension used (@obiba/amber)
+- Maintainer confirmed v1.2.0 availability
+- 3 unused extensions removed
+- Fallback: Use v1.1.6 if v1.2.0 issues arise
 
 ### Medium Risk: Bundle Size Increase
 **If bundle too large:**
@@ -297,7 +295,8 @@
 ---
 
 **Created:** 2026-05-31  
-**Status:** READY (pending extension verification)  
+**Updated:** 2026-05-31 (extension verification complete)  
+**Status:** ✅ **READY TO START** (all blockers resolved)  
 **Next Phase:** Phase 3 - State Management (Pinia + Feathers-Pinia)
 
 ---
