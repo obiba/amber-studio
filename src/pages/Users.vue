@@ -168,15 +168,15 @@
               :label="$t('firstname')"
               lazy-rules
               class='q-ma-sm'
-              @blur="v$.newProfileData.firstname.$touch"
-              :error="v$.newProfileData.firstname.$error"
+              @blur="v$.firstname.$touch"
+              :error="v$.firstname.$error"
               :hint="$t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.newProfileData.firstname.$errors">
+                <div v-for="error in v$.firstname.$errors">
                   {{error.$message}}
                 </div>
               </template>
@@ -188,15 +188,15 @@
               :label="$t('lastname')"
               lazy-rules
               class='q-ma-sm'
-              @blur="v$.newProfileData.lastname.$touch"
-              :error="v$.newProfileData.lastname.$error"
+              @blur="v$.lastname.$touch"
+              :error="v$.lastname.$error"
               :hint="$t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.newProfileData.lastname.$errors">
+                <div v-for="error in v$.lastname.$errors">
                   {{error.$message}}
                 </div>
               </template>
@@ -209,15 +209,15 @@
               lazy-rules
               class='q-ma-sm'
               v-if='!selectedUser'
-              @blur="v$.newProfileData.email.$touch"
-              :error="v$.newProfileData.email.$error"
+              @blur="v$.email.$touch"
+              :error="v$.email.$error"
               :hint="$t('email_hint')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-envelope' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.newProfileData.email.$errors">
+                <div v-for="error in v$.email.$errors">
                   {{error.$message}}
                 </div>
               </template>
@@ -231,15 +231,15 @@
               class='q-ma-sm'
               type='password'
               v-if='!selectedUser'
-              @blur="v$.newProfileData.password.$touch"
-              :error="v$.newProfileData.password.$error"
+              @blur="v$.password.$touch"
+              :error="v$.password.$error"
               :hint="$t('password_hint')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-lock' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.newProfileData.password.$errors">
+                <div v-for="error in v$.password.$errors">
                   {{error.$message}}
                 </div>
               </template>
@@ -434,8 +434,9 @@
   </q-page>
 </template>
 
-<script>
-import { ref, computed } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, email } from '../boot/vuelidate'
 import { date } from 'quasar'
@@ -444,310 +445,311 @@ import { settings } from '../boot/settings'
 import { useAdminStore } from 'src/stores/admin'
 import { useAccountStore } from 'src/stores/account'
 
-export default {
-  mounted: function () {
-    this.getTableUsers()
-    this.setPagination()
-    this.initGroups()
-  },
-  setup () {
-    const adminStore = useAdminStore()
-    const accountStore = useAccountStore()
+const { t } = useI18n()
+const adminStore = useAdminStore()
+const accountStore = useAccountStore()
 
-    return {
-      v$: useVuelidate(),
-      selected: ref([]),
-      filter: ref(''),
-      rolesFilter: ref([]),
-      selectedGroup: ref(null),
-      settings,
-      adminStore,
-      accountStore
-    }
+// Reactive state
+const selected = ref([])
+const filter = ref('')
+const rolesFilter = ref([])
+const selectedGroup = ref(null)
+const roles = ['guest', 'interviewer', 'manager', 'administrator', 'inactive']
+const allGroupsOptions = ref([])
+const groupsOptions = ref([])
+const selectedUser = ref({})
+const showEditUser = ref(false)
+const showCreateUser = ref(false)
+const showConfirmDeleteUser = ref(false)
+const showConfirmDeleteUsers = ref(false)
+const showConfirmGroupUsers = ref(false)
+const paginationOpts = ref({
+  sortBy: 'lastSeen',
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+const newProfileData = ref({
+  firstname: '',
+  lastname: '',
+  institution: '',
+  city: '',
+  title: '',
+  phone: '',
+  language: '',
+  role: ''
+})
+
+// Columns definition
+const columns = [
+  {
+    name: 'name',
+    required: true,
+    label: t('name'),
+    align: 'left'
   },
-  data () {
-    return {
-      roles: ['guest', 'interviewer', 'manager', 'administrator', 'inactive'],
-      allGroupsOptions: [],
-      groupsOptions: [],
-      columns: [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left'
-        },
-        {
-          name: 'email',
-          align: 'left',
-          label: this.$t('email'),
-          field: 'email',
-          sortable: true
-        },
-        {
-          name: 'institution',
-          align: 'left',
-          label: this.$t('institution'),
-          field: 'institution',
-          sortable: true
-        },
-        {
-          name: 'status',
-          align: 'left',
-          label: this.$t('status'),
-          field: 'isVerified',
-          format: val => {
-            if (val) {
-              return this.$t('confirmed')
-            } else return this.$t('pending')
-          },
-          sortable: false
-        },
-        {
-          name: 'role',
-          align: 'left',
-          label: this.$t('role'),
-          field: 'role',
-          sortable: false
-        },
-        {
-          name: 'lastSeen',
-          align: 'left',
-          label: this.$t('users.last_seen'),
-          field: 'lastSeen',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ],
-      selectedUser: {},
-      showEditUser: false,
-      showCreateUser: false,
-      showConfirmDeleteUser: false,
-      showConfirmDeleteUsers: false,
-      showConfirmGroupUsers: false,
-      paginationOpts: {
-        sortBy: 'lastSeen',
-        descending: false,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      newProfileData: {
-        firstname: '',
-        lastname: '',
-        institution: '',
-        city: '',
-        title: '',
-        phone: '',
-        language: '',
-        role: ''
-      }
-    }
+  {
+    name: 'email',
+    align: 'left',
+    label: t('email'),
+    field: 'email',
+    sortable: true
   },
-  watch: {
-    rolesFilter: function (newFilter, oldFilter) {
-      this.getTableUsers()
-    }
+  {
+    name: 'institution',
+    align: 'left',
+    label: t('institution'),
+    field: 'institution',
+    sortable: true
   },
-  validations: {
-    newProfileData: {
-      firstname: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      lastname: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      email: {
-        email,
-        required
-      },
-      password: {
-        required,
-        minLength: minLength(8)
-      },
-      institution: {
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      city: {
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      language: {
-        required
-      },
-      role: {
-        required
-      }
-    }
+  {
+    name: 'status',
+    align: 'left',
+    label: t('status'),
+    field: 'isVerified',
+    format: val => {
+      if (val) {
+        return t('confirmed')
+      } else return t('pending')
+    },
+    sortable: false
   },
-  computed: {
-    users () {
-      return this.adminStore.users
-    },
-    groups () {
-      return this.adminStore.groups
-    },
-    disableCreateProfile () {
-      return this.v$.newProfileData.$invalid
-    },
-    disableGroupUsers () {
-      return this.selectedGroup === null
-    },
-    localeOptions () {
-      return locales.map(loc => {
-        return {
-          value: loc,
-          label: this.$t('locales.' + loc)
-        }
-      })
-        .sort((loc1, loc2) => {
-          if (loc1.label > loc2.label) return 1
-          if (loc1.label < loc2.label) return -1
-          return 0
-        })
-    },
-    hasLocales () {
-      return locales.length > 1
-    },
-    rolesOptions () {
-      return this.roles.map(rl => {
-        return {
-          value: rl,
-          label: this.$t('roles.' + rl)
-        }
-      })
-    }
+  {
+    name: 'role',
+    align: 'left',
+    label: t('role'),
+    field: 'role',
+    sortable: false
   },
-  methods: {
-    async initGroups () {
-      await this.adminStore.getGroups({
-        rowsPerPage: 0,
-        page: 1,
-        sortBy: 'name',
-        descending: -1
-      })
-      this.allGroupsOptions = this.groups ? this.groups.map(g => {
-        return {
-          value: g._id,
-          label: g.name,
-          object: g
-        }
-      }) : []
-      this.groupsOptions = this.allGroupsOptions
-    },
-    setPagination () {
-      this.paginationOpts = this.adminStore.userPaginationOpts
-    },
-    async getTableUsers (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.adminStore.setUserPagination(requestProp.pagination)
-        await this.adminStore.getUsers(requestProp.pagination, requestProp.filter, this.rolesFilter)
-      } else {
-        await this.adminStore.getUsers(this.paginationOpts, this.filter, this.rolesFilter)
-      }
-      this.paginationOpts.rowsNumber = this.adminStore.userPaginationOpts.rowsNumber
-    },
-    createUser () {
-      this.newProfileData = {
-        language: locales[0],
-        role: 'guest'
-      }
-      this.showCreateUser = true
-      this.selectedUser = undefined
-    },
-    confirmDeleteUser (user) {
-      this.showConfirmDeleteUser = true
-      this.selectedUser = user
-    },
-    confirmDeleteUsers () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteUsers = true
-      }
-    },
-    confirmGroupUsers () {
-      this.selectedGroup = null
-      if (this.selected.length > 0) {
-        this.showConfirmGroupUsers = true
-      }
-    },
-    resendEmailVerification (email) {
-      this.accountStore.resendVerification(email)
-    },
-    async saveUser () {
-      this.v$.$reset()
-      // create
-      const userData = { ...this.newProfileData }
-      await this.adminStore.createUser(userData, this.paginationOpts)
-    },
-    resetPassword (email) {
-      this.accountStore.forgotPassword(email)
-    },
-    deleteUser () {
-      this.adminStore.deleteUser(this.selectedUser._id, this.paginationOpts)
-    },
-    deleteUsers () {
-      const ids = this.selected.map(u => u._id)
-      this.adminStore.deleteUsers(ids, this.paginationOpts)
-      this.selected = []
-    },
-    groupUsers () {
-      const toSave = { ...this.selectedGroup.object }
-      toSave.users = [...this.selectedGroup.object.users]
-      if (!toSave.users || toSave.users.length === 0) {
-        toSave.users = this.selected.map(u => u._id)
-      } else {
-        this.selected.filter(u => !toSave.users.includes(u._id)).forEach(u => toSave.users.push(u._id))
-      }
-      this.adminStore.updateGroup(toSave)
-    },
-    copyUserProfile (user) {
-      return {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        city: user.city,
-        institution: user.institution,
-        title: user.title,
-        phone: user.phone,
-        language: user.language,
-        role: user.role
-      }
-    },
-    async activeateUser (user) {
-      const profileData = this.copyUserProfile(user)
-      profileData.role = 'guest'
-      await this.adminStore.updateUser(profileData, user._id, this.paginationOpts)
-    },
-    async deactiveateUser (user) {
-      const profileData = this.copyUserProfile(user)
-      profileData.role = 'inactive'
-      await this.adminStore.updateUser(profileData, user._id, this.paginationOpts)
-    },
-    filterGroupsOptions (val, update) {
-      update(() => {
-        if (val === '') {
-          this.groupsOptions = this.allGroupsOptions
-        } else {
-          const needle = val.toLowerCase()
-          this.groupsOptions = this.allGroupsOptions.filter(
-            g => g.label.toLowerCase().indexOf(needle) > -1
-          )
-        }
-      })
-    }
+  {
+    name: 'lastSeen',
+    align: 'left',
+    label: t('users.last_seen'),
+    field: 'lastSeen',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : t('unknown')}`
+  },
+  {
+    name: 'action',
+    align: 'left',
+    label: t('action')
+  }
+]
+
+// Validation rules
+const rules = {
+  firstname: {
+    required,
+    minLength: minLength(2),
+    maxLength: maxLength(30)
+  },
+  lastname: {
+    required,
+    minLength: minLength(2),
+    maxLength: maxLength(30)
+  },
+  email: {
+    email,
+    required
+  },
+  password: {
+    required,
+    minLength: minLength(8)
+  },
+  institution: {
+    minLength: minLength(2),
+    maxLength: maxLength(30)
+  },
+  city: {
+    minLength: minLength(2),
+    maxLength: maxLength(30)
+  },
+  language: {
+    required
+  },
+  role: {
+    required
   }
 }
+
+const v$ = useVuelidate(rules, newProfileData)
+
+// Watch rolesFilter
+import { watch } from 'vue'
+watch(rolesFilter, () => {
+  getTableUsers()
+})
+
+// Computed
+const users = computed(() => adminStore.users)
+const groups = computed(() => adminStore.groups)
+const disableCreateProfile = computed(() => v$.value.$invalid)
+const disableGroupUsers = computed(() => selectedGroup.value === null)
+const localeOptions = computed(() => {
+  return locales.map(loc => {
+    return {
+      value: loc,
+      label: t('locales.' + loc)
+    }
+  })
+    .sort((loc1, loc2) => {
+      if (loc1.label > loc2.label) return 1
+      if (loc1.label < loc2.label) return -1
+      return 0
+    })
+})
+const hasLocales = computed(() => locales.length > 1)
+const rolesOptions = computed(() => {
+  return roles.map(rl => {
+    return {
+      value: rl,
+      label: t('roles.' + rl)
+    }
+  })
+})
+
+// Methods
+async function initGroups() {
+  await adminStore.getGroups({
+    rowsPerPage: 0,
+    page: 1,
+    sortBy: 'name',
+    descending: -1
+  })
+  allGroupsOptions.value = groups.value ? groups.value.map(g => {
+    return {
+      value: g._id,
+      label: g.name,
+      object: g
+    }
+  }) : []
+  groupsOptions.value = allGroupsOptions.value
+}
+
+function setPagination() {
+  paginationOpts.value = adminStore.userPaginationOpts
+}
+
+async function getTableUsers(requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    adminStore.setUserPagination(requestProp.pagination)
+    await adminStore.getUsers(requestProp.pagination, requestProp.filter, rolesFilter.value)
+  } else {
+    await adminStore.getUsers(paginationOpts.value, filter.value, rolesFilter.value)
+  }
+  paginationOpts.value.rowsNumber = adminStore.userPaginationOpts.rowsNumber
+}
+
+function createUser() {
+  newProfileData.value = {
+    language: locales[0],
+    role: 'guest'
+  }
+  showCreateUser.value = true
+  selectedUser.value = undefined
+}
+
+function confirmDeleteUser(user) {
+  showConfirmDeleteUser.value = true
+  selectedUser.value = user
+}
+
+function confirmDeleteUsers() {
+  if (selected.value.length > 0) {
+    showConfirmDeleteUsers.value = true
+  }
+}
+
+function confirmGroupUsers() {
+  selectedGroup.value = null
+  if (selected.value.length > 0) {
+    showConfirmGroupUsers.value = true
+  }
+}
+
+function resendEmailVerification(emailAddr) {
+  accountStore.resendVerification(emailAddr)
+}
+
+async function saveUser() {
+  v$.value.$reset()
+  // create
+  const userData = { ...newProfileData.value }
+  await adminStore.createUser(userData, paginationOpts.value)
+}
+
+function resetPassword(emailAddr) {
+  accountStore.forgotPassword(emailAddr)
+}
+
+function deleteUser() {
+  adminStore.deleteUser(selectedUser.value._id, paginationOpts.value)
+}
+
+function deleteUsers() {
+  const ids = selected.value.map(u => u._id)
+  adminStore.deleteUsers(ids, paginationOpts.value)
+  selected.value = []
+}
+
+function groupUsers() {
+  const toSave = { ...selectedGroup.value.object }
+  toSave.users = [...selectedGroup.value.object.users]
+  if (!toSave.users || toSave.users.length === 0) {
+    toSave.users = selected.value.map(u => u._id)
+  } else {
+    selected.value.filter(u => !toSave.users.includes(u._id)).forEach(u => toSave.users.push(u._id))
+  }
+  adminStore.updateGroup(toSave)
+}
+
+function copyUserProfile(user) {
+  return {
+    firstname: user.firstname,
+    lastname: user.lastname,
+    city: user.city,
+    institution: user.institution,
+    title: user.title,
+    phone: user.phone,
+    language: user.language,
+    role: user.role
+  }
+}
+
+async function activeateUser(user) {
+  const profileData = copyUserProfile(user)
+  profileData.role = 'guest'
+  await adminStore.updateUser(profileData, user._id, paginationOpts.value)
+}
+
+async function deactiveateUser(user) {
+  const profileData = copyUserProfile(user)
+  profileData.role = 'inactive'
+  await adminStore.updateUser(profileData, user._id, paginationOpts.value)
+}
+
+function filterGroupsOptions(val, update) {
+  update(() => {
+    if (val === '') {
+      groupsOptions.value = allGroupsOptions.value
+    } else {
+      const needle = val.toLowerCase()
+      groupsOptions.value = allGroupsOptions.value.filter(
+        g => g.label.toLowerCase().indexOf(needle) > -1
+      )
+    }
+  })
+}
+
+// Lifecycle
+onMounted(() => {
+  getTableUsers()
+  setPagination()
+  initGroups()
+})
 </script>
 
 <style scoped>

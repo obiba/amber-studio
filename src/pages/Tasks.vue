@@ -217,11 +217,15 @@
   </q-page>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { settings } from '../boot/settings'
 import { date } from 'quasar'
 import { useAdminStore } from 'src/stores/admin'
+
+const { t } = useI18n()
+const adminStore = useAdminStore()
 
 const types = [
   'participants-info-activate',
@@ -232,153 +236,152 @@ const types = [
   'participants-summary'
 ]
 
-export default {
-  mounted: function () {
-    this.getTableTasks()
-    this.setPagination()
-  },
-  setup () {
-    const adminStore = useAdminStore()
+// Reactive state
+const selected = ref([])
+const filter = ref('')
+const selectedTask = ref({})
+const showCreateTask = ref(false)
+const showConfirmDeleteTask = ref(false)
+const showViewTask = ref(false)
+const showConfirmDeleteTasks = ref(false)
+const logFilterDebug = ref(false)
+const paginationOpts = ref({
+  sortBy: 'createdAt',
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+const newTaskData = ref({})
 
+// Columns definition
+const columns = [
+  {
+    name: 'type',
+    required: true,
+    label: t('type'),
+    align: 'left',
+    field: 'type',
+    sortable: true,
+    format: val => t(`tasks.types.${val}`)
+  },
+  {
+    name: 'state',
+    required: true,
+    label: t('state'),
+    align: 'left',
+    field: 'state',
+    sortable: true,
+    format: val => t(`tasks.states.${val}`)
+  },
+  {
+    name: 'error',
+    required: true,
+    label: t('tasks.error'),
+    align: 'left',
+    field: 'error',
+    sortable: true
+  },
+  {
+    name: 'createdAt',
+    align: 'left',
+    label: t('date'),
+    field: 'createdAt',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : t('unknown')}`
+  },
+  {
+    name: 'action',
+    align: 'left',
+    label: t('action')
+  }
+]
+
+// Computed
+const tasks = computed(() => adminStore.tasks)
+const typeOptions = computed(() => {
+  return types.map((opt) => {
     return {
-      selected: ref([]),
-      filter: ref(''),
-      settings,
-      adminStore
+      value: opt,
+      label: t(`tasks.types.${opt}`)
     }
-  },
-  data () {
-    return {
-      columns: [
-        {
-          name: 'type',
-          required: true,
-          label: this.$t('type'),
-          align: 'left',
-          field: 'type',
-          sortable: true,
-          format: val => this.$t(`tasks.types.${val}`)
-        },
-        {
-          name: 'state',
-          required: true,
-          label: this.$t('state'),
-          align: 'left',
-          field: 'state',
-          sortable: true,
-          format: val => this.$t(`tasks.states.${val}`)
-        },
-        {
-          name: 'error',
-          required: true,
-          label: this.$t('tasks.error'),
-          align: 'left',
-          field: 'error',
-          sortable: true
-        },
-        {
-          name: 'createdAt',
-          align: 'left',
-          label: this.$t('date'),
-          field: 'createdAt',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ],
-      selectedTask: {},
-      showCreateTask: false,
-      showConfirmDeleteTask: false,
-      showViewTask: false,
-      showConfirmDeleteTasks: false,
-      logFilterDebug: false,
-      paginationOpts: {
-        sortBy: 'createdAt',
-        descending: false,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      newTaskData: {}
-    }
-  },
-  computed: {
-    tasks () {
-      return this.adminStore.tasks
-    },
-    typeOptions () {
-      return types.map((opt) => {
-        return {
-          value: opt,
-          label: this.$t(`tasks.types.${opt}`)
-        }
-      })
-    },
-    filteredSelectedTaskLogs () {
-      if (this.logFilterDebug) {
-        return this.selectedTask.logs
-      }
-      return this.selectedTask.logs.filter(log => log.level !== 'debug')
-    }
-  },
-  methods: {
-    makeEllipsis (text, length) {
-      if (text && text.length > length) {
-        return text.substring(0, length) + ' ...'
-      }
-      return text
-    },
-    setPagination () {
-      this.paginationOpts = this.adminStore.taskPaginationOpts
-    },
-    async getTableTasks (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.adminStore.setTaskPagination(requestProp.pagination)
-        await this.adminStore.getTasks(requestProp.pagination, requestProp.filter)
-      } else {
-        await this.adminStore.getTasks(this.paginationOpts, this.filter)
-      }
-      this.paginationOpts.rowsNumber = this.adminStore.taskPaginationOpts.rowsNumber
-    },
-    createTask () {
-      this.newTaskData = {
-        type: types[0]
-      }
-      this.showCreateTask = true
-      this.selectedTask = undefined
-    },
-    confirmDeleteTask (task) {
-      this.showConfirmDeleteTask = true
-      this.selectedTask = task
-    },
-    viewTask (task) {
-      this.selectedTask = task
-      this.showViewTask = true
-    },
-    confirmDeleteTasks () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteTasks = true
-      }
-    },
-    async saveTask () {
-      // create
-      const createdData = { ...this.newTaskData }
-      await this.adminStore.createTask(createdData, this.paginationOpts)
-    },
-    deleteTask () {
-      this.adminStore.deleteTask(this.selectedTask._id, this.paginationOpts)
-    },
-    deleteTasks () {
-      const ids = this.selected.map(u => u._id)
-      this.adminStore.deleteTasks(ids, this.paginationOpts)
-      this.selected = []
-    }
+  })
+})
+const filteredSelectedTaskLogs = computed(() => {
+  if (logFilterDebug.value) {
+    return selectedTask.value.logs
+  }
+  return selectedTask.value.logs?.filter(log => log.level !== 'debug') || []
+})
+const disableCreateTask = computed(() => !newTaskData.value.type)
+
+// Methods
+function makeEllipsis(text, length) {
+  if (text && text.length > length) {
+    return text.substring(0, length) + ' ...'
+  }
+  return text
+}
+
+function setPagination() {
+  paginationOpts.value = adminStore.taskPaginationOpts
+}
+
+async function getTableTasks(requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    adminStore.setTaskPagination(requestProp.pagination)
+    await adminStore.getTasks(requestProp.pagination, requestProp.filter)
+  } else {
+    await adminStore.getTasks(paginationOpts.value, filter.value)
+  }
+  paginationOpts.value.rowsNumber = adminStore.taskPaginationOpts.rowsNumber
+}
+
+function createTask() {
+  newTaskData.value = {
+    type: types[0]
+  }
+  showCreateTask.value = true
+  selectedTask.value = undefined
+}
+
+function confirmDeleteTask(task) {
+  showConfirmDeleteTask.value = true
+  selectedTask.value = task
+}
+
+function viewTask(task) {
+  selectedTask.value = task
+  showViewTask.value = true
+}
+
+function confirmDeleteTasks() {
+  if (selected.value.length > 0) {
+    showConfirmDeleteTasks.value = true
   }
 }
+
+async function saveTask() {
+  // create
+  const createdData = { ...newTaskData.value }
+  await adminStore.createTask(createdData, paginationOpts.value)
+}
+
+function deleteTask() {
+  adminStore.deleteTask(selectedTask.value._id, paginationOpts.value)
+}
+
+function deleteTasks() {
+  const ids = selected.value.map(u => u._id)
+  adminStore.deleteTasks(ids, paginationOpts.value)
+  selected.value = []
+}
+
+// Lifecycle
+onMounted(() => {
+  getTableTasks()
+  setPagination()
+})
 </script>

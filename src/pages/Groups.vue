@@ -105,12 +105,12 @@
               :label="$t('name')"
               lazy-rules
               class='q-ma-sm'
-              @blur="v$.newGroupData.name.$touch"
-              :error="v$.newGroupData.name.$error"
+              @blur="v$.name.$touch"
+              :error="v$.name.$error"
               :hint="$t('required')"
             >
               <template v-slot:error>
-                <div v-for="error in v$.newGroupData.name.$errors">
+                <div v-for="error in v$.name.$errors">
                   {{error.$message}}
                 </div>
               </template>
@@ -201,153 +201,153 @@
   </q-page>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
 import { useAdminStore } from 'src/stores/admin'
 
-export default {
-  mounted: function () {
-    this.getTableGroups()
-    this.setPagination()
-  },
-  setup () {
-    const adminStore = useAdminStore()
+const { t } = useI18n()
+const adminStore = useAdminStore()
 
-    return {
-      v$: useVuelidate(),
-      selected: ref([]),
-      filter: ref(''),
-      settings,
-      adminStore
-    }
+// Reactive state
+const selected = ref([])
+const filter = ref('')
+const selectedGroup = ref({})
+const showCreateGroup = ref(false)
+const showConfirmDeleteGroup = ref(false)
+const showConfirmDeleteGroups = ref(false)
+const paginationOpts = ref({
+  sortBy: 'name',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+const groupData = ref({
+  name: '',
+  description: ''
+})
+const newGroupData = ref({
+  name: '',
+  description: ''
+})
+
+// Columns definition
+const columns = [
+  {
+    name: 'name',
+    required: true,
+    label: t('name'),
+    align: 'left',
+    field: 'name',
+    sortable: true
   },
-  data () {
-    return {
-      columns: [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left',
-          field: 'name',
-          sortable: true
-        },
-        {
-          name: 'description',
-          align: 'left',
-          label: this.$t('description'),
-          field: 'description',
-          sortable: true
-        },
-        {
-          name: 'members',
-          align: 'left',
-          label: this.$t('members'),
-          field: 'users',
-          format: val => {
-            return val ? val.length : 0
-          },
-          sortable: false
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ],
-      selectedGroup: {},
-      showCreateGroup: false,
-      showConfirmDeleteGroup: false,
-      showConfirmDeleteGroups: false,
-      paginationOpts: {
-        sortBy: 'name',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      groupData: {
-        name: '',
-        description: ''
-      },
-      newGroupData: {
-        name: '',
-        description: ''
-      }
-    }
+  {
+    name: 'description',
+    align: 'left',
+    label: t('description'),
+    field: 'description',
+    sortable: true
   },
-  validations: {
-    newGroupData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      description: {
-        minLength: minLength(2),
-        maxLength: maxLength(500)
-      }
-    }
+  {
+    name: 'members',
+    align: 'left',
+    label: t('members'),
+    field: 'users',
+    format: val => {
+      return val ? val.length : 0
+    },
+    sortable: false
   },
-  computed: {
-    groups () {
-      return this.adminStore.groups
-    },
-    disableCreateGroup () {
-      return this.v$.newGroupData.$invalid
-    }
+  {
+    name: 'action',
+    align: 'left',
+    label: t('action')
+  }
+]
+
+// Validation rules
+const rules = {
+  name: {
+    required,
+    minLength: minLength(2),
+    maxLength: maxLength(30)
   },
-  methods: {
-    makeEllipsis (text, length) {
-      if (text && text.length > length) {
-        return text.substring(0, length) + ' ...'
-      }
-      return text
-    },
-    setPagination () {
-      this.paginationOpts = this.adminStore.groupPaginationOpts
-    },
-    async getTableGroups (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.adminStore.setGroupPagination(requestProp.pagination)
-        await this.adminStore.getGroups(requestProp.pagination, requestProp.filter)
-      } else {
-        await this.adminStore.getGroups(this.paginationOpts, this.filter)
-      }
-      this.paginationOpts.rowsNumber = this.adminStore.groupPaginationOpts.rowsNumber
-    },
-    createGroup () {
-      this.newGroupData = {}
-      this.showCreateGroup = true
-      this.selectedGroup = undefined
-    },
-    confirmDeleteGroup (group) {
-      this.showConfirmDeleteGroup = true
-      this.selectedGroup = group
-    },
-    confirmDeleteGroups () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteGroups = true
-      }
-    },
-    async saveGroup () {
-      this.v$.$reset()
-      // create
-      const createdData = { ...this.newGroupData }
-      await this.adminStore.createGroup(createdData, this.paginationOpts)
-    },
-    deleteGroup () {
-      this.adminStore.deleteGroup(this.selectedGroup._id, this.paginationOpts)
-    },
-    deleteGroups () {
-      const ids = this.selected.map(u => u._id)
-      this.adminStore.deleteGroups(ids, this.paginationOpts)
-      this.selected = []
-    }
+  description: {
+    minLength: minLength(2),
+    maxLength: maxLength(500)
   }
 }
+
+const v$ = useVuelidate(rules, newGroupData)
+
+// Computed
+const groups = computed(() => adminStore.groups)
+const disableCreateGroup = computed(() => v$.value.$invalid)
+
+// Methods
+function makeEllipsis(text, length) {
+  if (text && text.length > length) {
+    return text.substring(0, length) + ' ...'
+  }
+  return text
+}
+
+function setPagination() {
+  paginationOpts.value = adminStore.groupPaginationOpts
+}
+
+async function getTableGroups(requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    adminStore.setGroupPagination(requestProp.pagination)
+    await adminStore.getGroups(requestProp.pagination, requestProp.filter)
+  } else {
+    await adminStore.getGroups(paginationOpts.value, filter.value)
+  }
+  paginationOpts.value.rowsNumber = adminStore.groupPaginationOpts.rowsNumber
+}
+
+function createGroup() {
+  newGroupData.value = {}
+  showCreateGroup.value = true
+  selectedGroup.value = undefined
+}
+
+function confirmDeleteGroup(group) {
+  showConfirmDeleteGroup.value = true
+  selectedGroup.value = group
+}
+
+function confirmDeleteGroups() {
+  if (selected.value.length > 0) {
+    showConfirmDeleteGroups.value = true
+  }
+}
+
+async function saveGroup() {
+  v$.value.$reset()
+  // create
+  const createdData = { ...newGroupData.value }
+  await adminStore.createGroup(createdData, paginationOpts.value)
+}
+
+function deleteGroup() {
+  adminStore.deleteGroup(selectedGroup.value._id, paginationOpts.value)
+}
+
+function deleteGroups() {
+  const ids = selected.value.map(u => u._id)
+  adminStore.deleteGroups(ids, paginationOpts.value)
+  selected.value = []
+}
+
+// Lifecycle
+onMounted(() => {
+  getTableGroups()
+  setPagination()
+})
 </script>

@@ -17,15 +17,15 @@
               :label="$t('firstname')"
               lazy-rules
               class='q-ma-sm'
-              @blur="v$.profileData.firstname.$touch"
-              :error="v$.profileData.firstname.$error"
+              @blur="v$.firstname.$touch"
+              :error="v$.firstname.$error"
               :hint="$t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.profileData.firstname.$errors">
+                <div v-for="error in v$.firstname.$errors">
                   {{error.$message}}
                 </div>
               </template>
@@ -37,15 +37,15 @@
               :label="$t('lastname')"
               lazy-rules
               class='q-ma-sm'
-              @blur="v$.profileData.lastname.$touch"
-              :error="v$.profileData.lastname.$error"
+              @blur="v$.lastname.$touch"
+              :error="v$.lastname.$error"
               :hint="$t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.profileData.lastname.$errors">
+                <div v-for="error in v$.lastname.$errors">
                   {{error.$message}}
                 </div>
               </template>
@@ -172,138 +172,125 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { useAdminStore } from 'src/stores/admin'
 
-export default defineComponent({
-  mounted: function () {
-    this.initData()
-  },
-  setup () {
-    const userOptions = ref([])
-    const adminStore = useAdminStore()
+const route = useRoute()
+const { t } = useI18n()
+const adminStore = useAdminStore()
 
-    return {
-      v$: useVuelidate(),
-      userOptions,
-      settings,
-      adminStore
-    }
+// Reactive state
+const roles = ['guest', 'interviewer', 'manager', 'administrator', 'inactive']
+const profileData = ref({
+  firstname: '',
+  lastname: '',
+  institution: '',
+  city: '',
+  title: '',
+  phone: '',
+  language: '',
+  role: ''
+})
+
+// Validation rules
+const rules = {
+  firstname: {
+    required,
+    minLength: minLength(2),
+    maxLength: maxLength(30)
   },
-  data () {
-    return {
-      roles: ['guest', 'interviewer', 'manager', 'administrator', 'inactive'],
-      profileData: {
-        firstname: '',
-        lastname: '',
-        institution: '',
-        city: '',
-        title: '',
-        phone: '',
-        language: '',
-        role: ''
-      }
-    }
+  lastname: {
+    required,
+    minLength: minLength(2),
+    maxLength: maxLength(30)
   },
-  validations: {
-    profileData: {
-      firstname: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      lastname: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      institution: {
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      city: {
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      language: {
-        required
-      },
-      role: {
-        required
-      }
-    }
+  institution: {
+    minLength: minLength(2),
+    maxLength: maxLength(30)
   },
-  computed: {
-    user () {
-      return this.adminStore.user
-    },
-    currentUser () {
-      return this.adminStore.user
-    },
-    disableSaveUser () {
-      return this.v$.profileData.$invalid
-    },
-    disableTotp2FA () {
-      return this.currentUser.totp2faEnabled === false
-    },
-    localeOptions () {
-      return locales.map(loc => {
-        return {
-          value: loc,
-          label: this.$t('locales.' + loc)
-        }
-      })
-        .sort((loc1, loc2) => {
-          if (loc1.label > loc2.label) return 1
-          if (loc1.label < loc2.label) return -1
-          return 0
-        })
-    },
-    hasLocales () {
-      return locales.length > 1
-    },
-    rolesOptions () {
-      return this.roles.map(rl => {
-        return {
-          value: rl,
-          label: this.$t('roles.' + rl)
-        }
-      })
-    }
+  city: {
+    minLength: minLength(2),
+    maxLength: maxLength(30)
   },
-  methods: {
-    copyUserProfile (user) {
-      return {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        city: user.city,
-        institution: user.institution,
-        title: user.title,
-        phone: user.phone,
-        language: user.language,
-        role: user.role,
-        totp2faRequired: user.totp2faRequired,
-        with2fa: user.with2fa !== false, // default to true if not set
-      }
-    },
-    async initData () {
-      await this.adminStore.getUser(this.$route.params.id)
-      this.profileData = this.copyUserProfile(this.user)
-    },
-    async saveUser () {
-      this.v$.$reset()
-      const toSave = { ...this.profileData }
-      await this.adminStore.updateUser(toSave, this.user._id)
-    },
-    async resetTotp2FA () {
-      this.profileData.totp2faEnabled = false
-      this.saveUser()
-    }
+  language: {
+    required
+  },
+  role: {
+    required
   }
+}
+
+const v$ = useVuelidate(rules, profileData)
+
+// Computed
+const user = computed(() => adminStore.user)
+const currentUser = computed(() => adminStore.user)
+const disableSaveUser = computed(() => v$.value.$invalid)
+const disableTotp2FA = computed(() => currentUser.value.totp2faEnabled === false)
+const localeOptions = computed(() => {
+  return locales.map(loc => {
+    return {
+      value: loc,
+      label: t('locales.' + loc)
+    }
+  })
+    .sort((loc1, loc2) => {
+      if (loc1.label > loc2.label) return 1
+      if (loc1.label < loc2.label) return -1
+      return 0
+    })
+})
+const hasLocales = computed(() => locales.length > 1)
+const rolesOptions = computed(() => {
+  return roles.map(rl => {
+    return {
+      value: rl,
+      label: t('roles.' + rl)
+    }
+  })
+})
+
+// Methods
+function copyUserProfile(user) {
+  return {
+    firstname: user.firstname,
+    lastname: user.lastname,
+    city: user.city,
+    institution: user.institution,
+    title: user.title,
+    phone: user.phone,
+    language: user.language,
+    role: user.role,
+    totp2faRequired: user.totp2faRequired,
+    with2fa: user.with2fa !== false, // default to true if not set
+  }
+}
+
+async function initData() {
+  await adminStore.getUser(route.params.id)
+  profileData.value = copyUserProfile(user.value)
+}
+
+async function saveUser() {
+  v$.value.$reset()
+  const toSave = { ...profileData.value }
+  await adminStore.updateUser(toSave, user.value._id)
+}
+
+async function resetTotp2FA() {
+  profileData.value.totp2faEnabled = false
+  saveUser()
+}
+
+// Lifecycle
+onMounted(() => {
+  initData()
 })
 </script>
