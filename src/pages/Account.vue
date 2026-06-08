@@ -136,12 +136,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
+import { useAuthStore } from 'src/stores/auth'
+import { useAccountStore } from 'src/stores/account'
+import { useAdminStore } from 'src/stores/admin'
 
 export default defineComponent({
   mounted: function () {
@@ -149,10 +151,17 @@ export default defineComponent({
   },
   setup () {
     const userOptions = ref([])
+    const authStore = useAuthStore()
+    const accountStore = useAccountStore()
+    const adminStore = useAdminStore()
+    
     return {
       v$: useVuelidate(),
       userOptions,
-      settings
+      settings,
+      authStore,
+      accountStore,
+      adminStore
     }
   },
   data () {
@@ -194,10 +203,12 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      currentUser: state => state.admin.user,
-      user: state => state.auth.payload.user
-    }),
+    currentUser() {
+      return this.adminStore.user
+    },
+    user() {
+      return this.authStore.user
+    },
     disableSaveUser () {
       return this.v$.profileData.$invalid
     },
@@ -219,10 +230,6 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getUser: 'admin/getUser',
-      updateProfile: 'account/updateProfile'
-    }),
     copyUserProfile (user) {
       return {
         firstname: user.firstname,
@@ -236,16 +243,13 @@ export default defineComponent({
       }
     },
     async initData () {
-      await this.getUser({ id: this.user._id })
+      await this.adminStore.getUser(this.user._id)
       this.profileData = this.copyUserProfile(this.currentUser)
     },
     async saveUser () {
       this.v$.$reset()
       const toSave = { ...this.profileData }
-      this.updateProfile({
-        profileData: toSave,
-        id: this.user._id
-      })
+      await this.accountStore.updateProfile(this.user._id, toSave)
     }
   }
 })

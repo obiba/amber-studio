@@ -114,10 +114,10 @@
 <script>
 import { useI18n } from 'vue-i18n'
 import { defineComponent, watch } from 'vue'
-import { mapState } from 'vuex'
 import { LocalStorage, Notify, useQuasar, copyToClipboard } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
+import { useAuthStore } from 'src/stores/auth'
 
 import Banner from 'components/Banner'
 
@@ -126,6 +126,7 @@ export default defineComponent({
   setup() {
     const $q = useQuasar()
     const { locale } = useI18n({ useScope: 'global' })
+    const authStore = useAuthStore()
 
     watch(locale, val => {
       // dynamic import, so loading on demand only
@@ -138,7 +139,8 @@ export default defineComponent({
 
     return {
       locale: locale,
-      settings
+      settings,
+      authStore
     }
   },
   data() {
@@ -157,7 +159,7 @@ export default defineComponent({
     LocalStorage.remove('feathers-jwt')
   },
   watch: {
-    user(newUser, oldUser) {
+    'authStore.user'(newUser, oldUser) {
       if (newUser !== null) {
         this.$router.push('/')
       }
@@ -165,10 +167,6 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      user: state => state.auth.payload ? state.auth.payload.user : null,
-      submitting: state => state.auth.isAuthenticatePending
-    }),
     disableSubmit() {
       return this.email.length === 0 || this.password.length === 0
     },
@@ -220,8 +218,8 @@ export default defineComponent({
       })
     },
     onSubmit() {
-      this.$store
-        .dispatch('auth/authenticate', this.makePayload())
+      this.authStore
+        .authenticate(this.makePayload())
         .then(response => {
           if (response.data && response.data.qr && response.data.secret) {
             // 2FA is enabled for that user

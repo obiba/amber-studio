@@ -50,21 +50,23 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, strongPassword } from '../boot/vuelidate'
-import userService from '../services/user'
 import { Notify } from 'quasar'
 import { settings } from '../boot/settings'
+import { useAccountStore } from 'src/stores/account'
 
 import Banner from 'components/Banner'
 
 export default defineComponent({
   components: { Banner },
   setup() {
+    const accountStore = useAccountStore()
+    
     return {
       v$: useVuelidate(),
-      settings
+      settings,
+      accountStore
     }
   },
   data() {
@@ -88,9 +90,6 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      submitting: state => state.auth.showLoading
-    }),
     disableSubmit() {
       return this.v$.formData.$invalid
     }
@@ -98,33 +97,31 @@ export default defineComponent({
   methods: {
     async resetPassword() {
       const token = this.$route.query.token
-      let result
-      if (token) {
-        result = await userService
-          .resetPassword(token, this.formData.password)
-          .catch(err => {
-            if (err.response) {
-              Notify.create({
-                message: this.$t('reset.failure'),
-                color: 'negative',
-                icon: 'fas fa-times'
-              })
-            }
-          })
-      } else {
+      if (!token) {
         Notify.create({
           message: this.$t('reset.bad_link'),
           color: 'negative',
           icon: 'fas fa-times'
         })
+        return
       }
-      if (result && result.status === 201) {
+      
+      try {
+        const result = await this.accountStore.resetPassword(token, this.formData.password)
+        if (result && result.status === 201) {
+          Notify.create({
+            message: this.$t('reset.success'),
+            color: 'positive',
+            icon: 'fas fa-check'
+          })
+          this.$router.push('/')
+        }
+      } catch (err) {
         Notify.create({
-          message: this.$t('reset.success'),
-          color: 'positive',
-          icon: 'fas fa-check'
+          message: this.$t('reset.failure'),
+          color: 'negative',
+          icon: 'fas fa-times'
         })
-        this.$router.push('/')
       }
     }
   }
