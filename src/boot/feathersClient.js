@@ -1,10 +1,10 @@
 import { boot } from 'quasar/wrappers'
+import { createClient } from 'feathers-pinia'
 import feathers from '@feathersjs/feathers'
 import rest from '@feathersjs/rest-client'
 import auth from '@feathersjs/authentication-client'
 import { iff, discard } from 'feathers-hooks-common'
 import { axios } from './axios'
-import feathersVuex from '@feathersjs/vuex'
 
 const restClient = rest(import.meta.env.VITE_API || import.meta.env.API)
 
@@ -27,21 +27,16 @@ const feathersClient = feathers()
     }
   })
 
-// Setting up feathers-vuex
-const {
-  makeServicePlugin,
-  makeAuthPlugin,
-  BaseModel,
-  models,
-  FeathersVuex
-} = feathersVuex(feathersClient, {
-  serverAlias: 'api', // optional for working with multiple APIs (this is the default value)
-  idField: '_id', // Must match the id field in your database table/collection
-  whitelist: ['$regex', '$options']
+// Create Feathers-Pinia client
+const api = createClient(feathersClient, {
+  idField: '_id',
+  whitelist: ['$regex', '$options'],
+  storage: window.localStorage
 })
 
 export default boot(({ app }) => {
-  app.use(FeathersVuex)
+  // Feathers-Pinia auto-creates service stores
+  // Services will be set up in their respective stores
 })
 
-export { feathersClient, makeAuthPlugin, makeServicePlugin, BaseModel, models, FeathersVuex }
+export { api, feathersClient }
