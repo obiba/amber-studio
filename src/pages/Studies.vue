@@ -222,22 +222,26 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
-import AuthMixin from '../mixins/AuthMixin'
+import { useStudyStore } from 'src/stores/study'
+import { useAuth } from 'src/composables/useAuth'
 
 export default {
-  mixins: [AuthMixin],
   mounted: function () {
     this.getTableStudies()
     this.setPagination()
   },
   setup () {
+    const studyStore = useStudyStore()
+    const { isReadOnly } = useAuth()
+
     return {
+      studyStore,
+      isReadOnly,
       v$: useVuelidate(),
       selected: ref([]),
       filter: ref(''),
@@ -281,9 +285,9 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      studies: state => state.study.studies
-    }),
+    studies () {
+      return this.studyStore.studies
+    },
     disableCreateStudy () {
       return this.v$.newStudyData.$invalid
     },
@@ -344,23 +348,18 @@ export default {
       return text
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.study.studyPaginationOpts
+      this.paginationOpts = this.studyStore.studyPaginationOpts
     },
     async getTableStudies (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('study/setStudyPagination', {
-          studyPaginationOpts: requestProp.pagination
-        })
-        await this.getStudies({ paginationOpts: requestProp.pagination, filter: requestProp.filter })
+        this.studyStore.setStudyPagination(requestProp.pagination)
+        await this.studyStore.getStudies(requestProp.pagination, requestProp.filter)
       } else {
-        await this.getStudies({ paginationOpts: this.paginationOpts, filter: this.filter })
+        await this.studyStore.getStudies(this.paginationOpts, this.filter)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.study.studyPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.studyStore.studyPaginationOpts.rowsNumber
     },
-    ...mapActions({
-      getStudies: 'study/getStudies'
-    }),
     createStudy () {
       this.newStudyData = {}
       this.showCreateStudy = true
@@ -379,23 +378,14 @@ export default {
       this.v$.$reset()
       // create
       const createdData = { ...this.newStudyData }
-      this.$store.dispatch('study/createStudy', {
-        study: createdData,
-        paginationOpts: this.paginationOpts
-      })
+      this.studyStore.createStudy(createdData, this.paginationOpts)
     },
     deleteStudy () {
-      this.$store.dispatch('study/deleteStudy', {
-        id: this.selectedStudy._id,
-        paginationOpts: this.paginationOpts
-      })
+      this.studyStore.deleteStudy(this.selectedStudy._id, this.paginationOpts)
     },
     deleteStudies () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('study/deleteStudies', {
-        ids: ids,
-        paginationOpts: this.paginationOpts
-      })
+      this.studyStore.deleteStudies(ids, this.paginationOpts)
       this.selected = []
     }
   }

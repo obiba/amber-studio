@@ -68,10 +68,10 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
-import AuthMixin from '../mixins/AuthMixin'
+import { useStudyStore } from 'src/stores/study'
+import { useAuth } from 'src/composables/useAuth'
 import DashboardCounts from 'components/dashboard/DashboardCounts.vue'
 
 export default defineComponent({
@@ -79,7 +79,16 @@ export default defineComponent({
   components: {
     DashboardCounts
   },
-  mixins: [AuthMixin],
+  setup () {
+    const studyStore = useStudyStore()
+    const { user, isGuest } = useAuth()
+
+    return {
+      studyStore,
+      user,
+      isGuest
+    }
+  },
   data () {
     return {
       counts: {},
@@ -121,9 +130,9 @@ export default defineComponent({
     })
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study
-    }),
+    study () {
+      return this.studyStore.study
+    },
     studyId () {
       return this.$route.params.id
     },

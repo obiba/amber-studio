@@ -243,20 +243,21 @@ import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { defineComponent, ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import AuthMixin from '../mixins/AuthMixin'
-import { mapState, mapActions } from 'vuex'
+import { useStudyStore } from 'src/stores/study'
+import { useAuth } from 'src/composables/useAuth'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 
 export default defineComponent({
   name: 'MainLayout',
-  mixins: [AuthMixin],
   mounted: function () {
     this.initStudyData()
   },
   setup () {
     const $q = useQuasar()
     const { locale } = useI18n({ useScope: 'global' })
+    const studyStore = useStudyStore()
+    const { userEmail, isGuest } = useAuth()
 
     watch(locale, val => {
       // dynamic import, so loading on demand only
@@ -270,6 +271,9 @@ export default defineComponent({
     const leftDrawerOpen = ref(false)
 
     return {
+      studyStore,
+      userEmail,
+      isGuest,
       locale,
       leftDrawerOpen,
       toggleLeftDrawer () {
@@ -300,9 +304,9 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study
-    }),
+    study () {
+      return this.studyStore.study
+    },
     localeOptions () {
       return locales.map(loc => {
         return {
@@ -326,7 +330,7 @@ export default defineComponent({
       return this.$route.params.id
     },
     currentStudy () {
-      return this.$store.state.study.study
+      return this.studyStore.study
     },
     disableSave () {
       return this.v$.studyData.$invalid
@@ -344,12 +348,8 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getStudy: 'study/getStudy',
-      updateStudy: 'study/updateStudy'
-    }),
     async initStudyData () {
-      await this.getStudy({ id: this.$route.params.id })
+      await this.studyStore.getStudy(this.$route.params.id)
       this.studyData = { ...JSON.parse(JSON.stringify(this.study)) }
     },
     onEdit () {
@@ -358,9 +358,7 @@ export default defineComponent({
     async save () {
       this.v$.$reset()
       const toSave = { ...this.studyData }
-      this.updateStudy({
-        study: toSave
-      })
+      this.studyStore.updateStudy(toSave)
     },
     onLocaleSelection (opt) {
       this.locale = opt.value
