@@ -23,39 +23,30 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent } from 'vue'
+<script setup>
+import { computed } from 'vue'
 import { t } from '../../../boot/i18n'
 
-export default defineComponent({
-  name: 'MapItem',
-  props: ['modelValue', 'readOnly'],
-  emits: ['update:modelValue'],
-  setup (props, { emit }) {
-    const schema = computed({
-      get () {
-        return props.modelValue
-      },
-      set (value) {
-        emit('update:modelValue', value)
-      }
-    })
+const props = defineProps(['modelValue', 'readOnly'])
+const emit = defineEmits(['update:modelValue'])
 
-    const geoTypes = ['Point', 'Polygon']
-
-    const geoTypeOptions = computed(() => {
-      return geoTypes.map(tp => {
-        return {
-          value: tp,
-          label: t('form.geo.types.' + tp)
-        }
-      }).sort((a, b) => a.label.localeCompare(b.label))
-    })
-
-    return {
-      schema,
-      geoTypeOptions
-    }
+const schema = computed({
+  get () {
+    return props.modelValue
+  },
+  set (value) {
+    emit('update:modelValue', value)
   }
+})
+
+const geoTypes = ['Point', 'Polygon']
+
+const geoTypeOptions = computed(() => {
+  return geoTypes.map(tp => {
+    return {
+      value: tp,
+      label: t('form.geo.types.' + tp)
+    }
+  }).sort((a, b) => a.label.localeCompare(b.label))
 })
 </script>

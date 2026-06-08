@@ -224,169 +224,171 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref, computed } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import { date } from 'quasar'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
 import { useFormStore } from 'src/stores/form'
 import { useAuth } from 'src/composables/useAuth'
+import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'FormRevisions',
-  props: ['form'],
-  emits: ['reinstate'],
-  components: { BlitzForm },
-  mounted: function () {
-    this.setPagination()
-    this.getTableFormRevisions()
-  },
-  setup () {
-    const formStore = useFormStore()
-    const { isReadOnly } = useAuth()
+const props = defineProps(['form'])
+const emit = defineEmits(['reinstate'])
 
-    return {
-      remountCounter: 0,
-      modelData: ref({}),
-      selected: ref([]),
-      filter: ref(''),
-      locale: ref('en'),
-      // Store refs
-      formRevisions: computed(() => formStore.formRevisions),
-      formRevisionPaginationOpts: computed(() => formStore.formRevisionPaginationOpts),
-      isReadOnly
-    }
+const formStore = useFormStore()
+const { isReadOnly } = useAuth()
+const { t } = useI18n()
+
+// Refs
+const remountCounter = ref(0)
+const modelData = ref({})
+const selected = ref([])
+const filter = ref('')
+const locale = ref('en')
+const viewTab = ref('form')
+const selectedRevision = ref({})
+const showViewRevision = ref(false)
+const showConfirmReinstateRevision = ref(false)
+const showConfirmDeleteRevision = ref(false)
+const showConfirmDeleteRevisions = ref(false)
+const paginationOpts = ref({
+  sortBy: 'revision',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+
+const columns = [
+  {
+    name: 'revision',
+    required: true,
+    label: t('revision'),
+    align: 'left',
+    field: 'revision',
+    sortable: true
   },
-  data () {
-    return {
-      viewTab: 'form',
-      selectedRevision: {},
-      showViewRevision: false,
-      showConfirmReinstateRevision: false,
-      showConfirmDeleteRevision: false,
-      showConfirmDeleteRevisions: false,
-      paginationOpts: {
-        sortBy: 'revision',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      columns: [
-        {
-          name: 'revision',
-          required: true,
-          label: this.$t('revision'),
-          align: 'left',
-          field: 'revision',
-          sortable: true
-        },
-        {
-          name: 'comment',
-          required: true,
-          label: this.$t('comment'),
-          align: 'left',
-          field: 'comment',
-          sortable: true
-        },
-        {
-          name: 'createdAt',
-          required: true,
-          label: this.$t('date'),
-          align: 'left',
-          field: 'createdAt',
-          sortable: true
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ]
-    }
+  {
+    name: 'comment',
+    required: true,
+    label: t('comment'),
+    align: 'left',
+    field: 'comment',
+    sortable: true
   },
-  computed: {
-    locales () {
-      return Object.keys(this.selectedRevision.schema.i18n).filter(loc => this.locale !== loc)
-    },
-    blitzarSchema () {
-      return makeBlitzarQuasarSchemaForm(this.selectedRevision.schema, { locale: this.locale, debug: true })
-    },
-    modelDataStr () {
-      return JSON.stringify(this.modelData, null, '  ')
-    }
+  {
+    name: 'createdAt',
+    required: true,
+    label: t('date'),
+    align: 'left',
+    field: 'createdAt',
+    sortable: true
   },
-  methods: {
-    formatDate (dateStr) {
-      return date.formatDate(date.extractDate(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ'), 'YYYY-MM-DD HH:mm:ss')
-    },
-    onLocale (newLocale) {
-      this.locale = newLocale
-    },
-    onExport (formRevision) {
-      const data = { ...formRevision.schema }
-      delete data._id
-      delete data.name
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-      const a = document.createElement('a')
-      a.download = `${this.form.name}-${formRevision.revision}-schema.json`
-      a.href = window.URL.createObjectURL(blob)
-      a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
-      a.click()
-      a.remove()
-    },
-    onReinstate (formRevision) {
-      this.showConfirmReinstateRevision = true
-      this.selectedRevision = formRevision
-    },
-    onView (formRevision) {
-      this.showViewRevision = true
-      this.selectedRevision = formRevision
-      this.modelData = {}
-      this.remountCounter++
-      this.viewTab = 'form'
-    },
-    onConfirmDelete (formRevision) {
-      this.showConfirmDeleteRevision = true
-      this.selectedRevision = formRevision
-    },
-    onConfirmDeleteMultiple () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteRevisions = true
-      }
-    },
-    async getTableFormRevisions (requestProp) {
-      const formStore = useFormStore()
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        formStore.setFormRevisionPagination(requestProp.pagination)
-        await formStore.getFormRevisions(requestProp.pagination, this.form._id, requestProp.filter)
-      } else {
-        await formStore.getFormRevisions(this.paginationOpts, this.form._id, this.filter)
-      }
-      this.paginationOpts.rowsNumber = formStore.formRevisionPaginationOpts.rowsNumber
-    },
-    setPagination () {
-      const formStore = useFormStore()
-      this.paginationOpts = { ...formStore.formRevisionPaginationOpts }
-    },
-    async reinstateFormRevision () {
-      const formStore = useFormStore()
-      const toSave = { ...this.form }
-      toSave.schema = this.selectedRevision.schema
-      await formStore.updateForm(toSave, undefined, true)
-      this.$emit('reinstate')
-    },
-    deleteFormRevision () {
-      const formStore = useFormStore()
-      formStore.deleteFormRevision(this.selectedRevision._id, this.paginationOpts, this.form._id)
-    },
-    deleteFormRevisions () {
-      const formStore = useFormStore()
-      const ids = this.selected.map(u => u._id)
-      formStore.deleteFormRevisions(ids, this.paginationOpts, this.form._id)
-      this.selected = []
-    }
+  {
+    name: 'action',
+    align: 'left',
+    label: t('action')
   }
+]
+
+// Computed
+const formRevisions = computed(() => formStore.formRevisions)
+const formRevisionPaginationOpts = computed(() => formStore.formRevisionPaginationOpts)
+
+const locales = computed(() => {
+  return Object.keys(selectedRevision.value.schema.i18n).filter(loc => locale.value !== loc)
+})
+
+const blitzarSchema = computed(() => {
+  return makeBlitzarQuasarSchemaForm(selectedRevision.value.schema, { locale: locale.value, debug: true })
+})
+
+const modelDataStr = computed(() => {
+  return JSON.stringify(modelData.value, null, '  ')
+})
+
+// Methods
+function formatDate (dateStr) {
+  return date.formatDate(date.extractDate(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ'), 'YYYY-MM-DD HH:mm:ss')
+}
+
+function onLocale (newLocale) {
+  locale.value = newLocale
+}
+
+function onExport (formRevision) {
+  const data = { ...formRevision.schema }
+  delete data._id
+  delete data.name
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
+  const a = document.createElement('a')
+  a.download = `${props.form.name}-${formRevision.revision}-schema.json`
+  a.href = window.URL.createObjectURL(blob)
+  a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
+  a.click()
+  a.remove()
+}
+
+function onReinstate (formRevision) {
+  showConfirmReinstateRevision.value = true
+  selectedRevision.value = formRevision
+}
+
+function onView (formRevision) {
+  showViewRevision.value = true
+  selectedRevision.value = formRevision
+  modelData.value = {}
+  remountCounter.value++
+  viewTab.value = 'form'
+}
+
+function onConfirmDelete (formRevision) {
+  showConfirmDeleteRevision.value = true
+  selectedRevision.value = formRevision
+}
+
+function onConfirmDeleteMultiple () {
+  if (selected.value.length > 0) {
+    showConfirmDeleteRevisions.value = true
+  }
+}
+
+async function getTableFormRevisions (requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    formStore.setFormRevisionPagination(requestProp.pagination)
+    await formStore.getFormRevisions(requestProp.pagination, props.form._id, requestProp.filter)
+  } else {
+    await formStore.getFormRevisions(paginationOpts.value, props.form._id, filter.value)
+  }
+  paginationOpts.value.rowsNumber = formStore.formRevisionPaginationOpts.rowsNumber
+}
+
+function setPagination () {
+  paginationOpts.value = { ...formStore.formRevisionPaginationOpts }
+}
+
+async function reinstateFormRevision () {
+  const toSave = { ...props.form }
+  toSave.schema = selectedRevision.value.schema
+  await formStore.updateForm(toSave, undefined, true)
+  emit('reinstate')
+}
+
+function deleteFormRevision () {
+  formStore.deleteFormRevision(selectedRevision.value._id, paginationOpts.value, props.form._id)
+}
+
+function deleteFormRevisions () {
+  const ids = selected.value.map(u => u._id)
+  formStore.deleteFormRevisions(ids, paginationOpts.value, props.form._id)
+  selected.value = []
+}
+
+// Lifecycle
+onMounted(() => {
+  setPagination()
+  getTableFormRevisions()
 })
 </script>

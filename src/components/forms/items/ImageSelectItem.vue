@@ -117,122 +117,105 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, watch, defineComponent } from 'vue'
+<script setup>
+import { ref, computed, watch } from 'vue'
 import OptionsItem from './OptionsItem.vue'
 import * as Papa from 'papaparse'
 
-export default defineComponent({
-  name: 'ImageSelectItem',
-  props: ['modelValue', 'readOnly'],
-  emits: ['update:modelValue'],
-  components: { OptionsItem },
-  setup (props, { emit }) {
-    const areasCount = ref(5)
-    const imageFile = ref(null)
-    const areasFile = ref(null)
+const props = defineProps(['modelValue', 'readOnly'])
+const emit = defineEmits(['update:modelValue'])
 
-    const schema = computed({
-      get () {
-        return props.modelValue
-      },
-      set (value) {
-        emit('update:modelValue', value)
-      }
-    })
+const areasCount = ref(5)
+const imageFile = ref(null)
+const areasFile = ref(null)
 
-    const areasList = computed(() => {
-      return props.modelValue.areas ? props.modelValue.areas.slice(0, areasCount.value) : []
-    })
+const schema = computed({
+  get () {
+    return props.modelValue
+  },
+  set (value) {
+    emit('update:modelValue', value)
+  }
+})
 
-    const hasMoreAreas = computed(() => {
-      return props.modelValue.areas && props.modelValue.areas.length > areasCount.value
-    })
+const areasList = computed(() => {
+  return props.modelValue.areas ? props.modelValue.areas.slice(0, areasCount.value) : []
+})
 
-    function showMoreAreas () {
-      areasCount.value = areasCount.value + 5
+const hasMoreAreas = computed(() => {
+  return props.modelValue.areas && props.modelValue.areas.length > areasCount.value
+})
+
+function showMoreAreas () {
+  areasCount.value = areasCount.value + 5
+}
+
+function deleteArea (area) {
+  schema.value.areas = props.modelValue.areas.filter(ar => `${ar.value}-${ar.points}` !== `${area.value}-${area.points}`)
+  if (areasCount.value > 5) {
+    areasCount.value = areasCount.value - 1
+  }
+}
+
+function addArea () {
+  if (!props.modelValue.areas) {
+    schema.value.areas = []
+  }
+  const val = '' + (props.modelValue.areas.length + 1)
+  schema.value.areas.push({
+    value: val,
+    fill: '#cccccc',
+    points: '0,0 10,0 10,10 0,10'
+  })
+}
+
+function deleteAreas () {
+  schema.value.areas = []
+}
+
+watch(imageFile, async (newValue) => {
+  if (newValue !== null) {
+    const reader = new FileReader()
+    reader.onload = evt => {
+      schema.value.imageSrc = evt.target.result
     }
-
-    function deleteArea (area) {
-      schema.value.areas = props.modelValue.areas.filter(ar => `${ar.value}-${ar.points}` !== `${area.value}-${area.points}`)
-      if (areasCount.value > 5) {
-        areasCount.value = areasCount.value - 1
-      }
+    reader.onerror = evt => {
+      console.error(evt)
     }
-    function addArea () {
-      if (!props.modelValue.areas) {
-        schema.value.areas = []
-      }
-      const val = '' + (props.modelValue.areas.length + 1)
-      schema.value.areas.push({
-        value: val,
-        fill: '#cccccc',
-        points: '0,0 10,0 10,10 0,10'
-      })
-    }
+    reader.readAsDataURL(newValue)
+  }
+})
 
-    function deleteAreas (area) {
-      schema.value.areas = []
-    }
-
-    watch(imageFile, async (newValue) => {
-      if (newValue !== null) {
-        const reader = new FileReader()
-        reader.onload = evt => {
-          schema.value.imageSrc = evt.target.result
+watch(areasFile, async (newValue) => {
+  if (newValue !== null) {
+    Papa.parse(newValue, {
+      header: false,
+      delimiter: newValue.name.endsWith('.tsv') ? '\t' : ',',
+      complete: function (results, file) {
+        if (results.errors.length === 0) {
+          console.error(results.error)
         }
-        reader.onerror = evt => {
-          console.error(evt)
-        }
-        reader.readAsDataURL(newValue)
-      }
-    })
-
-    watch(areasFile, async (newValue) => {
-      if (newValue !== null) {
-        Papa.parse(newValue, {
-          header: false,
-          delimiter: newValue.name.endsWith('.tsv') ? '\t' : ',',
-          complete: function (results, file) {
-            if (results.errors.length === 0) {
-              console.error(results.error)
-            }
-            if (results.data.length > 0) {
-              if (!schema.value.areas) {
-                schema.value.areas = []
-              }
-              results.data
-                .filter((row) => row.length > 2 && row[0].trim().length > 0)
-                .forEach((row) => {
-                  const val = row[0]
-                  const fill = row[1]
-                  row.splice(0, 2)
-                  schema.value.areas.push({
-                    value: val,
-                    fill: fill,
-                    points: row.join(',')
-                  })
-                })
-            } else {
-              console.error(results.error)
-            }
+        if (results.data.length > 0) {
+          if (!schema.value.areas) {
+            schema.value.areas = []
           }
-        })
+          results.data
+            .filter((row) => row.length > 2 && row[0].trim().length > 0)
+            .forEach((row) => {
+              const val = row[0]
+              const fill = row[1]
+              row.splice(0, 2)
+              schema.value.areas.push({
+                value: val,
+                fill: fill,
+                points: row.join(',')
+              })
+            })
+        } else {
+          console.error(results.error)
+        }
       }
     })
-
-    return {
-      areasCount,
-      imageFile,
-      areasFile,
-      schema,
-      areasList,
-      hasMoreAreas,
-      showMoreAreas,
-      deleteArea,
-      addArea,
-      deleteAreas
-    }
   }
 })
 </script>

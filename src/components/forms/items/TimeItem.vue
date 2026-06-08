@@ -18,26 +18,18 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent } from 'vue'
+<script setup>
+import { computed } from 'vue'
 
-export default defineComponent({
-  name: 'TimeItem',
-  props: ['modelValue', 'readOnly'],
-  emits: ['update:modelValue'],
-  setup (props, { emit }) {
-    const schema = computed({
-      get () {
-        return props.modelValue
-      },
-      set (value) {
-        emit('update:modelValue', value)
-      }
-    })
+const props = defineProps(['modelValue', 'readOnly'])
+const emit = defineEmits(['update:modelValue'])
 
-    return {
-      schema
-    }
+const schema = computed({
+  get () {
+    return props.modelValue
+  },
+  set (value) {
+    emit('update:modelValue', value)
   }
 })
 </script>

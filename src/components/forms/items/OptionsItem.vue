@@ -66,102 +66,86 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, watch, defineComponent } from 'vue'
+<script setup>
+import { ref, computed, watch } from 'vue'
 import * as Papa from 'papaparse'
 
-export default defineComponent({
-  name: 'Options',
-  props: ['modelValue', 'readOnly'],
-  emits: ['update:modelValue'],
-  setup (props, { emit }) {
-    const optionsCount = ref(5)
-    const optionsFile = ref(null)
+const props = defineProps(['modelValue', 'readOnly'])
+const emit = defineEmits(['update:modelValue'])
 
-    const schema = computed({
-      get () {
-        return props.modelValue
-      },
-      set (value) {
-        emit('update:modelValue', value)
-      }
-    })
+const optionsCount = ref(5)
+const optionsFile = ref(null)
 
-    const optionsList = computed(() => {
-      return props.modelValue.options ? props.modelValue.options.slice(0, optionsCount.value) : []
-    })
+const schema = computed({
+  get () {
+    return props.modelValue
+  },
+  set (value) {
+    emit('update:modelValue', value)
+  }
+})
 
-    const hasMoreOptions = computed(() => {
-      return props.modelValue.options && props.modelValue.options.length > optionsCount.value
-    })
+const optionsList = computed(() => {
+  return props.modelValue.options ? props.modelValue.options.slice(0, optionsCount.value) : []
+})
 
-    function showMoreOptions () {
-      optionsCount.value = optionsCount.value + 5
-    }
+const hasMoreOptions = computed(() => {
+  return props.modelValue.options && props.modelValue.options.length > optionsCount.value
+})
 
-    function deleteOption (option) {
-      schema.value.options = props.modelValue.options.filter(opt => opt.value !== option.value)
-      if (optionsCount.value > 5) {
-        optionsCount.value = optionsCount.value - 1
-      }
-    }
+function showMoreOptions () {
+  optionsCount.value = optionsCount.value + 5
+}
 
-    function addOption () {
-      if (!props.modelValue.options) {
-        schema.value.options = []
-      }
-      const val = '' + (props.modelValue.options.length + 1)
-      schema.value.options.push({
-        value: val,
-        label: val
-      })
-    }
+function deleteOption (option) {
+  schema.value.options = props.modelValue.options.filter(opt => opt.value !== option.value)
+  if (optionsCount.value > 5) {
+    optionsCount.value = optionsCount.value - 1
+  }
+}
 
-    function deleteOptions () {
-      schema.value.options = []
-    }
+function addOption () {
+  if (!props.modelValue.options) {
+    schema.value.options = []
+  }
+  const val = '' + (props.modelValue.options.length + 1)
+  schema.value.options.push({
+    value: val,
+    label: val
+  })
+}
 
-    watch(optionsFile, async (newValue) => {
-      if (newValue !== null) {
-        Papa.parse(newValue, {
-          header: false,
-          delimiter: newValue.name.endsWith('.tsv') ? '\t' : ',',
-          complete: function (results, file) {
-            if (results.errors.length === 0) {
-              console.error(results.error)
-            }
-            if (results.data.length > 0) {
-              if (!schema.value.options) {
-                schema.value.options = []
-              }
-              results.data
-                .filter((row) => row.length > 0 && row[0].trim().length > 0)
-                .forEach((row) => {
-                  const val = row.shift().trim()
-                  schema.value.options.push({
-                    value: val,
-                    label: row.length > 0 ? row.join(results.meta.delimiter) : val
-                  })
-                })
-            } else {
-              console.error(results.error)
-            }
+function deleteOptions () {
+  schema.value.options = []
+}
+
+watch(optionsFile, async (newValue) => {
+  if (newValue !== null) {
+    Papa.parse(newValue, {
+      header: false,
+      delimiter: newValue.name.endsWith('.tsv') ? '\t' : ',',
+      complete: function (results, file) {
+        if (results.errors.length === 0) {
+          console.error(results.error)
+        }
+        if (results.data.length > 0) {
+          if (!schema.value.options) {
+            schema.value.options = []
           }
-        })
+          results.data
+            .filter((row) => row.length > 0 && row[0].trim().length > 0)
+            .forEach((row) => {
+              const val = row.shift().trim()
+              schema.value.options.push({
+                value: val,
+                label: row.length > 0 ? row.join(results.meta.delimiter) : val
+              })
+            })
+        } else {
+          console.error(results.error)
+        }
       }
     })
-
-    return {
-      optionsCount,
-      optionsFile,
-      schema,
-      optionsList,
-      hasMoreOptions,
-      showMoreOptions,
-      deleteOption,
-      addOption,
-      deleteOptions
-    }
   }
 })
 </script>
