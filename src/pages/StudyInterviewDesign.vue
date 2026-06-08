@@ -187,7 +187,7 @@ const innerTab = ref('steps')
 const splitterModel = ref(15)
 const selected = ref([])
 const reload = ref(0)
-const paginationOpts = reactive({
+const paginationOpts = ref({
   descending: true,
   page: 1,
   rowsPerPage: 10
@@ -196,7 +196,7 @@ const saveIntervalId = ref(null)
 const changeDetected = ref(0)
 const showEditDefinition = ref(false)
 const revisionOptions = ref([])
-const interviewDesignData = reactive({})
+const interviewDesignData = ref({})
 const originalInterviewDesign = reactive({ steps: [], i18n: {} })
 
 // validations

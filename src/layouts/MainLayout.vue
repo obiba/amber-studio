@@ -162,18 +162,25 @@ import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { useAuth } from '../composables/useAuth'
 
+// Import Quasar language files statically
+import langEnUS from 'quasar/lang/en-US'
+import langFr from 'quasar/lang/fr'
+
 const $q = useQuasar()
 const { locale, t } = useI18n({ useScope: 'global' })
 const { userEmail, isGuest, isAdministrator, logout } = useAuth()
 
-// Watch locale changes to update Quasar language
+// Map locale codes to Quasar language objects
+const quasarLangMap = {
+  en: langEnUS,
+  fr: langFr
+}
+
+// Watch locale changes
 watch(locale, val => {
-  // dynamic import, so loading on demand only
-  const langIso = val === 'en' ? 'en-US' : val
-  import('quasar/lang/' + langIso)
-    .then(lang => {
-      $q.lang.set(lang.default)
-    })
+  // Set Quasar language based on locale
+  const lang = quasarLangMap[val] || quasarLangMap.en
+  $q.lang.set(lang)
 })
 
 // Drawer state

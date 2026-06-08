@@ -242,7 +242,7 @@ const selectedStudy = ref({})
 const showCreateStudy = ref(false)
 const showConfirmDeleteStudy = ref(false)
 const showConfirmDeleteStudies = ref(false)
-const paginationOpts = reactive({
+const paginationOpts = ref({
   sortBy: 'name',
   descending: true,
   page: 1,

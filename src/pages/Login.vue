@@ -122,6 +122,10 @@ import { useAuthStore } from 'src/stores/auth'
 
 import Banner from 'src/components/Banner.vue'
 
+// Import Quasar language files statically
+import langEnUS from 'quasar/lang/en-US'
+import langFr from 'quasar/lang/fr'
+
 const $q = useQuasar()
 const router = useRouter()
 const { t, locale } = useI18n({ useScope: 'global' })
@@ -137,13 +141,16 @@ const withToken = ref(false)
 const method = ref('')
 const showPassword = ref(false)
 
-// watch locale for Quasar lang change
+// Map locale codes to Quasar language objects
+const quasarLangMap = {
+  en: langEnUS,
+  fr: langFr
+}
+// Watch locale changes
 watch(locale, val => {
-  const langIso = val === 'en' ? 'en-US' : val
-  import('quasar/lang/' + langIso)
-    .then(lang => {
-      $q.lang.set(lang.default)
-    })
+  // Set Quasar language based on locale
+  const lang = quasarLangMap[val] || quasarLangMap.en
+  $q.lang.set(lang)
 })
 
 // watch authStore.user

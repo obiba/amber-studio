@@ -282,7 +282,7 @@ const showEditDefinition = ref(false)
 const showImportSchema = ref(false)
 const showTag = ref(false)
 const publicationComment = ref(null)
-const studyFormData = reactive({})
+const studyFormData = ref({})
 const originalSchemaStr = ref(null)
 
 // Store refs

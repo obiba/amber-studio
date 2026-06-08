@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { api } from '../boot/feathersClient'
+import { feathersClient } from '../boot/feathersClient'
 
 export const useAuthStore = defineStore('auth', () => {
   // State
@@ -16,13 +16,13 @@ export const useAuthStore = defineStore('auth', () => {
   // Actions
   async function authenticate(credentials) {
     try {
-      const response = await api.reAuthenticate()
+      const response = await feathersClient.reAuthenticate()
       await responseHandler(response)
       return response
     } catch (error) {
       // If reauth fails, try regular auth with credentials
       if (credentials) {
-        const authResponse = await api.authenticate(credentials)
+        const authResponse = await feathersClient.authenticate(credentials)
         await responseHandler(authResponse)
         return authResponse
       }
@@ -40,7 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout() {
     try {
-      await api.logout()
+      await feathersClient.logout()
     } finally {
       user.value = null
       accessToken.value = null
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function reAuthenticate() {
     try {
-      const response = await api.reAuthenticate()
+      const response = await feathersClient.reAuthenticate()
       await responseHandler(response)
       return response
     } catch (error) {

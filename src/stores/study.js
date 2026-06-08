@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import studyService from '../services/study/study'
+import studyService from '../services/study'
 import { t } from '../boot/i18n'
 import { errorHandler } from '../boot/errors'
 import { Notify } from 'quasar'
