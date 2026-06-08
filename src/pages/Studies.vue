@@ -221,175 +221,173 @@
   </q-page>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup>
+import { ref, reactive, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { date } from 'quasar'
+import { useI18n } from 'vue-i18n'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
 
-export default {
-  mounted: function () {
-    this.getTableStudies()
-    this.setPagination()
-  },
-  setup () {
-    const studyStore = useStudyStore()
-    const { isReadOnly } = useAuth()
+const { t } = useI18n()
+const studyStore = useStudyStore()
+const { isReadOnly } = useAuth()
 
-    return {
-      studyStore,
-      isReadOnly,
-      v$: useVuelidate(),
-      selected: ref([]),
-      filter: ref(''),
-      settings
-    }
-  },
-  data () {
-    return {
-      selectedStudy: {},
-      showCreateStudy: false,
-      showConfirmDeleteStudy: false,
-      showConfirmDeleteStudies: false,
-      paginationOpts: {
-        sortBy: 'name',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      studyData: {
-        name: '',
-        description: ''
-      },
-      newStudyData: {
-        name: '',
-        description: ''
-      }
-    }
-  },
-  validations: {
-    newStudyData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      description: {
-        minLength: minLength(2),
-        maxLength: maxLength(500)
-      }
-    }
-  },
-  computed: {
-    studies () {
-      return this.studyStore.studies
+// data
+const selected = ref([])
+const filter = ref('')
+const selectedStudy = ref({})
+const showCreateStudy = ref(false)
+const showConfirmDeleteStudy = ref(false)
+const showConfirmDeleteStudies = ref(false)
+const paginationOpts = reactive({
+  sortBy: 'name',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+const studyData = reactive({
+  name: '',
+  description: ''
+})
+const newStudyData = reactive({
+  name: '',
+  description: '',
+  services: undefined
+})
+
+// validations
+const rules = {
+  newStudyData: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    disableCreateStudy () {
-      return this.v$.newStudyData.$invalid
-    },
-    columns () {
-      const cols = [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left',
-          field: 'name',
-          sortable: true
-        },
-        {
-          name: 'description',
-          align: 'left',
-          label: this.$t('description'),
-          field: 'description',
-          sortable: true
-        },
-        {
-          name: 'forms',
-          align: 'left',
-          label: this.$t('study.forms'),
-          field: 'forms',
-          sortable: true
-        },
-        {
-          name: 'updatedAt',
-          align: 'left',
-          label: this.$t('updated_at'),
-          field: 'updatedAt',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
-        }
-      ]
-      if (!this.isReadOnly) {
-        cols.push({
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        })
-      }
-      return cols
-    },
-    servicesOptions () {
-      return [
-        { label: this.$t('study.case_reports'), value: 'case-reports' },
-        { label: this.$t('study.interviews'), value: 'interviews' }]
-    }
-  },
-  methods: {
-    makeEllipsis (text, length) {
-      if (text && text.length > length) {
-        return text.substring(0, length) + ' ...'
-      }
-      return text
-    },
-    setPagination () {
-      this.paginationOpts = this.studyStore.studyPaginationOpts
-    },
-    async getTableStudies (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.studyStore.setStudyPagination(requestProp.pagination)
-        await this.studyStore.getStudies(requestProp.pagination, requestProp.filter)
-      } else {
-        await this.studyStore.getStudies(this.paginationOpts, this.filter)
-      }
-      this.paginationOpts.rowsNumber = this.studyStore.studyPaginationOpts.rowsNumber
-    },
-    createStudy () {
-      this.newStudyData = {}
-      this.showCreateStudy = true
-      this.selectedStudy = undefined
-    },
-    confirmDeleteStudy (study) {
-      this.showConfirmDeleteStudy = true
-      this.selectedStudy = study
-    },
-    confirmDeleteStudies () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteStudies = true
-      }
-    },
-    async saveStudy () {
-      this.v$.$reset()
-      // create
-      const createdData = { ...this.newStudyData }
-      this.studyStore.createStudy(createdData, this.paginationOpts)
-    },
-    deleteStudy () {
-      this.studyStore.deleteStudy(this.selectedStudy._id, this.paginationOpts)
-    },
-    deleteStudies () {
-      const ids = this.selected.map(u => u._id)
-      this.studyStore.deleteStudies(ids, this.paginationOpts)
-      this.selected = []
+    description: {
+      minLength: minLength(2),
+      maxLength: maxLength(500)
     }
   }
 }
+const v$ = useVuelidate(rules, { newStudyData })
+
+// computed
+const studies = computed(() => studyStore.studies)
+const disableCreateStudy = computed(() => v$.value.newStudyData.$invalid)
+const columns = computed(() => {
+  const cols = [
+    {
+      name: 'name',
+      required: true,
+      label: t('name'),
+      align: 'left',
+      field: 'name',
+      sortable: true
+    },
+    {
+      name: 'description',
+      align: 'left',
+      label: t('description'),
+      field: 'description',
+      sortable: true
+    },
+    {
+      name: 'forms',
+      align: 'left',
+      label: t('study.forms'),
+      field: 'forms',
+      sortable: true
+    },
+    {
+      name: 'updatedAt',
+      align: 'left',
+      label: t('updated_at'),
+      field: 'updatedAt',
+      sortable: true,
+      format: val =>
+        `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : t('unknown')}`
+    }
+  ]
+  if (!isReadOnly.value) {
+    cols.push({
+      name: 'action',
+      align: 'left',
+      label: t('action')
+    })
+  }
+  return cols
+})
+const servicesOptions = computed(() => [
+  { label: t('study.case_reports'), value: 'case-reports' },
+  { label: t('study.interviews'), value: 'interviews' }
+])
+
+// methods
+function makeEllipsis(text, length) {
+  if (text && text.length > length) {
+    return text.substring(0, length) + ' ...'
+  }
+  return text
+}
+
+function setPagination() {
+  Object.assign(paginationOpts, studyStore.studyPaginationOpts)
+}
+
+async function getTableStudies(requestProp) {
+  if (requestProp) {
+    Object.assign(paginationOpts, requestProp.pagination)
+    studyStore.setStudyPagination(requestProp.pagination)
+    await studyStore.getStudies(requestProp.pagination, requestProp.filter)
+  } else {
+    await studyStore.getStudies(paginationOpts, filter.value)
+  }
+  paginationOpts.rowsNumber = studyStore.studyPaginationOpts.rowsNumber
+}
+
+function createStudy() {
+  Object.assign(newStudyData, { name: '', description: '', services: undefined })
+  showCreateStudy.value = true
+  selectedStudy.value = undefined
+}
+
+function confirmDeleteStudy(study) {
+  showConfirmDeleteStudy.value = true
+  selectedStudy.value = study
+}
+
+function confirmDeleteStudies() {
+  if (selected.value.length > 0) {
+    showConfirmDeleteStudies.value = true
+  }
+}
+
+async function saveStudy() {
+  v$.value.$reset()
+  // create
+  const createdData = { ...newStudyData }
+  studyStore.createStudy(createdData, paginationOpts)
+}
+
+function deleteStudy() {
+  studyStore.deleteStudy(selectedStudy.value._id, paginationOpts)
+}
+
+function deleteStudies() {
+  const ids = selected.value.map(u => u._id)
+  studyStore.deleteStudies(ids, paginationOpts)
+  selected.value = []
+}
+
+// mounted
+onMounted(() => {
+  getTableStudies()
+  setPagination()
+})
 </script>
 
 <style scoped>

@@ -22,16 +22,6 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 import { settings } from '../boot/settings'
-
-export default defineComponent({
-  name: 'Error404',
-  setup () {
-    return {
-      settings: settings
-    }
-  }
-})
 </script>

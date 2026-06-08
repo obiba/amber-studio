@@ -164,8 +164,9 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent, ref, toRaw } from 'vue'
+<script setup>
+import { ref, reactive, computed, toRaw, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import InterviewDesignSteps from 'src/components/interviews/InterviewDesignSteps.vue'
@@ -175,132 +176,117 @@ import { useInterviewStore } from 'src/stores/interview'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
 
-export default defineComponent({
-  components: {
-    InterviewDesignSteps,
-    InterviewDesignTranslations,
-    Campaigns
-  },
-  setup () {
-    const interviewStore = useInterviewStore()
-    const studyStore = useStudyStore()
-    const { isReadOnly } = useAuth()
+const route = useRoute()
+const interviewStore = useInterviewStore()
+const studyStore = useStudyStore()
+const { isReadOnly } = useAuth()
 
-    return {
-      interviewStore,
-      studyStore,
-      isReadOnly,
-      v$: useVuelidate(),
-      tab: ref('design'),
-      innerTab: ref('steps'),
-      splitterModel: ref(15),
-      selected: ref([]),
-      reload: ref(0),
-      paginationOpts: {
-        descending: true,
-        page: 1,
-        rowsPerPage: 10
-      }
-    }
-  },
-  mounted () {
-    // check for changes every 2 seconds
-    this.saveIntervalId = setInterval(() => {
-      if (!this.isReadOnly) {
-        if (this.changeDetected >= 0 && this.hasInterviewDesignChanged()) {
-          this.changeDetected++
-          // auto save every 4s
-          if (this.changeDetected > 2) {
-            this.save(false)
-          }
-        }
-      }
-    }, 2000)
-    this.initStudyInterviewDesignData()
-  },
-  beforeUnmount () {
-    if (this.saveIntervalId) {
-      clearInterval(this.saveIntervalId)
-    }
-  },
-  data () {
-    return {
-      saveIntervalId: null,
-      changeDetected: 0,
-      showEditDefinition: false,
-      revisionOptions: [],
-      interviewDesignData: {},
-      originalInterviewDesign: { steps: [], i18n: {} }
-    }
-  },
-  validations: {
-    interviewDesignData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      label: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
-    }
-  },
-  computed: {
-    study () {
-      return this.studyStore.study
+// data
+const tab = ref('design')
+const innerTab = ref('steps')
+const splitterModel = ref(15)
+const selected = ref([])
+const reload = ref(0)
+const paginationOpts = reactive({
+  descending: true,
+  page: 1,
+  rowsPerPage: 10
+})
+const saveIntervalId = ref(null)
+const changeDetected = ref(0)
+const showEditDefinition = ref(false)
+const revisionOptions = ref([])
+const interviewDesignData = reactive({})
+const originalInterviewDesign = reactive({ steps: [], i18n: {} })
+
+// validations
+const rules = {
+  interviewDesignData: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    interviewDesign () {
-      return this.interviewStore.interviewDesign
-    },
-    studyId () {
-      return this.$route.params.id
-    },
-    disableSave () {
-      return this.v$.interviewDesignData.$invalid
-    },
-    saveIcon () {
-      if (this.changeDetected < 0) {
-        return 'cloud_sync'
-      }
-      if (this.changeDetected === 0) {
-        return 'cloud_done'
-      }
-      return 'cloud_upload'
-    }
-  },
-  methods: {
-    asReference () {
-      return { steps: this.interviewDesignData.steps, i18n: this.interviewDesignData.i18n }
-    },
-    initOriginalInterviewDesign () {
-      this.originalInterviewDesign.steps = JSON.parse(JSON.stringify(this.interviewDesignData.steps))
-      this.originalInterviewDesign.i18n = this.interviewDesignData.i18n ? JSON.parse(JSON.stringify(this.interviewDesignData.i18n)) : undefined
-    },
-    async initStudyInterviewDesignData () {
-      await this.interviewStore.getInterviewDesign(this.$route.params.itwid)
-      this.interviewDesignData = JSON.parse(JSON.stringify(this.interviewDesign))
-      this.initOriginalInterviewDesign()
-      await this.studyStore.getStudy(this.interviewDesign.study)
-    },
-    hasInterviewDesignChanged () {
-      return JSON.stringify(this.originalInterviewDesign.steps) !== JSON.stringify(this.interviewDesignData.steps) ||
-        JSON.stringify(this.originalInterviewDesign.i18n) !== JSON.stringify(this.interviewDesignData.i18n)
-    },
-    async save (notification, interviewDesign) {
-      this.v$.$reset()
-      this.changeDetected = -1
-      const toSave = interviewDesign || toRaw(this.interviewDesignData)
-      return this.interviewStore.updateInterviewDesign(toSave, undefined, undefined, notification).then(() => {
-        this.initOriginalInterviewDesign()
-        this.changeDetected = 0
-      })
-    },
-    onEdit () {
-      this.showEditDefinition = true
+    label: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     }
   }
+}
+const v$ = useVuelidate(rules, { interviewDesignData })
+
+// computed
+const study = computed(() => studyStore.study)
+const interviewDesign = computed(() => interviewStore.interviewDesign)
+const studyId = computed(() => route.params.id)
+const disableSave = computed(() => v$.value.interviewDesignData.$invalid)
+const saveIcon = computed(() => {
+  if (changeDetected.value < 0) {
+    return 'cloud_sync'
+  }
+  if (changeDetected.value === 0) {
+    return 'cloud_done'
+  }
+  return 'cloud_upload'
 })
 
+// methods
+function asReference() {
+  return { steps: interviewDesignData.steps, i18n: interviewDesignData.i18n }
+}
+
+function initOriginalInterviewDesign() {
+  originalInterviewDesign.steps = JSON.parse(JSON.stringify(interviewDesignData.steps))
+  originalInterviewDesign.i18n = interviewDesignData.i18n ? JSON.parse(JSON.stringify(interviewDesignData.i18n)) : undefined
+}
+
+async function initStudyInterviewDesignData() {
+  await interviewStore.getInterviewDesign(route.params.itwid)
+  Object.assign(interviewDesignData, JSON.parse(JSON.stringify(interviewDesign.value)))
+  initOriginalInterviewDesign()
+  await studyStore.getStudy(interviewDesign.value.study)
+}
+
+function hasInterviewDesignChanged() {
+  return JSON.stringify(originalInterviewDesign.steps) !== JSON.stringify(interviewDesignData.steps) ||
+    JSON.stringify(originalInterviewDesign.i18n) !== JSON.stringify(interviewDesignData.i18n)
+}
+
+async function save(notification, interviewDesignArg) {
+  v$.value.$reset()
+  changeDetected.value = -1
+  const toSave = interviewDesignArg || toRaw(interviewDesignData)
+  return interviewStore.updateInterviewDesign(toSave, undefined, undefined, notification).then(() => {
+    initOriginalInterviewDesign()
+    changeDetected.value = 0
+  })
+}
+
+function onEdit() {
+  showEditDefinition.value = true
+}
+
+// mounted
+onMounted(() => {
+  // check for changes every 2 seconds
+  saveIntervalId.value = setInterval(() => {
+    if (!isReadOnly.value) {
+      if (changeDetected.value >= 0 && hasInterviewDesignChanged()) {
+        changeDetected.value++
+        // auto save every 4s
+        if (changeDetected.value > 2) {
+          save(false)
+        }
+      }
+    }
+  }, 2000)
+  initStudyInterviewDesignData()
+})
+
+onBeforeUnmount(() => {
+  if (saveIntervalId.value) {
+    clearInterval(saveIntervalId.value)
+  }
+})
 </script>

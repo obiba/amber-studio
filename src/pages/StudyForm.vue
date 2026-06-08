@@ -251,184 +251,172 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent, ref, toRaw, computed } from 'vue'
+<script setup>
+import { ref, reactive, computed, toRaw, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { useFormStore } from 'src/stores/form'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
-import FormMixin from '../mixins/FormMixin'
+import { useFormMixin } from '../composables/useFormMixin'
 import FormItems from 'src/components/forms/FormItems.vue'
 import FormTranslations from 'src/components/forms/FormTranslations.vue'
 import FormRevisions from 'src/components/forms/FormRevisions.vue'
 
-export default defineComponent({
-  components: {
-    FormItems,
-    FormTranslations,
-    FormRevisions
-  },
-  mixins: [FormMixin],
-  mounted () {
-    // check for changes every 2 seconds
-    this.saveIntervalId = setInterval(() => {
-      if (!this.isReadOnly) {
-        if (this.changeDetected >= 0 && this.originalSchemaStr !== JSON.stringify(this.studyFormData.schema)) {
-          this.changeDetected++
-          // auto save every 4s
-          if (this.changeDetected > 2) {
-            this.save(false)
-          }
-        }
-      }
-    }, 2000)
-    this.initStudyFormData()
-  },
-  beforeUnmount () {
-    if (this.saveIntervalId) {
-      clearInterval(this.saveIntervalId)
-    }
-  },
-  setup () {
-    const formStore = useFormStore()
-    const studyStore = useStudyStore()
-    const { isReadOnly } = useAuth()
+const route = useRoute()
+const formStore = useFormStore()
+const studyStore = useStudyStore()
+const { isReadOnly } = useAuth()
+const { generateIds, deleteIds } = useFormMixin()
 
-    return {
-      v$: useVuelidate(),
-      tab: ref('schema'),
-      innerTab: ref('items'),
-      splitterModel: ref(15),
-      importSchemaFile: ref(null),
-      reload: ref(0),
-      // Store refs
-      studyForm: computed(() => formStore.form),
-      isReadOnly
-    }
-  },
-  data () {
-    return {
-      saveIntervalId: null,
-      changeDetected: 0,
-      showEditDefinition: false,
-      showImportSchema: false,
-      showTag: false,
-      publicationComment: null,
-      studyFormData: {},
-      originalSchemaStr: null
-    }
-  },
-  validations: {
-    studyFormData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
-    }
-  },
-  computed: {
-    studyId () {
-      return this.$route.params.id
-    },
-    disableImportSchema () {
-      return this.importSchemaFile === null
-    },
-    disableTag () {
-      return this.changeDetected !== 0
-    },
-    disableSave () {
-      return this.v$.studyFormData.$invalid
-    },
-    saveIcon () {
-      if (this.changeDetected < 0) {
-        return 'cloud_sync'
-      }
-      if (this.changeDetected === 0) {
-        return 'cloud_done'
-      }
-      return 'cloud_upload'
-    }
-  },
-  methods: {
-    async initStudyFormData () {
-      const formStore = useFormStore()
-      const studyStore = useStudyStore()
-      await formStore.getForm(this.$route.params.fid)
-      this.studyFormData = JSON.parse(JSON.stringify(this.studyForm))
-      this.generateIds(this.studyFormData.schema.items)
-      this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
-      await studyStore.getStudy(this.studyForm.study)
-    },
-    async save (notification) {
-      const formStore = useFormStore()
-      this.v$.$reset()
-      this.changeDetected = -1
-      this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
-      const toSave = toRaw(this.studyFormData)
-      return formStore.updateForm(toSave, undefined, notification).then(() => {
-        this.changeDetected = 0
-      })
-    },
-    onExport () {
-      const data = JSON.parse(JSON.stringify(this.studyFormData.schema))
-      delete data._id
-      delete data.name
-      this.deleteIds(data.items)
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-      const a = document.createElement('a')
-      a.download = this.studyFormData.name + '-schema.json'
-      a.href = window.URL.createObjectURL(blob)
-      a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
-      a.click()
-      a.remove()
-    },
-    onImport () {
-      this.showImportSchema = true
-      this.importSchemaFile = null
-    },
-    onEdit () {
-      this.showEditDefinition = true
-    },
-    onTag () {
-      this.showTag = true
-      this.publicationComment = null
-    },
-    onReinstate () {
-      this.studyFormData = JSON.parse(JSON.stringify(this.studyForm))
-      this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
-      this.reload++
-    },
-    importSchema () {
-      if (this.importSchemaFile) {
-        const reader = new FileReader()
-        reader.readAsText(this.importSchemaFile, 'UTF-8')
-        reader.onload = evt => {
-          const schema = JSON.parse(evt.target.result)
-          this.studyFormData.schema = schema
-          if (this.studyFormData.schema.items) {
-            this.generateIds(this.studyFormData.schema.items)
-          }
-          this.save(true).then(() => this.onReinstate())
-        }
-        reader.onerror = evt => {
-          console.error(evt)
-        }
-      }
-    },
-    tag () {
-      const formStore = useFormStore()
-      const toSave = {
-        form: this.studyFormData._id,
-        study: this.studyFormData.study
-      }
-      if (this.publicationComment) {
-        toSave.comment = this.publicationComment
-      }
-      formStore.createFormRevision(toSave)
+// data
+const tab = ref('schema')
+const innerTab = ref('items')
+const splitterModel = ref(15)
+const importSchemaFile = ref(null)
+const reload = ref(0)
+const saveIntervalId = ref(null)
+const changeDetected = ref(0)
+const showEditDefinition = ref(false)
+const showImportSchema = ref(false)
+const showTag = ref(false)
+const publicationComment = ref(null)
+const studyFormData = reactive({})
+const originalSchemaStr = ref(null)
+
+// Store refs
+const studyForm = computed(() => formStore.form)
+
+// validations
+const rules = {
+  studyFormData: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     }
   }
+}
+const v$ = useVuelidate(rules, { studyFormData })
+
+// computed
+const studyId = computed(() => route.params.id)
+const disableImportSchema = computed(() => importSchemaFile.value === null)
+const disableTag = computed(() => changeDetected.value !== 0)
+const disableSave = computed(() => v$.value.studyFormData.$invalid)
+const saveIcon = computed(() => {
+  if (changeDetected.value < 0) {
+    return 'cloud_sync'
+  }
+  if (changeDetected.value === 0) {
+    return 'cloud_done'
+  }
+  return 'cloud_upload'
 })
 
+// methods
+async function initStudyFormData() {
+  await formStore.getForm(route.params.fid)
+  Object.assign(studyFormData, JSON.parse(JSON.stringify(studyForm.value)))
+  generateIds(studyFormData.schema.items)
+  originalSchemaStr.value = JSON.stringify(studyFormData.schema)
+  await studyStore.getStudy(studyForm.value.study)
+}
+
+async function save(notification) {
+  v$.value.$reset()
+  changeDetected.value = -1
+  originalSchemaStr.value = JSON.stringify(studyFormData.schema)
+  const toSave = toRaw(studyFormData)
+  return formStore.updateForm(toSave, undefined, notification).then(() => {
+    changeDetected.value = 0
+  })
+}
+
+function onExport() {
+  const data = JSON.parse(JSON.stringify(studyFormData.schema))
+  delete data._id
+  delete data.name
+  deleteIds(data.items)
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
+  const a = document.createElement('a')
+  a.download = studyFormData.name + '-schema.json'
+  a.href = window.URL.createObjectURL(blob)
+  a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
+  a.click()
+  a.remove()
+}
+
+function onImport() {
+  showImportSchema.value = true
+  importSchemaFile.value = null
+}
+
+function onEdit() {
+  showEditDefinition.value = true
+}
+
+function onTag() {
+  showTag.value = true
+  publicationComment.value = null
+}
+
+function onReinstate() {
+  Object.assign(studyFormData, JSON.parse(JSON.stringify(studyForm.value)))
+  originalSchemaStr.value = JSON.stringify(studyFormData.schema)
+  reload.value++
+}
+
+function importSchema() {
+  if (importSchemaFile.value) {
+    const reader = new FileReader()
+    reader.readAsText(importSchemaFile.value, 'UTF-8')
+    reader.onload = evt => {
+      const schema = JSON.parse(evt.target.result)
+      studyFormData.schema = schema
+      if (studyFormData.schema.items) {
+        generateIds(studyFormData.schema.items)
+      }
+      save(true).then(() => onReinstate())
+    }
+    reader.onerror = evt => {
+      console.error(evt)
+    }
+  }
+}
+
+function tag() {
+  const toSave = {
+    form: studyFormData._id,
+    study: studyFormData.study
+  }
+  if (publicationComment.value) {
+    toSave.comment = publicationComment.value
+  }
+  formStore.createFormRevision(toSave)
+}
+
+// mounted
+onMounted(() => {
+  // check for changes every 2 seconds
+  saveIntervalId.value = setInterval(() => {
+    if (!isReadOnly.value) {
+      if (changeDetected.value >= 0 && originalSchemaStr.value !== JSON.stringify(studyFormData.schema)) {
+        changeDetected.value++
+        // auto save every 4s
+        if (changeDetected.value > 2) {
+          save(false)
+        }
+      }
+    }
+  }, 2000)
+  initStudyFormData()
+})
+
+onBeforeUnmount(() => {
+  if (saveIntervalId.value) {
+    clearInterval(saveIntervalId.value)
+  }
+})
 </script>

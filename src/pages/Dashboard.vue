@@ -30,54 +30,45 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { ref, onMounted } from 'vue'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import studyService from '../services/study'
 import { useAuth } from 'src/composables/useAuth'
 import DashboardCounts from 'components/dashboard/DashboardCounts.vue'
 
-export default defineComponent({
-  name: 'Dashboard',
-  components: {
-    DashboardCounts
-  },
-  setup () {
-    const { isGuest, user } = useAuth()
-    return { isGuest, user }
-  },
-  data () {
-    return {
-      counts: {},
-      studies: [],
-      interviewDesigns: [],
-      myCampaigns: []
+const { isGuest, user } = useAuth()
+
+// data
+const counts = ref({})
+const studies = ref([])
+const interviewDesigns = ref([])
+const myCampaigns = ref([])
+
+// methods
+function getCampaignLabel(campaign) {
+  return `${studies.value.find(std => std._id === campaign.study).name} / ${interviewDesigns.value.find(itwd => itwd._id === campaign.interviewDesign).name} / ${campaign.name}`
+}
+
+// mounted
+onMounted(() => {
+  metricsService.getMetrics().then((result) => {
+    counts.value = result.counts ? result.counts : {}
+  })
+  studyService.getStudies().then((result) => {
+    studies.value = result.data ? result.data : []
+    if (studies.value.length > 0) {
+      interviewDesignService.getInterviewDesignsByStudy().then((result) => {
+        interviewDesigns.value = result.data ? result.data : []
+        if (interviewDesigns.value.length > 0) {
+          campaignService.getCampaigns().then((result) => {
+            myCampaigns.value = (result.data ? result.data : [])
+              .filter((c) => (c.investigators && c.investigators.includes(user.value._id)) || (c.supporters && c.supporters.includes(user.value._id)))
+          })
+        }
+      })
     }
-  },
-  mounted () {
-    metricsService.getMetrics().then((result) => {
-      this.counts = result.counts ? result.counts : {}
-    })
-    studyService.getStudies().then((result) => {
-      this.studies = result.data ? result.data : []
-      if (this.studies.length > 0) {
-        interviewDesignService.getInterviewDesignsByStudy(this.studyId).then((result) => {
-          this.interviewDesigns = result.data ? result.data : []
-          if (this.interviewDesigns.length > 0) {
-            campaignService.getCampaigns().then((result) => {
-              this.myCampaigns = (result.data ? result.data : [])
-                .filter((c) => (c.investigators && c.investigators.includes(this.user._id)) || (c.supporters && c.supporters.includes(this.user._id)))
-            })
-          }
-        })
-      }
-    })
-  },
-  methods: {
-    getCampaignLabel (campaign) {
-      return `${this.studies.find(std => std._id === campaign.study).name} / ${this.interviewDesigns.find(itwd => itwd._id === campaign.interviewDesign).name} / ${campaign.name}`
-    }
-  }
+  })
 })
 </script>
