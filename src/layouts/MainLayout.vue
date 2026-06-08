@@ -160,14 +160,14 @@ import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { defineComponent, ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import AuthMixin from '../mixins/AuthMixin'
+import { useAuth } from '../composables/useAuth'
 
 export default defineComponent({
   name: 'MainLayout',
-  mixins: [AuthMixin],
   setup () {
     const $q = useQuasar()
     const { locale } = useI18n({ useScope: 'global' })
+    const { userEmail, isGuest, isAdministrator } = useAuth()
 
     watch(locale, val => {
       // dynamic import, so loading on demand only
@@ -186,7 +186,10 @@ export default defineComponent({
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
-      settings
+      settings,
+      userEmail,
+      isGuest,
+      isAdministrator
     }
   },
   computed: {

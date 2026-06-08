@@ -88,7 +88,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
 import RecordsChart from 'components/dashboard/RecordsChart.vue'
 
 export default defineComponent({
@@ -102,7 +102,10 @@ export default defineComponent({
   components: {
     RecordsChart
   },
-  mixins: [AuthMixin],
+  setup () {
+    const { isAdministrator } = useAuth()
+    return { isAdministrator }
+  },
   computed: {
     case_reports_aggregations () {
       return this.counts && this.counts.case_reports_agg ? this.counts.case_reports_agg : []

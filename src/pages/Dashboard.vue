@@ -35,7 +35,7 @@ import { defineComponent } from 'vue'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import studyService from '../services/study'
-import AuthMixin from '../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
 import DashboardCounts from 'components/dashboard/DashboardCounts.vue'
 
 export default defineComponent({
@@ -43,7 +43,10 @@ export default defineComponent({
   components: {
     DashboardCounts
   },
-  mixins: [AuthMixin],
+  setup () {
+    const { isGuest, user } = useAuth()
+    return { isGuest, user }
+  },
   data () {
     return {
       counts: {},

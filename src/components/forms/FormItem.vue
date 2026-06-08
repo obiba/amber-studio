@@ -146,7 +146,7 @@ import { marked } from 'marked'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
 import { settings } from '../../boot/settings'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
 
 import AutocompleteItem from './items/AutocompleteItem.vue'
 import CheckboxGroupItem from './items/CheckboxGroupItem.vue'
@@ -173,8 +173,8 @@ export default defineComponent({
   components: { BlitzForm },
   props: ['modelValue', 'i18n'],
   emits: ['update:modelValue'],
-  mixins: [AuthMixin],
   setup () {
+    const { isReadOnly } = useAuth()
     const ccLicenses = [
       {
         value: 'cc-by-40',
@@ -209,6 +209,7 @@ export default defineComponent({
     const { locale } = useI18n({ useScope: 'global' })
 
     return {
+      isReadOnly,
       remountCounter: 0,
       tab: ref('design'),
       types: [

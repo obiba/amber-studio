@@ -530,13 +530,12 @@
 import { defineComponent, ref } from 'vue'
 import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
 import { participantService } from '../../services/interview'
 import { errorHandler } from '../../boot/errors'
 
 export default defineComponent({
   name: 'Participants',
-  mixins: [AuthMixin],
   props: {
     campaign: {
       type: Object,
@@ -544,7 +543,9 @@ export default defineComponent({
     }
   },
   setup () {
+    const { isReadOnly } = useAuth()
     return {
+      isReadOnly,
       tableRef: ref(),
       showEditParticipant: ref(false),
       showViewParticipant: ref(false),

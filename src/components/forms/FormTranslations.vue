@@ -324,15 +324,16 @@ import { locales } from '../../boot/i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { Notify } from 'quasar'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
 
 export default defineComponent({
   name: 'FormTranslations',
   props: ['modelValue'],
   emits: ['update:modelValue'],
-  mixins: [AuthMixin],
   setup () {
+    const { isReadOnly } = useAuth()
     return {
+      isReadOnly,
       locales: locales,
       v$: useVuelidate(),
       selected: ref([]),

@@ -173,7 +173,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
 import FormMixin from '../../mixins/FormMixin'
 import FormItem from 'src/components/forms/FormItem.vue'
 
@@ -184,9 +184,11 @@ export default defineComponent({
   components: {
     FormItem
   },
-  mixins: [AuthMixin, FormMixin],
+  mixins: [FormMixin],
   setup () {
+    const { isReadOnly } = useAuth()
     return {
+      isReadOnly,
       splitterModel: ref(20),
       formItemSelected: ref(null),
       selected: ref(null),
