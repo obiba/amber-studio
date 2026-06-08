@@ -67,16 +67,17 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import AuthMixin from '../mixins/AuthMixin'
+import DashboardCounts from 'components/dashboard/DashboardCounts.vue'
 
 export default defineComponent({
   name: 'Study',
   components: {
-    DashboardCounts: defineAsyncComponent(() => import('components/dashboard/DashboardCounts'))
+    DashboardCounts
   },
   mixins: [AuthMixin],
   data () {

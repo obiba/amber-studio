@@ -87,8 +87,9 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent } from 'vue'
 import AuthMixin from '../../mixins/AuthMixin'
+import RecordsChart from 'components/dashboard/RecordsChart.vue'
 
 export default defineComponent({
   name: 'DashboardCounts',
@@ -99,7 +100,7 @@ export default defineComponent({
     }
   },
   components: {
-    RecordsChart: defineAsyncComponent(() => import('components/dashboard/RecordsChart'))
+    RecordsChart
   },
   mixins: [AuthMixin],
   computed: {

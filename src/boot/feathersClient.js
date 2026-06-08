@@ -6,7 +6,7 @@ import { iff, discard } from 'feathers-hooks-common'
 import { axios } from './axios'
 import feathersVuex from '@feathersjs/vuex'
 
-const restClient = rest(process.env.API)
+const restClient = rest(import.meta.env.VITE_API || import.meta.env.API)
 
 const feathersClient = feathers()
   .configure(restClient.axios(axios))

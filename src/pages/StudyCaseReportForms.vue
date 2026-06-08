@@ -14,11 +14,12 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent } from 'vue'
+import CaseReportForms from 'src/components/crfs/CaseReportForms.vue'
 
 export default defineComponent({
   components: {
-    CaseReportForms: defineAsyncComponent(() => import('src/components/crfs/CaseReportForms.vue'))
+    CaseReportForms
   }
 })
 </script>

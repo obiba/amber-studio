@@ -166,16 +166,19 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, defineAsyncComponent, ref, toRaw } from 'vue'
+import { defineComponent, ref, toRaw } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import AuthMixin from '../mixins/AuthMixin'
+import InterviewDesignSteps from 'src/components/interviews/InterviewDesignSteps.vue'
+import InterviewDesignTranslations from 'src/components/interviews/InterviewDesignTranslations.vue'
+import Campaigns from 'src/components/interviews/Campaigns.vue'
 
 export default defineComponent({
   components: {
-    InterviewDesignSteps: defineAsyncComponent(() => import('src/components/interviews/InterviewDesignSteps.vue')),
-    InterviewDesignTranslations: defineAsyncComponent(() => import('src/components/interviews/InterviewDesignTranslations.vue')),
-    Campaigns: defineAsyncComponent(() => import('src/components/interviews/Campaigns.vue'))
+    InterviewDesignSteps,
+    InterviewDesignTranslations,
+    Campaigns
   },
   mixins: [AuthMixin],
   mounted () {

@@ -14,11 +14,12 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent } from 'vue'
+import Forms from 'components/forms/Forms.vue'
 
 export default defineComponent({
   components: {
-    Forms: defineAsyncComponent(() => import('components/forms/Forms.vue'))
+    Forms
   }
 })
 </script>

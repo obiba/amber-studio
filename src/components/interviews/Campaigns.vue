@@ -666,18 +666,21 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, defineAsyncComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService, metricsService } from '../../services/utils'
 import AuthMixin from '../../mixins/AuthMixin'
 import { date } from 'quasar'
+import Participants from 'src/components/interviews/Participants.vue'
+import RecordsChart from 'components/dashboard/RecordsChart.vue'
+import PieChart from 'components/charts/PieChart.vue'
 
 export default defineComponent({
   components: {
-    Participants: defineAsyncComponent(() => import('src/components/interviews/Participants.vue')),
-    RecordsChart: defineAsyncComponent(() => import('components/dashboard/RecordsChart')),
-    PieChart: defineAsyncComponent(() => import('components/charts/PieChart'))
+    Participants,
+    RecordsChart,
+    PieChart
   },
   name: 'StudyCaseReportForms',
   mixins: [AuthMixin],

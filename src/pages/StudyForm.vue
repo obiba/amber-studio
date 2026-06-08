@@ -253,17 +253,20 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { defineComponent, defineAsyncComponent, ref, toRaw } from 'vue'
+import { defineComponent, ref, toRaw } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import AuthMixin from '../mixins/AuthMixin'
 import FormMixin from '../mixins/FormMixin'
+import FormItems from 'src/components/forms/FormItems.vue'
+import FormTranslations from 'src/components/forms/FormTranslations.vue'
+import FormRevisions from 'src/components/forms/FormRevisions.vue'
 
 export default defineComponent({
   components: {
-    FormItems: defineAsyncComponent(() => import('src/components/forms/FormItems.vue')),
-    FormTranslations: defineAsyncComponent(() => import('src/components/forms/FormTranslations.vue')),
-    FormRevisions: defineAsyncComponent(() => import('src/components/forms/FormRevisions.vue'))
+    FormItems,
+    FormTranslations,
+    FormRevisions
   },
   mixins: [AuthMixin, FormMixin],
   mounted () {

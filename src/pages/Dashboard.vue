@@ -31,16 +31,17 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent } from 'vue'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import studyService from '../services/study'
 import AuthMixin from '../mixins/AuthMixin'
+import DashboardCounts from 'components/dashboard/DashboardCounts.vue'
 
 export default defineComponent({
   name: 'Dashboard',
   components: {
-    DashboardCounts: defineAsyncComponent(() => import('components/dashboard/DashboardCounts'))
+    DashboardCounts
   },
   mixins: [AuthMixin],
   data () {

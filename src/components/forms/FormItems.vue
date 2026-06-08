@@ -172,16 +172,17 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import AuthMixin from '../../mixins/AuthMixin'
 import FormMixin from '../../mixins/FormMixin'
+import FormItem from 'src/components/forms/FormItem.vue'
 
 export default defineComponent({
   name: 'FormItems',
   props: ['modelValue'],
   emits: ['update:modelValue'],
   components: {
-    FormItem: defineAsyncComponent(() => import('src/components/forms/FormItem.vue'))
+    FormItem
   },
   mixins: [AuthMixin, FormMixin],
   setup () {

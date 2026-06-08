@@ -43,7 +43,7 @@ import userService from '../services/user'
 import { Notify } from 'quasar'
 import { settings } from '../boot/settings'
 
-import Banner from 'components/Banner'
+import Banner from 'components/Banner.vue'
 
 export default defineComponent({
   components: { Banner },

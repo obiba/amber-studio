@@ -14,11 +14,12 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+import { defineComponent } from 'vue'
+import Interviews from 'src/components/interviews/Interviews.vue'
 
 export default defineComponent({
   components: {
-    Interviews: defineAsyncComponent(() => import('src/components/interviews/Interviews.vue'))
+    Interviews
   }
 })
 </script>
