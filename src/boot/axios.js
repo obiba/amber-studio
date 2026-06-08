@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { LoadingBar } from 'quasar'
 
-const api = axios.create({ baseURL: import.meta.env.VITE_API || import.meta.env.API })
+const api = axios.create({ baseURL: process.env.API })
 
 api.defaults.withCredentials = true
 

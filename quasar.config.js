@@ -11,12 +11,13 @@
 import { configure } from 'quasar/wrappers'
 import { fileURLToPath } from 'node:url'
 import { readFileSync } from 'node:fs'
+import path from 'node:path'
 
-const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'))
-const version = packageJson.version || '0'
-const settingsJson = readFileSync('./settings.json', 'utf8')
+export default configure(function (ctx) {
+  const packageJson = readFileSync('./package.json', 'utf8')
+  const version = JSON.parse(packageJson).version || 0
+  const settingsJson = readFileSync('./settings.json', 'utf8')
 
-export default configure(function (/* ctx */) {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -44,14 +45,7 @@ export default configure(function (/* ctx */) {
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
-      // 'ionicons-v4',
-      // 'mdi-v7',
-      'fontawesome-v6',
-      // 'eva-icons',
-      // 'themify',
-      // 'line-awesome',
-      // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
-
+      'fontawesome-v7',
       'roboto-font', // optional, you are not bound to it
       'material-icons' // optional, you are not bound to it
     ],
@@ -59,8 +53,8 @@ export default configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
-        node: 'node20'
+        browser: 'baseline-widely-available',
+        node: 'node22'
       },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'
@@ -68,56 +62,26 @@ export default configure(function (/* ctx */) {
 
       // Environment variables
       env: {
-        API: process.env.VITE_API || 'http://localhost:3030',
-        RECAPTCHA_SITE_KEY: process.env.VITE_RECAPTCHA_SITE_KEY || '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u',
-        SETTINGS: process.env.VITE_SETTINGS || settingsJson,
-        REGISTER_ENABLED: process.env.VITE_RECAPTCHA_SITE_KEY !== undefined ? 'true' : 'false',
+        API: ctx.dev ? 'http://localhost:3030' : process.env.AMBER_URL,
+        RECAPTCHA_SITE_KEY: ctx.dev ? '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u' : process.env.RECAPTCHA_SITE_KEY,
+        SETTINGS: ctx.dev ? settingsJson : (process.env.SETTINGS ? process.env.SETTINGS : settingsJson),
+        REGISTER_ENABLED: ctx.dev ? 'true' : String(process.env.RECAPTCHA_SITE_KEY !== undefined),
         VERSION: version
       },
 
-      publicPath: process.env.PATH_PREFIX || '/',
-      rtl: true, // https://quasar.dev/options/rtl-support
-
-      // Vite build options
-      extendViteConf (viteConf, { isServer, isClient }) {
-        // Add any Vite-specific configuration here
-        viteConf.resolve = viteConf.resolve || {}
-        viteConf.resolve.alias = viteConf.resolve.alias || {}
-      },
-
-      viteVuePluginOptions: {},
-
-      // Rollup options for manual chunking
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // Vendor chunks for better caching
-            'vendor-vue': ['vue', 'vue-router', 'pinia'],
-            'vendor-quasar': ['quasar'],
-            'vendor-feathers': [
-              '@feathersjs/client',
-              '@feathersjs/authentication-client',
-              '@feathersjs/feathers',
-              '@feathersjs/rest-client',
-              'feathers-pinia'
-            ],
-            'vendor-utils': [
-              'axios',
-              'echarts',
-              'marked',
-              'uuid'
-            ],
-            'vendor-validation': [
-              '@vuelidate/core',
-              '@vuelidate/validators'
-            ],
-            'vendor-blitzar': [
-              '@blitzar/form',
-              '@blitzar/types',
-              '@blitzar/utils'
-            ]
-          }
+      publicPath: process.env.PATH_PREFIX ? process.env.PATH_PREFIX : '/',
+      
+      // https://v2.quasar.dev/quasar-cli-vite/handling-vite
+      extendViteConf (viteConf) {
+        const __dirname = fileURLToPath(new URL('.', import.meta.url))
+        
+        if (!viteConf.resolve) {
+          viteConf.resolve = {}
         }
+        if (!viteConf.resolve.alias) {
+          viteConf.resolve.alias = {}
+        }
+        viteConf.resolve.alias.vue = path.resolve(__dirname, './node_modules/vue')
       }
     },
 
