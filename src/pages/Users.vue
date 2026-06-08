@@ -435,13 +435,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, email } from '../boot/vuelidate'
 import { date } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
+import { useAdminStore } from 'src/stores/admin'
 
 export default {
   mounted: function () {
@@ -450,13 +451,18 @@ export default {
     this.initGroups()
   },
   setup () {
+    const adminStore = useAdminStore()
+    const vuexStore = useStore()
+
     return {
       v$: useVuelidate(),
       selected: ref([]),
       filter: ref(''),
       rolesFilter: ref([]),
       selectedGroup: ref(null),
-      settings
+      settings,
+      adminStore,
+      vuexStore
     }
   },
   data () {
@@ -586,10 +592,12 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      users: state => state.admin.users,
-      groups: state => state.admin.groups
-    }),
+    users () {
+      return this.adminStore.users
+    },
+    groups () {
+      return this.adminStore.groups
+    },
     disableCreateProfile () {
       return this.v$.newProfileData.$invalid
     },
@@ -623,13 +631,11 @@ export default {
   },
   methods: {
     async initGroups () {
-      await this.getGroups({
-        paginationOpts: {
-          rowsPerPage: 0,
-          page: 1,
-          sortBy: 'name',
-          descending: -1
-        }
+      await this.adminStore.getGroups({
+        rowsPerPage: 0,
+        page: 1,
+        sortBy: 'name',
+        descending: -1
       })
       this.allGroupsOptions = this.groups ? this.groups.map(g => {
         return {
@@ -641,25 +647,18 @@ export default {
       this.groupsOptions = this.allGroupsOptions
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.admin.userPaginationOpts
+      this.paginationOpts = this.adminStore.userPaginationOpts
     },
     async getTableUsers (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('admin/setUserPagination', {
-          userPaginationOpts: requestProp.pagination
-        })
-        await this.getUsers({ paginationOpts: requestProp.pagination, filter: requestProp.filter, roles: this.rolesFilter })
+        this.adminStore.setUserPagination(requestProp.pagination)
+        await this.adminStore.getUsers(requestProp.pagination, requestProp.filter, this.rolesFilter)
       } else {
-        await this.getUsers({ paginationOpts: this.paginationOpts, filter: this.filter, roles: this.rolesFilter })
+        await this.adminStore.getUsers(this.paginationOpts, this.filter, this.rolesFilter)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.admin.userPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.adminStore.userPaginationOpts.rowsNumber
     },
-    ...mapActions({
-      getUsers: 'admin/getUsers',
-      getGroups: 'admin/getGroups',
-      updateGroup: 'admin/updateGroup'
-    }),
     createUser () {
       this.newProfileData = {
         language: locales[0],
@@ -684,7 +683,7 @@ export default {
       }
     },
     resendEmailVerification (email) {
-      this.$store.dispatch('account/resendVerification', {
+      this.vuexStore.dispatch('account/resendVerification', {
         email: email
       })
     },
@@ -692,29 +691,19 @@ export default {
       this.v$.$reset()
       // create
       const userData = { ...this.newProfileData }
-      this.$store.dispatch('admin/createUser', {
-        user: userData,
-        paginationOpts: this.paginationOpts
-      })
+      await this.adminStore.createUser(userData, this.paginationOpts)
     },
     resetPassword (email) {
-      this.$store
-        .dispatch('account/forgotPassword', {
-          emailAddress: email
-        })
+      this.vuexStore.dispatch('account/forgotPassword', {
+        emailAddress: email
+      })
     },
     deleteUser () {
-      this.$store.dispatch('admin/deleteUser', {
-        id: this.selectedUser._id,
-        paginationOpts: this.paginationOpts
-      })
+      this.adminStore.deleteUser(this.selectedUser._id, this.paginationOpts)
     },
     deleteUsers () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('admin/deleteUsers', {
-        ids: ids,
-        paginationOpts: this.paginationOpts
-      })
+      this.adminStore.deleteUsers(ids, this.paginationOpts)
       this.selected = []
     },
     groupUsers () {
@@ -725,9 +714,7 @@ export default {
       } else {
         this.selected.filter(u => !toSave.users.includes(u._id)).forEach(u => toSave.users.push(u._id))
       }
-      this.updateGroup({
-        group: toSave
-      })
+      this.adminStore.updateGroup(toSave)
     },
     copyUserProfile (user) {
       return {
@@ -744,20 +731,12 @@ export default {
     async activeateUser (user) {
       const profileData = this.copyUserProfile(user)
       profileData.role = 'guest'
-      this.$store.dispatch('admin/updateUser', {
-        user: profileData,
-        id: user._id,
-        paginationOpts: this.paginationOpts
-      })
+      await this.adminStore.updateUser(profileData, user._id, this.paginationOpts)
     },
     async deactiveateUser (user) {
       const profileData = this.copyUserProfile(user)
       profileData.role = 'inactive'
-      this.$store.dispatch('admin/updateUser', {
-        user: profileData,
-        id: user._id,
-        paginationOpts: this.paginationOpts
-      })
+      await this.adminStore.updateUser(profileData, user._id, this.paginationOpts)
     },
     filterGroupsOptions (val, update) {
       update(() => {

@@ -103,11 +103,11 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
+import { useAdminStore } from 'src/stores/admin'
 
 export default defineComponent({
   mounted: function () {
@@ -115,10 +115,13 @@ export default defineComponent({
   },
   setup () {
     const userOptions = ref([])
+    const adminStore = useAdminStore()
+
     return {
       v$: useVuelidate(),
       userOptions,
-      settings
+      settings,
+      adminStore
     }
   },
   data () {
@@ -142,38 +145,34 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      filteredUsers: state => state.admin.users,
-      group: state => state.admin.group,
-      groupUsers: state => state.admin.groupUsers
-    }),
+    filteredUsers () {
+      return this.adminStore.users
+    },
+    group () {
+      return this.adminStore.group
+    },
+    groupUsers () {
+      return this.adminStore.groupUsers
+    },
     currentGroup () {
-      return this.$store.state.admin.group
+      return this.adminStore.group
     },
     disableSaveGroup () {
       return this.v$.groupData.$invalid
     }
   },
   methods: {
-    ...mapActions({
-      getUsers: 'admin/getUsers',
-      getGroup: 'admin/getGroup',
-      getGroupUsers: 'admin/getGroupUsers',
-      updateGroup: 'admin/updateGroup'
-    }),
     async initData () {
-      await this.getGroup({ id: this.$route.params.id })
+      await this.adminStore.getGroup(this.$route.params.id)
       this.groupData = { ...this.group }
-      await this.getGroupUsers({ group: this.group })
+      await this.adminStore.getGroupUsers(this.group)
       this.groupData.users = [...this.groupUsers]
     },
     async saveGroup () {
       this.v$.$reset()
       const toSave = { ...this.groupData }
       toSave.users = this.groupData.users.map(u => u._id)
-      this.updateGroup({
-        group: toSave
-      })
+      await this.adminStore.updateGroup(toSave)
     },
     filterUserOptions (val, update, abort) {
       const filter = val.trim()
@@ -185,15 +184,12 @@ export default defineComponent({
         return
       }
       this.userOptionsLoading = true
-      this.getUsers({
-        paginationOpts: {
-          sortBy: 'email',
-          rowsPerPage: 5,
-          page: 1,
-          descending: -1
-        },
-        filter: filter
-      }).then(() => {
+      this.adminStore.getUsers({
+        sortBy: 'email',
+        rowsPerPage: 5,
+        page: 1,
+        descending: -1
+      }, filter).then(() => {
         update(() => {
           this.userOptions = this.filteredUsers.map(u => {
             return {

@@ -202,11 +202,11 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
+import { useAdminStore } from 'src/stores/admin'
 
 export default {
   mounted: function () {
@@ -214,11 +214,14 @@ export default {
     this.setPagination()
   },
   setup () {
+    const adminStore = useAdminStore()
+
     return {
       v$: useVuelidate(),
       selected: ref([]),
       filter: ref(''),
-      settings
+      settings,
+      adminStore
     }
   },
   data () {
@@ -290,9 +293,9 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      groups: state => state.admin.groups
-    }),
+    groups () {
+      return this.adminStore.groups
+    },
     disableCreateGroup () {
       return this.v$.newGroupData.$invalid
     }
@@ -305,23 +308,18 @@ export default {
       return text
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.admin.groupPaginationOpts
+      this.paginationOpts = this.adminStore.groupPaginationOpts
     },
     async getTableGroups (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('admin/setGroupPagination', {
-          groupPaginationOpts: requestProp.pagination
-        })
-        await this.getGroups({ paginationOpts: requestProp.pagination, filter: requestProp.filter })
+        this.adminStore.setGroupPagination(requestProp.pagination)
+        await this.adminStore.getGroups(requestProp.pagination, requestProp.filter)
       } else {
-        await this.getGroups({ paginationOpts: this.paginationOpts, filter: this.filter })
+        await this.adminStore.getGroups(this.paginationOpts, this.filter)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.admin.groupPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.adminStore.groupPaginationOpts.rowsNumber
     },
-    ...mapActions({
-      getGroups: 'admin/getGroups'
-    }),
     createGroup () {
       this.newGroupData = {}
       this.showCreateGroup = true
@@ -340,23 +338,14 @@ export default {
       this.v$.$reset()
       // create
       const createdData = { ...this.newGroupData }
-      this.$store.dispatch('admin/createGroup', {
-        group: createdData,
-        paginationOpts: this.paginationOpts
-      })
+      await this.adminStore.createGroup(createdData, this.paginationOpts)
     },
     deleteGroup () {
-      this.$store.dispatch('admin/deleteGroup', {
-        id: this.selectedGroup._id,
-        paginationOpts: this.paginationOpts
-      })
+      this.adminStore.deleteGroup(this.selectedGroup._id, this.paginationOpts)
     },
     deleteGroups () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('admin/deleteGroups', {
-        ids: ids,
-        paginationOpts: this.paginationOpts
-      })
+      this.adminStore.deleteGroups(ids, this.paginationOpts)
       this.selected = []
     }
   }

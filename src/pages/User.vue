@@ -173,12 +173,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
+import { useAdminStore } from 'src/stores/admin'
 
 export default defineComponent({
   mounted: function () {
@@ -186,10 +186,13 @@ export default defineComponent({
   },
   setup () {
     const userOptions = ref([])
+    const adminStore = useAdminStore()
+
     return {
       v$: useVuelidate(),
       userOptions,
-      settings
+      settings,
+      adminStore
     }
   },
   data () {
@@ -236,11 +239,11 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      user: state => state.admin.user
-    }),
+    user () {
+      return this.adminStore.user
+    },
     currentUser () {
-      return this.$store.state.admin.user
+      return this.adminStore.user
     },
     disableSaveUser () {
       return this.v$.profileData.$invalid
@@ -274,10 +277,6 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getUser: 'admin/getUser',
-      updateUser: 'admin/updateUser'
-    }),
     copyUserProfile (user) {
       return {
         firstname: user.firstname,
@@ -293,16 +292,13 @@ export default defineComponent({
       }
     },
     async initData () {
-      await this.getUser({ id: this.$route.params.id })
+      await this.adminStore.getUser(this.$route.params.id)
       this.profileData = this.copyUserProfile(this.user)
     },
     async saveUser () {
       this.v$.$reset()
       const toSave = { ...this.profileData }
-      this.updateUser({
-        user: toSave,
-        id: this.user._id
-      })
+      await this.adminStore.updateUser(toSave, this.user._id)
     },
     async resetTotp2FA () {
       this.profileData.totp2faEnabled = false

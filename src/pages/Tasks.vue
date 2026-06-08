@@ -218,10 +218,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { ref } from 'vue'
 import { settings } from '../boot/settings'
 import { date } from 'quasar'
+import { useAdminStore } from 'src/stores/admin'
 
 const types = [
   'participants-info-activate',
@@ -238,10 +238,13 @@ export default {
     this.setPagination()
   },
   setup () {
+    const adminStore = useAdminStore()
+
     return {
       selected: ref([]),
       filter: ref(''),
-      settings
+      settings,
+      adminStore
     }
   },
   data () {
@@ -305,9 +308,9 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      tasks: state => state.admin.tasks
-    }),
+    tasks () {
+      return this.adminStore.tasks
+    },
     typeOptions () {
       return types.map((opt) => {
         return {
@@ -331,23 +334,18 @@ export default {
       return text
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.admin.taskPaginationOpts
+      this.paginationOpts = this.adminStore.taskPaginationOpts
     },
     async getTableTasks (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('admin/setTaskPagination', {
-          taskPaginationOpts: requestProp.pagination
-        })
-        await this.getTasks({ paginationOpts: requestProp.pagination, filter: requestProp.filter })
+        this.adminStore.setTaskPagination(requestProp.pagination)
+        await this.adminStore.getTasks(requestProp.pagination, requestProp.filter)
       } else {
-        await this.getTasks({ paginationOpts: this.paginationOpts, filter: this.filter })
+        await this.adminStore.getTasks(this.paginationOpts, this.filter)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.admin.taskPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.adminStore.taskPaginationOpts.rowsNumber
     },
-    ...mapActions({
-      getTasks: 'admin/getTasks'
-    }),
     createTask () {
       this.newTaskData = {
         type: types[0]
@@ -371,23 +369,14 @@ export default {
     async saveTask () {
       // create
       const createdData = { ...this.newTaskData }
-      this.$store.dispatch('admin/createTask', {
-        task: createdData,
-        paginationOpts: this.paginationOpts
-      })
+      await this.adminStore.createTask(createdData, this.paginationOpts)
     },
     deleteTask () {
-      this.$store.dispatch('admin/deleteTask', {
-        id: this.selectedTask._id,
-        paginationOpts: this.paginationOpts
-      })
+      this.adminStore.deleteTask(this.selectedTask._id, this.paginationOpts)
     },
     deleteTasks () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('admin/deleteTasks', {
-        ids: ids,
-        paginationOpts: this.paginationOpts
-      })
+      this.adminStore.deleteTasks(ids, this.paginationOpts)
       this.selected = []
     }
   }
