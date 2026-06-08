@@ -222,7 +222,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { date } from 'quasar'
 import { useI18n } from 'vue-i18n'
@@ -249,11 +249,7 @@ const paginationOpts = ref({
   rowsPerPage: 10,
   rowsNumber: 10
 })
-const studyData = reactive({
-  name: '',
-  description: ''
-})
-const newStudyData = reactive({
+const newStudyData = ref({
   name: '',
   description: '',
   services: undefined
@@ -335,22 +331,22 @@ function makeEllipsis(text, length) {
 }
 
 function setPagination() {
-  Object.assign(paginationOpts, studyStore.studyPaginationOpts)
+  paginationOpts.value = { ...studyStore.studyPaginationOpts }
 }
 
 async function getTableStudies(requestProp) {
   if (requestProp) {
-    Object.assign(paginationOpts, requestProp.pagination)
+    paginationOpts.value = { ...requestProp.pagination }
     studyStore.setStudyPagination(requestProp.pagination)
     await studyStore.getStudies(requestProp.pagination, requestProp.filter)
   } else {
-    await studyStore.getStudies(paginationOpts, filter.value)
+    await studyStore.getStudies(paginationOpts.value, filter.value)
   }
-  paginationOpts.rowsNumber = studyStore.studyPaginationOpts.rowsNumber
+  paginationOpts.value.rowsNumber = studyStore.studyPaginationOpts.rowsNumber
 }
 
 function createStudy() {
-  Object.assign(newStudyData, { name: '', description: '', services: undefined })
+  newStudyData.value = { name: '', description: '', services: undefined }
   showCreateStudy.value = true
   selectedStudy.value = undefined
 }
@@ -369,17 +365,17 @@ function confirmDeleteStudies() {
 async function saveStudy() {
   v$.value.$reset()
   // create
-  const createdData = { ...newStudyData }
-  studyStore.createStudy(createdData, paginationOpts)
+  const createdData = { ...newStudyData.value }
+  studyStore.createStudy(createdData, paginationOpts.value)
 }
 
 function deleteStudy() {
-  studyStore.deleteStudy(selectedStudy.value._id, paginationOpts)
+  studyStore.deleteStudy(selectedStudy.value._id, paginationOpts.value)
 }
 
 function deleteStudies() {
   const ids = selected.value.map(u => u._id)
-  studyStore.deleteStudies(ids, paginationOpts)
+  studyStore.deleteStudies(ids, paginationOpts.value)
   selected.value = []
 }
 

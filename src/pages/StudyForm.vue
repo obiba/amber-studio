@@ -252,7 +252,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, toRaw, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, toRaw, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
@@ -318,30 +318,30 @@ const saveIcon = computed(() => {
 // methods
 async function initStudyFormData() {
   await formStore.getForm(route.params.fid)
-  Object.assign(studyFormData, JSON.parse(JSON.stringify(studyForm.value)))
-  generateIds(studyFormData.schema.items)
-  originalSchemaStr.value = JSON.stringify(studyFormData.schema)
+  studyFormData.value = JSON.parse(JSON.stringify(studyForm.value))
+  generateIds(studyFormData.value.schema.items)
+  originalSchemaStr.value = JSON.stringify(studyFormData.value.schema)
   await studyStore.getStudy(studyForm.value.study)
 }
 
 async function save(notification) {
   v$.value.$reset()
   changeDetected.value = -1
-  originalSchemaStr.value = JSON.stringify(studyFormData.schema)
-  const toSave = toRaw(studyFormData)
+  originalSchemaStr.value = JSON.stringify(studyFormData.value.schema)
+  const toSave = toRaw(studyFormData.value)
   return formStore.updateForm(toSave, undefined, notification).then(() => {
     changeDetected.value = 0
   })
 }
 
 function onExport() {
-  const data = JSON.parse(JSON.stringify(studyFormData.schema))
+  const data = JSON.parse(JSON.stringify(studyFormData.value.schema))
   delete data._id
   delete data.name
   deleteIds(data.items)
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
   const a = document.createElement('a')
-  a.download = studyFormData.name + '-schema.json'
+  a.download = studyFormData.value.name + '-schema.json'
   a.href = window.URL.createObjectURL(blob)
   a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
   a.click()
@@ -363,8 +363,8 @@ function onTag() {
 }
 
 function onReinstate() {
-  Object.assign(studyFormData, JSON.parse(JSON.stringify(studyForm.value)))
-  originalSchemaStr.value = JSON.stringify(studyFormData.schema)
+  studyFormData.value = JSON.parse(JSON.stringify(studyForm.value))
+  originalSchemaStr.value = JSON.stringify(studyFormData.value.schema)
   reload.value++
 }
 
@@ -374,9 +374,9 @@ function importSchema() {
     reader.readAsText(importSchemaFile.value, 'UTF-8')
     reader.onload = evt => {
       const schema = JSON.parse(evt.target.result)
-      studyFormData.schema = schema
-      if (studyFormData.schema.items) {
-        generateIds(studyFormData.schema.items)
+      studyFormData.value.schema = schema
+      if (studyFormData.value.schema.items) {
+        generateIds(studyFormData.value.schema.items)
       }
       save(true).then(() => onReinstate())
     }
@@ -388,8 +388,8 @@ function importSchema() {
 
 function tag() {
   const toSave = {
-    form: studyFormData._id,
-    study: studyFormData.study
+    form: studyFormData.value._id,
+    study: studyFormData.value.study
   }
   if (publicationComment.value) {
     toSave.comment = publicationComment.value
@@ -402,7 +402,7 @@ onMounted(() => {
   // check for changes every 2 seconds
   saveIntervalId.value = setInterval(() => {
     if (!isReadOnly.value) {
-      if (changeDetected.value >= 0 && originalSchemaStr.value !== JSON.stringify(studyFormData.schema)) {
+      if (changeDetected.value >= 0 && originalSchemaStr.value !== JSON.stringify(studyFormData.value.schema)) {
         changeDetected.value++
         // auto save every 4s
         if (changeDetected.value > 2) {

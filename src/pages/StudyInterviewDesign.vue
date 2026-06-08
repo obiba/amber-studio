@@ -233,30 +233,30 @@ const saveIcon = computed(() => {
 
 // methods
 function asReference() {
-  return { steps: interviewDesignData.steps, i18n: interviewDesignData.i18n }
+  return { steps: interviewDesignData.value.steps, i18n: interviewDesignData.value.i18n }
 }
 
 function initOriginalInterviewDesign() {
-  originalInterviewDesign.steps = JSON.parse(JSON.stringify(interviewDesignData.steps))
-  originalInterviewDesign.i18n = interviewDesignData.i18n ? JSON.parse(JSON.stringify(interviewDesignData.i18n)) : undefined
+  originalInterviewDesign.steps = JSON.parse(JSON.stringify(interviewDesignData.value.steps))
+  originalInterviewDesign.i18n = interviewDesignData.value.i18n ? JSON.parse(JSON.stringify(interviewDesignData.value.i18n)) : undefined
 }
 
 async function initStudyInterviewDesignData() {
   await interviewStore.getInterviewDesign(route.params.itwid)
-  Object.assign(interviewDesignData, JSON.parse(JSON.stringify(interviewDesign.value)))
+  interviewDesignData.value = JSON.parse(JSON.stringify(interviewDesign.value))
   initOriginalInterviewDesign()
   await studyStore.getStudy(interviewDesign.value.study)
 }
 
 function hasInterviewDesignChanged() {
-  return JSON.stringify(originalInterviewDesign.steps) !== JSON.stringify(interviewDesignData.steps) ||
-    JSON.stringify(originalInterviewDesign.i18n) !== JSON.stringify(interviewDesignData.i18n)
+  return JSON.stringify(originalInterviewDesign.steps) !== JSON.stringify(interviewDesignData.value.steps) ||
+    JSON.stringify(originalInterviewDesign.i18n) !== JSON.stringify(interviewDesignData.value.i18n)
 }
 
 async function save(notification, interviewDesignArg) {
   v$.value.$reset()
   changeDetected.value = -1
-  const toSave = interviewDesignArg || toRaw(interviewDesignData)
+  const toSave = interviewDesignArg || toRaw(interviewDesignData.value)
   return interviewStore.updateInterviewDesign(toSave, undefined, undefined, notification).then(() => {
     initOriginalInterviewDesign()
     changeDetected.value = 0

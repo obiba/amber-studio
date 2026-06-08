@@ -136,7 +136,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
@@ -152,7 +152,7 @@ const accountStore = useAccountStore()
 const adminStore = useAdminStore()
 
 // data
-const profileData = reactive({
+const profileData = ref({
   firstname: '',
   lastname: '',
   institution: '',
@@ -237,12 +237,12 @@ function copyUserProfile(userObj) {
 
 async function initData() {
   await adminStore.getUser(user.value._id)
-  Object.assign(profileData, copyUserProfile(currentUser.value))
+  profileData.value = copyUserProfile(currentUser.value)
 }
 
 async function saveUser() {
   v$.value.$reset()
-  const toSave = { ...profileData }
+  const toSave = { ...profileData.value }
   await accountStore.updateProfile(user.value._id, toSave)
 }
 

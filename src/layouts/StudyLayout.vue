@@ -238,7 +238,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
@@ -281,7 +281,7 @@ function toggleLeftDrawer() {
 
 // Data (formerly from data())
 const showEditDefinition = ref(false)
-const studyData = reactive({
+const studyData = ref({
   name: '',
   description: '',
   services: []
@@ -345,7 +345,7 @@ const hasInterviewService = computed(() =>
 // Methods
 async function initStudyData() {
   await studyStore.getStudy(route.params.id)
-  Object.assign(studyData, JSON.parse(JSON.stringify(study.value)))
+  studyData.value = JSON.parse(JSON.stringify(study.value))
 }
 
 function onEdit() {
@@ -354,7 +354,7 @@ function onEdit() {
 
 async function save() {
   v$.value.$reset()
-  const toSave = { ...studyData }
+  const toSave = { ...studyData.value }
   studyStore.updateStudy(toSave)
 }
 
