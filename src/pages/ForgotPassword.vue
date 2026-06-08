@@ -58,8 +58,9 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { required, email } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
 import useVuelidate from '@vuelidate/core'
@@ -67,42 +68,33 @@ import { useAccountStore } from 'src/stores/account'
 
 import Banner from 'components/Banner'
 
-export default defineComponent({
-  components: { Banner },
-  setup () {
-    const accountStore = useAccountStore()
-    
-    return {
-      settings,
-      accountStore
-    }
-  },
-  data () {
-    return {
-      v$: useVuelidate(),
-      resetEmail: ''
-    }
-  },
-  validations: {
-    resetEmail: {
-      required,
-      email
-    }
-  },
-  computed: {
-    disableSubmit () {
-      return this.v$.resetEmail.$invalid
-    }
-  },
-  methods: {
-    async forgotPassword () {
-      try {
-        await this.accountStore.forgotPassword(this.resetEmail)
-        this.$router.push('/login')
-      } catch (err) {
-        // Error handled by store
-      }
-    }
+const router = useRouter()
+const accountStore = useAccountStore()
+
+// data
+const resetEmail = ref('')
+
+// validations
+const rules = {
+  resetEmail: {
+    required,
+    email
   }
+}
+const v$ = useVuelidate(rules, { resetEmail })
+
+// computed
+const disableSubmit = computed(() => {
+  return v$.value.resetEmail.$invalid
 })
+
+// methods
+async function forgotPassword() {
+  try {
+    await accountStore.forgotPassword(resetEmail.value)
+    router.push('/login')
+  } catch (err) {
+    // Error handled by store
+  }
+}
 </script>

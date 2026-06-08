@@ -48,8 +48,10 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { ref, reactive, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, strongPassword } from '../boot/vuelidate'
 import { Notify } from 'quasar'
@@ -58,72 +60,63 @@ import { useAccountStore } from 'src/stores/account'
 
 import Banner from 'components/Banner'
 
-export default defineComponent({
-  components: { Banner },
-  setup() {
-    const accountStore = useAccountStore()
-    
-    return {
-      v$: useVuelidate(),
-      settings,
-      accountStore
-    }
-  },
-  data() {
-    return {
-      valid: false,
-      success: false,
-      showPassword: false,
-      formData: {
-        password: ''
-      }
-    }
-  },
-  validations: {
-    formData: {
-      password: {
-        required,
-        minLength: minLength(8),
-        maxLength: maxLength(64),
-        strongPassword
-      }
-    }
-  },
-  computed: {
-    disableSubmit() {
-      return this.v$.formData.$invalid
-    }
-  },
-  methods: {
-    async resetPassword() {
-      const token = this.$route.query.token
-      if (!token) {
-        Notify.create({
-          message: this.$t('reset.bad_link'),
-          color: 'negative',
-          icon: 'fas fa-times'
-        })
-        return
-      }
-      
-      try {
-        const result = await this.accountStore.resetPassword(token, this.formData.password)
-        if (result && result.status === 201) {
-          Notify.create({
-            message: this.$t('reset.success'),
-            color: 'positive',
-            icon: 'fas fa-check'
-          })
-          this.$router.push('/')
-        }
-      } catch (err) {
-        Notify.create({
-          message: this.$t('reset.failure'),
-          color: 'negative',
-          icon: 'fas fa-times'
-        })
-      }
+const router = useRouter()
+const route = useRoute()
+const { t } = useI18n({ useScope: 'global' })
+const accountStore = useAccountStore()
+
+// data
+const showPassword = ref(false)
+const formData = reactive({
+  password: ''
+})
+
+// validations
+const rules = {
+  formData: {
+    password: {
+      required,
+      minLength: minLength(8),
+      maxLength: maxLength(64),
+      strongPassword
     }
   }
+}
+const v$ = useVuelidate(rules, { formData })
+
+// computed
+const disableSubmit = computed(() => {
+  return v$.value.formData.$invalid
 })
+
+// methods
+async function resetPassword() {
+  const token = route.query.token
+  if (!token) {
+    Notify.create({
+      message: t('reset.bad_link'),
+      color: 'negative',
+      icon: 'fas fa-times'
+    })
+    return
+  }
+
+  try {
+    const result = await accountStore.resetPassword(token, formData.password)
+    if (result && result.status === 201) {
+      Notify.create({
+        message: t('reset.success'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+      router.push('/')
+    }
+  } catch (err) {
+    Notify.create({
+      message: t('reset.failure'),
+      color: 'negative',
+      icon: 'fas fa-times'
+    })
+  }
+}
 </script>

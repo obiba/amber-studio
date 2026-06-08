@@ -135,8 +135,9 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { reactive, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
@@ -145,112 +146,108 @@ import { useAuthStore } from 'src/stores/auth'
 import { useAccountStore } from 'src/stores/account'
 import { useAdminStore } from 'src/stores/admin'
 
-export default defineComponent({
-  mounted: function () {
-    this.initData()
-  },
-  setup () {
-    const userOptions = ref([])
-    const authStore = useAuthStore()
-    const accountStore = useAccountStore()
-    const adminStore = useAdminStore()
-    
-    return {
-      v$: useVuelidate(),
-      userOptions,
-      settings,
-      authStore,
-      accountStore,
-      adminStore
-    }
-  },
-  data () {
-    return {
-      profileData: {
-        firstname: '',
-        lastname: '',
-        institution: '',
-        city: '',
-        title: '',
-        phone: '',
-        language: ''
-      }
-    }
-  },
-  validations: {
-    profileData: {
-      firstname: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      lastname: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      institution: {
-        minLength: minLength(2),
-        maxLength: maxLength(100)
-      },
-      city: {
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      language: {
-        required
-      }
-    }
-  },
-  computed: {
-    currentUser() {
-      return this.adminStore.user
+const { t } = useI18n({ useScope: 'global' })
+const authStore = useAuthStore()
+const accountStore = useAccountStore()
+const adminStore = useAdminStore()
+
+// data
+const profileData = reactive({
+  firstname: '',
+  lastname: '',
+  institution: '',
+  city: '',
+  title: '',
+  phone: '',
+  language: ''
+})
+
+// validations
+const rules = {
+  profileData: {
+    firstname: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    user() {
-      return this.authStore.user
+    lastname: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    disableSaveUser () {
-      return this.v$.profileData.$invalid
+    institution: {
+      minLength: minLength(2),
+      maxLength: maxLength(100)
     },
-    localeOptions () {
-      return locales.map(loc => {
-        return {
-          value: loc,
-          label: this.$t('locales.' + loc)
-        }
-      })
-        .sort((loc1, loc2) => {
-          if (loc1.label > loc2.label) return 1
-          if (loc1.label < loc2.label) return -1
-          return 0
-        })
+    city: {
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    hasLocales () {
-      return locales.length > 1
-    }
-  },
-  methods: {
-    copyUserProfile (user) {
-      return {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        city: user.city,
-        institution: user.institution,
-        title: user.title,
-        phone: user.phone,
-        language: user.language,
-        role: user.role
-      }
-    },
-    async initData () {
-      await this.adminStore.getUser(this.user._id)
-      this.profileData = this.copyUserProfile(this.currentUser)
-    },
-    async saveUser () {
-      this.v$.$reset()
-      const toSave = { ...this.profileData }
-      await this.accountStore.updateProfile(this.user._id, toSave)
+    language: {
+      required
     }
   }
+}
+const v$ = useVuelidate(rules, { profileData })
+
+// computed
+const currentUser = computed(() => {
+  return adminStore.user
+})
+
+const user = computed(() => {
+  return authStore.user
+})
+
+const disableSaveUser = computed(() => {
+  return v$.value.profileData.$invalid
+})
+
+const localeOptions = computed(() => {
+  return locales.map(loc => {
+    return {
+      value: loc,
+      label: t('locales.' + loc)
+    }
+  })
+    .sort((loc1, loc2) => {
+      if (loc1.label > loc2.label) return 1
+      if (loc1.label < loc2.label) return -1
+      return 0
+    })
+})
+
+const hasLocales = computed(() => {
+  return locales.length > 1
+})
+
+// methods
+function copyUserProfile(userObj) {
+  return {
+    firstname: userObj.firstname,
+    lastname: userObj.lastname,
+    city: userObj.city,
+    institution: userObj.institution,
+    title: userObj.title,
+    phone: userObj.phone,
+    language: userObj.language,
+    role: userObj.role
+  }
+}
+
+async function initData() {
+  await adminStore.getUser(user.value._id)
+  Object.assign(profileData, copyUserProfile(currentUser.value))
+}
+
+async function saveUser() {
+  v$.value.$reset()
+  const toSave = { ...profileData }
+  await accountStore.updateProfile(user.value._id, toSave)
+}
+
+// mounted
+onMounted(() => {
+  initData()
 })
 </script>

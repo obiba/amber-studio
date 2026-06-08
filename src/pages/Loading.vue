@@ -31,18 +31,8 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 import { settings } from '../boot/settings'
-
-export default defineComponent({
-  name: 'Loading',
-  setup () {
-    return {
-      settings: settings
-    }
-  }
-})
 </script>
 
 <style>
