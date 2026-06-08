@@ -13,16 +13,7 @@
         </div>
     </div>
 </template>
-<script>
-import { settings } from '../boot/settings'
-import { defineComponent } from 'vue'
 
-export default defineComponent({
-  name: 'Banner',
-  setup () {
-    return {
-      settings
-    }
-  }
-})
+<script setup>
+import { settings } from '../boot/settings'
 </script>

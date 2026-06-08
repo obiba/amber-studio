@@ -354,8 +354,10 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref, computed } from 'vue'
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { interviewService } from '../../services/interview'
 import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
@@ -363,401 +365,399 @@ import { useInterviewStore } from 'src/stores/interview'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
 
-export default defineComponent({
-  name: 'StudyInterviews',
-  setup () {
-    const interviewStore = useInterviewStore()
-    const studyStore = useStudyStore()
-    const { isReadOnly } = useAuth()
+const { t: $t } = useI18n()
+const route = useRoute()
+const interviewStore = useInterviewStore()
+const studyStore = useStudyStore()
+const { isReadOnly } = useAuth()
 
+// Refs
+const locale = ref('en')
+const tab = ref('definition')
+const selected = ref([])
+const filter = ref('')
+const interviewDesignFilter = ref('0')
+const campaignFilter = ref('0')
+const stateFilter = ref('0')
+const eligibleFilter = ref('0')
+const fromDate = ref('')
+const toDate = ref('')
+const maximizedToggle = ref(false)
+const modelData = ref({})
+const selectedInterview = ref({})
+const selectedFillingDate = ref(null)
+const showInterview = ref(false)
+const showConfirmDeleteInterview = ref(false)
+const showConfirmDeleteInterviews = ref(false)
+const showEditFillingDate = ref(false)
+const paginationOpts = ref({
+  sortBy: 'updatedAt',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+
+// Computed
+const study = computed(() => studyStore.study)
+const interviews = computed(() => interviewStore.interviews)
+const interviewDesigns = computed(() => interviewStore.interviewDesigns)
+const campaigns = computed(() => interviewStore.campaigns)
+const studyId = computed(() => route.params.id)
+
+const columns = computed(() => [
+  {
+    name: 'code',
+    required: true,
+    label: t('interview.participant_code'),
+    align: 'left',
+    field: 'code',
+    sortable: true
+  },
+  {
+    name: 'identifier',
+    required: false,
+    label: t('id'),
+    align: 'left',
+    field: 'identifier',
+    sortable: true
+  },
+  {
+    name: 'interviewDesign',
+    required: true,
+    label: $t('study.interview_design'),
+    align: 'left',
+    field: 'interviewDesign',
+    sortable: true
+  },
+  {
+    name: 'campaign',
+    required: true,
+    label: $t('study.campaign'),
+    align: 'left',
+    field: 'campaign',
+    sortable: true,
+    format: val =>
+      campaigns.value.find(cmp => cmp._id === val)?.name
+  },
+  {
+    name: 'state',
+    required: true,
+    label: $t('state'),
+    align: 'left',
+    field: 'state',
+    sortable: true
+  },
+  {
+    name: 'updatedAt',
+    align: 'left',
+    label: $t('updated_at'),
+    field: 'updatedAt',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : $t('unknown')}`
+  },
+  {
+    name: 'fillingDate',
+    align: 'left',
+    label: $t('study.interview_filling_date'),
+    field: 'fillingDate',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD') : ''}`
+  },
+  {
+    name: 'participantValid',
+    align: 'left',
+    label: $t('interview.eligibility'),
+    field: 'participantValid',
+    sortable: false
+  },
+  {
+    name: 'action',
+    align: 'left',
+    label: $t('action')
+  }
+])
+
+const interviewDesignOptions = computed(() => {
+  const opts = interviewDesigns.value.map(itwd => {
     return {
-      interviewStore,
-      studyStore,
-      isReadOnly,
-      remountCounter: 0,
-      locale: ref('en'),
-      tab: ref('definition'),
-      selected: ref([]),
-      filter: ref(''),
-      interviewDesignFilter: ref('0'),
-      campaignFilter: ref('0'),
-      stateFilter: ref('0'),
-      eligibleFilter: ref('0'),
-      fromDate: ref(''),
-      toDate: ref(''),
-      maximizedToggle: ref(false)
+      value: itwd._id,
+      label: itwd.name
     }
-  },
-  mounted: function () {
-    this.setPagination()
-    if (this.study) {
-      this.interviewStore.getInterviewDesigns(undefined, this.studyId)
-      this.interviewStore.getCampaigns(undefined, undefined, this.studyId)
-      this.getTableInterviews()
-    }
-  },
-  data () {
+  })
+  opts.sort((a, b) => {
+    if (a.label < b.label) return -1
+    if (a.label > b.label) return 1
+    return 0
+  })
+  opts.splice(0, 0, {
+    value: '0',
+    label: t('study.all_designs')
+  })
+  return opts
+})
+
+const campaignOptions = computed(() => {
+  const opts = campaigns.value.map(cmp => {
+    const itwd = interviewDesigns.value.find(itwd => itwd._id === cmp.interviewDesign)
     return {
-      modelData: {},
-      selectedInterview: {},
-      selectedFillingDate: null,
-      showInterview: false,
-      showConfirmDeleteInterview: false,
-      showConfirmDeleteInterviews: false,
-      showEditFillingDate: false,
-      paginationOpts: {
-        sortBy: 'updatedAt',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      columns: [
-        {
-          name: 'code',
-          required: true,
-          label: t('interview.participant_code'),
-          align: 'left',
-          field: 'code',
-          sortable: true
-        },
-        {
-          name: 'identifier',
-          required: false,
-          label: t('id'),
-          align: 'left',
-          field: 'identifier',
-          sortable: true
-        },
-        {
-          name: 'interviewDesign',
-          required: true,
-          label: this.$t('study.interview_design'),
-          align: 'left',
-          field: 'interviewDesign',
-          sortable: true
-        },
-        {
-          name: 'campaign',
-          required: true,
-          label: this.$t('study.campaign'),
-          align: 'left',
-          field: 'campaign',
-          sortable: true,
-          format: val =>
-            this.campaigns.find(cmp => cmp._id === val)?.name
-        },
-        {
-          name: 'state',
-          required: true,
-          label: this.$t('state'),
-          align: 'left',
-          field: 'state',
-          sortable: true
-        },
-        {
-          name: 'updatedAt',
-          align: 'left',
-          label: this.$t('updated_at'),
-          field: 'updatedAt',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
-        },
-        {
-          name: 'fillingDate',
-          align: 'left',
-          label: this.$t('study.interview_filling_date'),
-          field: 'fillingDate',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD') : ''}`
-        },
-        {
-          name: 'participantValid',
-          align: 'left',
-          label: this.$t('interview.eligibility'),
-          field: 'participantValid',
-          sortable: false
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ]
+      value: cmp._id,
+      label: `${itwd ? itwd.name : '?'} - ${cmp.name}`
     }
+  })
+  opts.sort((a, b) => {
+    if (a.label < b.label) return -1
+    if (a.label > b.label) return 1
+    return 0
+  })
+  opts.splice(0, 0, {
+    value: '0',
+    label: t('study.all_campaigns')
+  })
+  return opts
+})
+
+const stateOptions = computed(() => [
+  {
+    value: '0',
+    label: t('study.all_states')
   },
-  computed: {
-    study () {
-      return this.studyStore.study
-    },
-    interviews () {
-      return this.interviewStore.interviews
-    },
-    interviewDesigns () {
-      return this.interviewStore.interviewDesigns
-    },
-    campaigns () {
-      return this.interviewStore.campaigns
-    },
-    studyId () {
-      return this.$route.params.id
-    },
-    interviewDesignOptions () {
-      const opts = this.interviewDesigns.map(itwd => {
-        return {
-          value: itwd._id,
-          label: itwd.name
-        }
-      })
-      opts.sort((a, b) => {
-        if (a.label < b.label) return -1
-        if (a.label > b.label) return 1
-        return 0
-      })
-      opts.splice(0, 0, {
-        value: '0',
-        label: t('study.all_designs')
-      })
-      return opts
-    },
-    campaignOptions () {
-      const opts = this.campaigns.map(cmp => {
-        const itwd = this.interviewDesigns.find(itwd => itwd._id === cmp.interviewDesign)
-        return {
-          value: cmp._id,
-          label: `${itwd ? itwd.name : '?'} - ${cmp.name}`
-        }
-      })
-      opts.sort((a, b) => {
-        if (a.label < b.label) return -1
-        if (a.label > b.label) return 1
-        return 0
-      })
-      opts.splice(0, 0, {
-        value: '0',
-        label: t('study.all_campaigns')
-      })
-      return opts
-    },
-    stateOptions () {
-      return [
-        {
-          value: '0',
-          label: t('study.all_states')
-        },
-        {
-          value: 'initiated',
-          label: t('study.interview_state.initiated')
-        },
-        {
-          value: 'in_progress',
-          label: t('study.interview_state.in_progress')
-        },
-        {
-          value: 'completed',
-          label: t('study.interview_state.completed')
-        }
-      ]
-    },
-    eligibleOptions () {
-      return [
-        {
-          value: '0',
-          label: t('interview.any_eligibility')
-        },
-        {
-          value: 'true',
-          label: t('interview.eligible')
-        },
-        {
-          value: 'false',
-          label: t('interview.not_eligible')
-        }
-      ]
-    },
-    hasInterviews () {
-      return this.interviews && this.interviews.length > 0
-    },
-    modelDataStr () {
-      return JSON.stringify(this.modelData, null, '  ')
-    }
+  {
+    value: 'initiated',
+    label: t('study.interview_state.initiated')
   },
-  watch: {
-    study: function (newValue, oldValue) {
-      this.getTableInterviews()
-    },
-    fromDate: function (newValue) {
-      this.onFilter()
-    },
-    toDate: function (newValue) {
-      this.onFilter()
-    }
+  {
+    value: 'in_progress',
+    label: t('study.interview_state.in_progress')
   },
-  methods: {
-    onFilter () {
-      this.selected = []
-      this.interviewStore.getInterviews(
-        this.paginationOpts,
-        this.studyId,
-        this.interviewDesignFilter,
-        this.campaignFilter,
-        this.stateFilter,
-        this.eligibleFilter === 'true' ? true : this.eligibleFilter === 'false' ? false : undefined,
-        this.filter,
-        this.fromDate,
-        this.toDate
-      )
-    },
-    onExport (format) {
-      let accept = 'application/json'
-      if (format === 'csv') {
-        accept = 'text/csv'
-      } else if (format === 'xlsx') {
-        accept = 'application/vnd.ms-excel'
-      } else if (format === 'zip') {
-        accept = 'application/zip'
-      }
-      const ids = this.selected.map(u => u._id)
-      const participantValid = this.eligibleFilter === 'true' ? true : this.eligibleFilter === 'false' ? false : undefined
-      interviewService.downloadInterviews(accept, this.studyId, this.interviewDesignFilter, this.campaignFilter, this.stateFilter, participantValid, this.filter, this.fromDate, this.toDate, ids)
-        .then(response => {
-          if (response.status === 200) {
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-            const ext = format
-            link.setAttribute('download', `interview-export.${ext}`)
-            document.body.appendChild(link)
-            link.click()
-            link.remove()
-          } else {
-            Notify.create({
-              message: 'Interview export failed.',
-              color: 'negative'
-            })
-          }
+  {
+    value: 'completed',
+    label: t('study.interview_state.completed')
+  }
+])
+
+const eligibleOptions = computed(() => [
+  {
+    value: '0',
+    label: t('interview.any_eligibility')
+  },
+  {
+    value: 'true',
+    label: t('interview.eligible')
+  },
+  {
+    value: 'false',
+    label: t('interview.not_eligible')
+  }
+])
+
+const hasInterviews = computed(() => interviews.value && interviews.value.length > 0)
+
+const modelDataStr = computed(() => JSON.stringify(modelData.value, null, '  '))
+
+// Methods
+function onFilter() {
+  selected.value = []
+  interviewStore.getInterviews(
+    paginationOpts.value,
+    studyId.value,
+    interviewDesignFilter.value,
+    campaignFilter.value,
+    stateFilter.value,
+    eligibleFilter.value === 'true' ? true : eligibleFilter.value === 'false' ? false : undefined,
+    filter.value,
+    fromDate.value,
+    toDate.value
+  )
+}
+
+function onExport(format) {
+  let accept = 'application/json'
+  if (format === 'csv') {
+    accept = 'text/csv'
+  } else if (format === 'xlsx') {
+    accept = 'application/vnd.ms-excel'
+  } else if (format === 'zip') {
+    accept = 'application/zip'
+  }
+  const ids = selected.value.map(u => u._id)
+  const participantValid = eligibleFilter.value === 'true' ? true : eligibleFilter.value === 'false' ? false : undefined
+  interviewService.downloadInterviews(accept, studyId.value, interviewDesignFilter.value, campaignFilter.value, stateFilter.value, participantValid, filter.value, fromDate.value, toDate.value, ids)
+    .then(response => {
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        const ext = format
+        link.setAttribute('download', `interview-export.${ext}`)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+      } else {
+        Notify.create({
+          message: 'Interview export failed.',
+          color: 'negative'
         })
-    },
-    onLocale (newLocale) {
-      this.locale = newLocale
-    },
-    onShow (studyInterview) {
-      this.showInterview = true
-      this.selectedInterview = studyInterview
-      this.modelData = {}
-      studyInterview.steps.forEach((step) => {
-        this.modelData[step.name] = { ...step.data }
-        delete this.modelData[step.name].__page
-      })
-      this.modelData.participant = studyInterview.data
-      this.maximizedToggle = false
-    },
-    onShowEditFillingDate (studyInterview) {
-      this.showEditFillingDate = true
-      this.selectedInterview = studyInterview
-      this.selectedFillingDate = studyInterview.fillingDate ? date.formatDate(studyInterview.fillingDate, 'YYYY-MM-DD') : null
-    },
-    onEditFillingDate () {
-      this.interviewStore.updateInterview(
-        { fillingDate: new Date(this.selectedFillingDate) },
-        this.selectedInterview._id,
-        this.paginationOpts,
-        this.studyId
-      )
-    },
-    onSave () {
-      const updatedData = { ...this.modelData }
-      this.interviewStore.updateInterview(
-        { data: updatedData },
-        this.selectedInterview._id,
-        this.paginationOpts,
-        this.studyId
-      )
-    },
-    onConfirmDelete (studyInterview) {
-      this.showConfirmDeleteInterview = true
-      this.selectedInterview = studyInterview
-    },
-    onConfirmDeleteMultiple () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteInterviews = true
       }
-    },
-    onReopen (studyInterview) {
-      this.interviewStore.updateInterview(
-        { state: 'in_progress' },
-        studyInterview._id,
-        this.paginationOpts,
-        this.studyId
-      )
-    },
-    onClearDate (name) {
-      if (name === 'from') {
-        this.fromDate = ''
-      } else {
-        this.toDate = ''
-      }
-    },
-    getInterviewDesignName (id) {
-      return this.interviewDesigns.filter(itwd => itwd._id === id).map(itwd => itwd.name).pop()
-    },
-    getInterviewFullName (interview) {
-      return interview.code
-    },
-    getInterviewID (interview) {
-      return interview.data && interview.data._id ? interview.data._id : ''
-    },
-    async getTableInterviews (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.interviewStore.setInterviewPagination(requestProp.pagination)
-        await this.interviewStore.getInterviews(
-          requestProp.pagination,
-          this.studyId,
-          this.interviewDesignFilter,
-          undefined,
-          this.stateFilter,
-          undefined,
-          requestProp.filter,
-          this.fromDate,
-          this.toDate
-        )
-      } else {
-        await this.interviewStore.getInterviews(
-          this.paginationOpts,
-          this.studyId,
-          this.interviewDesignFilter,
-          undefined,
-          this.stateFilter,
-          undefined,
-          this.filter,
-          this.fromDate,
-          this.toDate
-        )
-      }
-      this.paginationOpts.rowsNumber = this.interviewStore.interviewPaginationOpts.rowsNumber
-    },
-    setPagination () {
-      this.paginationOpts = this.interviewStore.interviewPaginationOpts
-    },
-    deleteInterview () {
-      this.interviewStore.deleteInterview(
-        this.selectedInterview._id,
-        this.paginationOpts,
-        this.studyId
-      )
-    },
-    deleteInterviews () {
-      const ids = this.selected.map(u => u._id)
-      this.interviewStore.deleteInterviews(
-        ids,
-        this.paginationOpts,
-        this.studyId
-      )
-      this.selected = []
-    }
+    })
+}
+
+function onLocale(newLocale) {
+  locale.value = newLocale
+}
+
+function onShow(studyInterview) {
+  showInterview.value = true
+  selectedInterview.value = studyInterview
+  modelData.value = {}
+  studyInterview.steps.forEach((step) => {
+    modelData.value[step.name] = { ...step.data }
+    delete modelData.value[step.name].__page
+  })
+  modelData.value.participant = studyInterview.data
+  maximizedToggle.value = false
+}
+
+function onShowEditFillingDate(studyInterview) {
+  showEditFillingDate.value = true
+  selectedInterview.value = studyInterview
+  selectedFillingDate.value = studyInterview.fillingDate ? date.formatDate(studyInterview.fillingDate, 'YYYY-MM-DD') : null
+}
+
+function onEditFillingDate() {
+  interviewStore.updateInterview(
+    { fillingDate: new Date(selectedFillingDate.value) },
+    selectedInterview.value._id,
+    paginationOpts.value,
+    studyId.value
+  )
+}
+
+function onSave() {
+  const updatedData = { ...modelData.value }
+  interviewStore.updateInterview(
+    { data: updatedData },
+    selectedInterview.value._id,
+    paginationOpts.value,
+    studyId.value
+  )
+}
+
+function onConfirmDelete(studyInterview) {
+  showConfirmDeleteInterview.value = true
+  selectedInterview.value = studyInterview
+}
+
+function onConfirmDeleteMultiple() {
+  if (selected.value.length > 0) {
+    showConfirmDeleteInterviews.value = true
+  }
+}
+
+function onReopen(studyInterview) {
+  interviewStore.updateInterview(
+    { state: 'in_progress' },
+    studyInterview._id,
+    paginationOpts.value,
+    studyId.value
+  )
+}
+
+function onClearDate(name) {
+  if (name === 'from') {
+    fromDate.value = ''
+  } else {
+    toDate.value = ''
+  }
+}
+
+function getInterviewDesignName(id) {
+  return interviewDesigns.value.filter(itwd => itwd._id === id).map(itwd => itwd.name).pop()
+}
+
+function getInterviewFullName(interview) {
+  return interview.code
+}
+
+function getInterviewID(interview) {
+  return interview.data && interview.data._id ? interview.data._id : ''
+}
+
+async function getTableInterviews(requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    interviewStore.setInterviewPagination(requestProp.pagination)
+    await interviewStore.getInterviews(
+      requestProp.pagination,
+      studyId.value,
+      interviewDesignFilter.value,
+      undefined,
+      stateFilter.value,
+      undefined,
+      requestProp.filter,
+      fromDate.value,
+      toDate.value
+    )
+  } else {
+    await interviewStore.getInterviews(
+      paginationOpts.value,
+      studyId.value,
+      interviewDesignFilter.value,
+      undefined,
+      stateFilter.value,
+      undefined,
+      filter.value,
+      fromDate.value,
+      toDate.value
+    )
+  }
+  paginationOpts.value.rowsNumber = interviewStore.interviewPaginationOpts.rowsNumber
+}
+
+function setPagination() {
+  paginationOpts.value = interviewStore.interviewPaginationOpts
+}
+
+function deleteInterview() {
+  interviewStore.deleteInterview(
+    selectedInterview.value._id,
+    paginationOpts.value,
+    studyId.value
+  )
+}
+
+function deleteInterviews() {
+  const ids = selected.value.map(u => u._id)
+  interviewStore.deleteInterviews(
+    ids,
+    paginationOpts.value,
+    studyId.value
+  )
+  selected.value = []
+}
+
+// Watchers
+watch(study, () => {
+  getTableInterviews()
+})
+
+watch(fromDate, () => {
+  onFilter()
+})
+
+watch(toDate, () => {
+  onFilter()
+})
+
+// Lifecycle
+onMounted(() => {
+  setPagination()
+  if (study.value) {
+    interviewStore.getInterviewDesigns(undefined, studyId.value)
+    interviewStore.getCampaigns(undefined, undefined, studyId.value)
+    getTableInterviews()
   }
 })
 </script>

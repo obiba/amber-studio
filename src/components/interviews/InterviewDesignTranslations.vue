@@ -317,8 +317,9 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, watch, onMounted, getCurrentInstance } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { interviewDesignI18nService } from '../../services/interview'
 import { locales } from '../../boot/i18n'
 import useVuelidate from '@vuelidate/core'
@@ -326,317 +327,329 @@ import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { Notify } from 'quasar'
 import { useAuth } from 'src/composables/useAuth'
 
-export default defineComponent({
-  name: 'InterviewDesignTranslations',
-  props: ['modelValue'],
-  emits: ['update:modelValue'],
-  setup () {
-    const { isReadOnly } = useAuth()
-    return {
-      isReadOnly,
-      locales: locales,
-      v$: useVuelidate(),
-      selected: ref([]),
-      filter: ref(''),
-      showImportTranslations: ref(false),
-      translationsFile: ref(null)
-    }
-  },
-  data () {
-    return {
-      showAddTranslation: false,
-      showConfirmDelete: false,
-      showConfirmDeleteLocale: false,
-      showConfirmClean: false,
-      showConfirmMerge: false,
-      localeToDelete: ref(null),
-      paginationOpts: {
-        sortBy: 'key',
-        descending: false,
-        rowsPerPage: 10
-      },
-      rows: ref([]),
-      newTranslationData: {
-        key: ''
-      }
-    }
-  },
-  validations: {
-    newTranslationData: {
-      key: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
-    }
-  },
-  watch: {
-    modelValue: function (newValue, oldValue) {
-      this.initRows()
-    }
-  },
-  computed: {
-    value: {
-      get () {
-        return this.modelValue
-      },
-      set (value) {
-        this.$emit('update:modelValue', value)
-      }
-    },
-    columns () {
-      const cols = [
-        {
-          name: 'key',
-          required: true,
-          label: this.$t('form.tr_key'),
-          align: 'left',
-          field: 'key',
-          sortable: true
-        }
-      ]
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
-      this.itwdLocales.forEach(loc => {
-        cols.push({
-          name: loc,
-          label: loc.toUpperCase(),
-          align: 'left',
-          field: loc,
-          sortable: true
-        })
-      })
+const { t: $t } = useI18n()
+const { isReadOnly } = useAuth()
+const { proxy } = getCurrentInstance()
 
-      return cols
-    },
-    disableAddTranslation () {
-      return this.v$.newTranslationData.$invalid
-    },
-    disableImportTranslations () {
-      return this.translationsFile === null
-    },
-    itwdLocales () {
-      return this.value.i18n && Object.keys(this.value.i18n).length > 0 ? Object.keys(this.value.i18n).sort() : ['en']
-    },
-    allLocales () {
-      const allLocales = [...this.locales]
-      this.itwdLocales.forEach((loc) => {
-        if (!allLocales.includes(loc)) {
-          allLocales.push(loc)
-        }
-      })
-      return allLocales
+// Refs
+const selected = ref([])
+const filter = ref('')
+const showImportTranslations = ref(false)
+const translationsFile = ref(null)
+const showAddTranslation = ref(false)
+const showConfirmDelete = ref(false)
+const showConfirmDeleteLocale = ref(false)
+const showConfirmClean = ref(false)
+const showConfirmMerge = ref(false)
+const localeToDelete = ref(null)
+const paginationOpts = ref({
+  sortBy: 'key',
+  descending: false,
+  rowsPerPage: 10
+})
+const rows = ref([])
+const newTranslationData = ref({
+  key: ''
+})
+
+// Vuelidate
+const rules = {
+  newTranslationData: {
+    key: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     }
+  }
+}
+
+const v$ = useVuelidate(rules, { newTranslationData })
+
+// Computed
+const value = computed({
+  get() {
+    return props.modelValue
   },
-  mounted () {
-    if (this.value) {
-      this.initRows()
+  set(val) {
+    emit('update:modelValue', val)
+  }
+})
+
+const columns = computed(() => {
+  const cols = [
+    {
+      name: 'key',
+      required: true,
+      label: $t('form.tr_key'),
+      align: 'left',
+      field: 'key',
+      sortable: true
     }
-  },
-  methods: {
-    initRows () {
-      // read i18n object and make rows
-      if (this.value && this.value) {
-        if (this.value.i18n) {
-          this.itwdLocales.forEach(loc => {
-            if (this.value.i18n[loc]) {
-              Object.entries(this.value.i18n[loc]).forEach(([key, value]) => {
-                let found = false
-                for (let i = 0; i < this.rows.length; i++) {
-                  if (!found && this.rows[i].key === key) {
-                    found = true
-                    this.rows[i][loc] = value
-                  }
-                }
-                if (!found) {
-                  const row = { key: key }
-                  row[loc] = value
-                  this.rows.push(row)
-                }
-              })
+  ]
+
+  itwdLocales.value.forEach(loc => {
+    cols.push({
+      name: loc,
+      label: loc.toUpperCase(),
+      align: 'left',
+      field: loc,
+      sortable: true
+    })
+  })
+
+  return cols
+})
+
+const disableAddTranslation = computed(() => v$.value.newTranslationData.$invalid)
+const disableImportTranslations = computed(() => translationsFile.value === null)
+
+const itwdLocales = computed(() => {
+  return value.value.i18n && Object.keys(value.value.i18n).length > 0 ? Object.keys(value.value.i18n).sort() : ['en']
+})
+
+const allLocales = computed(() => {
+  const all = [...locales]
+  itwdLocales.value.forEach((loc) => {
+    if (!all.includes(loc)) {
+      all.push(loc)
+    }
+  })
+  return all
+})
+
+// Methods
+function initRows() {
+  // read i18n object and make rows
+  if (value.value && value.value) {
+    if (value.value.i18n) {
+      itwdLocales.value.forEach(loc => {
+        if (value.value.i18n[loc]) {
+          Object.entries(value.value.i18n[loc]).forEach(([key, val]) => {
+            let found = false
+            for (let i = 0; i < rows.value.length; i++) {
+              if (!found && rows.value[i].key === key) {
+                found = true
+                rows.value[i][loc] = val
+              }
+            }
+            if (!found) {
+              const row = { key: key }
+              row[loc] = val
+              rows.value.push(row)
             }
           })
         }
-      }
-    },
-    mergeObservedKeys () {
-      // read items texts and merge/append to rows
-      if (this.value) {
-        let obsKeys = []
-        if (this.rows && this.rows.length > 0) {
-          this.rows.forEach(row => {
-            if (!obsKeys.includes(row.key)) {
-              obsKeys.push(row.key)
-            }
-          })
-        } else if (this.value.i18n && this.value.i18n.en) {
-          obsKeys = Object.keys(this.value.i18n.en)
-        }
-        obsKeys = this.appendObservedKeys([this.value], obsKeys)
-        this.appendObservedKeys(this.value.steps, obsKeys)
-      }
-      this.onRowEdit()
-    },
-    appendObservedKeys (steps, keys) {
-      const obsKeys = keys
-      const addObsKey = (key) => {
-        if (key && key.trim().length > 0 && !key.includes('.') && !obsKeys.includes(key)) {
-          const row = { key: key }
-          this.itwdLocales.forEach(loc => { row[loc] = key })
-          this.rows.push(row)
-          obsKeys.push(key)
-        }
-      }
-      if (steps) {
-        steps.forEach(step => {
-          ['label', 'description', 'interviewer_instructions', 'participant_instructions'].forEach(field => addObsKey(step[field]))
-        })
-      }
-      return obsKeys
-    },
-    onExport (format) {
-      let accept = 'application/json'
-      if (format === 'csv') {
-        accept = 'text/csv'
-      } else if (format === 'xlsx') {
-        accept = 'application/vnd.ms-excel'
-      } else if (format === 'zip') {
-        accept = 'application/zip'
-      }
-      interviewDesignI18nService.downloadTranslations(accept, this.value._id)
-        .then(response => {
-          if (response.status === 200) {
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-            const ext = format
-            link.setAttribute('download', `${this.value.name}-i18n.${ext}`)
-            document.body.appendChild(link)
-            link.click()
-            link.remove()
-          } else {
-            Notify.create({
-              message: 'Interview design translations export failed.',
-              color: 'negative'
-            })
-          }
-        })
-    },
-    keyExists (key) {
-      return this.rows.map(row => row.key).includes(key)
-    },
-    onRowEdit () {
-      // do not know whether there was a change but update i18n anyway
-      const toSave = { ...this.value }
-      if (!toSave.i18n) {
-        toSave.i18n = {}
-      }
-      if (Object.keys(toSave.i18n).length === 0) {
-        toSave.i18n.en = {}
-      }
-      Object.keys(toSave.i18n).forEach(loc => {
-        toSave.i18n[loc] = {}
-        this.rows.forEach(row => {
-          if (row.key && row.key.trim().length > 0 && row[loc]) {
-            toSave.i18n[loc][row.key] = row[loc]
-          }
-        })
       })
-      this.value = toSave
-    },
-    onAddTranslation () {
-      this.newTranslationData = {}
-      this.showAddTranslation = true
-    },
-    onToggleFormLocale (locale) {
-      if (this.value.i18n[locale]) {
-        this.localeToDelete = locale
-        this.showConfirmDeleteLocale = true
-      } else {
-        this.rows.forEach(row => {
-          row[locale] = row.en ? row.en : row.key
-        })
-        this.value.i18n[locale] = {}
-        this.onRowEdit()
-      }
-    },
-    addTranslation () {
-      if (!this.keyExists(this.newTranslationData.key)) {
-        this.rows.push({ key: this.newTranslationData.key })
-        this.onRowEdit()
+    }
+  }
+}
+
+function mergeObservedKeys() {
+  // read items texts and merge/append to rows
+  if (value.value) {
+    let obsKeys = []
+    if (rows.value && rows.value.length > 0) {
+      rows.value.forEach(row => {
+        if (!obsKeys.includes(row.key)) {
+          obsKeys.push(row.key)
+        }
+      })
+    } else if (value.value.i18n && value.value.i18n.en) {
+      obsKeys = Object.keys(value.value.i18n.en)
+    }
+    obsKeys = appendObservedKeys([value.value], obsKeys)
+    appendObservedKeys(value.value.steps, obsKeys)
+  }
+  onRowEdit()
+}
+
+function appendObservedKeys(steps, keys) {
+  const obsKeys = keys
+  const addObsKey = (key) => {
+    if (key && key.trim().length > 0 && !key.includes('.') && !obsKeys.includes(key)) {
+      const row = { key: key }
+      itwdLocales.value.forEach(loc => { row[loc] = key })
+      rows.value.push(row)
+      obsKeys.push(key)
+    }
+  }
+  if (steps) {
+    steps.forEach(step => {
+      ['label', 'description', 'interviewer_instructions', 'participant_instructions'].forEach(field => addObsKey(step[field]))
+    })
+  }
+  return obsKeys
+}
+
+function onExport(format) {
+  let accept = 'application/json'
+  if (format === 'csv') {
+    accept = 'text/csv'
+  } else if (format === 'xlsx') {
+    accept = 'application/vnd.ms-excel'
+  } else if (format === 'zip') {
+    accept = 'application/zip'
+  }
+  interviewDesignI18nService.downloadTranslations(accept, value.value._id)
+    .then(response => {
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        const ext = format
+        link.setAttribute('download', `${value.value.name}-i18n.${ext}`)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
       } else {
         Notify.create({
-          message: 'Translation key already exists.',
+          message: 'Interview design translations export failed.',
           color: 'negative'
         })
       }
-    },
-    onImportTranslations () {
-      this.translationsFile = null
-      this.showImportTranslations = true
-    },
-    importTranslations () {
-      const that = this
-      const toSave = this.value
-      const delim = this.translationsFile.name.endsWith('.tsv') ? '\t' : ','
-      this.$papa.parse(this.translationsFile, {
-        header: true,
-        delimiter: delim,
-        complete: function (results, file) {
-          if (results.errors.length === 0) {
-            console.error(results.error)
-          }
-          if (results.data.length > 0 && results.meta.fields.includes('key')) {
-            const locales = results.meta.fields.filter((f) => f !== 'key')
-            if (!toSave.i18n) {
-              toSave.i18n = {}
-            }
-            // array of row objects
-            results.data
-              .filter((row) => row.key.trim().length > 0)
-              .forEach((row) => {
-                locales.forEach((locale) => {
-                  if (!toSave.i18n[locale]) {
-                    toSave.i18n[locale] = {}
-                  }
-                  toSave.i18n[locale][row.key] = row[locale]
-                })
-              })
-            that.initRows()
-          } else {
-            console.error(results.error)
-          }
-        }
-      })
-    },
-    onConfirmClean () {
-      this.showConfirmClean = true
-    },
-    cleanKeys () {
-      // TODO
-    },
-    onConfirmMergeObservedKeys () {
-      this.showConfirmMerge = true
-    },
-    onConfirmDeleteMultiple () {
-      if (this.selected.length > 0) {
-        this.showConfirmDelete = true
+    })
+}
+
+function keyExists(key) {
+  return rows.value.map(row => row.key).includes(key)
+}
+
+function onRowEdit() {
+  // do not know whether there was a change but update i18n anyway
+  const toSave = { ...value.value }
+  if (!toSave.i18n) {
+    toSave.i18n = {}
+  }
+  if (Object.keys(toSave.i18n).length === 0) {
+    toSave.i18n.en = {}
+  }
+  Object.keys(toSave.i18n).forEach(loc => {
+    toSave.i18n[loc] = {}
+    rows.value.forEach(row => {
+      if (row.key && row.key.trim().length > 0 && row[loc]) {
+        toSave.i18n[loc][row.key] = row[loc]
       }
-    },
-    deleteSelected () {
-      const selectedKeys = this.selected.map(row => row.key)
-      this.rows = this.rows.filter(row => !selectedKeys.includes(row.key))
-      this.selected = []
-      this.onRowEdit()
-    },
-    deleteLocale () {
-      if (this.localeToDelete) {
-        delete this.value.i18n[this.localeToDelete]
-        this.rows.forEach(row => {
-          delete row[this.localeToDelete]
-        })
-        this.onRowEdit()
+    })
+  })
+  value.value = toSave
+}
+
+function onAddTranslation() {
+  newTranslationData.value = {}
+  showAddTranslation.value = true
+}
+
+function onToggleFormLocale(locale) {
+  if (value.value.i18n[locale]) {
+    localeToDelete.value = locale
+    showConfirmDeleteLocale.value = true
+  } else {
+    rows.value.forEach(row => {
+      row[locale] = row.en ? row.en : row.key
+    })
+    value.value.i18n[locale] = {}
+    onRowEdit()
+  }
+}
+
+function addTranslation() {
+  if (!keyExists(newTranslationData.value.key)) {
+    rows.value.push({ key: newTranslationData.value.key })
+    onRowEdit()
+  } else {
+    Notify.create({
+      message: 'Translation key already exists.',
+      color: 'negative'
+    })
+  }
+}
+
+function onImportTranslations() {
+  translationsFile.value = null
+  showImportTranslations.value = true
+}
+
+function importTranslations() {
+  const toSave = value.value
+  const delim = translationsFile.value.name.endsWith('.tsv') ? '\t' : ','
+  proxy.$papa.parse(translationsFile.value, {
+    header: true,
+    delimiter: delim,
+    complete: function (results, file) {
+      if (results.errors.length === 0) {
+        console.error(results.error)
+      }
+      if (results.data.length > 0 && results.meta.fields.includes('key')) {
+        const localesArr = results.meta.fields.filter((f) => f !== 'key')
+        if (!toSave.i18n) {
+          toSave.i18n = {}
+        }
+        // array of row objects
+        results.data
+          .filter((row) => row.key.trim().length > 0)
+          .forEach((row) => {
+            localesArr.forEach((locale) => {
+              if (!toSave.i18n[locale]) {
+                toSave.i18n[locale] = {}
+              }
+              toSave.i18n[locale][row.key] = row[locale]
+            })
+          })
+        initRows()
+      } else {
+        console.error(results.error)
       }
     }
+  })
+}
+
+function onConfirmClean() {
+  showConfirmClean.value = true
+}
+
+function cleanKeys() {
+  // TODO
+}
+
+function onConfirmMergeObservedKeys() {
+  showConfirmMerge.value = true
+}
+
+function onConfirmDeleteMultiple() {
+  if (selected.value.length > 0) {
+    showConfirmDelete.value = true
+  }
+}
+
+function deleteSelected() {
+  const selectedKeys = selected.value.map(row => row.key)
+  rows.value = rows.value.filter(row => !selectedKeys.includes(row.key))
+  selected.value = []
+  onRowEdit()
+}
+
+function deleteLocale() {
+  if (localeToDelete.value) {
+    delete value.value.i18n[localeToDelete.value]
+    rows.value.forEach(row => {
+      delete row[localeToDelete.value]
+    })
+    onRowEdit()
+  }
+}
+
+// Watchers
+watch(() => props.modelValue, () => {
+  initRows()
+})
+
+// Lifecycle
+onMounted(() => {
+  if (value.value) {
+    initRows()
   }
 })
 </script>

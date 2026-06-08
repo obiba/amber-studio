@@ -86,115 +86,110 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { computed } from 'vue'
 import { useAuth } from 'src/composables/useAuth'
 import RecordsChart from 'components/dashboard/RecordsChart.vue'
 
-export default defineComponent({
-  name: 'DashboardCounts',
-  props: {
-    counts: {
-      type: Object,
-      required: false
-    }
-  },
-  components: {
-    RecordsChart
-  },
-  setup () {
-    const { isAdministrator } = useAuth()
-    return { isAdministrator }
-  },
-  computed: {
-    case_reports_aggregations () {
-      return this.counts && this.counts.case_reports_agg ? this.counts.case_reports_agg : []
-    },
-    interviews_aggregations () {
-      return this.counts && this.counts.interviews_agg ? this.counts.interviews_agg : []
-    },
-    items () {
-      const cards = []
-      if (this.isAdministrator) {
-        if (this.counts.users !== undefined && this.counts.groups !== undefined) {
-          cards.push({
-            title: 'users.title',
-            icon: 'person',
-            value: this.counts.users ? this.counts.users : '-',
-            color1: '#5064b5',
-            color2: '#3e51b5',
-            link: '/users'
-          },
-          {
-            title: 'groups.title',
-            icon: 'people',
-            value: this.counts.groups ? this.counts.groups : '-',
-            color1: '#5064b5',
-            color2: '#3e51b5',
-            link: '/groups'
-          })
-        }
-      }
-      if (this.counts.studies !== undefined) {
-        cards.push({
-          title: 'studies.title',
-          icon: 'inventory',
-          value: this.counts.studies ? this.counts.studies : '-',
-          color1: '#f37169',
-          color2: '#f34636',
-          link: '/studies'
-        })
-      }
-      if (this.counts.forms !== undefined) {
-        cards.push(
-          {
-            title: 'study.forms',
-            icon: 'speaker_notes',
-            value: this.counts.forms ? this.counts.forms : '-',
-            color1: '#ea6a7f',
-            color2: '#ea4b64'
-          })
-      }
-      return cards
-    },
-    caseReportItems () {
-      const cards = [
-        {
-          title: 'study.case_report_forms',
-          icon: 'ballot',
-          value: this.counts.case_report_forms ? this.counts.case_report_forms : '-',
-          color1: '#a270b1',
-          color2: '#9f52b1'
-        },
-        {
-          title: 'study.case_reports',
-          icon: 'bar_chart',
-          value: this.counts.case_reports ? this.counts.case_reports : '-',
-          color1: '#a270b1',
-          color2: '#9f52b1'
-        }
-      ]
-      return cards
-    },
-    interviewItems () {
-      const cards = [
-        {
-          title: 'study.interview_designs',
-          icon: 'ballot',
-          value: this.counts.interview_designs ? this.counts.interview_designs : '-',
-          color1: '#a270b1',
-          color2: '#9f52b1'
-        },
-        {
-          title: 'study.interviews',
-          icon: 'bar_chart',
-          value: this.counts.interviews ? this.counts.interviews : '-',
-          color1: '#a270b1',
-          color2: '#9f52b1'
-        }
-      ]
-      return cards
+const props = defineProps({
+  counts: {
+    type: Object,
+    required: false
+  }
+})
+
+const { isAdministrator } = useAuth()
+
+const case_reports_aggregations = computed(() => {
+  return props.counts && props.counts.case_reports_agg ? props.counts.case_reports_agg : []
+})
+
+const interviews_aggregations = computed(() => {
+  return props.counts && props.counts.interviews_agg ? props.counts.interviews_agg : []
+})
+
+const items = computed(() => {
+  const cards = []
+  if (isAdministrator.value) {
+    if (props.counts.users !== undefined && props.counts.groups !== undefined) {
+      cards.push({
+        title: 'users.title',
+        icon: 'person',
+        value: props.counts.users ? props.counts.users : '-',
+        color1: '#5064b5',
+        color2: '#3e51b5',
+        link: '/users'
+      },
+      {
+        title: 'groups.title',
+        icon: 'people',
+        value: props.counts.groups ? props.counts.groups : '-',
+        color1: '#5064b5',
+        color2: '#3e51b5',
+        link: '/groups'
+      })
     }
   }
+  if (props.counts.studies !== undefined) {
+    cards.push({
+      title: 'studies.title',
+      icon: 'inventory',
+      value: props.counts.studies ? props.counts.studies : '-',
+      color1: '#f37169',
+      color2: '#f34636',
+      link: '/studies'
+    })
+  }
+  if (props.counts.forms !== undefined) {
+    cards.push(
+      {
+        title: 'study.forms',
+        icon: 'speaker_notes',
+        value: props.counts.forms ? props.counts.forms : '-',
+        color1: '#ea6a7f',
+        color2: '#ea4b64'
+      })
+  }
+  return cards
+})
+
+const caseReportItems = computed(() => {
+  const cards = [
+    {
+      title: 'study.case_report_forms',
+      icon: 'ballot',
+      value: props.counts.case_report_forms ? props.counts.case_report_forms : '-',
+      color1: '#a270b1',
+      color2: '#9f52b1'
+    },
+    {
+      title: 'study.case_reports',
+      icon: 'bar_chart',
+      value: props.counts.case_reports ? props.counts.case_reports : '-',
+      color1: '#a270b1',
+      color2: '#9f52b1'
+    }
+  ]
+  return cards
+})
+
+const interviewItems = computed(() => {
+  const cards = [
+    {
+      title: 'study.interview_designs',
+      icon: 'ballot',
+      value: props.counts.interview_designs ? props.counts.interview_designs : '-',
+      color1: '#a270b1',
+      color2: '#9f52b1'
+    },
+    {
+      title: 'study.interviews',
+      icon: 'bar_chart',
+      value: props.counts.interviews ? props.counts.interviews : '-',
+      color1: '#a270b1',
+      color2: '#9f52b1'
+    }
+  ]
+  return cards
 })
 </script>

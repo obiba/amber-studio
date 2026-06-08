@@ -16,69 +16,67 @@
   </div>
 </template>
 
-<script>
-import * as echarts from 'echarts';
+<script setup>
+import { ref, onMounted, watch } from 'vue'
+import { useQuasar } from 'quasar'
+import * as echarts from 'echarts'
 
-export default {
-  name: "GuageChart",
-  data() {
-    return {
-      model: false,
-      options: {
-        tooltip: {
-          formatter: '{a} <br/>{b} : {c}%'
-        },
-        series: [{
-          name: 'Pressure',
-          type: 'gauge',
-          progress: {
-            show: true
-          },
-          detail: {
-            valueAnimation: true,
-            formatter: '{value}'
-          },
-          data: [{
-            value: 50,
-            name: 'SCORE'
-          }]
-        }]
-      },
-      guage_chart: null
-    }
+const $q = useQuasar()
+
+const model = ref(false)
+const options = {
+  tooltip: {
+    formatter: '{a} <br/>{b} : {c}%'
   },
-  mounted() {
-    this.init();
-  },
-  watch: {
-    '$q.dark.isActive': function () {
-      this.init();
-    }
-  },
-  methods: {
-    SaveImage() {
-      const linkSource = this.guage_chart.getDataURL();
-      const downloadLink = document.createElement('a');
-      document.body.appendChild(downloadLink);
-      downloadLink.href = linkSource;
-      downloadLink.target = '_self';
-      downloadLink.download = 'GuageChart.png';
-      downloadLink.click();
+  series: [{
+    name: 'Pressure',
+    type: 'gauge',
+    progress: {
+      show: true
     },
-    init() {
-      let guageChart = document.getElementById('guageChart');
-      echarts.dispose(guageChart);
-      let theme = this.model ? 'dark' : 'light';
-      this.guage_chart = echarts.init(guageChart, theme);
-      this.guage_chart.setOption(this.options)
+    detail: {
+      valueAnimation: true,
+      formatter: '{value}'
     },
-    onResize() {
-      if (this.guage_chart) {
-        this.guage_chart.resize();
-      }
-    }
+    data: [{
+      value: 50,
+      name: 'SCORE'
+    }]
+  }]
+}
+let guage_chart = null
+
+function SaveImage() {
+  const linkSource = guage_chart.getDataURL()
+  const downloadLink = document.createElement('a')
+  document.body.appendChild(downloadLink)
+  downloadLink.href = linkSource
+  downloadLink.target = '_self'
+  downloadLink.download = 'GuageChart.png'
+  downloadLink.click()
+}
+
+function init() {
+  const guageChart = document.getElementById('guageChart')
+  echarts.dispose(guageChart)
+  const theme = model.value ? 'dark' : 'light'
+  guage_chart = echarts.init(guageChart, theme)
+  guage_chart.setOption(options)
+}
+
+function onResize() {
+  if (guage_chart) {
+    guage_chart.resize()
   }
 }
+
+onMounted(() => {
+  init()
+})
+
+watch(() => $q.dark.isActive, () => {
+  init()
+})
 </script>
 
 <style scoped>

@@ -254,7 +254,6 @@
             </div>
             <div class="col-1">
               <q-btn
-                v-if="!readOnly"
                 class="q-mt-md text-secondary"
                 size="12px"
                 flat
@@ -363,7 +362,6 @@
             </div>
             <div class="col-1">
               <q-btn
-                v-if="!readOnly"
                 class="q-mt-md text-secondary"
                 size="12px"
                 flat
@@ -526,515 +524,538 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted, getCurrentInstance } from 'vue'
 import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
 import { useAuth } from 'src/composables/useAuth'
 import { participantService } from '../../services/interview'
 import { errorHandler } from '../../boot/errors'
 
-export default defineComponent({
-  name: 'Participants',
-  props: {
-    campaign: {
-      type: Object,
-      required: true
-    }
+const props = defineProps({
+  campaign: {
+    type: Object,
+    required: true
+  }
+})
+
+const { isReadOnly } = useAuth()
+const { proxy } = getCurrentInstance()
+
+// Refs
+const tableRef = ref()
+const showEditParticipant = ref(false)
+const showViewParticipant = ref(false)
+const showImportParticipants = ref(false)
+const participantsFile = ref(null)
+const showAddParticipant = ref(false)
+const showConfirmDeleteParticipant = ref(false)
+const showConfirmDeleteParticipants = ref(false)
+const participantData = ref({})
+const participants = ref([])
+const delimiter = ref(',')
+const eligibleFilter = ref('0')
+const filter = ref('')
+const selected = ref([])
+const paginationOpts = ref({
+  sortBy: 'createdAt',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+const addMode = ref('single')
+const addCount = ref(10)
+
+const addOptions = [
+  {
+    value: 'single',
+    label: t('interview.add_single_participant')
   },
-  setup () {
-    const { isReadOnly } = useAuth()
-    return {
-      isReadOnly,
-      tableRef: ref(),
-      showEditParticipant: ref(false),
-      showViewParticipant: ref(false),
-      showImportParticipants: ref(false),
-      participantsFile: ref(null),
-      showAddParticipant: ref(false),
-      showConfirmDeleteParticipant: ref(false),
-      showConfirmDeleteParticipants: ref(false),
-      participantData: ref({}),
-      participants: ref([]),
-      delimiter: ref(','),
-      eligibleFilter: ref('0'),
-      filter: ref(''),
-      selected: ref([]),
-      paginationOpts: ref({
-        sortBy: 'createdAt',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      }),
-      addMode: ref('single'),
-      addCount: ref(10),
-      addOptions: [
-        {
-          value: 'single',
-          label: t('interview.add_single_participant')
-        },
-        {
-          value: 'multiple',
-          label: t('interview.add_multiple_participants')
-        }
-      ],
-      delimiters: [
-        {
-          value: ',',
-          label: t('comma')
-        },
-        {
-          value: ';',
-          label: t('semicolon')
-        },
-        {
-          value: '\t',
-          label: t('tabulation')
-        }
-      ],
-      columns: [
-        {
-          name: 'code',
-          required: true,
-          label: t('interview.participant_code'),
-          align: 'left',
-          field: 'code',
-          sortable: true
-        },
-        {
-          name: 'identifier',
-          required: false,
-          label: t('id'),
-          align: 'left',
-          field: 'identifier',
-          sortable: true
-        },
-        {
-          name: 'validFrom',
-          align: 'left',
-          label: t('interview.participant_valid_from'),
-          field: 'validFrom',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD') : '-'}`
-        },
-        {
-          name: 'validUntil',
-          align: 'left',
-          label: t('interview.participant_valid_until'),
-          field: 'validUntil',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD') : '-'}`
-        },
-        {
-          name: 'initAt',
-          align: 'left',
-          label: t('interview.participant_initial_contact'),
-          field: 'initAt',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm') : '-'}`
-        },
-        {
-          name: 'reminders',
-          align: 'left',
-          label: t('interview.participant_reminders_count'),
-          field: 'reminders',
-          sortable: true,
-          format: val =>
-            `${val ? val.length : '0'}`
-        },
-        {
-          name: 'valid',
-          align: 'left',
-          label: t('interview.eligibility'),
-          field: 'valid',
-          sortable: false
-        },
-        {
-          name: 'walkin',
-          align: 'left',
-          label: t('interview.participant_walkin'),
-          field: 'createdBy',
-          sortable: false
-        },
-        {
-          name: 'lastSeen',
-          align: 'left',
-          label: t('users.last_seen'),
-          field: 'lastSeen',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : '-'}`
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: t('action')
-        }
-      ]
-    }
+  {
+    value: 'multiple',
+    label: t('interview.add_multiple_participants')
+  }
+]
+
+const delimiters = [
+  {
+    value: ',',
+    label: t('comma')
   },
-  mounted () {
-    this.updateTableParticipants()
+  {
+    value: ';',
+    label: t('semicolon')
   },
-  computed: {
-    hasParticipants () {
-      return (this.participants && this.participants.length > 0) || (this.filter && this.filter.length > 1)
-    },
-    disableSaveParticipant () {
-      if (this.participantData.validFrom && this.participantData.validUntil) {
-        try {
-          const from = new Date(this.participantData.validFrom)
-          const until = new Date(this.participantData.validUntil)
-          return from > until
-        } catch (e) {
-          return true
-        }
-      }
-      return false
-    },
-    disableImportParticipants () {
-      return this.participantsFile === null
-    },
-    participantDataStr () {
-      return JSON.stringify(this.participantData, null, '  ')
-    },
-    eligibleOptions () {
-      return [
-        {
-          value: '0',
-          label: t('interview.any_eligibility')
-        },
-        {
-          value: 'true',
-          label: t('interview.eligible')
-        },
-        {
-          value: 'false',
-          label: t('interview.not_eligible')
-        }
-      ]
-    }
+  {
+    value: '\t',
+    label: t('tabulation')
+  }
+]
+
+const columns = [
+  {
+    name: 'code',
+    required: true,
+    label: t('interview.participant_code'),
+    align: 'left',
+    field: 'code',
+    sortable: true
   },
-  methods: {
-    onFilter () {
-      this.tableRef.requestServerInteraction()
-    },
-    updateTableParticipants () {
-      this.selected = []
-      const valid = this.eligibleFilter === '0' ? undefined : this.eligibleFilter === 'true'
-      participantService.getParticipants(this.paginationOpts, this.campaign._id, this.filter, valid)
-        .then(response => {
-          this.participants = response.data
-          this.paginationOpts.rowsNumber = response.total
-        })
-        .catch(err => this.handleError(err))
-    },
-    async getTableParticipants (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        await this.updateTableParticipants()
-      } else {
-        await this.updateTableParticipants()
-      }
-    },
-    deleteAttribute (idx) {
-      this.participantData.attributes.splice(idx, 1)
-    },
-    addAttribute () {
-      this.participantData.attributes.push({
-        key: '',
-        value: ''
-      })
-    },
-    deleteAttributes () {
-      this.participantData.attributes = [
-        {
-          key: '',
-          value: ''
-        }
-      ]
-    },
-    asParticipantData (attributes) {
-      const data = {}
-      attributes
-        .filter(attribute => attribute.key !== undefined && attribute.key.trim() !== '')
-        .forEach(attribute => {
-          data[attribute.key.replaceAll(' ', '_')] = attribute.value
-        })
-      return data
-    },
-    asParticipantAttributes (data) {
-      const attributes = []
-      for (const key in data) {
-        attributes.push({
-          key: key,
-          value: data[key]
-        })
-      }
-      return attributes
-    },
-    addParticipant () {
-      this.participantData.data = this.asParticipantData(this.participantData.attributes)
-      delete this.participantData.data.attributes
-      if (this.addMode === 'single') {
-        participantService.createParticipant(this.participantData)
-          .then(() => {
-            Notify.create({
-              message: t('success.create_participant'),
-              color: 'positive',
-              icon: 'fas fa-check'
-            })
-            this.updateTableParticipants()
-          })
-          .catch(err => this.handleError(err))
-      } else {
-        const pTemplate = { ...this.participantData }
-        delete pTemplate.identifier
-        const participants = []
-        for (let i = 0; i < this.addCount; i++) {
-          participants.push(pTemplate)
-        }
-        participantService.createParticipant(participants)
-          .then(() => {
-            Notify.create({
-              message: t('success.create_participants'),
-              color: 'positive',
-              icon: 'fas fa-check'
-            })
-            this.updateTableParticipants()
-          })
-          .catch(err => this.handleError(err))
-      }
-    },
-    handleError (err) {
-      if (err.code === 400) {
-        errorHandler.onError(err, err.message)
-      } else {
-        errorHandler.onError(err, t('error.general'))
-      }
-    },
-    editParticipant () {
-      this.participantData.data = this.asParticipantData(this.participantData.attributes)
-      delete this.participantData.data.attributes
-      participantService.patchParticipant(this.participantData)
-        .then(() => {
-          Notify.create({
-            message: t('success.update_participant'),
-            color: 'positive',
-            icon: 'fas fa-check'
-          })
-          this.updateTableParticipants()
-        })
-        .catch(err => this.handleError(err))
-    },
-    resetPassword (participant) {
-      this.participantData = {
-        _id: participant._id,
-        password: null
-      }
-      participantService.patchParticipant(this.participantData)
-        .then(() => {
-          Notify.create({
-            message: t('success.reset_participant_password'),
-            color: 'positive',
-            icon: 'fas fa-check'
-          })
-          this.updateTableParticipants()
-        })
-        .catch(err => this.handleError(err))
-    },
-    doActivateParticipant (participant, activated) {
-      this.participantData = {
-        _id: participant._id,
-        activated: activated
-      }
-      participantService.patchParticipant(this.participantData)
-        .then(() => {
-          Notify.create({
-            message: activated ? t('success.activate_participant') : t('success.pause_participant'),
-            color: 'positive',
-            icon: 'fas fa-check'
-          })
-          this.updateTableParticipants()
-        })
-        .catch(err => this.handleError(err))
-    },
-    activateParticipant (participant) {
-      this.doActivateParticipant(participant, true)
-    },
-    pauseParticipant (participant) {
-      this.doActivateParticipant(participant, false)
-    },
-    deleteParticipant () {
-      participantService.deleteParticipant(this.participantData._id)
-        .then(() => {
-          Notify.create({
-            message: t('success.delete_participant'),
-            color: 'positive',
-            icon: 'fas fa-check'
-          })
-          this.updateTableParticipants()
-        })
-        .catch(err => this.handleError(err))
-    },
-    deleteParticipants () {
-      participantService.deleteParticipants(this.selected.map(p => p._id))
-        .then(() => {
-          Notify.create({
-            message: t('success.delete_participants'),
-            color: 'positive',
-            icon: 'fas fa-check'
-          })
-          this.updateTableParticipants()
-        })
-        .catch(err => this.handleError(err))
-    },
-    importParticipants () {
-      const knownHeaders = ['identifier', 'validFrom', 'validUntil', 'activated']
-      const campaignId = this.campaign._id
-      const that = this
-      // const delim = this.participantsFile.name.endsWith('.tsv') ? '\t' : ','
-      this.$papa.parse(this.participantsFile, {
-        header: true,
-        delimiter: this.delimiter,
-        complete: function (results, file) {
-          if (results.errors.length === 0) {
-            console.error(results.error)
-          }
-          if (results.data.length > 0) {
-            const participants = []
-            // array of row objects
-            results.data.forEach((row) => {
-              const pobj = {
-                identifier: null,
-                validFrom: null,
-                validUntil: null,
-                activated: true,
-                campaign: campaignId,
-                data: {}
-              }
-              let valid = false // we need at least one not empty data entry
-              Object.keys(row)
-                .forEach((key) => {
-                  if (key !== 'code' && row[key].length > 0) {
-                    if (knownHeaders.includes(key)) {
-                      pobj[key] = row[key]
-                    } else {
-                      pobj.data[key] = row[key]
-                    }
-                    valid = true
-                  }
-                })
-              if (valid) {
-                participants.push(pobj)
-              }
-            })
-            if (participants.length > 0) {
-              participantService.createParticipant(participants)
-                .then(() => {
-                  Notify.create({
-                    message: t('success.create_participants'),
-                    color: 'positive',
-                    icon: 'fas fa-check'
-                  })
-                  that.updateTableParticipants()
-                })
-                .catch(err => {
-                  that.updateTableParticipants() // some may have passed
-                  that.handleError(err)
-                })
-            }
-          }
-        }
-      })
-    },
-    onAddParticipant () {
-      this.participantData = {
-        identifier: null,
-        validFrom: null,
-        validUntil: null,
-        campaign: this.campaign._id,
-        attributes: [
-          {
-            key: '',
-            value: ''
-          }
-        ]
-      }
-      this.addMode = 'single'
-      this.addCount = 10
-      this.showAddParticipant = true
-    },
-    onImport () {
-      this.participantsFile = null
-      this.showImportParticipants = true
-    },
-    onExport (format) {
-      let accept = 'application/json'
-      if (format === 'csv') {
-        accept = 'text/csv'
-      } else if (format === 'xlsx') {
-        accept = 'application/vnd.ms-excel'
-      }
-      const ids = this.selected.map(u => u._id)
-      const valid = this.eligibleFilter === '0' ? undefined : this.eligibleFilter === 'true'
-      participantService.downloadParticipants(accept, this.campaign._id, this.filter, valid, ids)
-        .then(response => {
-          if (response.status === 200) {
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-            const ext = format
-            link.setAttribute('download', `participants-export.${ext}`)
-            document.body.appendChild(link)
-            link.click()
-            link.remove()
-          } else {
-            Notify.create({
-              message: 'Participants export failed.',
-              color: 'negative'
-            })
-          }
-        })
-    },
-    toParticipantData (participant) {
-      this.participantData = { ...participant }
-      this.participantData.validFrom = this.participantData.validFrom ? date.formatDate(this.participantData.validFrom, 'YYYY-MM-DD') : null
-      this.participantData.validUntil = this.participantData.validUntil ? date.formatDate(this.participantData.validUntil, 'YYYY-MM-DD') : null
-      // remove internal fields or fields that are already in the columns
-      delete this.participantData._id
-      delete this.participantData.interviewDesign
-      delete this.participantData.campaign
-      delete this.participantData.study
-      delete this.participantData.createdBy
-      delete this.participantData.activated
-      delete this.participantData.lastSeen
-    },
-    onEdit (participant) {
-      this.toParticipantData(participant)
-      this.participantData._id = participant._id
-      this.participantData.attributes = this.asParticipantAttributes(this.participantData.data)
-      delete this.participantData.data
-      this.showEditParticipant = true
-    },
-    onView (participant) {
-      this.toParticipantData(participant)
-      // remove internal fields or fields that are already in the columns
-      delete this.participantData.validFrom
-      delete this.participantData.validUntil
-      this.showViewParticipant = true
-    },
-    onConfirmDelete (participant) {
-      this.participantData = { ...participant }
-      this.showConfirmDeleteParticipant = true
-    },
-    onConfirmDeleteMultiple () {
-      this.showConfirmDeleteParticipants = true
+  {
+    name: 'identifier',
+    required: false,
+    label: t('id'),
+    align: 'left',
+    field: 'identifier',
+    sortable: true
+  },
+  {
+    name: 'validFrom',
+    align: 'left',
+    label: t('interview.participant_valid_from'),
+    field: 'validFrom',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD') : '-'}`
+  },
+  {
+    name: 'validUntil',
+    align: 'left',
+    label: t('interview.participant_valid_until'),
+    field: 'validUntil',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD') : '-'}`
+  },
+  {
+    name: 'initAt',
+    align: 'left',
+    label: t('interview.participant_initial_contact'),
+    field: 'initAt',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm') : '-'}`
+  },
+  {
+    name: 'reminders',
+    align: 'left',
+    label: t('interview.participant_reminders_count'),
+    field: 'reminders',
+    sortable: true,
+    format: val =>
+      `${val ? val.length : '0'}`
+  },
+  {
+    name: 'valid',
+    align: 'left',
+    label: t('interview.eligibility'),
+    field: 'valid',
+    sortable: false
+  },
+  {
+    name: 'walkin',
+    align: 'left',
+    label: t('interview.participant_walkin'),
+    field: 'createdBy',
+    sortable: false
+  },
+  {
+    name: 'lastSeen',
+    align: 'left',
+    label: t('users.last_seen'),
+    field: 'lastSeen',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : '-'}`
+  },
+  {
+    name: 'action',
+    align: 'left',
+    label: t('action')
+  }
+]
+
+// Computed
+const hasParticipants = computed(() => {
+  return (participants.value && participants.value.length > 0) || (filter.value && filter.value.length > 1)
+})
+
+const disableSaveParticipant = computed(() => {
+  if (participantData.value.validFrom && participantData.value.validUntil) {
+    try {
+      const from = new Date(participantData.value.validFrom)
+      const until = new Date(participantData.value.validUntil)
+      return from > until
+    } catch (e) {
+      return true
     }
   }
+  return false
+})
+
+const disableImportParticipants = computed(() => participantsFile.value === null)
+
+const participantDataStr = computed(() => JSON.stringify(participantData.value, null, '  '))
+
+const eligibleOptions = computed(() => [
+  {
+    value: '0',
+    label: t('interview.any_eligibility')
+  },
+  {
+    value: 'true',
+    label: t('interview.eligible')
+  },
+  {
+    value: 'false',
+    label: t('interview.not_eligible')
+  }
+])
+
+// Methods
+function onFilter() {
+  tableRef.value.requestServerInteraction()
+}
+
+function updateTableParticipants() {
+  selected.value = []
+  const valid = eligibleFilter.value === '0' ? undefined : eligibleFilter.value === 'true'
+  participantService.getParticipants(paginationOpts.value, props.campaign._id, filter.value, valid)
+    .then(response => {
+      participants.value = response.data
+      paginationOpts.value.rowsNumber = response.total
+    })
+    .catch(err => handleError(err))
+}
+
+async function getTableParticipants(requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    await updateTableParticipants()
+  } else {
+    await updateTableParticipants()
+  }
+}
+
+function deleteAttribute(idx) {
+  participantData.value.attributes.splice(idx, 1)
+}
+
+function addAttribute() {
+  participantData.value.attributes.push({
+    key: '',
+    value: ''
+  })
+}
+
+function deleteAttributes() {
+  participantData.value.attributes = [
+    {
+      key: '',
+      value: ''
+    }
+  ]
+}
+
+function asParticipantData(attributes) {
+  const data = {}
+  attributes
+    .filter(attribute => attribute.key !== undefined && attribute.key.trim() !== '')
+    .forEach(attribute => {
+      data[attribute.key.replaceAll(' ', '_')] = attribute.value
+    })
+  return data
+}
+
+function asParticipantAttributes(data) {
+  const attributes = []
+  for (const key in data) {
+    attributes.push({
+      key: key,
+      value: data[key]
+    })
+  }
+  return attributes
+}
+
+function addParticipant() {
+  participantData.value.data = asParticipantData(participantData.value.attributes)
+  delete participantData.value.data.attributes
+  if (addMode.value === 'single') {
+    participantService.createParticipant(participantData.value)
+      .then(() => {
+        Notify.create({
+          message: t('success.create_participant'),
+          color: 'positive',
+          icon: 'fas fa-check'
+        })
+        updateTableParticipants()
+      })
+      .catch(err => handleError(err))
+  } else {
+    const pTemplate = { ...participantData.value }
+    delete pTemplate.identifier
+    const participantsArr = []
+    for (let i = 0; i < addCount.value; i++) {
+      participantsArr.push(pTemplate)
+    }
+    participantService.createParticipant(participantsArr)
+      .then(() => {
+        Notify.create({
+          message: t('success.create_participants'),
+          color: 'positive',
+          icon: 'fas fa-check'
+        })
+        updateTableParticipants()
+      })
+      .catch(err => handleError(err))
+  }
+}
+
+function handleError(err) {
+  if (err.code === 400) {
+    errorHandler.onError(err, err.message)
+  } else {
+    errorHandler.onError(err, t('error.general'))
+  }
+}
+
+function editParticipant() {
+  participantData.value.data = asParticipantData(participantData.value.attributes)
+  delete participantData.value.data.attributes
+  participantService.patchParticipant(participantData.value)
+    .then(() => {
+      Notify.create({
+        message: t('success.update_participant'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+      updateTableParticipants()
+    })
+    .catch(err => handleError(err))
+}
+
+function resetPassword(participant) {
+  participantData.value = {
+    _id: participant._id,
+    password: null
+  }
+  participantService.patchParticipant(participantData.value)
+    .then(() => {
+      Notify.create({
+        message: t('success.reset_participant_password'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+      updateTableParticipants()
+    })
+    .catch(err => handleError(err))
+}
+
+function doActivateParticipant(participant, activated) {
+  participantData.value = {
+    _id: participant._id,
+    activated: activated
+  }
+  participantService.patchParticipant(participantData.value)
+    .then(() => {
+      Notify.create({
+        message: activated ? t('success.activate_participant') : t('success.pause_participant'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+      updateTableParticipants()
+    })
+    .catch(err => handleError(err))
+}
+
+function activateParticipant(participant) {
+  doActivateParticipant(participant, true)
+}
+
+function pauseParticipant(participant) {
+  doActivateParticipant(participant, false)
+}
+
+function deleteParticipant() {
+  participantService.deleteParticipant(participantData.value._id)
+    .then(() => {
+      Notify.create({
+        message: t('success.delete_participant'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+      updateTableParticipants()
+    })
+    .catch(err => handleError(err))
+}
+
+function deleteParticipants() {
+  participantService.deleteParticipants(selected.value.map(p => p._id))
+    .then(() => {
+      Notify.create({
+        message: t('success.delete_participants'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+      updateTableParticipants()
+    })
+    .catch(err => handleError(err))
+}
+
+function importParticipants() {
+  const knownHeaders = ['identifier', 'validFrom', 'validUntil', 'activated']
+  const campaignId = props.campaign._id
+  // const delim = participantsFile.value.name.endsWith('.tsv') ? '\t' : ','
+  proxy.$papa.parse(participantsFile.value, {
+    header: true,
+    delimiter: delimiter.value,
+    complete: function (results, file) {
+      if (results.errors.length === 0) {
+        console.error(results.error)
+      }
+      if (results.data.length > 0) {
+        const participantsArr = []
+        // array of row objects
+        results.data.forEach((row) => {
+          const pobj = {
+            identifier: null,
+            validFrom: null,
+            validUntil: null,
+            activated: true,
+            campaign: campaignId,
+            data: {}
+          }
+          let valid = false // we need at least one not empty data entry
+          Object.keys(row)
+            .forEach((key) => {
+              if (key !== 'code' && row[key].length > 0) {
+                if (knownHeaders.includes(key)) {
+                  pobj[key] = row[key]
+                } else {
+                  pobj.data[key] = row[key]
+                }
+                valid = true
+              }
+            })
+          if (valid) {
+            participantsArr.push(pobj)
+          }
+        })
+        if (participantsArr.length > 0) {
+          participantService.createParticipant(participantsArr)
+            .then(() => {
+              Notify.create({
+                message: t('success.create_participants'),
+                color: 'positive',
+                icon: 'fas fa-check'
+              })
+              updateTableParticipants()
+            })
+            .catch(err => {
+              updateTableParticipants() // some may have passed
+              handleError(err)
+            })
+        }
+      }
+    }
+  })
+}
+
+function onAddParticipant() {
+  participantData.value = {
+    identifier: null,
+    validFrom: null,
+    validUntil: null,
+    campaign: props.campaign._id,
+    attributes: [
+      {
+        key: '',
+        value: ''
+      }
+    ]
+  }
+  addMode.value = 'single'
+  addCount.value = 10
+  showAddParticipant.value = true
+}
+
+function onImport() {
+  participantsFile.value = null
+  showImportParticipants.value = true
+}
+
+function onExport(format) {
+  let accept = 'application/json'
+  if (format === 'csv') {
+    accept = 'text/csv'
+  } else if (format === 'xlsx') {
+    accept = 'application/vnd.ms-excel'
+  }
+  const ids = selected.value.map(u => u._id)
+  const valid = eligibleFilter.value === '0' ? undefined : eligibleFilter.value === 'true'
+  participantService.downloadParticipants(accept, props.campaign._id, filter.value, valid, ids)
+    .then(response => {
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        const ext = format
+        link.setAttribute('download', `participants-export.${ext}`)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+      } else {
+        Notify.create({
+          message: 'Participants export failed.',
+          color: 'negative'
+        })
+      }
+    })
+}
+
+function toParticipantData(participant) {
+  participantData.value = { ...participant }
+  participantData.value.validFrom = participantData.value.validFrom ? date.formatDate(participantData.value.validFrom, 'YYYY-MM-DD') : null
+  participantData.value.validUntil = participantData.value.validUntil ? date.formatDate(participantData.value.validUntil, 'YYYY-MM-DD') : null
+  // remove internal fields or fields that are already in the columns
+  delete participantData.value._id
+  delete participantData.value.interviewDesign
+  delete participantData.value.campaign
+  delete participantData.value.study
+  delete participantData.value.createdBy
+  delete participantData.value.activated
+  delete participantData.value.lastSeen
+}
+
+function onEdit(participant) {
+  toParticipantData(participant)
+  participantData.value._id = participant._id
+  participantData.value.attributes = asParticipantAttributes(participantData.value.data)
+  delete participantData.value.data
+  showEditParticipant.value = true
+}
+
+function onView(participant) {
+  toParticipantData(participant)
+  // remove internal fields or fields that are already in the columns
+  delete participantData.value.validFrom
+  delete participantData.value.validUntil
+  showViewParticipant.value = true
+}
+
+function onConfirmDelete(participant) {
+  participantData.value = { ...participant }
+  showConfirmDeleteParticipant.value = true
+}
+
+function onConfirmDeleteMultiple() {
+  showConfirmDeleteParticipants.value = true
+}
+
+// Lifecycle
+onMounted(() => {
+  updateTableParticipants()
 })
 </script>

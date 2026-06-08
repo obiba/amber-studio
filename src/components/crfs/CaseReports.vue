@@ -312,8 +312,10 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref, computed, watch } from 'vue'
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { formRevisionService } from '../../services/form'
 import { caseReportExportService } from '../../services/caseReport'
 import { t } from '../../boot/i18n'
@@ -324,322 +326,302 @@ import { useStudyStore } from 'src/stores/study'
 import { useFormStore } from 'src/stores/form'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
-import { useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'StudyCaseReports',
-  components: { BlitzForm },
-  mounted: function () {
-    this.setPagination()
-    if (this.study) {
-      this.caseReportStore.getCaseReportForms(this.paginationOpts, this.studyId)
-      this.formStore.getForms(this.paginationOpts, this.studyId)
-      this.getTableCaseReports()
-    }
+const { t: $t } = useI18n()
+const route = useRoute()
+const { isReadOnly } = useAuth()
+const caseReportStore = useCaseReportStore()
+const studyStore = useStudyStore()
+const formStore = useFormStore()
+
+// Refs
+const remountCounter = ref(0)
+const showTab = ref('form')
+const locale = ref('en')
+const tab = ref('definition')
+const selected = ref([])
+const filter = ref('')
+const caseReportFormFilter = ref('0')
+const formFilter = ref('0')
+const fromDate = ref('')
+const toDate = ref('')
+const maximizedToggle = ref(false)
+const modelData = ref({})
+const selectedFormRevision = ref({ schema: [] })
+const selectedCaseReport = ref({})
+const showCaseReport = ref(false)
+const showConfirmDeleteCaseReport = ref(false)
+const showConfirmDeleteCaseReports = ref(false)
+const paginationOpts = ref({
+  sortBy: 'updatedAt',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+
+// Computed refs for store state
+const study = computed(() => studyStore.study)
+const forms = computed(() => formStore.forms)
+const caseReports = computed(() => caseReportStore.caseReports)
+const caseReportForms = computed(() => caseReportStore.caseReportForms)
+const studyId = computed(() => route.params.id)
+
+const columns = computed(() => [
+  {
+    name: '_id',
+    required: true,
+    label: $t('id'),
+    align: 'left',
+    field: row => (row.data && row.data._id) ? row.data._id : '',
+    sortable: true
   },
-  setup () {
-    const { isReadOnly } = useAuth()
-    const caseReportStore = useCaseReportStore()
-    const studyStore = useStudyStore()
-    const formStore = useFormStore()
-    const route = useRoute()
+  {
+    name: 'caseReportForm',
+    required: true,
+    label: $t('study.case_report_form'),
+    align: 'left',
+    field: 'caseReportForm',
+    sortable: true
+  },
+  {
+    name: 'form',
+    required: true,
+    label: $t('study.form'),
+    align: 'left',
+    field: 'form',
+    sortable: true
+  },
+  {
+    name: 'revision',
+    align: 'left',
+    label: $t('revision'),
+    field: 'revision',
+    sortable: true
+  },
+  {
+    name: 'updatedAt',
+    align: 'left',
+    label: $t('updated_at'),
+    field: 'updatedAt',
+    sortable: true,
+    format: val =>
+      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : $t('unknown')}`
+  },
+  {
+    name: 'action',
+    align: 'left',
+    label: $t('action')
+  }
+])
 
-    const remountCounter = ref(0)
-    const showTab = ref('form')
-    const locale = ref('en')
-    const tab = ref('definition')
-    const selected = ref([])
-    const filter = ref('')
-    const caseReportFormFilter = ref('0')
-    const formFilter = ref('0')
-    const fromDate = ref('')
-    const toDate = ref('')
-    const maximizedToggle = ref(false)
-
-    // Computed refs for store state
-    const study = computed(() => studyStore.study)
-    const forms = computed(() => formStore.forms)
-    const caseReports = computed(() => caseReportStore.caseReports)
-    const caseReportForms = computed(() => caseReportStore.caseReportForms)
-
+const caseReportFormOptions = computed(() => {
+  const opts = caseReportForms.value.map(crf => {
     return {
-      isReadOnly,
-      caseReportStore,
-      studyStore,
-      formStore,
-      route,
-      remountCounter,
-      showTab,
-      locale,
-      tab,
-      selected,
-      filter,
-      caseReportFormFilter,
-      formFilter,
-      fromDate,
-      toDate,
-      maximizedToggle,
-      study,
-      forms,
-      caseReports,
-      caseReportForms
+      value: crf._id,
+      label: crf.name
     }
-  },
-  data () {
+  })
+  opts.splice(0, 0, {
+    value: '0',
+    label: t('study.all_forms')
+  })
+  return opts
+})
+
+const formOptions = computed(() => {
+  const opts = forms.value.map(form => {
     return {
-      modelData: {},
-      selectedFormRevision: { schema: [] },
-      selectedCaseReport: {},
-      showCaseReport: false,
-      showConfirmDeleteCaseReport: false,
-      showConfirmDeleteCaseReports: false,
-      paginationOpts: {
-        sortBy: 'updatedAt',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      columns: [
-        {
-          name: '_id',
-          required: true,
-          label: this.$t('id'),
-          align: 'left',
-          field: row => (row.data && row.data._id) ? row.data._id : '',
-          sortable: true
-        },
-        {
-          name: 'caseReportForm',
-          required: true,
-          label: this.$t('study.case_report_form'),
-          align: 'left',
-          field: 'caseReportForm',
-          sortable: true
-        },
-        {
-          name: 'form',
-          required: true,
-          label: this.$t('study.form'),
-          align: 'left',
-          field: 'form',
-          sortable: true
-        },
-        {
-          name: 'revision',
-          align: 'left',
-          label: this.$t('revision'),
-          field: 'revision',
-          sortable: true
-        },
-        {
-          name: 'updatedAt',
-          align: 'left',
-          label: this.$t('updated_at'),
-          field: 'updatedAt',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
-        },
-        /* {
-          name: 'state',
-          align: 'left',
-          label: this.$t('state'),
-          field: 'state',
-          sortable: true
-        }, */
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ]
+      value: form._id,
+      label: form.name
     }
-  },
-  computed: {
-    studyId () {
-      return this.route.params.id
-    },
-    caseReportFormOptions () {
-      const opts = this.caseReportForms.map(crf => {
-        return {
-          value: crf._id,
-          label: crf.name
-        }
-      })
-      opts.splice(0, 0, {
-        value: '0',
-        label: t('study.all_forms')
-      })
-      return opts
-    },
-    formOptions () {
-      const opts = this.forms.map(form => {
-        return {
-          value: form._id,
-          label: form.name
-        }
-      })
-      opts.splice(0, 0, {
-        value: '0',
-        label: t('study.all_forms')
-      })
-      return opts
-    },
-    hasCaseReports () {
-      return this.caseReports && this.caseReports.length > 0
-    },
-    modelDataStr () {
-      return JSON.stringify(this.modelData, null, '  ')
-    },
-    formRevisionLocales () {
-      return Object.keys(this.selectedFormRevision.schema.i18n).filter(loc => this.locale !== loc)
-    },
-    formRevisionBlitzarSchema () {
-      return makeBlitzarQuasarSchemaForm(this.selectedFormRevision.schema, { locale: this.locale, debug: true })
-    }
-  },
-  watch: {
-    study: function (newValue, oldValue) {
-      this.getTableCaseReports()
-    },
-    caseReportFormFilter: function (newValue) {
-      this.onFilter()
-    },
-    formFilter: function (newValue) {
-      this.onFilter()
-    },
-    fromDate: function (newValue) {
-      this.onFilter()
-    },
-    toDate: function (newValue) {
-      this.onFilter()
-    }
-  },
-  methods: {
-    onFilter () {
-      this.selected = []
-      this.caseReportStore.getCaseReports(
-        this.paginationOpts,
-        this.studyId,
-        this.formFilter,
-        this.caseReportFormFilter,
-        this.filter,
-        this.fromDate,
-        this.toDate
-      )
-    },
-    onExport (format) {
-      let accept = 'application/json'
-      if (format === 'csv') {
-        accept = 'text/csv'
-      } else if (format === 'xlsx') {
-        accept = 'application/vnd.ms-excel'
-      } else if (format === 'zip') {
-        accept = 'application/zip'
-      }
-      const ids = this.selected.map(u => u._id)
-      caseReportExportService.downloadCaseReports(accept, this.studyId, this.caseReportFormFilter, this.formFilter, this.filter, this.fromDate, this.toDate, ids)
-        .then(response => {
-          if (response.status === 200) {
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-            const ext = format
-            link.setAttribute('download', `case-report-export.${ext}`)
-            document.body.appendChild(link)
-            link.click()
-            link.remove()
-          } else {
-            Notify.create({
-              message: 'Case report export failed.',
-              color: 'negative'
-            })
-          }
-        })
-    },
-    onLocale (newLocale) {
-      this.locale = newLocale
-    },
-    onShow (studyCaseReport) {
-      this.showCaseReport = true
-      this.selectedCaseReport = studyCaseReport
-      this.modelData = {}
-      this.showTab = 'form'
-      this.maximizedToggle = false
-      formRevisionService.getFormRevision(studyCaseReport.form, studyCaseReport.revision)
-        .then(res => {
-          this.selectedFormRevision = res.data[0]
-          this.modelData = studyCaseReport.data
-          this.remountCounter++
-        })
-    },
-    onSave () {
-      const updatedData = { ...this.modelData }
-      this.caseReportStore.updateCaseReport(
-        { data: updatedData },
-        this.selectedCaseReport._id,
-        this.paginationOpts,
-        this.studyId
-      )
-    },
-    onConfirmDelete (studyCaseReport) {
-      this.showConfirmDeleteCaseReport = true
-      this.selectedCaseReport = studyCaseReport
-    },
-    onConfirmDeleteMultiple () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteCaseReports = true
-      }
-    },
-    onClearDate (name) {
-      if (name === 'from') {
-        this.fromDate = ''
+  })
+  opts.splice(0, 0, {
+    value: '0',
+    label: t('study.all_forms')
+  })
+  return opts
+})
+
+const hasCaseReports = computed(() => caseReports.value && caseReports.value.length > 0)
+const modelDataStr = computed(() => JSON.stringify(modelData.value, null, '  '))
+
+const formRevisionLocales = computed(() => {
+  return Object.keys(selectedFormRevision.value.schema.i18n).filter(loc => locale.value !== loc)
+})
+
+const formRevisionBlitzarSchema = computed(() => {
+  return makeBlitzarQuasarSchemaForm(selectedFormRevision.value.schema, { locale: locale.value, debug: true })
+})
+
+// Methods
+function onFilter() {
+  selected.value = []
+  caseReportStore.getCaseReports(
+    paginationOpts.value,
+    studyId.value,
+    formFilter.value,
+    caseReportFormFilter.value,
+    filter.value,
+    fromDate.value,
+    toDate.value
+  )
+}
+
+function onExport(format) {
+  let accept = 'application/json'
+  if (format === 'csv') {
+    accept = 'text/csv'
+  } else if (format === 'xlsx') {
+    accept = 'application/vnd.ms-excel'
+  } else if (format === 'zip') {
+    accept = 'application/zip'
+  }
+  const ids = selected.value.map(u => u._id)
+  caseReportExportService.downloadCaseReports(accept, studyId.value, caseReportFormFilter.value, formFilter.value, filter.value, fromDate.value, toDate.value, ids)
+    .then(response => {
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        const ext = format
+        link.setAttribute('download', `case-report-export.${ext}`)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
       } else {
-        this.toDate = ''
+        Notify.create({
+          message: 'Case report export failed.',
+          color: 'negative'
+        })
       }
-    },
-    getCaseReportFormName (crfId) {
-      return this.caseReportForms.filter(crf => crf._id === crfId).map(crf => crf.name).pop()
-    },
-    getFormName (formId) {
-      return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
-    },
-    getCaseReportFullName (caseReport) {
-      return this.getCaseReportID(caseReport) + ':' + this.getCaseReportFormName(caseReport.caseReportForm) + ':' + (caseReport.revision ? caseReport.revision : t('study.latest_revision'))
-    },
-    getCaseReportID (caseReport) {
-      return caseReport.data && caseReport.data._id ? caseReport.data._id : ''
-    },
-    async getTableCaseReports (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.caseReportStore.setCaseReportPagination(requestProp.pagination)
-        await this.caseReportStore.getCaseReports(requestProp.pagination, this.studyId, this.formFilter, undefined, requestProp.filter, this.fromDate, this.toDate)
-      } else {
-        await this.caseReportStore.getCaseReports(this.paginationOpts, this.studyId, this.formFilter, undefined, this.filter, this.fromDate, this.toDate)
-      }
-      this.paginationOpts.rowsNumber = this.caseReportStore.caseReportPaginationOpts.rowsNumber
-    },
-    setPagination () {
-      this.paginationOpts = this.caseReportStore.caseReportPaginationOpts
-    },
-    deleteCaseReport () {
-      this.caseReportStore.deleteCaseReport(
-        this.selectedCaseReport._id,
-        this.paginationOpts,
-        this.studyId
-      )
-    },
-    deleteCaseReports () {
-      const ids = this.selected.map(u => u._id)
-      this.caseReportStore.deleteCaseReports(
-        ids,
-        this.paginationOpts,
-        this.studyId
-      )
-      this.selected = []
-    }
+    })
+}
+
+function onLocale(newLocale) {
+  locale.value = newLocale
+}
+
+function onShow(studyCaseReport) {
+  showCaseReport.value = true
+  selectedCaseReport.value = studyCaseReport
+  modelData.value = {}
+  showTab.value = 'form'
+  maximizedToggle.value = false
+  formRevisionService.getFormRevision(studyCaseReport.form, studyCaseReport.revision)
+    .then(res => {
+      selectedFormRevision.value = res.data[0]
+      modelData.value = studyCaseReport.data
+      remountCounter.value++
+    })
+}
+
+function onSave() {
+  const updatedData = { ...modelData.value }
+  caseReportStore.updateCaseReport(
+    { data: updatedData },
+    selectedCaseReport.value._id,
+    paginationOpts.value,
+    studyId.value
+  )
+}
+
+function onConfirmDelete(studyCaseReport) {
+  showConfirmDeleteCaseReport.value = true
+  selectedCaseReport.value = studyCaseReport
+}
+
+function onConfirmDeleteMultiple() {
+  if (selected.value.length > 0) {
+    showConfirmDeleteCaseReports.value = true
+  }
+}
+
+function onClearDate(name) {
+  if (name === 'from') {
+    fromDate.value = ''
+  } else {
+    toDate.value = ''
+  }
+}
+
+function getCaseReportFormName(crfId) {
+  return caseReportForms.value.filter(crf => crf._id === crfId).map(crf => crf.name).pop()
+}
+
+function getFormName(formId) {
+  return forms.value.filter(form => form._id === formId).map(form => form.name).pop()
+}
+
+function getCaseReportFullName(caseReport) {
+  return getCaseReportID(caseReport) + ':' + getCaseReportFormName(caseReport.caseReportForm) + ':' + (caseReport.revision ? caseReport.revision : t('study.latest_revision'))
+}
+
+function getCaseReportID(caseReport) {
+  return caseReport.data && caseReport.data._id ? caseReport.data._id : ''
+}
+
+async function getTableCaseReports(requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    caseReportStore.setCaseReportPagination(requestProp.pagination)
+    await caseReportStore.getCaseReports(requestProp.pagination, studyId.value, formFilter.value, undefined, requestProp.filter, fromDate.value, toDate.value)
+  } else {
+    await caseReportStore.getCaseReports(paginationOpts.value, studyId.value, formFilter.value, undefined, filter.value, fromDate.value, toDate.value)
+  }
+  paginationOpts.value.rowsNumber = caseReportStore.caseReportPaginationOpts.rowsNumber
+}
+
+function setPagination() {
+  paginationOpts.value = caseReportStore.caseReportPaginationOpts
+}
+
+function deleteCaseReport() {
+  caseReportStore.deleteCaseReport(
+    selectedCaseReport.value._id,
+    paginationOpts.value,
+    studyId.value
+  )
+}
+
+function deleteCaseReports() {
+  const ids = selected.value.map(u => u._id)
+  caseReportStore.deleteCaseReports(
+    ids,
+    paginationOpts.value,
+    studyId.value
+  )
+  selected.value = []
+}
+
+// Watchers
+watch(study, () => {
+  getTableCaseReports()
+})
+
+watch(caseReportFormFilter, () => {
+  onFilter()
+})
+
+watch(formFilter, () => {
+  onFilter()
+})
+
+watch(fromDate, () => {
+  onFilter()
+})
+
+watch(toDate, () => {
+  onFilter()
+})
+
+// Lifecycle
+onMounted(() => {
+  setPagination()
+  if (study.value) {
+    caseReportStore.getCaseReportForms(paginationOpts.value, studyId.value)
+    formStore.getForms(paginationOpts.value, studyId.value)
+    getTableCaseReports()
   }
 })
 </script>

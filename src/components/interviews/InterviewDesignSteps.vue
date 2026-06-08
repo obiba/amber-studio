@@ -298,8 +298,9 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { t } from '../../boot/i18n'
@@ -307,157 +308,166 @@ import { formRevisionService } from '../../services/form'
 import { useFormStore } from 'src/stores/form'
 import { useAuth } from 'src/composables/useAuth'
 
-export default defineComponent({
-  name: 'Steps',
-  props: ['modelValue'],
-  emits: ['update:modelValue'],
-  setup () {
-    const formStore = useFormStore()
-    const { isReadOnly } = useAuth()
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
+const route = useRoute()
+const formStore = useFormStore()
+const { isReadOnly } = useAuth()
+
+// Refs
+const splitterModel = ref(20)
+const selected = ref(null)
+const showConfirmDeleteStep = ref(false)
+const showAddStep = ref(false)
+const stepData = ref({})
+const revisionOptions = ref([])
+
+// Computed
+const forms = computed(() => formStore.forms)
+
+const value = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val)
+  }
+})
+
+const studyId = computed(() => route.params.id)
+
+const formOptions = computed(() => {
+  return forms.value.map(form => {
     return {
-      formStore,
-      isReadOnly,
-      v$: useVuelidate(),
-      splitterModel: ref(20),
-      selected: ref(null),
-      showConfirmDeleteStep: ref(false),
-      showAddStep: ref(false),
-      stepData: ref({}),
-      revisionOptions: ref([])
+      value: form._id,
+      label: form.name
     }
-  },
-  validations: {
-    stepData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30),
-        nameUnique (value) {
-          if (this.steps) {
-            return !this.steps.find(step => step.name === value)
-          }
-          return true
-        },
-        nameReserved (value) {
-          return value !== 'participant'
+  })
+})
+
+const steps = computed(() => {
+  if (value.value && value.value.steps) {
+    return value.value.steps
+  }
+  return []
+})
+
+const disableSaveStep = computed(() => {
+  return v$.value.stepData.$invalid || !stepData.value.form || revisionOptions.value.length === 0
+})
+
+// Vuelidate rules
+const rules = computed(() => ({
+  stepData: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30),
+      nameUnique(val) {
+        if (steps.value) {
+          return !steps.value.find(step => step.name === val)
         }
+        return true
       },
-      label: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
+      nameReserved(val) {
+        return val !== 'participant'
       }
+    },
+    label: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     }
-  },
-  watch: {
-    'stepData.form': function () {
-      if (this.stepData.form) {
-        this.updateRevisionOptions(this.stepData.form)
-      } else {
-        this.revisionOptions = []
+  }
+}))
+
+const v$ = useVuelidate(rules, { stepData })
+
+// Methods
+function updateRevisionOptions(form) {
+  formRevisionService.getFormRevisionsDigest(studyId.value, form)
+    .then((response) => {
+      revisionOptions.value = response.data ? response.data.map(rev => {
+        return { value: rev.revision, label: rev.revision }
+      }) : []
+      if (revisionOptions.value.length > 0) {
+        revisionOptions.value.splice(0, 0, { value: null, label: t('study.latest_revision') })
       }
-    },
-    'selected.form': function () {
-      if (this.selected?.form) {
-        this.updateRevisionOptions(this.selected.form)
-      } else {
-        this.revisionOptions = []
-      }
-    }
-  },
-  mounted () {
-    if (this.studyId) {
-      this.formStore.getForms(undefined, this.studyId)
-    }
-  },
-  computed: {
-    forms () {
-      return this.formStore.forms
-    },
-    value: {
-      get () {
-        return this.modelValue
-      },
-      set (value) {
-        this.$emit('update:modelValue', value)
-      }
-    },
-    studyId () {
-      return this.$route.params.id
-    },
-    formOptions () {
-      return this.forms.map(form => {
-        return {
-          value: form._id,
-          label: form.name
-        }
-      })
-    },
-    steps () {
-      if (this.value && this.value.steps) {
-        return this.value.steps
-      }
-      return []
-    },
-    disableSaveStep () {
-      return this.v$.stepData.$invalid || !this.stepData.form || this.revisionOptions.length === 0
-    }
-  },
-  methods: {
-    updateRevisionOptions (form) {
-      formRevisionService.getFormRevisionsDigest(this.studyId, form)
-        .then((response) => {
-          this.revisionOptions = response.data ? response.data.map(rev => {
-            return { value: rev.revision, label: rev.revision }
-          }) : []
-          if (this.revisionOptions.length > 0) {
-            this.revisionOptions.splice(0, 0, { value: null, label: t('study.latest_revision') })
-          }
-        })
-    },
-    isStepActive (step) {
-      return this.selected?._id === step._id
-    },
-    onStepSelection (step) {
-      if (this.selected?._id === step._id) {
-        this.selected = null
-      } else {
-        this.selected = step
-      }
-    },
-    onConfirmDeleteStep () {
-      this.showConfirmDeleteStep = true
-    },
-    onAddStep () {
-      this.stepData = {
-        name: '',
-        description: ''
-      }
-      this.showAddStep = true
-    },
-    addStep () {
-      this.value.steps.push(this.stepData)
-    },
-    moveUpStep () {
-      const idx = this.value.steps.indexOf(this.selected)
-      if (idx > 0) {
-        this.value.steps.splice(idx, 1)
-        this.value.steps.splice(idx - 1, 0, this.selected)
-      }
-    },
-    moveDownStep () {
-      const idx = this.value.steps.indexOf(this.selected)
-      if (idx < this.value.steps.length) {
-        this.value.steps.splice(idx, 1)
-        this.value.steps.splice(idx + 1, 0, this.selected)
-      }
-    },
-    deleteStep () {
-      const idx = this.value.steps.indexOf(this.selected)
-      this.value.steps = this.value.steps.filter(step => step._id !== this.selected._id)
-      this.selected = this.value.steps.length === 0 ? null : (idx === this.value.steps.length ? this.value.steps[idx - 1] : this.value.steps[idx])
-    }
+    })
+}
+
+function isStepActive(step) {
+  return selected.value?._id === step._id
+}
+
+function onStepSelection(step) {
+  if (selected.value?._id === step._id) {
+    selected.value = null
+  } else {
+    selected.value = step
+  }
+}
+
+function onConfirmDeleteStep() {
+  showConfirmDeleteStep.value = true
+}
+
+function onAddStep() {
+  stepData.value = {
+    name: '',
+    description: ''
+  }
+  showAddStep.value = true
+}
+
+function addStep() {
+  value.value.steps.push(stepData.value)
+}
+
+function moveUpStep() {
+  const idx = value.value.steps.indexOf(selected.value)
+  if (idx > 0) {
+    value.value.steps.splice(idx, 1)
+    value.value.steps.splice(idx - 1, 0, selected.value)
+  }
+}
+
+function moveDownStep() {
+  const idx = value.value.steps.indexOf(selected.value)
+  if (idx < value.value.steps.length) {
+    value.value.steps.splice(idx, 1)
+    value.value.steps.splice(idx + 1, 0, selected.value)
+  }
+}
+
+function deleteStep() {
+  const idx = value.value.steps.indexOf(selected.value)
+  value.value.steps = value.value.steps.filter(step => step._id !== selected.value._id)
+  selected.value = value.value.steps.length === 0 ? null : (idx === value.value.steps.length ? value.value.steps[idx - 1] : value.value.steps[idx])
+}
+
+// Watchers
+watch(() => stepData.value.form, () => {
+  if (stepData.value.form) {
+    updateRevisionOptions(stepData.value.form)
+  } else {
+    revisionOptions.value = []
+  }
+})
+
+watch(() => selected.value?.form, () => {
+  if (selected.value?.form) {
+    updateRevisionOptions(selected.value.form)
+  } else {
+    revisionOptions.value = []
+  }
+})
+
+// Lifecycle
+onMounted(() => {
+  if (studyId.value) {
+    formStore.getForms(undefined, studyId.value)
   }
 })
 </script>

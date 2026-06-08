@@ -583,7 +583,7 @@
                   </div>
                   <div class="col-1">
                     <q-btn
-                      v-if="!readOnly"
+                      v-if="!isReadOnly"
                       class="q-mt-md text-secondary"
                       size="12px"
                       flat
@@ -664,8 +664,10 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService, metricsService } from '../../services/utils'
@@ -678,329 +680,332 @@ import { useStudyStore } from 'src/stores/study'
 import { useAdminStore } from 'src/stores/admin'
 import { useAuth } from 'src/composables/useAuth'
 
-export default defineComponent({
-  components: {
-    Participants,
-    RecordsChart,
-    PieChart
-  },
-  name: 'StudyCaseReportForms',
-  setup () {
-    const interviewStore = useInterviewStore()
-    const studyStore = useStudyStore()
-    const adminStore = useAdminStore()
-    const { isReadOnly } = useAuth()
+const { t: $t } = useI18n()
+const route = useRoute()
+const interviewStore = useInterviewStore()
+const studyStore = useStudyStore()
+const adminStore = useAdminStore()
+const { isReadOnly } = useAuth()
 
-    return {
-      interviewStore,
-      studyStore,
-      adminStore,
-      isReadOnly,
-      v$: useVuelidate(),
-      tab: ref(''),
-      selected: ref([]),
-      paginationOpts: {
-        descending: true,
-        page: 1,
-        rowsPerPage: 100,
-        sortBy: 'name'
-      },
-      showAddCampaign: ref(false),
-      showEditCampaign: ref(false),
-      showDeleteCampaign: ref(false),
-      campaignData: ref({}),
-      subjects: [],
-      date,
-      counts: ref({})
-    }
-  },
-  mounted () {
-    subjectsService.getSubjects().then((result) => {
-      this.subjects = result
-    })
-  },
-  validations: {
-    campaignData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      visitUrl: {
-        url: (value) => !value || /^https?:\/\/.*/.test(value)
-      },
-      completionUrl: {
-        url: (value) => !value || /^https?:\/\/.*/.test(value)
-      }
-    }
-  },
-  watch: {
-    study () {
-      this.initCampaigns()
-    }
-  },
-  computed: {
-    study () {
-      return this.studyStore.study
+// Refs
+const tab = ref('')
+const selected = ref([])
+const paginationOpts = ref({
+  descending: true,
+  page: 1,
+  rowsPerPage: 100,
+  sortBy: 'name'
+})
+const showAddCampaign = ref(false)
+const showEditCampaign = ref(false)
+const showDeleteCampaign = ref(false)
+const campaignData = ref({})
+const subjects = ref([])
+const counts = ref({})
+
+// Vuelidate
+const rules = {
+  campaignData: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    interviewDesign () {
-      return this.interviewStore.interviewDesign
+    visitUrl: {
+      url: (value) => !value || /^https?:\/\/.*/.test(value)
     },
-    campaigns () {
-      return this.interviewStore.campaigns
-    },
-    disableSaveCampaign () {
-      return this.v$.campaignData.$invalid || this.campaignData.investigators.length === 0
-    },
-    userSubjectOptions () {
-      return this.getSubjectOptions('user')
-    },
-    investigatorSubjects () {
-      if (this.tab !== '') {
-        const rval = this.campaigns
-          .find((cmp) => cmp.name === this.tab).investigators
-          .map((id) => this.getSubject(id, 'user'))
-          .filter((sub) => sub !== undefined)
-        return rval
-      }
-      return []
-    },
-    supporterSubjects () {
-      if (this.tab !== '') {
-        const supporters = this.campaigns
-          .find((cmp) => cmp.name === this.tab).supporters
-        if (supporters) {
-          const rval = supporters
-            .map((id) => this.getSubject(id, 'user'))
-            .filter((sub) => sub !== undefined)
-          return rval
-        }
-      }
-      return []
-    },
-    interviewStateFrequencies () {
-      let itwFreqs = []
-      if (this.counts.interviews_freq) {
-        itwFreqs = this.counts.interviews_freq.map((f) => {
-          return {
-            name: this.$t(`study.interview_state.${f._id}`),
-            value: f.count
-          }
-        })
-      }
-      if (this.counts.participants_freq) {
-        const totalItw = this.counts.interviews_freq
-          ? this.counts.interviews_freq.map((f) => f.count).reduce((a, b) => a + b, 0)
-          : 0
-        const totalPart = this.counts.participants_freq.map((f) => f.count).reduce((a, b) => a + b, 0)
-        itwFreqs.push({
-          name: this.$t('study.interview_state.not_started'),
-          value: totalPart - totalItw
-        })
-      }
-      return itwFreqs
-    }
-  },
-  methods: {
-    async initCampaigns () {
-      await this.interviewStore.getCampaigns(this.paginationOpts, this.interviewDesign._id)
-      if (this.campaigns.length > 0) {
-        this.tab = this.$route.query.c
-          ? (this.campaigns.find(c => c._id === this.$route.query.c) || this.campaigns[0]).name
-          : this.campaigns[0].name
-        this.getCampaignMetrics()
-      }
-    },
-    getSubject (id, type) {
-      if (this.subjects && this.subjects.length > 0) {
-        return this.subjects.find(s => s.type === type && s.id === id)
-      }
-      return { id: id, type: type, name: '?' }
-    },
-    getSubjectOptions (type) {
-      return this.subjects.filter(s => s.type === type).map(s => {
-        return {
-          value: s.id,
-          label: s.name
-        }
-      })
-    },
-    getCampaignMetrics () {
-      const name = this.tab
-      const campaign = this.campaigns.find((cmp) => cmp.name === name)
-      if (campaign) {
-        metricsService.getMetrics({
-          type: 'interview',
-          query: {
-            interview: {
-              interviewDesign: this.interviewDesign._id,
-              campaign: campaign._id
-            },
-            participant: {
-              interviewDesign: this.interviewDesign._id,
-              campaign: campaign._id
-            }
-          }
-        }).then((result) => {
-          this.counts = result.counts ? result.counts : {}
-        })
-      } else {
-        this.counts = {}
-      }
-    },
-    onAddCampaign () {
-      this.campaignData = {
-        name: '',
-        investigators: [],
-        walkinParamsStr: '',
-        walkinAttributes: [],
-      }
-      this.showAddCampaign = true
-    },
-    onEditCampaign (campaign) {
-      this.campaignData = { ...campaign, walkinParamsStr: '', walkinAttributes: {} }
-      this.campaignData.validFrom = this.campaignData.validFrom ? date.formatDate(this.campaignData.validFrom, 'YYYY-MM-DD') : null
-      this.campaignData.validUntil = this.campaignData.validUntil ? date.formatDate(this.campaignData.validUntil, 'YYYY-MM-DD') : null
-      this.campaignData.walkinParamsStr = this.getWalkInParameters(campaign).join(', ')
-      this.campaignData.walkinAttributes = this.getWalkInAttributesArray(campaign)
-      this.campaignData.notifyOnInterviewCompletion = !!this.campaignData.notifyOnInterviewCompletion
-      this.showEditCampaign = true
-    },
-    deleteWalkInAttribute (idx) {
-      this.campaignData.walkinAttributes.splice(idx, 1)
-    },
-    addWalkInAttribute () {
-      this.campaignData.walkinAttributes.push({
-        key: '',
-        value: ''
-      })
-    },
-    deleteWalkInAttributes () {
-      this.campaignData.walkinAttributes = [
-        {
-          key: '',
-          value: ''
-        }
-      ]
-    },
-    onConfirmDeleteCampaign (campaign) {
-      this.campaignData = { ...campaign }
-      this.showDeleteCampaign = true
-    },
-    addCampaign () {
-      const toSave = { ...this.campaignData }
-      toSave.interviewDesign = this.interviewDesign._id
-      this.interviewStore.createCampaign(
-        toSave,
-        this.paginationOpts,
-        this.interviewDesign._id
-      ).then(() => {
-        this.tab = this.campaignData.name
-        this.getCampaignMetrics()
-      })
-    },
-    editCampaign () {
-      const toSave = { ...this.campaignData }
-      toSave.walkInData = {}
-      if (toSave.walkInEnabled) {
-        toSave.walkinParamsStr.replaceAll(',', ' ').split(' ').forEach((param) => {
-          const key = param.trim()
-          if (key && key.length > 0) {
-            toSave.walkInData[key] = null // null means it will be replaced by the walk-in participant
-          }
-        })
-        toSave.walkinAttributes.forEach((attr) => {
-          if (attr.key && attr.key.trim().length > 0 && attr.value) {
-            toSave.walkInData[attr.key.replaceAll(' ', '_')] = attr.value
-          }
-        })
-      }
-      delete toSave.walkinParamsStr
-      delete toSave.walkinAttributes
-      this.interviewStore.updateCampaign(
-        toSave,
-        undefined,
-        this.paginationOpts,
-        this.interviewDesign._id
-      ).then(() => { this.tab = this.campaignData.name })
-    },
-    removeCampaign () {
-      const idx = this.campaigns.map(campaign => campaign.name).indexOf(this.campaignData.name)
-      const nextidx = idx === this.campaigns.length - 1 ? idx - 1 : idx + 1
-      const nexttab = nextidx < 0 ? undefined : this.campaigns[nextidx].name
-      this.interviewStore.deleteCampaign(
-        this.campaignData._id,
-        this.paginationOpts,
-        this.interviewDesign._id
-      ).then(() => {
-        this.tab = nexttab
-        this.getCampaignMetrics()
-      })
-    },
-    makeWalkInUrl (campaign) {
-      if (campaign.visitUrl && campaign.walkInEnabled) {
-        const baseUrl = campaign.visitUrl.replace(/\/$/, '')
-        let queryParams = `campaign=${campaign._id}`
-        if (campaign.walkInData) {
-          Object.entries(campaign.walkInData).forEach(([key, value]) => {
-            if (value === null) {
-              const val = `{{%${key}%}}`
-              queryParams = `${queryParams}&${key}=${val}`
-            }
-          })
-        }
-        return `${baseUrl}/go?${queryParams}`
-      }
-      return campaign.visitUrl
-    },
-    hasWalkInParameters (campaign) {
-      // has any walk-in data with null values
-      if (!campaign || !campaign.walkInData) return false
-      if (Object.keys(campaign.walkInData).length === 0) return false
-      for (const key in campaign.walkInData) {
-        if (campaign.walkInData[key] === null) {
-          return true
-        }
-      }
-      // if all values are not null, return false
-      return false
-    },
-    getWalkInParameters (campaign) {
-      if (!campaign || !campaign.walkInData) return []
-      if (Object.keys(campaign.walkInData).length === 0) return []
-      const params = []
-      for (const key in campaign.walkInData) {
-        if (campaign.walkInData[key] === null) {
-          params.push(key)
-        }
-      }
-      return params
-    },
-    getWalkInAttributesArray (campaign) {
-      if (!campaign || !campaign.walkInData) return []
-      if (Object.keys(campaign.walkInData).length === 0) return []
-      const attributes = []
-      for (const key in campaign.walkInData) {
-        if (campaign.walkInData[key] !== null) {
-          attributes.push({ key: key, value: campaign.walkInData[key] })
-        }
-      }
-      return attributes
-    },
-    onParticipantsTask (type) {
-      const campaign = this.campaigns.find((cmp) => cmp.name === this.tab)
-      this.adminStore.createTask({
-        type: type,
-        arguments: {
-          interviewDesign: {
-            _id: this.interviewDesign._id
-          },
-          campaign: {
-            _id: campaign._id
-          }
-        }
-      })
+    completionUrl: {
+      url: (value) => !value || /^https?:\/\/.*/.test(value)
     }
   }
+}
+
+const v$ = useVuelidate(rules, { campaignData })
+
+// Computed
+const study = computed(() => studyStore.study)
+const interviewDesign = computed(() => interviewStore.interviewDesign)
+const campaigns = computed(() => interviewStore.campaigns)
+
+const disableSaveCampaign = computed(() => v$.value.campaignData.$invalid || campaignData.value.investigators.length === 0)
+
+const userSubjectOptions = computed(() => getSubjectOptions('user'))
+
+const investigatorSubjects = computed(() => {
+  if (tab.value !== '') {
+    const rval = campaigns.value
+      .find((cmp) => cmp.name === tab.value).investigators
+      .map((id) => getSubject(id, 'user'))
+      .filter((sub) => sub !== undefined)
+    return rval
+  }
+  return []
+})
+
+const supporterSubjects = computed(() => {
+  if (tab.value !== '') {
+    const supporters = campaigns.value
+      .find((cmp) => cmp.name === tab.value).supporters
+    if (supporters) {
+      const rval = supporters
+        .map((id) => getSubject(id, 'user'))
+        .filter((sub) => sub !== undefined)
+      return rval
+    }
+  }
+  return []
+})
+
+const interviewStateFrequencies = computed(() => {
+  let itwFreqs = []
+  if (counts.value.interviews_freq) {
+    itwFreqs = counts.value.interviews_freq.map((f) => {
+      return {
+        name: $t(`study.interview_state.${f._id}`),
+        value: f.count
+      }
+    })
+  }
+  if (counts.value.participants_freq) {
+    const totalItw = counts.value.interviews_freq
+      ? counts.value.interviews_freq.map((f) => f.count).reduce((a, b) => a + b, 0)
+      : 0
+    const totalPart = counts.value.participants_freq.map((f) => f.count).reduce((a, b) => a + b, 0)
+    itwFreqs.push({
+      name: $t('study.interview_state.not_started'),
+      value: totalPart - totalItw
+    })
+  }
+  return itwFreqs
+})
+
+// Methods
+async function initCampaigns() {
+  await interviewStore.getCampaigns(paginationOpts.value, interviewDesign.value._id)
+  if (campaigns.value.length > 0) {
+    tab.value = route.query.c
+      ? (campaigns.value.find(c => c._id === route.query.c) || campaigns.value[0]).name
+      : campaigns.value[0].name
+    getCampaignMetrics()
+  }
+}
+
+function getSubject(id, type) {
+  if (subjects.value && subjects.value.length > 0) {
+    return subjects.value.find(s => s.type === type && s.id === id)
+  }
+  return { id: id, type: type, name: '?' }
+}
+
+function getSubjectOptions(type) {
+  return subjects.value.filter(s => s.type === type).map(s => {
+    return {
+      value: s.id,
+      label: s.name
+    }
+  })
+}
+
+function getCampaignMetrics() {
+  const name = tab.value
+  const campaign = campaigns.value.find((cmp) => cmp.name === name)
+  if (campaign) {
+    metricsService.getMetrics({
+      type: 'interview',
+      query: {
+        interview: {
+          interviewDesign: interviewDesign.value._id,
+          campaign: campaign._id
+        },
+        participant: {
+          interviewDesign: interviewDesign.value._id,
+          campaign: campaign._id
+        }
+      }
+    }).then((result) => {
+      counts.value = result.counts ? result.counts : {}
+    })
+  } else {
+    counts.value = {}
+  }
+}
+
+function onAddCampaign() {
+  campaignData.value = {
+    name: '',
+    investigators: [],
+    walkinParamsStr: '',
+    walkinAttributes: [],
+  }
+  showAddCampaign.value = true
+}
+
+function onEditCampaign(campaign) {
+  campaignData.value = { ...campaign, walkinParamsStr: '', walkinAttributes: {} }
+  campaignData.value.validFrom = campaignData.value.validFrom ? date.formatDate(campaignData.value.validFrom, 'YYYY-MM-DD') : null
+  campaignData.value.validUntil = campaignData.value.validUntil ? date.formatDate(campaignData.value.validUntil, 'YYYY-MM-DD') : null
+  campaignData.value.walkinParamsStr = getWalkInParameters(campaign).join(', ')
+  campaignData.value.walkinAttributes = getWalkInAttributesArray(campaign)
+  campaignData.value.notifyOnInterviewCompletion = !!campaignData.value.notifyOnInterviewCompletion
+  showEditCampaign.value = true
+}
+
+function deleteWalkInAttribute(idx) {
+  campaignData.value.walkinAttributes.splice(idx, 1)
+}
+
+function addWalkInAttribute() {
+  campaignData.value.walkinAttributes.push({
+    key: '',
+    value: ''
+  })
+}
+
+function deleteWalkInAttributes() {
+  campaignData.value.walkinAttributes = [
+    {
+      key: '',
+      value: ''
+    }
+  ]
+}
+
+function onConfirmDeleteCampaign(campaign) {
+  campaignData.value = { ...campaign }
+  showDeleteCampaign.value = true
+}
+
+function addCampaign() {
+  const toSave = { ...campaignData.value }
+  toSave.interviewDesign = interviewDesign.value._id
+  interviewStore.createCampaign(
+    toSave,
+    paginationOpts.value,
+    interviewDesign.value._id
+  ).then(() => {
+    tab.value = campaignData.value.name
+    getCampaignMetrics()
+  })
+}
+
+function editCampaign() {
+  const toSave = { ...campaignData.value }
+  toSave.walkInData = {}
+  if (toSave.walkInEnabled) {
+    toSave.walkinParamsStr.replaceAll(',', ' ').split(' ').forEach((param) => {
+      const key = param.trim()
+      if (key && key.length > 0) {
+        toSave.walkInData[key] = null // null means it will be replaced by the walk-in participant
+      }
+    })
+    toSave.walkinAttributes.forEach((attr) => {
+      if (attr.key && attr.key.trim().length > 0 && attr.value) {
+        toSave.walkInData[attr.key.replaceAll(' ', '_')] = attr.value
+      }
+    })
+  }
+  delete toSave.walkinParamsStr
+  delete toSave.walkinAttributes
+  interviewStore.updateCampaign(
+    toSave,
+    undefined,
+    paginationOpts.value,
+    interviewDesign.value._id
+  ).then(() => { tab.value = campaignData.value.name })
+}
+
+function removeCampaign() {
+  const idx = campaigns.value.map(campaign => campaign.name).indexOf(campaignData.value.name)
+  const nextidx = idx === campaigns.value.length - 1 ? idx - 1 : idx + 1
+  const nexttab = nextidx < 0 ? undefined : campaigns.value[nextidx].name
+  interviewStore.deleteCampaign(
+    campaignData.value._id,
+    paginationOpts.value,
+    interviewDesign.value._id
+  ).then(() => {
+    tab.value = nexttab
+    getCampaignMetrics()
+  })
+}
+
+function makeWalkInUrl(campaign) {
+  if (campaign.visitUrl && campaign.walkInEnabled) {
+    const baseUrl = campaign.visitUrl.replace(/\/$/, '')
+    let queryParams = `campaign=${campaign._id}`
+    if (campaign.walkInData) {
+      Object.entries(campaign.walkInData).forEach(([key, value]) => {
+        if (value === null) {
+          const val = `{{%${key}%}}`
+          queryParams = `${queryParams}&${key}=${val}`
+        }
+      })
+    }
+    return `${baseUrl}/go?${queryParams}`
+  }
+  return campaign.visitUrl
+}
+
+function hasWalkInParameters(campaign) {
+  // has any walk-in data with null values
+  if (!campaign || !campaign.walkInData) return false
+  if (Object.keys(campaign.walkInData).length === 0) return false
+  for (const key in campaign.walkInData) {
+    if (campaign.walkInData[key] === null) {
+      return true
+    }
+  }
+  // if all values are not null, return false
+  return false
+}
+
+function getWalkInParameters(campaign) {
+  if (!campaign || !campaign.walkInData) return []
+  if (Object.keys(campaign.walkInData).length === 0) return []
+  const params = []
+  for (const key in campaign.walkInData) {
+    if (campaign.walkInData[key] === null) {
+      params.push(key)
+    }
+  }
+  return params
+}
+
+function getWalkInAttributesArray(campaign) {
+  if (!campaign || !campaign.walkInData) return []
+  if (Object.keys(campaign.walkInData).length === 0) return []
+  const attributes = []
+  for (const key in campaign.walkInData) {
+    if (campaign.walkInData[key] !== null) {
+      attributes.push({ key: key, value: campaign.walkInData[key] })
+    }
+  }
+  return attributes
+}
+
+function onParticipantsTask(type) {
+  const campaign = campaigns.value.find((cmp) => cmp.name === tab.value)
+  adminStore.createTask({
+    type: type,
+    arguments: {
+      interviewDesign: {
+        _id: interviewDesign.value._id
+      },
+      campaign: {
+        _id: campaign._id
+      }
+    }
+  })
+}
+
+// Watchers
+watch(study, () => {
+  initCampaigns()
+})
+
+// Lifecycle
+onMounted(() => {
+  subjectsService.getSubjects().then((result) => {
+    subjects.value = result
+  })
 })
 </script>

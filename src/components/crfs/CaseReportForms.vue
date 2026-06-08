@@ -47,7 +47,7 @@
           </template>
           <template v-slot:body-cell-form='props'>
             <q-td :props='props'>
-              <router-link :to="'/study/' + this.studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
+              <router-link :to="'/study/' + studyId + '/form/' + props.row.form">{{ getFormName(props.row.form) }}</router-link>
             </q-td>
           </template>
           <template v-slot:body-cell-revision='props'>
@@ -391,8 +391,9 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref, computed, watch } from 'vue'
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
@@ -405,372 +406,372 @@ import { useStudyStore } from 'src/stores/study'
 import { useFormStore } from 'src/stores/form'
 import { useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'StudyCaseReportForms',
-  mounted: function () {
-    this.setPagination()
-    if (this.studyId) {
-      this.formStore.getForms(undefined, this.studyId)
-      this.getTableStudyCaseReportForms()
-    }
-    subjectsService.getSubjects().then((result) => {
-      this.subjects = result
-    })
-  },
-  setup () {
-    const { isReadOnly } = useAuth()
-    const caseReportStore = useCaseReportStore()
-    const studyStore = useStudyStore()
-    const formStore = useFormStore()
-    const route = useRoute()
+const { t: $t } = useI18n()
+const { isReadOnly } = useAuth()
+const caseReportStore = useCaseReportStore()
+const studyStore = useStudyStore()
+const formStore = useFormStore()
+const route = useRoute()
 
-    const v$ = useVuelidate()
-    const tab = ref('definition')
-    const selected = ref([])
-    const filter = ref('')
+// Refs
+const selected = ref([])
+const filter = ref('')
+const newStudyCaseReportFormData = ref({
+  name: '',
+  description: '',
+  repeatPolicy: 'multiple'
+})
+const revisionOptions = ref([])
+const selectedStudyCaseReportForm = ref({})
+const showCreateStudyCaseReportForm = ref(false)
+const showEditStudyCaseReportForm = ref(false)
+const showConfirmCreateFormRevision = ref(false)
+const showConfirmDeleteStudyCaseReportForm = ref(false)
+const showConfirmDeleteStudyCaseReportForms = ref(false)
+const paginationOpts = ref({
+  sortBy: 'updatedAt',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+const subjects = ref([])
 
-    // Computed refs for store state
-    const study = computed(() => studyStore.study)
-    const forms = computed(() => formStore.forms)
-    const studyCaseReportForms = computed(() => caseReportStore.caseReportForms)
-
-    return {
-      isReadOnly,
-      caseReportStore,
-      studyStore,
-      formStore,
-      route,
-      v$,
-      tab,
-      selected,
-      filter,
-      study,
-      forms,
-      studyCaseReportForms
+// Validation rules
+const rules = {
+  newStudyCaseReportFormData: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     }
   },
-  data () {
-    return {
-      newStudyCaseReportFormData: {
-        name: '',
-        description: '',
-        repeatPolicy: 'multiple'
-      },
-      revisionOptions: [],
-      selectedStudyCaseReportForm: {},
-      showCreateStudyCaseReportForm: false,
-      showEditStudyCaseReportForm: false,
-      showConfirmCreateFormRevision: false,
-      showConfirmDeleteStudyCaseReportForm: false,
-      showConfirmDeleteStudyCaseReportForms: false,
-      paginationOpts: {
-        sortBy: 'updatedAt',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      subjects: []
-    }
-  },
-  validations: {
-    newStudyCaseReportFormData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
-    },
-    selectedStudyCaseReportForm: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
-    }
-  },
-  computed: {
-    studyId () {
-      return this.route.params.id
-    },
-    columns () {
-      const cols = [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left',
-          field: 'name',
-          sortable: true
-        },
-        {
-          name: 'description',
-          align: 'left',
-          label: this.$t('description'),
-          field: 'description',
-          sortable: true
-        },
-        {
-          name: 'form',
-          required: true,
-          label: this.$t('study.form'),
-          align: 'left',
-          field: 'form',
-          sortable: true
-        },
-        {
-          name: 'revision',
-          align: 'left',
-          label: this.$t('revision'),
-          field: 'revision',
-          sortable: true
-        },
-        {
-          name: 'repeatPolicy',
-          align: 'left',
-          label: this.$t('study.case_report_form_repeat_policy.title'),
-          field: 'repeatPolicy',
-          sortable: true
-        },
-        {
-          name: 'updatedAt',
-          align: 'left',
-          label: this.$t('updated_at'),
-          field: 'updatedAt',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
-        }
-      ]
-      if (this.subjects && this.subjects.length > 0) {
-        cols.push({
-          name: 'permissions',
-          align: 'left',
-          label: this.$t('restricted_access'),
-          field: 'permissions',
-          sortable: false
-        })
-      }
-      cols.push({
-        name: 'state',
-        align: 'left',
-        label: this.$t('state'),
-        field: 'state',
-        sortable: true
-      })
-      if (!this.isReadOnly) {
-        cols.push({
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        })
-      }
-      return cols
-    },
-    formOptions () {
-      return this.forms.map(form => {
-        return {
-          value: form._id,
-          label: form.name
-        }
-      })
-    },
-    repeatOptions () {
-      return [
-        'multiple', 'single_reject', 'single_update'
-      ].map(opt => {
-        return {
-          value: opt,
-          label: this.$t('study.case_report_form_repeat_policy.' + opt)
-        }
-      })
-    },
-    userSubjectOptions () {
-      return this.getSubjectOptions('user')
-    },
-    groupSubjectOptions () {
-      return this.getSubjectOptions('group')
-    },
-    disableCreateStudyCaseReportForm () {
-      return this.v$.newStudyCaseReportFormData.$invalid || !this.newStudyCaseReportFormData.form || !this.newStudyCaseReportFormData.revision || this.revisionOptions.length === 0
-    },
-    disableEditStudyCaseReportForm () {
-      return this.v$.selectedStudyCaseReportForm.$invalid || !this.selectedStudyCaseReportForm.revision || this.revisionOptions.length === 0
-    },
-    hasStudyCaseReportForms () {
-      return this.studyCaseReportForms && this.studyCaseReportForms.length > 0
-    }
-  },
-  watch: {
-    study: function (newValue, oldValue) {
-      this.getTableStudyCaseReportForms()
-    },
-    'newStudyCaseReportFormData.form': function () {
-      if (this.newStudyCaseReportFormData.form) {
-        this.updateRevisionOptions(this.newStudyCaseReportFormData.form)
-      } else {
-        this.revisionOptions = []
-      }
-    }
-  },
-  methods: {
-    updateRevisionOptions (form) {
-      formRevisionService.getFormRevisionsDigest(this.studyId, form)
-        .then((response) => {
-          this.revisionOptions = response.data ? response.data.map(rev => rev.revision) : []
-          if (this.revisionOptions.length > 0) {
-            this.revisionOptions.splice(0, 0, t('study.latest_revision'))
-          } else {
-            this.showConfirmCreateFormRevision = true
-          }
-        })
-    },
-    onAdd () {
-      this.newStudyCaseReportFormData = {
-        name: '',
-        description: '',
-        repeatPolicy: 'multiple',
-        restrictedAccess: false,
-        permissions: {
-          users: [],
-          groups: []
-        }
-      }
-      this.showCreateStudyCaseReportForm = true
-      this.selectedStudyCaseReportForm = undefined
-    },
-    onEdit (studyCaseReportForm) {
-      this.selectedStudyCaseReportForm = { ...studyCaseReportForm }
-      this.selectedStudyCaseReportForm.permissions = {
-        users: studyCaseReportForm.permissions && studyCaseReportForm.permissions.users ? studyCaseReportForm.permissions.users : [],
-        groups: studyCaseReportForm.permissions && studyCaseReportForm.permissions.groups ? studyCaseReportForm.permissions.groups : []
-      }
-      this.selectedStudyCaseReportForm.restrictedAccess = this.selectedStudyCaseReportForm.permissions.users.length > 0 || this.selectedStudyCaseReportForm.permissions.groups.length > 0
-      this.updateRevisionOptions(this.selectedStudyCaseReportForm.form)
-      this.showEditStudyCaseReportForm = true
-    },
-    onConfirmDelete (studyCaseReportForm) {
-      this.showConfirmDeleteStudyCaseReportForm = true
-      this.selectedStudyCaseReportForm = studyCaseReportForm
-    },
-    onConfirmDeleteMultiple () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteStudyCaseReportForms = true
-      }
-    },
-    getSubject (id, type) {
-      if (this.subjects && this.subjects.length > 0) {
-        return this.subjects.filter(s => s.type === type && s.id === id).pop()
-      }
-      return { id: id, type: type, name: '?' }
-    },
-    getSubjectOptions (type) {
-      return this.subjects.filter(s => s.type === type).map(s => {
-        return {
-          value: s.id,
-          label: s.name
-        }
-      })
-    },
-    getFormName (formId) {
-      return this.forms.filter(form => form._id === formId).map(form => form.name).pop()
-    },
-    getCaseReportFormFullName (caseReportForm) {
-      return this.getFormName(caseReportForm.form) + ':' + (caseReportForm.revision ? caseReportForm.revision : t('study.latest_revision'))
-    },
-    async getTableStudyCaseReportForms (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.caseReportStore.setCaseReportFormPagination(requestProp.pagination)
-        await this.caseReportStore.getCaseReportForms(requestProp.pagination, this.studyId, requestProp.filter)
-      } else {
-        await this.caseReportStore.getCaseReportForms(this.paginationOpts, this.studyId, this.filter)
-      }
-      this.paginationOpts.rowsNumber = this.caseReportStore.caseReportFormPaginationOpts.rowsNumber
-    },
-    setPagination () {
-      this.paginationOpts = this.caseReportStore.caseReportFormPaginationOpts
-    },
-    start (studyCaseReportForm) {
-      this.setState(studyCaseReportForm, 'active')
-    },
-    pause (studyCaseReportForm) {
-      this.setState(studyCaseReportForm, 'paused')
-    },
-    setState (studyCaseReportForm, state) {
-      const toSave = { ...studyCaseReportForm }
-      toSave.state = state
-      this.caseReportStore.updateCaseReportForm(
-        toSave,
-        undefined,
-        this.paginationOpts
-      )
-    },
-    async createFormRevision () {
-      const toSave = {
-        form: this.newStudyCaseReportFormData.form,
-        study: this.studyId
-      }
-      await this.formStore.createFormRevision(toSave)
-      this.updateRevisionOptions()
-    },
-    deleteStudyCaseReportForm () {
-      this.caseReportStore.deleteCaseReportForm(
-        this.selectedStudyCaseReportForm._id,
-        this.paginationOpts,
-        this.studyId
-      )
-    },
-    deleteStudyCaseReportForms () {
-      const ids = this.selected.map(u => u._id)
-      this.caseReportStore.deleteCaseReportForms(
-        ids,
-        this.paginationOpts,
-        this.studyId
-      )
-      this.selected = []
-    },
-    async saveStudyCaseReportForm (create) {
-      this.v$.$reset()
-      if (create) {
-        const toSave = { ...this.newStudyCaseReportFormData }
-        toSave.study = this.studyId
-        if (toSave.restrictedAccess) {
-          // empty permissions means it is not a restricted access
-          if (toSave.permissions.users.length === 0 && toSave.permissions.groups.length === 0) {
-            toSave.permissions = null
-          }
-        } else {
-          toSave.permissions = null
-        }
-        if (toSave.revision === t('study.latest_revision')) {
-          delete toSave.revision
-        }
-        this.caseReportStore.createCaseReportForm(
-          toSave,
-          this.paginationOpts
-        )
-      } else {
-        const toSave = { ...this.selectedStudyCaseReportForm }
-        if (this.selectedStudyCaseReportForm.restrictedAccess) {
-          // empty permissions means it is not a restricted access
-          if (this.selectedStudyCaseReportForm.permissions.users.length === 0 && this.selectedStudyCaseReportForm.permissions.groups.length === 0) {
-            toSave.permissions = null
-          }
-        } else {
-          toSave.permissions = null
-        }
-        delete toSave.restrictedAccess
-        if (toSave.revision === t('study.latest_revision')) {
-          delete toSave.revision
-        }
-        this.caseReportStore.updateCaseReportForm(
-          toSave,
-          undefined,
-          this.paginationOpts
-        )
-      }
+  selectedStudyCaseReportForm: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     }
   }
+}
+
+const v$ = useVuelidate(rules, { newStudyCaseReportFormData, selectedStudyCaseReportForm })
+
+// Computed
+const study = computed(() => studyStore.study)
+const forms = computed(() => formStore.forms)
+const studyCaseReportForms = computed(() => caseReportStore.caseReportForms)
+
+const studyId = computed(() => route.params.id)
+
+const columns = computed(() => {
+  const cols = [
+    {
+      name: 'name',
+      required: true,
+      label: $t('name'),
+      align: 'left',
+      field: 'name',
+      sortable: true
+    },
+    {
+      name: 'description',
+      align: 'left',
+      label: $t('description'),
+      field: 'description',
+      sortable: true
+    },
+    {
+      name: 'form',
+      required: true,
+      label: $t('study.form'),
+      align: 'left',
+      field: 'form',
+      sortable: true
+    },
+    {
+      name: 'revision',
+      align: 'left',
+      label: $t('revision'),
+      field: 'revision',
+      sortable: true
+    },
+    {
+      name: 'repeatPolicy',
+      align: 'left',
+      label: $t('study.case_report_form_repeat_policy.title'),
+      field: 'repeatPolicy',
+      sortable: true
+    },
+    {
+      name: 'updatedAt',
+      align: 'left',
+      label: $t('updated_at'),
+      field: 'updatedAt',
+      sortable: true,
+      format: val =>
+        `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : $t('unknown')}`
+    }
+  ]
+  if (subjects.value && subjects.value.length > 0) {
+    cols.push({
+      name: 'permissions',
+      align: 'left',
+      label: $t('restricted_access'),
+      field: 'permissions',
+      sortable: false
+    })
+  }
+  cols.push({
+    name: 'state',
+    align: 'left',
+    label: $t('state'),
+    field: 'state',
+    sortable: true
+  })
+  if (!isReadOnly.value) {
+    cols.push({
+      name: 'action',
+      align: 'left',
+      label: $t('action')
+    })
+  }
+  return cols
+})
+
+const formOptions = computed(() => {
+  return forms.value.map(form => {
+    return {
+      value: form._id,
+      label: form.name
+    }
+  })
+})
+
+const repeatOptions = computed(() => {
+  return [
+    'multiple', 'single_reject', 'single_update'
+  ].map(opt => {
+    return {
+      value: opt,
+      label: $t('study.case_report_form_repeat_policy.' + opt)
+    }
+  })
+})
+
+const userSubjectOptions = computed(() => getSubjectOptions('user'))
+const groupSubjectOptions = computed(() => getSubjectOptions('group'))
+
+const disableCreateStudyCaseReportForm = computed(() => {
+  return v$.value.newStudyCaseReportFormData.$invalid || !newStudyCaseReportFormData.value.form || !newStudyCaseReportFormData.value.revision || revisionOptions.value.length === 0
+})
+
+const disableEditStudyCaseReportForm = computed(() => {
+  return v$.value.selectedStudyCaseReportForm.$invalid || !selectedStudyCaseReportForm.value.revision || revisionOptions.value.length === 0
+})
+
+const hasStudyCaseReportForms = computed(() => {
+  return studyCaseReportForms.value && studyCaseReportForms.value.length > 0
+})
+
+// Watchers
+watch(study, () => {
+  getTableStudyCaseReportForms()
+})
+
+watch(() => newStudyCaseReportFormData.value.form, (newForm) => {
+  if (newForm) {
+    updateRevisionOptions(newForm)
+  } else {
+    revisionOptions.value = []
+  }
+})
+
+// Methods
+function updateRevisionOptions (form) {
+  formRevisionService.getFormRevisionsDigest(studyId.value, form)
+    .then((response) => {
+      revisionOptions.value = response.data ? response.data.map(rev => rev.revision) : []
+      if (revisionOptions.value.length > 0) {
+        revisionOptions.value.splice(0, 0, t('study.latest_revision'))
+      } else {
+        showConfirmCreateFormRevision.value = true
+      }
+    })
+}
+
+function onAdd () {
+  newStudyCaseReportFormData.value = {
+    name: '',
+    description: '',
+    repeatPolicy: 'multiple',
+    restrictedAccess: false,
+    permissions: {
+      users: [],
+      groups: []
+    }
+  }
+  showCreateStudyCaseReportForm.value = true
+  selectedStudyCaseReportForm.value = undefined
+}
+
+function onEdit (studyCaseReportForm) {
+  selectedStudyCaseReportForm.value = { ...studyCaseReportForm }
+  selectedStudyCaseReportForm.value.permissions = {
+    users: studyCaseReportForm.permissions && studyCaseReportForm.permissions.users ? studyCaseReportForm.permissions.users : [],
+    groups: studyCaseReportForm.permissions && studyCaseReportForm.permissions.groups ? studyCaseReportForm.permissions.groups : []
+  }
+  selectedStudyCaseReportForm.value.restrictedAccess = selectedStudyCaseReportForm.value.permissions.users.length > 0 || selectedStudyCaseReportForm.value.permissions.groups.length > 0
+  updateRevisionOptions(selectedStudyCaseReportForm.value.form)
+  showEditStudyCaseReportForm.value = true
+}
+
+function onConfirmDelete (studyCaseReportForm) {
+  showConfirmDeleteStudyCaseReportForm.value = true
+  selectedStudyCaseReportForm.value = studyCaseReportForm
+}
+
+function onConfirmDeleteMultiple () {
+  if (selected.value.length > 0) {
+    showConfirmDeleteStudyCaseReportForms.value = true
+  }
+}
+
+function getSubject (id, type) {
+  if (subjects.value && subjects.value.length > 0) {
+    return subjects.value.filter(s => s.type === type && s.id === id).pop()
+  }
+  return { id: id, type: type, name: '?' }
+}
+
+function getSubjectOptions (type) {
+  return subjects.value.filter(s => s.type === type).map(s => {
+    return {
+      value: s.id,
+      label: s.name
+    }
+  })
+}
+
+function getFormName (formId) {
+  return forms.value.filter(form => form._id === formId).map(form => form.name).pop()
+}
+
+function getCaseReportFormFullName (caseReportForm) {
+  return getFormName(caseReportForm.form) + ':' + (caseReportForm.revision ? caseReportForm.revision : t('study.latest_revision'))
+}
+
+async function getTableStudyCaseReportForms (requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    caseReportStore.setCaseReportFormPagination(requestProp.pagination)
+    await caseReportStore.getCaseReportForms(requestProp.pagination, studyId.value, requestProp.filter)
+  } else {
+    await caseReportStore.getCaseReportForms(paginationOpts.value, studyId.value, filter.value)
+  }
+  paginationOpts.value.rowsNumber = caseReportStore.caseReportFormPaginationOpts.rowsNumber
+}
+
+function setPagination () {
+  paginationOpts.value = caseReportStore.caseReportFormPaginationOpts
+}
+
+function start (studyCaseReportForm) {
+  setState(studyCaseReportForm, 'active')
+}
+
+function pause (studyCaseReportForm) {
+  setState(studyCaseReportForm, 'paused')
+}
+
+function setState (studyCaseReportForm, state) {
+  const toSave = { ...studyCaseReportForm }
+  toSave.state = state
+  caseReportStore.updateCaseReportForm(
+    toSave,
+    undefined,
+    paginationOpts.value
+  )
+}
+
+async function createFormRevision () {
+  const toSave = {
+    form: newStudyCaseReportFormData.value.form,
+    study: studyId.value
+  }
+  await formStore.createFormRevision(toSave)
+  updateRevisionOptions()
+}
+
+function deleteStudyCaseReportForm () {
+  caseReportStore.deleteCaseReportForm(
+    selectedStudyCaseReportForm.value._id,
+    paginationOpts.value,
+    studyId.value
+  )
+}
+
+function deleteStudyCaseReportForms () {
+  const ids = selected.value.map(u => u._id)
+  caseReportStore.deleteCaseReportForms(
+    ids,
+    paginationOpts.value,
+    studyId.value
+  )
+  selected.value = []
+}
+
+async function saveStudyCaseReportForm (create) {
+  v$.value.$reset()
+  if (create) {
+    const toSave = { ...newStudyCaseReportFormData.value }
+    toSave.study = studyId.value
+    if (toSave.restrictedAccess) {
+      // empty permissions means it is not a restricted access
+      if (toSave.permissions.users.length === 0 && toSave.permissions.groups.length === 0) {
+        toSave.permissions = null
+      }
+    } else {
+      toSave.permissions = null
+    }
+    if (toSave.revision === t('study.latest_revision')) {
+      delete toSave.revision
+    }
+    caseReportStore.createCaseReportForm(
+      toSave,
+      paginationOpts.value
+    )
+  } else {
+    const toSave = { ...selectedStudyCaseReportForm.value }
+    if (selectedStudyCaseReportForm.value.restrictedAccess) {
+      // empty permissions means it is not a restricted access
+      if (selectedStudyCaseReportForm.value.permissions.users.length === 0 && selectedStudyCaseReportForm.value.permissions.groups.length === 0) {
+        toSave.permissions = null
+      }
+    } else {
+      toSave.permissions = null
+    }
+    delete toSave.restrictedAccess
+    if (toSave.revision === t('study.latest_revision')) {
+      delete toSave.revision
+    }
+    caseReportStore.updateCaseReportForm(
+      toSave,
+      undefined,
+      paginationOpts.value
+    )
+  }
+}
+
+// Lifecycle
+onMounted(() => {
+  setPagination()
+  if (studyId.value) {
+    formStore.getForms(undefined, studyId.value)
+    getTableStudyCaseReportForms()
+  }
+  subjectsService.getSubjects().then((result) => {
+    subjects.value = result
+  })
 })
 </script>

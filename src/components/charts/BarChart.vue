@@ -15,73 +15,67 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { onMounted } from 'vue'
 import * as echarts from 'echarts'
 
-export default defineComponent({
-  name: 'BarChart',
-  setup () {
-    return {
-      model: ref(false),
-      options: {
-        legend: {
-          bottom: 10
-        },
-        tooltip: {},
-        dataset: {
-          source: [
-            ['product', '2015', '2016', '2017'],
-            ['Matcha Latte', 43.3, 85.8, 93.7],
-            ['Milk Tea', 83.1, 73.4, 55.1],
-            ['Cheese Cocoa', 86.4, 65.2, 82.5],
-            ['Walnut Brownie', 72.4, 53.9, 39.1]
-          ]
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '20%',
-          top: '5%',
-          containLabel: true
-        },
-        xAxis: { type: 'category' },
-        yAxis: {},
-        // Declare several bar series, each will be mapped
-        // to a column of dataset.source by default.
-        series: [
-          { type: 'bar' },
-          { type: 'bar' },
-          { type: 'bar' }
-        ]
-      },
-      bar_chart: ref(null)
-    }
+const options = {
+  legend: {
+    bottom: 10
   },
-  mounted () {
-    this.init()
+  tooltip: {},
+  dataset: {
+    source: [
+      ['product', '2015', '2016', '2017'],
+      ['Matcha Latte', 43.3, 85.8, 93.7],
+      ['Milk Tea', 83.1, 73.4, 55.1],
+      ['Cheese Cocoa', 86.4, 65.2, 82.5],
+      ['Walnut Brownie', 72.4, 53.9, 39.1]
+    ]
   },
-  methods: {
-    SaveImage () {
-      const linkSource = this.bar_chart.getDataURL()
-      const downloadLink = document.createElement('a')
-      document.body.appendChild(downloadLink)
-      downloadLink.href = linkSource
-      downloadLink.target = '_self'
-      downloadLink.download = 'BarChart.png'
-      downloadLink.click()
-    },
-    init () {
-      const barChart = document.getElementById('barChart')
-      this.bar_chart = echarts.init(barChart, 'light')
-      this.bar_chart.setOption(this.options)
-    },
-    onResize () {
-      if (this.bar_chart) {
-        this.bar_chart.resize()
-      }
-    }
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '20%',
+    top: '5%',
+    containLabel: true
+  },
+  xAxis: { type: 'category' },
+  yAxis: {},
+  // Declare several bar series, each will be mapped
+  // to a column of dataset.source by default.
+  series: [
+    { type: 'bar' },
+    { type: 'bar' },
+    { type: 'bar' }
+  ]
+}
+let bar_chart = null
+
+function SaveImage() {
+  const linkSource = bar_chart.getDataURL()
+  const downloadLink = document.createElement('a')
+  document.body.appendChild(downloadLink)
+  downloadLink.href = linkSource
+  downloadLink.target = '_self'
+  downloadLink.download = 'BarChart.png'
+  downloadLink.click()
+}
+
+function init() {
+  const barChart = document.getElementById('barChart')
+  bar_chart = echarts.init(barChart, 'light')
+  bar_chart.setOption(options)
+}
+
+function onResize() {
+  if (bar_chart) {
+    bar_chart.resize()
   }
+}
+
+onMounted(() => {
+  init()
 })
 </script>
 
