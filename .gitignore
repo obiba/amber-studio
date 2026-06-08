@@ -138,3 +138,5 @@ yarn-error.log*
 *.sln
 
 .yarnrc
+.serena
+
