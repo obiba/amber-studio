@@ -392,23 +392,25 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed, watch } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { formRevisionService } from '../../services/form'
 import { t } from '../../boot/i18n'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
+import { useCaseReportStore } from 'src/stores/caseReport'
+import { useStudyStore } from 'src/stores/study'
+import { useFormStore } from 'src/stores/form'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'StudyCaseReportForms',
-  mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     if (this.studyId) {
-      this.getStudyForms({ study: this.studyId })
+      this.formStore.getForms(undefined, this.studyId)
       this.getTableStudyCaseReportForms()
     }
     subjectsService.getSubjects().then((result) => {
@@ -416,11 +418,35 @@ export default defineComponent({
     })
   },
   setup () {
+    const { isReadOnly } = useAuth()
+    const caseReportStore = useCaseReportStore()
+    const studyStore = useStudyStore()
+    const formStore = useFormStore()
+    const route = useRoute()
+
+    const v$ = useVuelidate()
+    const tab = ref('definition')
+    const selected = ref([])
+    const filter = ref('')
+
+    // Computed refs for store state
+    const study = computed(() => studyStore.study)
+    const forms = computed(() => formStore.forms)
+    const studyCaseReportForms = computed(() => caseReportStore.caseReportForms)
+
     return {
-      v$: useVuelidate(),
-      tab: ref('definition'),
-      selected: ref([]),
-      filter: ref('')
+      isReadOnly,
+      caseReportStore,
+      studyStore,
+      formStore,
+      route,
+      v$,
+      tab,
+      selected,
+      filter,
+      study,
+      forms,
+      studyCaseReportForms
     }
   },
   data () {
@@ -464,13 +490,8 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study,
-      forms: state => state.form.forms,
-      studyCaseReportForms: state => state.caseReport ? state.caseReport.caseReportForms : []
-    }),
     studyId () {
-      return this.$route.params.id
+      return this.route.params.id
     },
     columns () {
       const cols = [
@@ -593,13 +614,6 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getStudyForms: 'form/getForms',
-      getStudyCaseReportForms: 'caseReport/getCaseReportForms',
-      createStudyCaseReportForm: 'caseReport/createCaseReportForm',
-      updateStudyCaseReportForm: 'caseReport/updateCaseReportForm',
-      createStudyFormRevision: 'form/createFormRevision'
-    }),
     updateRevisionOptions (form) {
       formRevisionService.getFormRevisionsDigest(this.studyId, form)
         .then((response) => {
@@ -667,17 +681,15 @@ export default defineComponent({
     async getTableStudyCaseReportForms (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('caseReport/setCaseReportFormPagination', {
-          caseReportFormPaginationOpts: requestProp.pagination
-        })
-        await this.getStudyCaseReportForms({ paginationOpts: requestProp.pagination, study: this.studyId, filter: requestProp.filter })
+        this.caseReportStore.setCaseReportFormPagination(requestProp.pagination)
+        await this.caseReportStore.getCaseReportForms(requestProp.pagination, this.studyId, requestProp.filter)
       } else {
-        await this.getStudyCaseReportForms({ paginationOpts: this.paginationOpts, study: this.studyId, filter: this.filter })
+        await this.caseReportStore.getCaseReportForms(this.paginationOpts, this.studyId, this.filter)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.caseReport.caseReportFormPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.caseReportStore.caseReportFormPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.caseReport.caseReportFormPaginationOpts
+      this.paginationOpts = this.caseReportStore.caseReportFormPaginationOpts
     },
     start (studyCaseReportForm) {
       this.setState(studyCaseReportForm, 'active')
@@ -688,35 +700,34 @@ export default defineComponent({
     setState (studyCaseReportForm, state) {
       const toSave = { ...studyCaseReportForm }
       toSave.state = state
-      this.updateStudyCaseReportForm({
-        caseReportForm: toSave,
-        paginationOpts: this.paginationOpts
-      })
+      this.caseReportStore.updateCaseReportForm(
+        toSave,
+        undefined,
+        this.paginationOpts
+      )
     },
     async createFormRevision () {
       const toSave = {
         form: this.newStudyCaseReportFormData.form,
         study: this.studyId
       }
-      await this.createStudyFormRevision({
-        formRevision: toSave
-      })
+      await this.formStore.createFormRevision(toSave)
       this.updateRevisionOptions()
     },
     deleteStudyCaseReportForm () {
-      this.$store.dispatch('caseReport/deleteCaseReportForm', {
-        id: this.selectedStudyCaseReportForm._id,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.caseReportStore.deleteCaseReportForm(
+        this.selectedStudyCaseReportForm._id,
+        this.paginationOpts,
+        this.studyId
+      )
     },
     deleteStudyCaseReportForms () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('caseReport/deleteCaseReportForms', {
-        ids: ids,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.caseReportStore.deleteCaseReportForms(
+        ids,
+        this.paginationOpts,
+        this.studyId
+      )
       this.selected = []
     },
     async saveStudyCaseReportForm (create) {
@@ -735,9 +746,10 @@ export default defineComponent({
         if (toSave.revision === t('study.latest_revision')) {
           delete toSave.revision
         }
-        this.createStudyCaseReportForm({
-          caseReportForm: toSave
-        })
+        this.caseReportStore.createCaseReportForm(
+          toSave,
+          this.paginationOpts
+        )
       } else {
         const toSave = { ...this.selectedStudyCaseReportForm }
         if (this.selectedStudyCaseReportForm.restrictedAccess) {
@@ -752,10 +764,11 @@ export default defineComponent({
         if (toSave.revision === t('study.latest_revision')) {
           delete toSave.revision
         }
-        this.updateStudyCaseReportForm({
-          caseReportForm: toSave,
-          paginationOpts: this.paginationOpts
-        })
+        this.caseReportStore.updateCaseReportForm(
+          toSave,
+          undefined,
+          this.paginationOpts
+        )
       }
     }
   }

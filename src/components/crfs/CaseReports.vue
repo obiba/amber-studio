@@ -313,41 +313,76 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed, watch } from 'vue'
 import { formRevisionService } from '../../services/form'
 import { caseReportExportService } from '../../services/caseReport'
 import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
+import { useCaseReportStore } from 'src/stores/caseReport'
+import { useStudyStore } from 'src/stores/study'
+import { useFormStore } from 'src/stores/form'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'StudyCaseReports',
   components: { BlitzForm },
-  mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     if (this.study) {
-      this.getCaseReportForms({ study: this.studyId })
-      this.getForms({ study: this.studyId })
+      this.caseReportStore.getCaseReportForms(this.paginationOpts, this.studyId)
+      this.formStore.getForms(this.paginationOpts, this.studyId)
       this.getTableCaseReports()
     }
   },
   setup () {
+    const { isReadOnly } = useAuth()
+    const caseReportStore = useCaseReportStore()
+    const studyStore = useStudyStore()
+    const formStore = useFormStore()
+    const route = useRoute()
+
+    const remountCounter = ref(0)
+    const showTab = ref('form')
+    const locale = ref('en')
+    const tab = ref('definition')
+    const selected = ref([])
+    const filter = ref('')
+    const caseReportFormFilter = ref('0')
+    const formFilter = ref('0')
+    const fromDate = ref('')
+    const toDate = ref('')
+    const maximizedToggle = ref(false)
+
+    // Computed refs for store state
+    const study = computed(() => studyStore.study)
+    const forms = computed(() => formStore.forms)
+    const caseReports = computed(() => caseReportStore.caseReports)
+    const caseReportForms = computed(() => caseReportStore.caseReportForms)
+
     return {
-      remountCounter: 0,
-      showTab: ref('form'),
-      locale: ref('en'),
-      tab: ref('definition'),
-      selected: ref([]),
-      filter: ref(''),
-      caseReportFormFilter: ref('0'),
-      formFilter: ref('0'),
-      fromDate: ref(''),
-      toDate: ref(''),
-      maximizedToggle: ref(false)
+      isReadOnly,
+      caseReportStore,
+      studyStore,
+      formStore,
+      route,
+      remountCounter,
+      showTab,
+      locale,
+      tab,
+      selected,
+      filter,
+      caseReportFormFilter,
+      formFilter,
+      fromDate,
+      toDate,
+      maximizedToggle,
+      study,
+      forms,
+      caseReports,
+      caseReportForms
     }
   },
   data () {
@@ -422,14 +457,8 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study,
-      forms: state => state.form.forms,
-      caseReports: state => state.caseReport ? state.caseReport.caseReports : [],
-      caseReportForms: state => state.caseReport ? state.caseReport.caseReportForms : []
-    }),
     studyId () {
-      return this.$route.params.id
+      return this.route.params.id
     },
     caseReportFormOptions () {
       const opts = this.caseReportForms.map(crf => {
@@ -488,22 +517,17 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getForms: 'form/getForms',
-      getCaseReports: 'caseReport/getCaseReports',
-      getCaseReportForms: 'caseReport/getCaseReportForms'
-    }),
     onFilter () {
       this.selected = []
-      this.getCaseReports({
-        paginationOpts: this.paginationOpts,
-        study: this.studyId,
-        caseReportForm: this.caseReportFormFilter,
-        form: this.formFilter,
-        filter: this.filter,
-        from: this.fromDate,
-        to: this.toDate
-      })
+      this.caseReportStore.getCaseReports(
+        this.paginationOpts,
+        this.studyId,
+        this.formFilter,
+        this.caseReportFormFilter,
+        this.filter,
+        this.fromDate,
+        this.toDate
+      )
     },
     onExport (format) {
       let accept = 'application/json'
@@ -552,12 +576,12 @@ export default defineComponent({
     },
     onSave () {
       const updatedData = { ...this.modelData }
-      this.$store.dispatch('caseReport/updateCaseReport', {
-        id: this.selectedCaseReport._id,
-        caseReport: { data: updatedData },
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.caseReportStore.updateCaseReport(
+        { data: updatedData },
+        this.selectedCaseReport._id,
+        this.paginationOpts,
+        this.studyId
+      )
     },
     onConfirmDelete (studyCaseReport) {
       this.showConfirmDeleteCaseReport = true
@@ -590,32 +614,30 @@ export default defineComponent({
     async getTableCaseReports (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('caseReport/setCaseReportPagination', {
-          caseReportPaginationOpts: requestProp.pagination
-        })
-        await this.getCaseReports({ paginationOpts: requestProp.pagination, study: this.studyId, form: this.formFilter, filter: requestProp.filter, from: this.fromDate, to: this.toDate })
+        this.caseReportStore.setCaseReportPagination(requestProp.pagination)
+        await this.caseReportStore.getCaseReports(requestProp.pagination, this.studyId, this.formFilter, undefined, requestProp.filter, this.fromDate, this.toDate)
       } else {
-        await this.getCaseReports({ paginationOpts: this.paginationOpts, study: this.studyId, form: this.formFilter, filter: this.filter, from: this.fromDate, to: this.toDate })
+        await this.caseReportStore.getCaseReports(this.paginationOpts, this.studyId, this.formFilter, undefined, this.filter, this.fromDate, this.toDate)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.caseReport.caseReportPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.caseReportStore.caseReportPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.caseReport.caseReportPaginationOpts
+      this.paginationOpts = this.caseReportStore.caseReportPaginationOpts
     },
     deleteCaseReport () {
-      this.$store.dispatch('caseReport/deleteCaseReport', {
-        id: this.selectedCaseReport._id,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.caseReportStore.deleteCaseReport(
+        this.selectedCaseReport._id,
+        this.paginationOpts,
+        this.studyId
+      )
     },
     deleteCaseReports () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('caseReport/deleteCaseReports', {
-        ids: ids,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.caseReportStore.deleteCaseReports(
+        ids,
+        this.paginationOpts,
+        this.studyId
+      )
       this.selected = []
     }
   }
