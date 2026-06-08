@@ -13,13 +13,6 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 import Forms from 'components/forms/Forms.vue'
-
-export default defineComponent({
-  components: {
-    Forms
-  }
-})
 </script>

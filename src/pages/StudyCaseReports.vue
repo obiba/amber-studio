@@ -13,13 +13,6 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 import CaseReports from 'src/components/crfs/CaseReports.vue'
-
-export default defineComponent({
-  components: {
-    CaseReports
-  }
-})
 </script>

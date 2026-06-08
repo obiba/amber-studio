@@ -4,3 +4,6 @@
     <q-separator/>
   </q-page>
 </template>
+
+<script setup>
+</script>

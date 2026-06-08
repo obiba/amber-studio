@@ -294,20 +294,12 @@
   </q-page>
 </template>
 
-<script>
-import {defineComponent} from 'vue';
-import {ref} from 'vue';
+<script setup>
+import { ref } from 'vue'
 
-export default defineComponent({
-  name: "Checkout",
-  setup() {
-    return {
-      step: ref(1),
-      address_detail: ref({}),
-      card_detail: ref({})
-    }
-  }
-})
+const step = ref(1)
+const address_detail = ref({})
+const card_detail = ref({})
 </script>
 
 <style scoped>

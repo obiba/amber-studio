@@ -13,13 +13,6 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 import Interviews from 'src/components/interviews/Interviews.vue'
-
-export default defineComponent({
-  components: {
-    Interviews
-  }
-})
 </script>
