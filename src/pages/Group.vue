@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="groups" :title="$t('groups.title')" to="/groups"/>
+        <q-breadcrumbs-el icon="groups" :title="t('groups.title')" to="/groups"/>
         <q-breadcrumbs-el :label="group.name" />
       </q-breadcrumbs>
     </div>
@@ -16,12 +16,12 @@
               <div class='col-12'>
                 <q-input
                   v-model='groupData.name'
-                  :label="$t('name')"
+                  :label="t('name')"
                   lazy-rules
                   class='q-mb-sm'
                   @blur="v$.name.$touch"
                       :error="v$.name.$error"
-                      :hint="$t('required')"
+                      :hint="t('required')"
                     >
                   <template v-slot:error>
                     <div v-for="error in v$.name.$errors">
@@ -35,7 +35,7 @@
               <div class='col-12'>
                 <q-input
                   v-model='groupData.description'
-                  :label="$t('description')"
+                  :label="t('description')"
                   autogrow
                   lazy-rules
                   class='q-mb-sm'
@@ -46,11 +46,11 @@
 
           <div class="col-12 col-md-6 q-pa-sm">
             <div>
-              {{ $t('members')}}
+              {{ t('members')}}
             </div>
             <q-select
-              :label="$t('group.search_users')"
-              :hint="$t('group.search_users_hint')"
+              :label="t('group.search_users')"
+              :hint="t('group.search_users_hint')"
               :options="userOptions"
               :loading="userOptionsLoading"
               v-model="selectedUserOptions"
@@ -88,7 +88,7 @@
         <q-btn
           @click='saveGroup'
           :disable='disableSaveGroup'
-          :label="$t('save')"
+          :label="t('save')"
           type='submit'
           color='primary'
           class="q-ml-sm q-mt-md"
@@ -105,10 +105,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
 import { useAdminStore } from 'src/stores/admin'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const adminStore = useAdminStore()

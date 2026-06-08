@@ -21,15 +21,15 @@
           color="negative"
           icon="delete_outline"
           :disable="selected.length === 0"
-          :title="$t('form.delete_form_revisions_hint')"
+          :title="t('form.delete_form_revisions_hint')"
           @click="onConfirmDeleteMultiple()" />
         <q-space />
         <q-input
           dense
           debounce="300"
           v-model="filter"
-          :placeholder="$t('search')"
-          :title="$t('form.search_form_revision_hint')">
+          :placeholder="t('search')"
+          :title="t('form.search_form_revision_hint')">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -48,7 +48,7 @@
             flat
             dense
             round
-            :title="$t('form.export_form_revision_hint')"
+            :title="t('form.export_form_revision_hint')"
             icon="file_download"
             @click='onExport(props.row)'>
           </q-btn>
@@ -59,7 +59,7 @@
             flat
             dense
             round
-            :title="$t('form.reinstate_form_revision_hint')"
+            :title="t('form.reinstate_form_revision_hint')"
             icon="undo"
             @click='onReinstate(props.row)'>
           </q-btn>
@@ -69,7 +69,7 @@
             flat
             dense
             round
-            :title="$t('form.view_form_revision_hint')"
+            :title="t('form.view_form_revision_hint')"
             icon="visibility"
             @click='onView(props.row)'>
           </q-btn>
@@ -80,7 +80,7 @@
             flat
             dense
             round
-            :title="$t('form.delete_form_revision_hint')"
+            :title="t('form.delete_form_revision_hint')"
             icon="delete"
             @click='onConfirmDelete(props.row)'>
           </q-btn>
@@ -89,7 +89,7 @@
     </q-table>
 
     <div v-else class="text-grey-6">
-      {{ $t('form.no_revision') }}
+      {{ t('form.no_revision') }}
     </div>
 
     <q-dialog v-model='showViewRevision' persistent>
@@ -135,7 +135,7 @@
           </q-tab-panels>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('close')" flat v-close-popup />
+          <q-btn :label="t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -144,17 +144,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.reinstate_form_revision_confirm')}}
+            {{t('form.reinstate_form_revision_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedRevision.revision}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='reinstateFormRevision'
-            :label="$t('reinstate')"
+            :label="t('reinstate')"
             type='submit'
             color='primary'
             v-close-popup
@@ -171,17 +171,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.delete_form_revision_confirm')}}
+            {{t('form.delete_form_revision_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedRevision.revision}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteFormRevision'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -198,17 +198,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.delete_form_revisions_confirm')}}
+            {{t('form.delete_form_revisions_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => g.revision).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteFormRevisions'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup

@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="person" :label="$t('users.title')" />
+        <q-breadcrumbs-el icon="person" :label="t('users.title')" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
@@ -24,7 +24,7 @@
             <q-btn
               color="primary"
               icon="add"
-              :title="$t('users.add_user_hint')"
+              :title="t('users.add_user_hint')"
               @click="createUser()"
               class="q-mr-md" />
             <q-btn
@@ -34,7 +34,7 @@
               color="black"
               icon="groups"
               :disable="selected.length === 0"
-              :title="$t('users.group_users_hint')"
+              :title="t('users.group_users_hint')"
               @click="confirmGroupUsers()" />
             <q-btn
               class="q-mr-md"
@@ -43,7 +43,7 @@
               color="negative"
               icon="delete_outline"
               :disable="selected.length === 0"
-              :title="$t('users.delete_users_hint')"
+              :title="t('users.delete_users_hint')"
               @click="confirmDeleteUsers()" />
             <q-space />
             <q-select
@@ -55,7 +55,7 @@
               :options="rolesOptions"
               use-chips
               clearable
-              :label="$t('users.roles_filter')"
+              :label="t('users.roles_filter')"
               style="min-width: 250px"
               class="q-mr-md"
               @change="getTableUsers"
@@ -64,8 +64,8 @@
               dense
               debounce="300"
               v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('users.search_hint')">
+              :placeholder="t('search')"
+              :title="t('users.search_hint')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -83,7 +83,7 @@
           </template>
           <template v-slot:body-cell-role='props'>
             <q-td>
-              {{ $t('roles.' + props.row.role) }}
+              {{ t('roles.' + props.row.role) }}
             </q-td>
           </template>
           <template v-slot:body-cell-action='props'>
@@ -94,7 +94,7 @@
                 flat
                 dense
                 round
-                :title="$t('users.edit_user_hint')"
+                :title="t('users.edit_user_hint')"
                 icon='edit'
                 :to="'/user/' + props.row._id">
               </q-btn>
@@ -105,7 +105,7 @@
                 flat
                 dense
                 round
-                :title="$t('users.resend_email_hint')"
+                :title="t('users.resend_email_hint')"
                 icon='send'
                 @click='resendEmailVerification(props.row.email)'>
               </q-btn>
@@ -116,7 +116,7 @@
                 flat
                 dense
                 round
-                :title="$t('users.reset_password_hint')"
+                :title="t('users.reset_password_hint')"
                 icon='replay'
                 @click='resetPassword(props.row.email)'>
               </q-btn>
@@ -127,7 +127,7 @@
                 flat
                 dense
                 round
-                :title="$t('users.activate_user_hint')"
+                :title="t('users.activate_user_hint')"
                 icon='play_arrow'
                 @click='activeateUser(props.row)'>
               </q-btn>
@@ -138,7 +138,7 @@
                 flat
                 dense
                 round
-                :title="$t('users.deactivate_user_hint')"
+                :title="t('users.deactivate_user_hint')"
                 icon='pause'
                 @click='deactiveateUser(props.row)'>
               </q-btn>
@@ -148,7 +148,7 @@
                 flat
                 dense
                 round
-                :title="$t('users.delete_user_hint')"
+                :title="t('users.delete_user_hint')"
                 icon='delete'
                 @click='confirmDeleteUser(props.row)'>
               </q-btn>
@@ -165,12 +165,12 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='newProfileData.firstname'
-              :label="$t('firstname')"
+              :label="t('firstname')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.firstname.$touch"
               :error="v$.firstname.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
@@ -185,12 +185,12 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='newProfileData.lastname'
-              :label="$t('lastname')"
+              :label="t('lastname')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.lastname.$touch"
               :error="v$.lastname.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
@@ -205,13 +205,13 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='newProfileData.email'
-              :label="$t('email')"
+              :label="t('email')"
               lazy-rules
               class='q-ma-sm'
               v-if='!selectedUser'
               @blur="v$.email.$touch"
               :error="v$.email.$error"
-              :hint="$t('email_hint')"
+              :hint="t('email_hint')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-envelope' size='xs' />
@@ -226,14 +226,14 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='newProfileData.password'
-              :label="$t('password')"
+              :label="t('password')"
               lazy-rules
               class='q-ma-sm'
               type='password'
               v-if='!selectedUser'
               @blur="v$.password.$touch"
               :error="v$.password.$error"
-              :hint="$t('password_hint')"
+              :hint="t('password_hint')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-lock' size='xs' />
@@ -248,7 +248,7 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='newProfileData.institution'
-              :label="$t('institution')"
+              :label="t('institution')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -260,7 +260,7 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='newProfileData.city'
-              :label="$t('city')"
+              :label="t('city')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -272,7 +272,7 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='newProfileData.title'
-              :label="$t('title')"
+              :label="t('title')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -284,7 +284,7 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='newProfileData.phone'
-              :label="$t('phone')"
+              :label="t('phone')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -299,7 +299,7 @@
                 v-show="hasLocales"
                 v-model="newProfileData.language"
                 :options="localeOptions"
-                :label="$t('preferred_language')"
+                :label="t('preferred_language')"
                 emit-value
                 map-options
                 options-dense
@@ -314,7 +314,7 @@
               class='q-ma-sm'
               v-model='newProfileData.role'
               :options='rolesOptions'
-              :label="$t('role')"
+              :label="t('role')"
               emit-value
               map-options
               options-dense
@@ -323,11 +323,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveUser'
             :disable='disableCreateProfile'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -344,17 +344,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('users.delete_user_confirm')}}
+            {{t('users.delete_user_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedUser.email}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteUser'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -375,8 +375,8 @@
               class='q-ma-sm'
               v-model='selectedGroup'
               :options='groupsOptions'
-              :label="$t('group.title')"
-              :hint="$t('users.group_add_hint')"
+              :label="t('group.title')"
+              :hint="t('users.group_add_hint')"
               use-input
               map-options
               options-dense
@@ -387,10 +387,10 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='groupUsers'
-            :label="$t('apply')"
+            :label="t('apply')"
             :disable='disableGroupUsers'
             type='submit'
             color='primary'
@@ -408,17 +408,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('users.delete_users_confirm')}}
+            {{t('users.delete_users_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(u => u.email).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteUsers'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup

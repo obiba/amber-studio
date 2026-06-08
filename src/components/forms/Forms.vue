@@ -20,7 +20,7 @@
               v-if="!isReadOnly"
               color="primary"
               icon="add"
-              :title="$t('study.add_study_form_hint')"
+              :title="t('study.add_study_form_hint')"
               @click="onAdd()"
               class="q-mr-md" />
             <q-btn
@@ -31,15 +31,15 @@
               color="negative"
               icon="delete_outline"
               :disable="selected.length === 0"
-              :title="$t('study.delete_study_forms_hint')"
+              :title="t('study.delete_study_forms_hint')"
               @click="onConfirmDeleteMultiple()" />
             <q-space />
             <q-input
               dense
               debounce="300"
               v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('study.search_study_form_hint')">
+              :placeholder="t('search')"
+              :title="t('study.search_study_form_hint')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -58,7 +58,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.edit_study_form_hint')"
+                :title="t('study.edit_study_form_hint')"
                 icon="edit"
                 :to="'/study/' + studyId + '/form/' + props.row._id">
               </q-btn>
@@ -68,7 +68,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.delete_study_form_hint')"
+                :title="t('study.delete_study_form_hint')"
                 icon="delete"
                 @click='onConfirmDelete(props.row)'>
               </q-btn>
@@ -82,7 +82,7 @@
       v-else
       color="primary"
       icon="add"
-      :label="$t('study.add_study_form_hint')"
+      :label="t('study.add_study_form_hint')"
       @click="onAdd()"
       class="q-ma-md" />
 
@@ -92,12 +92,12 @@
            <div class="col-12">
             <q-input
               v-model='newStudyFormData.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
               class="q-ma-sm"
               @blur="v$.newStudyFormData.name.$touch"
               :error="v$.newStudyFormData.name.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:error>
                 <div v-for="error in v$.newStudyFormData.name.$errors">
@@ -109,7 +109,7 @@
           <div class="col-12">
             <q-input
               v-model='newStudyFormData.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               class="q-ma-sm"
@@ -118,19 +118,19 @@
           <div class="col-12">
             <q-file
               v-model="newStudyFormData.importSchema"
-              :label="$t('study.import_schema')"
-              :hint="$t('study.import_schema_hint')"
+              :label="t('study.import_schema')"
+              :hint="t('study.import_schema_hint')"
               class="q-ma-sm"
               accept=".json"
             />
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudyForm'
             :disable='disableCreateStudyForm'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -147,17 +147,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_study_form_confirm')}}
+            {{t('study.delete_study_form_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedStudyForm.name}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudyForm'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -174,17 +174,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_study_forms_confirm')}}
+            {{t('study.delete_study_forms_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudyForms'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup

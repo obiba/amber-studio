@@ -18,7 +18,7 @@
           v-if="!isReadOnly"
           color="primary"
           icon="add"
-          :title="$t('form.tr_add_key')"
+          :title="t('form.tr_add_key')"
           @click="onAddTranslation()"
           class="q-mr-md" />
         <q-btn
@@ -28,7 +28,7 @@
           round
           color="black"
           icon="merge"
-          :title="$t('form.tr_merge_items')"
+          :title="t('form.tr_merge_items')"
           @click="onConfirmMergeObservedKeys()" />
         <q-btn
           v-if="false"
@@ -37,7 +37,7 @@
           round
           color="black"
           icon="cleaning_services"
-          :title="$t('form.tr_clean')"
+          :title="t('form.tr_clean')"
           @click="onConfirmClean()" />
         <q-btn
           v-if="!isReadOnly"
@@ -47,12 +47,12 @@
           color="negative"
           icon="delete_outline"
           :disable="selected.length === 0"
-          :title="$t('form.tr_delete_selected')"
+          :title="t('form.tr_delete_selected')"
           @click="onConfirmDeleteMultiple()" />
         <q-btn-dropdown
           flat
           icon="translate"
-          :title="$t('form.tr_locales_hint')">
+          :title="t('form.tr_locales_hint')">
           <q-list>
             <q-item v-for="loc in allLocales" :key="loc">
               <q-item-section>
@@ -60,7 +60,7 @@
               </q-item-section>
               <q-item-section>
                 <q-item-label class="text-uppercase">{{loc}}</q-item-label>
-                <q-item-label caption>{{$t('locales.' + loc) === 'locales.' + loc ? '' : $t('locales.' + loc)}}</q-item-label>
+                <q-item-label caption>{{t('locales.' + loc) === 'locales.' + loc ? '' : t('locales.' + loc)}}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -69,13 +69,13 @@
           v-if="!isReadOnly"
           flat
           icon="file_upload"
-          :title="$t('form.tr_import_hint')"
+          :title="t('form.tr_import_hint')"
           @click="onImportTranslations()"
           class="q-mr-md" />
         <q-btn-dropdown
           flat
           icon="download"
-          :title="$t('form.tr_export_hint')">
+          :title="t('form.tr_export_hint')">
           <q-list>
             <q-item clickable v-close-popup @click="onExport('csv')">
               <q-item-section>
@@ -99,8 +99,8 @@
           dense
           debounce="300"
           v-model="filter"
-          :placeholder="$t('search')"
-          :title="$t('form.tr_search_hint')">
+          :placeholder="t('search')"
+          :title="t('form.tr_search_hint')">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -122,17 +122,17 @@
         v-if="!isReadOnly"
         color="primary"
         icon="add"
-        :label="$t('form.tr_add')">
+        :label="t('form.tr_add')">
         <q-menu>
           <q-list style="min-width: 100px">
             <q-item clickable v-close-popup>
-              <q-item-section @click="onAddTranslation()">{{ $t('form.tr_add_key') }}</q-item-section>
+              <q-item-section @click="onAddTranslation()">{{ t('form.tr_add_key') }}</q-item-section>
             </q-item>
             <q-item clickable v-close-popup>
-              <q-item-section @click="mergeObservedKeys()">{{ $t('form.tr_merge_items') }}</q-item-section>
+              <q-item-section @click="mergeObservedKeys()">{{ t('form.tr_merge_items') }}</q-item-section>
             </q-item>
             <q-item clickable v-close-popup>
-              <q-item-section @click="onImportTranslations()">{{ $t('form.tr_import') }}</q-item-section>
+              <q-item-section @click="onImportTranslations()">{{ t('form.tr_import') }}</q-item-section>
             </q-item>
           </q-list>
         </q-menu>
@@ -145,12 +145,12 @@
            <div class="col-12">
             <q-input
               v-model='newTranslationData.key'
-              :label="$t('form.tr_key')"
+              :label="t('form.tr_key')"
               lazy-rules
               class="q-ma-sm"
               @blur="v$.newTranslationData.key.$touch"
               :error="v$.newTranslationData.key.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:error>
                 <div v-for="error in v$.newTranslationData.key.$errors">
@@ -161,11 +161,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='addTranslation'
             :disable='disableAddTranslation'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -182,14 +182,14 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.tr_merge_confirm')}}
+            {{t('form.tr_merge_confirm')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='mergeObservedKeys'
-            :label="$t('merge')"
+            :label="t('merge')"
             type='submit'
             color='primary'
             v-close-popup
@@ -206,14 +206,14 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.tr_clean_confirm')}}
+            {{t('form.tr_clean_confirm')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='cleanKeys'
-            :label="$t('clean')"
+            :label="t('clean')"
             type='submit'
             color='primary'
             v-close-popup
@@ -230,14 +230,14 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.tr_delete_selected_confirm')}}
+            {{t('form.tr_delete_selected_confirm')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteSelected'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -254,17 +254,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.tr_delete_locale_confirm')}}
+            {{t('form.tr_delete_locale_confirm')}}
           </div>
           <div class="q-mt-md">
             <span class="text-weight-bold text-uppercase">{{localeToDelete}}</span>
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteLocale'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -286,22 +286,22 @@
             clearable
             v-model="translationsFile"
             accept=".txt,.csv,.tsv"
-            :label="$t('form.tr_import_file')">
+            :label="t('form.tr_import_file')">
             <template v-slot:prepend>
               <q-icon name="add" @click.stop />
             </template>
 
             <template v-slot:hint>
-              {{ $t('form.tr_import_hint') }}
+              {{ t('form.tr_import_hint') }}
             </template>
           </q-file>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='importTranslations'
             :disable="disableImportTranslations"
-            :label="$t('import')"
+            :label="t('import')"
             type='submit'
             color='primary'
             v-close-popup
@@ -330,7 +330,7 @@ import { useAuth } from 'src/composables/useAuth'
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
 
-const { t: $t } = useI18n()
+const { t } = useI18n()
 const { isReadOnly } = useAuth()
 const { proxy } = getCurrentInstance()
 
@@ -383,7 +383,7 @@ const columns = computed(() => {
     {
       name: 'key',
       required: true,
-      label: $t('form.tr_key'),
+      label: t('form.tr_key'),
       align: 'left',
       field: 'key',
       sortable: true

@@ -5,14 +5,14 @@
       <div class="row">
         <div class="col-12">
           <q-breadcrumbs class="q-mt-sm q-mr-md text-h5" :class="isReadOnly ? '' : 'float-left'">
-            <q-breadcrumbs-el :label="$t('study.forms')" :to="'/study/' + studyId + '/forms'"/>
+            <q-breadcrumbs-el :label="t('study.forms')" :to="'/study/' + studyId + '/forms'"/>
             <q-breadcrumbs-el :label="studyForm.name" />
           </q-breadcrumbs>
           <div class="text-grey-7 q-mt-sm">
             <q-btn
               v-if="!isReadOnly"
               @click='onEdit'
-              :title="$t('edit_settings')"
+              :title="t('edit_settings')"
               icon="settings"
               flat
               dense
@@ -21,7 +21,7 @@
             <q-btn
               v-if="!isReadOnly"
               @click='save'
-              :title="$t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
+              :title="t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
               :icon="saveIcon"
               :disable="changeDetected < 0"
               flat
@@ -39,7 +39,7 @@
       <div class="row">
         <div class="text-body2 text-secondary col-12">
           <div class="note note-info">
-            <span v-html="$t('study.form_hint')"/>
+            <span v-html="t('study.form_hint')"/>
           </div>
         </div>
       </div>
@@ -56,8 +56,8 @@
           indicator-color="primary"
           align="justify"
         >
-          <q-tab name="schema" :label="$t('form.schema')" />
-          <q-tab name="revisions" :label="$t('form.revisions')" />
+          <q-tab name="schema" :label="t('form.schema')" />
+          <q-tab name="revisions" :label="t('form.revisions')" />
         </q-tabs>
 
         <q-separator />
@@ -69,7 +69,7 @@
             <div class="q-ma-sm">
               <q-btn
                 @click='onExport'
-                :label="$t('export')"
+                :label="t('export')"
                 icon="file_download"
                 flat
                 size="sm">
@@ -80,7 +80,7 @@
               <q-btn
                 v-if="!isReadOnly"
                 @click='onImport'
-                :label="$t('import')"
+                :label="t('import')"
                 icon="file_upload"
                 flat
                 size="sm">
@@ -91,7 +91,7 @@
               <q-btn
                 v-if="!isReadOnly"
                 @click='onTag'
-                :label="$t('tag')"
+                :label="t('tag')"
                 :disable="disableTag"
                 icon="sell"
                 flat
@@ -115,8 +115,8 @@
                   vertical
                   class="text-teal"
                 >
-                  <q-tab name="items" icon="category" :label="$t('form.items')" />
-                  <q-tab name="translations" icon="translate" :label="$t('form.translations')" />
+                  <q-tab name="items" icon="category" :label="t('form.items')" />
+                  <q-tab name="translations" icon="translate" :label="t('form.translations')" />
                 </q-tabs>
               </template>
 
@@ -149,12 +149,12 @@
           <div class="col-12">
             <q-input
               v-model='studyFormData.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
               class='q-mb-sm'
               @blur="v$.studyFormData.name.$touch"
               :error="v$.studyFormData.name.$error"
-              :hint="$t('required')">
+              :hint="t('required')">
               <template v-slot:error>
               <div v-for="error in v$.studyFormData.name.$errors">
                   {{error.$message}}
@@ -163,18 +163,18 @@
             </q-input>
             <q-input
               v-model='studyFormData.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               class='q-mb-sm'/>
            </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='save(true)'
             :disable='disableSave'
-            :label="$t('save')"
+            :label="t('save')"
             type='submit'
             color='primary'
             v-close-popup
@@ -193,19 +193,19 @@
           <div class="col-12">
             <q-file
               v-model="importSchemaFile"
-              :label="$t('form.import_schema')"
-              :hint="$t('form.import_schema_hint')"
+              :label="t('form.import_schema')"
+              :hint="t('form.import_schema_hint')"
               class="q-ma-sm"
               accept=".json"
             />
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='importSchema'
             :disable='disableImportSchema'
-            :label="$t('import')"
+            :label="t('import')"
             type='submit'
             color='primary'
             v-close-popup
@@ -224,18 +224,18 @@
            <div class="col-12">
             <q-input
               v-model='publicationComment'
-              :label="$t('comment')"
-              :hint="$t('form.tag_comment_hint')"
+              :label="t('comment')"
+              :hint="t('form.tag_comment_hint')"
               lazy-rules
               class="q-ma-sm"
             />
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='tag'
-            :label="$t('tag')"
+            :label="t('tag')"
             type='submit'
             color='primary'
             v-close-popup
@@ -254,6 +254,7 @@
 <script setup>
 import { ref, computed, toRaw, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { useFormStore } from 'src/stores/form'
@@ -263,6 +264,8 @@ import { useFormMixin } from '../composables/useFormMixin'
 import FormItems from 'src/components/forms/FormItems.vue'
 import FormTranslations from 'src/components/forms/FormTranslations.vue'
 import FormRevisions from 'src/components/forms/FormRevisions.vue'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const formStore = useFormStore()

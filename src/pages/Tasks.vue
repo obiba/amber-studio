@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="tasks" :label="$t('tasks.title')" />
+        <q-breadcrumbs-el icon="tasks" :label="t('tasks.title')" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
@@ -24,7 +24,7 @@
             <q-btn
               color="primary"
               icon="add"
-              :title="$t('tasks.add_task_hint')"
+              :title="t('tasks.add_task_hint')"
               @click="createTask()"
               class="q-mr-md" />
             <q-btn
@@ -34,15 +34,15 @@
               color="negative"
               icon="delete_outline"
               :disable="selected.length === 0"
-              :title="$t('tasks.delete_tasks_hint')"
+              :title="t('tasks.delete_tasks_hint')"
               @click="confirmDeleteTasks()" />
             <q-space />
             <q-input
               dense
               debounce="300"
               v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('tasks.search_hint')">
+              :placeholder="t('search')"
+              :title="t('tasks.search_hint')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -77,7 +77,7 @@
                 flat
                 dense
                 round
-                :title="$t('tasks.view_task_hint')"
+                :title="t('tasks.view_task_hint')"
                 icon='visibility'
                 @click='viewTask(props.row)'>
               </q-btn>
@@ -87,7 +87,7 @@
                 flat
                 dense
                 round
-                :title="$t('tasks.delete_task_hint')"
+                :title="t('tasks.delete_task_hint')"
                 icon='delete'
                 @click='confirmDeleteTask(props.row)'>
               </q-btn>
@@ -103,17 +103,17 @@
           <q-select
             v-model="newTaskData.type"
             :options="typeOptions"
-            :label="$t('type')"
+            :label="t('type')"
             emit-value
             map-options
           />
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveTask'
             :disable='disableCreateTask'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -130,17 +130,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('tasks.delete_task_confirm')}}
+            {{t('tasks.delete_task_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedTask.type}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteTask'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -157,7 +157,7 @@
       <q-card>
         <q-card-section>
           <div class="text-weight-bold q-mb-md">
-            {{$t(`tasks.types.${selectedTask.type}`)}}
+            {{t(`tasks.types.${selectedTask.type}`)}}
           </div>
           <div>
             <q-toggle
@@ -182,7 +182,7 @@
           </q-list>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('close')" flat color="primary" v-close-popup />
+          <q-btn :label="t('close')" flat color="primary" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -191,17 +191,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('tasks.delete_tasks_confirm')}}
+            {{t('tasks.delete_tasks_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(t => t.type).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteTasks'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup

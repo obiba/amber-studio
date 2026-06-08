@@ -12,20 +12,20 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle">
-                    {{ $t('login.title') }}
+                    {{ t('login.title') }}
                   </div>
                 </div>
               </q-card-section>
               <q-card-section v-if="!withToken">
                 <q-form @submit="onSubmit" class="q-gutter-md">
 
-                  <q-input autofocus v-model="email" :label="$t('email')" lazy-rules>
+                  <q-input autofocus v-model="email" :label="t('email')" lazy-rules>
                     <template v-slot:prepend>
                       <q-icon name="fas fa-envelope" size="xs" />
                     </template>
                   </q-input>
 
-                  <q-input :type="showPassword ? 'text' : 'password'" v-model="password" :label="$t('password')"
+                  <q-input :type="showPassword ? 'text' : 'password'" v-model="password" :label="t('password')"
                     lazy-rules>
                     <template v-slot:prepend>
                       <q-icon name="fas fa-lock" size="xs" />
@@ -37,21 +37,21 @@
                   </q-input>
 
                   <div>
-                    <q-btn :label="$t('login.submit')" type="submit" color="primary" :disable="disableSubmit" />
-                    <q-btn v-if="settings.register_enabled" :label="$t('login.register')" flat to="/register" stretch
+                    <q-btn :label="t('login.submit')" type="submit" color="primary" :disable="disableSubmit" />
+                    <q-btn v-if="settings.register_enabled" :label="t('login.register')" flat to="/register" stretch
                       class="text-bold q-ml-md" />
                   </div>
                 </q-form>
               </q-card-section>
               <q-card-section v-if="secret">
                 <div class="col text-subtitle">
-                  {{ $t('login.totp') }}
+                  {{ t('login.totp') }}
                 </div>
                 <div class="text-center q-mt-md">
                   <img :src="qr" />
                 </div>
                 <div class="col text-subtitle q-mt-md">
-                  {{ $t('login.totp_secret') }}
+                  {{ t('login.totp_secret') }}
                 </div>
                 <q-input dense v-model="secret" readonly>
                   <template v-slot:after>
@@ -59,17 +59,17 @@
                   </template>
                 </q-input>
                 <div class="col text-subtitle q-mt-md">
-                  {{ $t('login.email_otp') }}
+                  {{ t('login.email_otp') }}
                 </div>
                 <div class="q-mt-md">
-                  <q-btn :label="$t('login.send_email_token')" @click="onEmailToken" color="info" stretch
+                  <q-btn :label="t('login.send_email_token')" @click="onEmailToken" color="info" stretch
                     class="text-bold" />
                 </div>
               </q-card-section>
               <q-card-section v-if="withToken">
                 <q-form @submit="onSubmit" class="q-gutter-md">
 
-                  <q-input autofocus type="number" v-model="token" :label="$t('login.token')" lazy-rules
+                  <q-input autofocus type="number" v-model="token" :label="t('login.token')" lazy-rules
                     class="no-spinner">
                     <template v-slot:prepend>
                       <q-icon name="fas fa-mobile" size="xs" />
@@ -77,15 +77,15 @@
                   </q-input>
 
                   <div>
-                    <q-btn :label="$t('login.validate')" type="submit" color="primary" :disable="disableValidate" />
-                    <q-btn :label="$t('cancel')" @click="onCancelToken" flat stretch class="text-bold q-ml-md" />
+                    <q-btn :label="t('login.validate')" type="submit" color="primary" :disable="disableValidate" />
+                    <q-btn :label="t('cancel')" @click="onCancelToken" flat stretch class="text-bold q-ml-md" />
                   </div>
                 </q-form>
 
               </q-card-section>
               <q-card-section>
                 <q-btn flat to="/forgot-password" dense no-caps class="text-bold">
-                  {{ $t('login.forgot_password') }}
+                  {{ t('login.forgot_password') }}
                 </q-btn>
                 <q-btn-dropdown v-show="hasLocales" flat :label="locale" class="float-right">
                   <q-list>

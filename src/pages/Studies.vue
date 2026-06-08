@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="inventory_2" :label="$t('studies.title')" />
+        <q-breadcrumbs-el icon="inventory_2" :label="t('studies.title')" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
@@ -27,7 +27,7 @@
                 v-if="!isReadOnly"
                 color="primary"
                 icon="add"
-                :title="$t('studies.add_study_hint')"
+                :title="t('studies.add_study_hint')"
                 @click="createStudy()"
                 class="q-mr-md" />
               <q-btn
@@ -38,15 +38,15 @@
                 color="negative"
                 icon="delete_outline"
                 :disable="selected.length === 0"
-                :title="$t('studies.delete_studies_hint')"
+                :title="t('studies.delete_studies_hint')"
                 @click="confirmDeleteStudies()" />
               <q-space />
               <q-input
                 dense
                 debounce="300"
                 v-model="filter"
-                :placeholder="$t('search')"
-                :title="$t('studies.search_hint')">
+                :placeholder="t('search')"
+                :title="t('studies.search_hint')">
                 <template v-slot:append>
                   <q-icon name="search"/>
                 </template>
@@ -77,7 +77,7 @@
                   flat
                   dense
                   round
-                  :title="$t('studies.edit_study_hint')"
+                  :title="t('studies.edit_study_hint')"
                   icon='edit'
                   :to="'/study/' + props.row._id">
                 </q-btn>
@@ -87,7 +87,7 @@
                   flat
                   dense
                   round
-                  :title="$t('studies.delete_study_hint')"
+                  :title="t('studies.delete_study_hint')"
                   icon='delete'
                   @click='confirmDeleteStudy(props.row)'>
                 </q-btn>
@@ -101,7 +101,7 @@
         v-else
         color="primary"
         icon="add"
-        :label="$t('studies.add_study_hint')"
+        :label="t('studies.add_study_hint')"
         @click="createStudy()"
         class="q-mt-md q-ml-md" />
     </div>
@@ -112,12 +112,12 @@
             <div class='col-12'>
             <q-input
               v-model='newStudyData.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.newStudyData.name.$touch"
               :error="v$.newStudyData.name.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:error>
                 <div v-for="error in v$.newStudyData.name.$errors">
@@ -129,15 +129,15 @@
           <div class='col-12'>
             <q-input
               v-model='newStudyData.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               class='q-ma-sm'
             />
             <q-select
               v-model="newStudyData.services"
-              :label="$t('study.services')"
-              :hint="$t('study.services_hint')"
+              :label="t('study.services')"
+              :hint="t('study.services_hint')"
               :options="servicesOptions"
               multiple
               emit-value
@@ -147,11 +147,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudy'
             :disable='disableCreateStudy'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -168,17 +168,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('studies.delete_study_confirm')}}
+            {{t('studies.delete_study_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedStudy.name}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudy'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -195,17 +195,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('studies.delete_studies_confirm')}}
+            {{t('studies.delete_studies_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudies'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup

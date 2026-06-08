@@ -12,7 +12,7 @@
             size="10px"
             dense
             icon='add'
-            :title="$t('interview.add_step_hint')"
+            :title="t('interview.add_step_hint')"
             @click='onAddStep()'>
           </q-btn>
         </div>
@@ -44,7 +44,7 @@
               flat
               dense
               round
-              :title="$t('interview.move_up_step_hint')"
+              :title="t('interview.move_up_step_hint')"
               icon="arrow_upward"
               @click='moveUpStep'>
             </q-btn>
@@ -55,7 +55,7 @@
               flat
               dense
               round
-              :title="$t('interview.move_down_step_hint')"
+              :title="t('interview.move_down_step_hint')"
               icon="arrow_downward"
               @click='moveDownStep'>
             </q-btn>
@@ -66,7 +66,7 @@
               flat
               dense
               round
-              :title="$t('interview.delete_step_hint')"
+              :title="t('interview.delete_step_hint')"
               icon="delete_outline"
               @click='onConfirmDeleteStep'>
             </q-btn>
@@ -75,16 +75,16 @@
         <q-separator/>
         <div v-if="selected" class="row q-ml-md q-mt-sm">
           <div class="col-12">
-            <div class="text-weight-bold">{{ $t('interview.definition') }}</div>
+            <div class="text-weight-bold">{{ t('interview.definition') }}</div>
           </div>
         </div>
         <div v-if="selected" class="row q-pa-md q-col-gutter-lg">
           <div class="col-md-6 col-sm-12">
             <q-input
               v-model='selected.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
-              :hint="$t('interview.step_name_hint')"
+              :hint="t('interview.step_name_hint')"
               class="q-mb-md"
               :disable="isReadOnly"
             >
@@ -96,14 +96,14 @@
               :options="formOptions"
               emit-value
               map-options
-              :label="$t('study.form')"
+              :label="t('study.form')"
               :disable="isReadOnly" />
             <q-select
               v-model="selected.revision"
               :options="revisionOptions"
               emit-value
               map-options
-              :label="$t('study.form_revision')"
+              :label="t('study.form_revision')"
               :disable="isReadOnly || !selected.form" />
               <q-btn
                 v-if="selected.form"
@@ -113,7 +113,7 @@
                 size="sm"
                 class="q-mt-md"
                 :to="'/study/' + studyId + '/form/' + selected.form">
-                  {{ $t('interview.go_to_form') }}
+                  {{ t('interview.go_to_form') }}
               </q-btn>
           </div>
         </div>
@@ -121,16 +121,16 @@
           <div class="col-md-6 col-sm-12">
             <q-input
               v-model='selected.label'
-              :label="$t('title')"
+              :label="t('title')"
               lazy-rules
-              :hint="$t('required')"
+              :hint="t('required')"
               class="q-mb-md"
               :disable="isReadOnly"
             >
             </q-input>
             <q-input
               v-model='selected.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               :disable="isReadOnly"
@@ -141,22 +141,22 @@
               v-model.number="selected.time_estimate"
               class="q-mb-md"
               type="number"
-              :label="$t('interview.step_time_estimate')"
-              :hint="$t('interview.step_time_estimate_hint')"
+              :label="t('interview.step_time_estimate')"
+              :hint="t('interview.step_time_estimate_hint')"
               :disable="isReadOnly" />
             <q-input
               v-model.number="selected.time_estimate_max"
               class="q-mb-md"
               type="number"
-              :label="$t('interview.step_time_estimate_max')"
-              :hint="$t('interview.step_time_estimate_max_hint')"
+              :label="t('interview.step_time_estimate_max')"
+              :hint="t('interview.step_time_estimate_max_hint')"
               :disable="isReadOnly" />
           </div>
         </div>
         <q-separator/>
         <div v-if="selected" class="row q-ml-md q-mt-sm">
           <div class="col-12">
-            <div class="text-weight-bold">{{ $t('interview.step_rendering') }}</div>
+            <div class="text-weight-bold">{{ t('interview.step_rendering') }}</div>
           </div>
         </div>
         <div v-if="selected" class="row q-pa-md q-col-gutter-lg">
@@ -167,8 +167,8 @@
               type="textarea"
               autogrow
               lazy-rules
-              :label="$t('interview.step_condition')"
-              :hint="$t('interview.step_condition_hint')"
+              :label="t('interview.step_condition')"
+              :hint="t('interview.step_condition_hint')"
               :disable="isReadOnly" />
           </div>
           <div class="col-md-6 col-sm-12">
@@ -178,13 +178,13 @@
               type="textarea"
               autogrow
               lazy-rules
-              :label="$t('interview.step_disable')"
-              :hint="$t('interview.step_disable_hint')"
+              :label="t('interview.step_disable')"
+              :hint="t('interview.step_disable_hint')"
               :disable="isReadOnly" />
           </div>
         </div>
         <div v-else class="q-ma-md text-grey-6">
-          {{$t('interview.no_step_selected')}}
+          {{t('interview.no_step_selected')}}
         </div>
       </template>
 
@@ -194,7 +194,7 @@
       v-else-if="!isReadOnly"
       color="primary"
       icon="add"
-      :label="$t('interview.add_step_hint')"
+      :label="t('interview.add_step_hint')"
       @click="onAddStep()"
       class="q-ma-md" />
 
@@ -203,11 +203,11 @@
         <q-card-section>
           <q-input
             v-model='stepData.name'
-            :label="$t('name')"
+            :label="t('name')"
             lazy-rules
             @blur="v$.stepData.name.$touch"
             :error="v$.stepData.name.$error"
-            :hint="$t('interview.step_name_hint')"
+            :hint="t('interview.step_name_hint')"
           >
             <template v-slot:error>
               <div v-for="error in v$.stepData.name.$errors">
@@ -217,11 +217,11 @@
           </q-input>
           <q-input
             v-model='stepData.label'
-            :label="$t('title')"
+            :label="t('title')"
             lazy-rules
             @blur="v$.stepData.label.$touch"
             :error="v$.stepData.label.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.stepData.label.$errors">
@@ -231,7 +231,7 @@
           </q-input>
           <q-input
             v-model='stepData.description'
-            :label="$t('description')"
+            :label="t('description')"
             autogrow
             lazy-rules
           />
@@ -242,21 +242,21 @@
             :options="formOptions"
             emit-value
             map-options
-            :label="$t('study.form')" />
+            :label="t('study.form')" />
           <q-select
             v-model="stepData.revision"
             :options="revisionOptions"
             emit-value
             map-options
-            :label="$t('study.form_revision')"
+            :label="t('study.form_revision')"
             :disable="!stepData.form" />
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='addStep'
             :disable="disableSaveStep"
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -273,17 +273,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('interview.delete_step_confirm')}}
+            {{t('interview.delete_step_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{ selected.name }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStep'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -301,12 +301,14 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
-import { t } from '../../boot/i18n'
 import { formRevisionService } from '../../services/form'
 import { useFormStore } from 'src/stores/form'
 import { useAuth } from 'src/composables/useAuth'
+
+const { t } = useI18n()
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])

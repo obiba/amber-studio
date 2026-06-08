@@ -5,14 +5,14 @@
       <div class="row">
         <div class="col-12">
           <q-breadcrumbs class="q-mt-sm q-mr-md text-h5" :class="isReadOnly ? '' : 'float-left'">
-            <q-breadcrumbs-el :label="$t('study.interview_designs')" :to="'/study/' + studyId + '/interview-designs'"/>
+            <q-breadcrumbs-el :label="t('study.interview_designs')" :to="'/study/' + studyId + '/interview-designs'"/>
             <q-breadcrumbs-el :label="interviewDesign.name" />
           </q-breadcrumbs>
           <div class="text-grey-7 q-mt-sm">
             <q-btn
               v-if="!isReadOnly"
               @click='onEdit'
-              :title="$t('edit_settings')"
+              :title="t('edit_settings')"
               icon="settings"
               flat
               dense
@@ -21,7 +21,7 @@
             <q-btn
               v-if="!isReadOnly"
               @click='save'
-              :title="$t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
+              :title="t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
               :icon="saveIcon"
               :disable="changeDetected < 0"
               flat
@@ -39,7 +39,7 @@
       <div class="row">
         <div class="text-body2 text-secondary col-12">
           <div class="note note-info">
-            <span v-html="$t('study.interview_designs_hint')"/>
+            <span v-html="t('study.interview_designs_hint')"/>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
     <q-card class="q-ma-md">
 
       <q-card-section v-if="!isReadOnly">
-        <div class="text-h5 q-mb-md">{{ $t('interview.design') }}</div>
+        <div class="text-h5 q-mb-md">{{ t('interview.design') }}</div>
         <q-separator/>
         <q-splitter
           v-model="splitterModel"
@@ -58,8 +58,8 @@
               vertical
               class="text-teal"
             >
-              <q-tab name="steps" icon="category" :label="$t('interview.steps')" />
-              <q-tab name="translations" icon="translate" :label="$t('form.translations')" />
+              <q-tab name="steps" icon="category" :label="t('interview.steps')" />
+              <q-tab name="translations" icon="translate" :label="t('form.translations')" />
             </q-tabs>
           </template>
           <template v-slot:after>
@@ -83,7 +83,7 @@
     <q-card class="q-ma-md">
 
       <q-card-section>
-        <div class="text-h5 q-mb-md">{{ $t('interview.campaigns') }}</div>
+        <div class="text-h5 q-mb-md">{{ t('interview.campaigns') }}</div>
         <campaigns/>
       </q-card-section>
 
@@ -95,12 +95,12 @@
           <div class="col-12">
             <q-input
               v-model='interviewDesignData.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
               class='q-mb-sm'
               @blur="v$.interviewDesignData.name.$touch"
               :error="v$.interviewDesignData.name.$error"
-              :hint="$t('required')">
+              :hint="t('required')">
               <template v-slot:error>
               <div v-for="error in v$.interviewDesignData.name.$errors">
                   {{error.$message}}
@@ -109,11 +109,11 @@
             </q-input>
             <q-input
               v-model='interviewDesignData.label'
-              :label="$t('title')"
+              :label="t('title')"
               lazy-rules
               @blur="v$.interviewDesignData.label.$touch"
               :error="v$.interviewDesignData.label.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:error>
                 <div v-for="error in v$.interviewDesignData.label.$errors">
@@ -123,32 +123,32 @@
             </q-input>
             <q-input
               v-model='interviewDesignData.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               class='q-mb-sm'/>
             <q-input
               v-model='interviewDesignData.interviewer_instructions'
-              :label="$t('interview.interviewer_instructions')"
-              :hint="$t('interview.interviewer_instructions_hint')"
+              :label="t('interview.interviewer_instructions')"
+              :hint="t('interview.interviewer_instructions_hint')"
               autogrow
               lazy-rules
               class='q-mb-sm'/>
             <q-input
               v-model='interviewDesignData.participant_instructions'
-              :label="$t('interview.participant_instructions')"
-              :hint="$t('interview.participant_instructions_hint')"
+              :label="t('interview.participant_instructions')"
+              :hint="t('interview.participant_instructions_hint')"
               autogrow
               lazy-rules
               class='q-mb-sm'/>
            </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='save(true)'
             :disable='disableSave'
-            :label="$t('save')"
+            :label="t('save')"
             type='submit'
             color='primary'
             v-close-popup
@@ -167,6 +167,7 @@
 <script setup>
 import { ref, reactive, computed, toRaw, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import InterviewDesignSteps from 'src/components/interviews/InterviewDesignSteps.vue'
@@ -175,6 +176,8 @@ import Campaigns from 'src/components/interviews/Campaigns.vue'
 import { useInterviewStore } from 'src/stores/interview'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const interviewStore = useInterviewStore()

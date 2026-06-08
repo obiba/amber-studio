@@ -8,9 +8,9 @@
       indicator-color="primary"
       align="justify"
       narrow-indicator>
-      <q-tab name="design" :label="$t('form.design')" />
-      <q-tab name="schema" :label="$t('form.schema')" />
-      <q-tab name="preview" :label="$t('form.preview')" />
+      <q-tab name="design" :label="t('form.design')" />
+      <q-tab name="schema" :label="t('form.schema')" />
+      <q-tab name="preview" :label="t('form.preview')" />
     </q-tabs>
 
     <q-separator />
@@ -19,34 +19,34 @@
       <q-tab-panel name="design" class="q-pa-none">
         <div v-if="isRoot" class="row q-col-gutter-lg q-pa-md">
           <div class="col-md-6 col-sm-12">
-            <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
-            <q-input class="q-mb-md" v-model="value.label" :label="$t('form.title')" :hint="$t('form.form_title_hint')" :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.form_description_hint')" autogrow :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model="value.copyright" :label="$t('form.copyright')" :hint="$t('form.form_copyright_hint')" :disable="isReadOnly" />
-            <q-select class="q-mb-md" v-model="value.license" :options="licenseOptions" :label="$t('form.license')" :hint="$t('form.form_license_hint')" emit-value map-options :disable="isReadOnly" />
-            <div v-html="$t('form.form_license_cc')" class="text-caption text-grey-7 q-mb-md"/>
-            <q-select class="q-mb-md" v-model="value.layout" :options="layoutOptions" :label="$t('form.layout')" :hint="$t('form.layout_hint')" emit-value map-options :disable="isReadOnly" />
+            <p class="text-weight-bold q-mb-sm">{{ t('form.definition') }}</p>
+            <q-input class="q-mb-md" v-model="value.label" :label="t('form.title')" :hint="t('form.form_title_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.description" :label="t('form.description')" :hint="t('form.form_description_hint')" autogrow :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.copyright" :label="t('form.copyright')" :hint="t('form.form_copyright_hint')" :disable="isReadOnly" />
+            <q-select class="q-mb-md" v-model="value.license" :options="licenseOptions" :label="t('form.license')" :hint="t('form.form_license_hint')" emit-value map-options :disable="isReadOnly" />
+            <div v-html="t('form.form_license_cc')" class="text-caption text-grey-7 q-mb-md"/>
+            <q-select class="q-mb-md" v-model="value.layout" :options="layoutOptions" :label="t('form.layout')" :hint="t('form.layout_hint')" emit-value map-options :disable="isReadOnly" />
           </div>
           <div class="col-md-6 col-sm-12">
-            <p class="text-weight-bold q-mb-sm">{{ $t('form.settings') }}</p>
-            <q-input class="q-mb-md" v-model="value.idLabel" :label="$t('form.id_label')" :hint="$t('form.id_label_hint')" :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model="value.idDescription" :label="$t('form.id_description')" :hint="$t('form.id_description_hint')" autogrow :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model.number="value.idMask" :label="$t('form.id_mask')" :hint="$t('form.mask_hint')" :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model="value.idValidation" :label="$t('form.id_validation')" :hint="$t('form.id_validation_hint')" :disable="isReadOnly" />
-            <q-input class="q-mb-md" v-model="value.idValidationMessage" :label="$t('form.id_validation_message')" :hint="$t('form.validation_message_hint')" :disable="isReadOnly" />
+            <p class="text-weight-bold q-mb-sm">{{ t('form.settings') }}</p>
+            <q-input class="q-mb-md" v-model="value.idLabel" :label="t('form.id_label')" :hint="t('form.id_label_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.idDescription" :label="t('form.id_description')" :hint="t('form.id_description_hint')" autogrow :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model.number="value.idMask" :label="t('form.id_mask')" :hint="t('form.mask_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.idValidation" :label="t('form.id_validation')" :hint="t('form.id_validation_hint')" :disable="isReadOnly" />
+            <q-input class="q-mb-md" v-model="value.idValidationMessage" :label="t('form.id_validation_message')" :hint="t('form.validation_message_hint')" :disable="isReadOnly" />
           </div>
         </div>
         <div v-else>
           <div class="q-pa-md bg-grey-2">
-            <p class="text-weight-bold q-mb-sm">{{ $t('form.definition') }}</p>
+            <p class="text-weight-bold q-mb-sm">{{ t('form.definition') }}</p>
             <div class="row q-col-gutter-lg">
               <div class="col-md-6 col-sm-12">
-                <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="$t('form.type')" :hint="$t('form.type_hint')" emit-value map-options :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model="value.name" :label="$t('form.name')" :hint="$t(isVariable ? 'form.name_hint': 'form.section_hint')" :disable="isReadOnly" />
+                <q-select class="q-mb-md" v-model="value.type" :options="typeOptions" :label="t('form.type')" :hint="t('form.type_hint')" emit-value map-options :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model="value.name" :label="t('form.name')" :hint="t(isVariable ? 'form.name_hint': 'form.section_hint')" :disable="isReadOnly" />
               </div>
               <div class="col-md-6 col-sm-12">
-                <q-input class="q-mb-md" v-model="value.label" :label="$t('form.label')" :hint="$t('form.label_hint')" :disable="isReadOnly" />
-                <q-input class="q-mb-md" v-model="value.description" :label="$t('form.description')" :hint="$t('form.description_hint')" autogrow :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model="value.label" :label="t('form.label')" :hint="t('form.label_hint')" :disable="isReadOnly" />
+                <q-input class="q-mb-md" v-model="value.description" :label="t('form.description')" :hint="t('form.description_hint')" autogrow :disable="isReadOnly" />
               </div>
             </div>
           </div>
@@ -90,13 +90,13 @@
               icon="edit"
               flat
               size="sm"
-              :label="$t('form.preview_data_edit')"
+              :label="t('form.preview_data_edit')"
               @click="editModelData()"/>
             <q-btn
               icon="backspace"
               flat
               size="sm"
-              :label="$t('form.preview_data_clear')"
+              :label="t('form.preview_data_clear')"
               @click="clearModelData()"/>
           </q-card-section>
           <q-separator/>
@@ -117,14 +117,14 @@
             type="textarea"
             autogrow
             rows="10"
-            :label="$t('form.preview_data')"
-            :hint="$t('form.preview_data_hint')" />
+            :label="t('form.preview_data')"
+            :hint="t('form.preview_data_hint')" />
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='onApplyModelData'
-            :label="$t('apply')"
+            :label="t('apply')"
             type='submit'
             color='primary'
             v-close-popup

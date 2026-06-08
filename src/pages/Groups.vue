@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="groups" :label="$t('groups.title')" />
+        <q-breadcrumbs-el icon="groups" :label="t('groups.title')" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
@@ -24,7 +24,7 @@
             <q-btn
               color="primary"
               icon="add"
-              :title="$t('groups.add_group_hint')"
+              :title="t('groups.add_group_hint')"
               @click="createGroup()"
               class="q-mr-md" />
             <q-btn
@@ -34,15 +34,15 @@
               color="negative"
               icon="delete_outline"
               :disable="selected.length === 0"
-              :title="$t('groups.delete_groups_hint')"
+              :title="t('groups.delete_groups_hint')"
               @click="confirmDeleteGroups()" />
             <q-space />
             <q-input
               dense
               debounce="300"
               v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('groups.search_hint')">
+              :placeholder="t('search')"
+              :title="t('groups.search_hint')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -76,7 +76,7 @@
                 flat
                 dense
                 round
-                :title="$t('groups.edit_group_hint')"
+                :title="t('groups.edit_group_hint')"
                 icon='edit'
                 :to="'/group/' + props.row._id">
               </q-btn>
@@ -86,7 +86,7 @@
                 flat
                 dense
                 round
-                :title="$t('groups.delete_group_hint')"
+                :title="t('groups.delete_group_hint')"
                 icon='delete'
                 @click='confirmDeleteGroup(props.row)'>
               </q-btn>
@@ -102,12 +102,12 @@
            <div class='col-12'>
             <q-input
               v-model='newGroupData.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.name.$touch"
               :error="v$.name.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:error>
                 <div v-for="error in v$.name.$errors">
@@ -119,7 +119,7 @@
           <div class='col-12'>
             <q-input
               v-model='newGroupData.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               class='q-ma-sm'
@@ -127,11 +127,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveGroup'
             :disable='disableCreateGroup'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -148,17 +148,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('groups.delete_group_confirm')}}
+            {{t('groups.delete_group_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedGroup.name}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteGroup'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -175,17 +175,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('groups.delete_groups_confirm')}}
+            {{t('groups.delete_groups_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteGroups'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup

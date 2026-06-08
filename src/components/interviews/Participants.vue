@@ -18,7 +18,7 @@
           v-if="!isReadOnly"
           color="primary"
           icon="add"
-          :title="$t('interview.add_participant_hint')"
+          :title="t('interview.add_participant_hint')"
           @click="onAddParticipant()"
           class="q-mr-md" />
         <q-btn
@@ -28,12 +28,12 @@
           color="negative"
           icon="delete_outline"
           :disable="selected.length === 0"
-          :title="$t('interview.delete_participants_hint')"
+          :title="t('interview.delete_participants_hint')"
           @click="onConfirmDeleteMultiple()" />
         <q-btn
           v-if="!isReadOnly"
           @click='onImport'
-          :title="$t('import')"
+          :title="t('import')"
           icon="file_upload"
           flat
           round>
@@ -45,7 +45,7 @@
           flat
           icon="download"
           :disable="!hasParticipants"
-          :title="$t('export')">
+          :title="t('export')">
           <q-list>
             <q-item clickable v-close-popup @click="onExport('csv')">
               <q-item-section>
@@ -71,15 +71,15 @@
           :options="eligibleOptions"
           emit-value
           map-options
-          :label="$t('interview.participant_eligibility')"
+          :label="t('interview.participant_eligibility')"
           style="min-width: 150px"
           @update:model-value="onFilter"/>
         <q-input
           dense
           debounce="300"
           v-model="filter"
-          :placeholder="$t('search')"
-          :title="$t('interview.search_participants_hint')">
+          :placeholder="t('search')"
+          :title="t('interview.search_participants_hint')">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -116,7 +116,7 @@
             flat
             dense
             round
-            :title="$t('interview.reset_participant_password_hint')"
+            :title="t('interview.reset_participant_password_hint')"
             icon='replay'
             @click='resetPassword(props.row)'>
           </q-btn>
@@ -126,7 +126,7 @@
             flat
             dense
             round
-            :title="$t('interview.edit_participant_hint')"
+            :title="t('interview.edit_participant_hint')"
             icon="edit"
             @click='onEdit(props.row)'>
           </q-btn>
@@ -137,7 +137,7 @@
             flat
             dense
             round
-            :title="$t('interview.pause_participant_hint')"
+            :title="t('interview.pause_participant_hint')"
             icon="pause"
             @click='pauseParticipant(props.row)'>
           </q-btn>
@@ -148,7 +148,7 @@
             flat
             dense
             round
-            :title="$t('interview.activate_participant_hint')"
+            :title="t('interview.activate_participant_hint')"
             icon="play_arrow"
             @click='activateParticipant(props.row)'>
           </q-btn>
@@ -158,7 +158,7 @@
             flat
             dense
             round
-            :title="$t('interview.view_participant_hint')"
+            :title="t('interview.view_participant_hint')"
             icon="visibility"
             @click='onView(props.row)'>
           </q-btn>
@@ -169,7 +169,7 @@
             flat
             dense
             round
-            :title="$t('interview.delete_participant_hint')"
+            :title="t('interview.delete_participant_hint')"
             icon="delete"
             @click='onConfirmDelete(props.row)'>
           </q-btn>
@@ -188,12 +188,12 @@
           <q-input
             v-if="addMode === 'single'"
             v-model='participantData.identifier'
-            :label="$t('interview.participant_identifier')"
-            :hint="$t('interview.participant_identifier_hint')"
+            :label="t('interview.participant_identifier')"
+            :hint="t('interview.participant_identifier_hint')"
             lazy-rules
           />
           <div v-if="addMode === 'multiple'">
-            <p class="q-mb-sm q-mt-md">{{ $t('interview.add_participants_count') }}</p>
+            <p class="q-mb-sm q-mt-md">{{ t('interview.add_participants_count') }}</p>
             <q-slider
               v-model="addCount"
               :min="1"
@@ -201,21 +201,21 @@
               :step="1"
               label
             />
-            <div class="text-secondary text-caption">{{ $t('interview.add_participants_count_hint') }}</div>
+            <div class="text-secondary text-caption">{{ t('interview.add_participants_count_hint') }}</div>
           </div>
         </q-card-section>
         <q-card-section>
           <q-input
             filled
             v-model="participantData.validFrom"
-            :label="$t('interview.participant_valid_from')"
-            :hint="$t('interview.participant_valid_from_hint')">
+            :label="t('interview.participant_valid_from')"
+            :hint="t('interview.participant_valid_from_hint')">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy>
                   <q-date v-model="participantData.validFrom" mask="YYYY-MM-DD">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                      <q-btn v-close-popup :label="t('close')" color="primary" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -227,14 +227,14 @@
           <q-input
             filled
             v-model="participantData.validUntil"
-            :label="$t('interview.participant_valid_until')"
-            :hint="$t('interview.participant_valid_until_hint')">
+            :label="t('interview.participant_valid_until')"
+            :hint="t('interview.participant_valid_until_hint')">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy>
                   <q-date v-model="participantData.validUntil" mask="YYYY-MM-DD">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                      <q-btn v-close-popup :label="t('close')" color="primary" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -243,14 +243,14 @@
           </q-input>
         </q-card-section>
         <q-card-section>
-          <p class="q-mb-sm q-mt-md">{{ $t('interview.participant_attributes') }}</p>
-          <p class="text-secondary text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
+          <p class="q-mb-sm q-mt-md">{{ t('interview.participant_attributes') }}</p>
+          <p class="text-secondary text-caption">{{ t('interview.participant_attributes_hint') }}</p>
           <div class="row q-col-gutter-md" v-for="(attribute, key) in participantData.attributes" :key="participantData.attributes.indexOf(attribute)">
             <div class="col-4">
-              <q-input class="q-mb-md" v-model="attribute.key" :label="$t('key')"/>
+              <q-input class="q-mb-md" v-model="attribute.key" :label="t('key')"/>
             </div>
             <div class="col-7">
-              <q-input class="q-mb-md" v-model="attribute.value" :label="$t('value')"/>
+              <q-input class="q-mb-md" v-model="attribute.value" :label="t('value')"/>
             </div>
             <div class="col-1">
               <q-btn
@@ -269,7 +269,7 @@
               <q-btn
                 color="primary"
                 icon="add"
-                :title="$t('interview.add_participant_attribute_hint')"
+                :title="t('interview.add_participant_attribute_hint')"
                 @click="addAttribute()"
                 class="q-mr-sm"
               />
@@ -278,18 +278,18 @@
                 round
                 color="negative"
                 icon="delete_outline"
-                :title="$t('interview.delete_participant_attributes_hint')"
+                :title="t('interview.delete_participant_attributes_hint')"
                 @click="deleteAttributes()"
               />
             </div>
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='addParticipant'
             :disable="disableSaveParticipant"
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -307,8 +307,8 @@
         <q-card-section>
           <q-input
             v-model='participantData.identifier'
-            :label="$t('interview.participant_identifier')"
-            :hint="$t('interview.participant_identifier_hint')"
+            :label="t('interview.participant_identifier')"
+            :hint="t('interview.participant_identifier_hint')"
             lazy-rules
           />
         </q-card-section>
@@ -316,14 +316,14 @@
           <q-input
             filled
             v-model="participantData.validFrom"
-            :label="$t('interview.participant_valid_from')"
-            :hint="$t('interview.participant_valid_from_hint')">
+            :label="t('interview.participant_valid_from')"
+            :hint="t('interview.participant_valid_from_hint')">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy>
                   <q-date v-model="participantData.validFrom" mask="YYYY-MM-DD">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                      <q-btn v-close-popup :label="t('close')" color="primary" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -335,14 +335,14 @@
           <q-input
             filled
             v-model="participantData.validUntil"
-            :label="$t('interview.participant_valid_until')"
-            :hint="$t('interview.participant_valid_until_hint')">
+            :label="t('interview.participant_valid_until')"
+            :hint="t('interview.participant_valid_until_hint')">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy>
                   <q-date v-model="participantData.validUntil" mask="YYYY-MM-DD">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                      <q-btn v-close-popup :label="t('close')" color="primary" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -351,14 +351,14 @@
           </q-input>
         </q-card-section>
         <q-card-section>
-          <p class="q-mb-xs q-mt-md">{{ $t('interview.participant_attributes') }}</p>
-          <p class="text-secondary text-caption">{{ $t('interview.participant_attributes_hint') }}</p>
+          <p class="q-mb-xs q-mt-md">{{ t('interview.participant_attributes') }}</p>
+          <p class="text-secondary text-caption">{{ t('interview.participant_attributes_hint') }}</p>
           <div class="row q-col-gutter-md" v-for="(attribute, key) in participantData.attributes" :key="participantData.attributes.indexOf(attribute)">
             <div class="col-4">
-              <q-input class="q-mb-md" v-model="attribute.key" :label="$t('key')"/>
+              <q-input class="q-mb-md" v-model="attribute.key" :label="t('key')"/>
             </div>
             <div class="col-7">
-              <q-input class="q-mb-md" v-model="attribute.value" :label="$t('value')"/>
+              <q-input class="q-mb-md" v-model="attribute.value" :label="t('value')"/>
             </div>
             <div class="col-1">
               <q-btn
@@ -377,7 +377,7 @@
               <q-btn
                 color="primary"
                 icon="add"
-                :title="$t('interview.add_participant_attribute_hint')"
+                :title="t('interview.add_participant_attribute_hint')"
                 @click="addAttribute()"
                 class="q-mr-sm"
               />
@@ -386,18 +386,18 @@
                 round
                 color="negative"
                 icon="delete_outline"
-                :title="$t('interview.delete_participant_attributes_hint')"
+                :title="t('interview.delete_participant_attributes_hint')"
                 @click="deleteAttributes()"
               />
             </div>
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='editParticipant'
             :disable="disableSaveParticipant"
-            :label="$t('save')"
+            :label="t('save')"
             type='submit'
             color='primary'
             v-close-popup
@@ -419,13 +419,13 @@
             clearable
             v-model="participantsFile"
             accept=".txt,.csv,.tsv"
-            :label="$t('interview.upload_participants')">
+            :label="t('interview.upload_participants')">
             <template v-slot:prepend>
               <q-icon name="add" @click.stop />
             </template>
 
             <template v-slot:hint>
-              {{ $t('interview.upload_participants_hint') }}
+              {{ t('interview.upload_participants_hint') }}
             </template>
           </q-file>
           <q-select
@@ -433,15 +433,15 @@
             :options="delimiters"
             emit-value
             map-options
-            :label="$t('delimiter')"
-            :hint="$t('delimiter_hint')" />
+            :label="t('delimiter')"
+            :hint="t('delimiter_hint')" />
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='importParticipants'
             :disable="disableImportParticipants"
-            :label="$t('import')"
+            :label="t('import')"
             type='submit'
             color='primary'
             v-close-popup
@@ -462,7 +462,7 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('close')" flat v-close-popup />
+          <q-btn :label="t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -471,17 +471,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('interview.delete_participant_confirm')}}
+            {{t('interview.delete_participant_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             <q-chip>{{ participantData.code }}</q-chip>
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteParticipant'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -498,17 +498,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('interview.delete_participants_confirm')}}
+            {{t('interview.delete_participants_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             <q-chip v-for="p in selected" :key="p.code">{{ p.code }}</q-chip>
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteParticipants'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -526,11 +526,13 @@
 
 <script setup>
 import { ref, computed, onMounted, getCurrentInstance } from 'vue'
-import { t } from '../../boot/i18n'
+import { useI18n } from 'vue-i18n'
 import { date, Notify } from 'quasar'
 import { useAuth } from 'src/composables/useAuth'
 import { participantService } from '../../services/interview'
 import { errorHandler } from '../../boot/errors'
+
+const { t } = useI18n()
 
 const props = defineProps({
   campaign: {

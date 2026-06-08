@@ -20,7 +20,7 @@
               v-if="!isReadOnly"
               color="primary"
               icon="add"
-              :title="$t('study.add_interview_design_hint')"
+              :title="t('study.add_interview_design_hint')"
               @click="onAdd()"
               class="q-mr-md" />
             <q-btn
@@ -31,15 +31,15 @@
               color="negative"
               icon="delete_outline"
               :disable="selected.length === 0"
-              :title="$t('study.delete_interview_designs_hint')"
+              :title="t('study.delete_interview_designs_hint')"
               @click="onConfirmDeleteMultiple()" />
             <q-space />
             <q-input
               dense
               debounce="300"
               v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('study.search_interview_design_hint')">
+              :placeholder="t('search')"
+              :title="t('study.search_interview_design_hint')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -65,7 +65,7 @@
           </template>
           <template v-slot:body-cell-state='props'>
             <q-td :props='props'>
-              {{ $t('study.interview_design_state.' + props.row.state) }}
+              {{ t('study.interview_design_state.' + props.row.state) }}
               <q-icon v-if="props.row.permissions" name="lock"/>
             </q-td>
           </template>
@@ -77,7 +77,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.edit_interview_design_hint')"
+                :title="t('study.edit_interview_design_hint')"
                 icon="edit"
                 @click='onEdit(props.row)'>
               </q-btn>
@@ -88,7 +88,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.start_interview_design_hint')"
+                :title="t('study.start_interview_design_hint')"
                 icon="play_arrow"
                 @click='start(props.row)'>
               </q-btn>
@@ -99,7 +99,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.pause_interview_design_hint')"
+                :title="t('study.pause_interview_design_hint')"
                 icon="pause"
                 @click='pause(props.row)'>
               </q-btn>
@@ -109,7 +109,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.delete_interview_design_hint')"
+                :title="t('study.delete_interview_design_hint')"
                 icon="delete"
                 @click='onConfirmDelete(props.row)'>
               </q-btn>
@@ -123,7 +123,7 @@
       v-else-if="!isReadOnly"
       color="primary"
       icon="add"
-      :label="$t('study.add_interview_design_hint')"
+      :label="t('study.add_interview_design_hint')"
       @click="onAdd()"
       class="q-ma-md" />
 
@@ -132,11 +132,11 @@
         <q-card-section>
           <q-input
             v-model='newStudyInterviewDesignData.name'
-            :label="$t('name')"
+            :label="t('name')"
             lazy-rules
             @blur="v$.newStudyInterviewDesignData.name.$touch"
             :error="v$.newStudyInterviewDesignData.name.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.newStudyInterviewDesignData.name.$errors">
@@ -146,11 +146,11 @@
           </q-input>
           <q-input
             v-model='newStudyInterviewDesignData.label'
-            :label="$t('title')"
+            :label="t('title')"
             lazy-rules
             @blur="v$.newStudyInterviewDesignData.label.$touch"
             :error="v$.newStudyInterviewDesignData.label.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.newStudyInterviewDesignData.label.$errors">
@@ -160,7 +160,7 @@
           </q-input>
           <q-input
             v-model='newStudyInterviewDesignData.description'
-            :label="$t('description')"
+            :label="t('description')"
             autogrow
             lazy-rules
           />
@@ -169,7 +169,7 @@
           <q-toggle
             class="q-mt-md"
             v-model="newStudyInterviewDesignData.restrictedAccess"
-            :label="$t('restricted_access')"
+            :label="t('restricted_access')"
           />
           <q-select
             v-if="newStudyInterviewDesignData.restrictedAccess"
@@ -179,7 +179,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.permitted_users')" />
+            :label="t('study.permitted_users')" />
           <q-select
             v-if="newStudyInterviewDesignData.restrictedAccess"
             v-model="newStudyInterviewDesignData.permissions.groups"
@@ -188,14 +188,14 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.permitted_groups')" />
+            :label="t('study.permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudyInterviewDesign(true)'
             :disable='disableCreateStudyInterviewDesign'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -213,11 +213,11 @@
         <q-card-section>
           <q-input
             v-model='selectedStudyInterviewDesign.name'
-            :label="$t('name')"
+            :label="t('name')"
             lazy-rules
             @blur="v$.selectedStudyInterviewDesign.name.$touch"
             :error="v$.selectedStudyInterviewDesign.name.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.selectedStudyInterviewDesign.name.$errors">
@@ -227,11 +227,11 @@
           </q-input>
           <q-input
             v-model='selectedStudyInterviewDesign.label'
-            :label="$t('title')"
+            :label="t('title')"
             lazy-rules
             @blur="v$.selectedStudyInterviewDesign.label.$touch"
             :error="v$.selectedStudyInterviewDesign.label.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.selectedStudyInterviewDesign.label.$errors">
@@ -241,7 +241,7 @@
           </q-input>
           <q-input
             v-model='selectedStudyInterviewDesign.description'
-            :label="$t('description')"
+            :label="t('description')"
             autogrow
             lazy-rules
           />
@@ -250,7 +250,7 @@
           <q-toggle
             class="q-mt-md"
             v-model="selectedStudyInterviewDesign.restrictedAccess"
-            :label="$t('restricted_access')"
+            :label="t('restricted_access')"
           />
           <q-select
             v-if="selectedStudyInterviewDesign.restrictedAccess"
@@ -260,7 +260,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.permitted_users')" />
+            :label="t('study.permitted_users')" />
           <q-select
             v-if="selectedStudyInterviewDesign.restrictedAccess"
             v-model="selectedStudyInterviewDesign.permissions.groups"
@@ -269,14 +269,14 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.permitted_groups')" />
+            :label="t('study.permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudyInterviewDesign(false)'
             :disable='disableEditStudyInterviewDesign'
-            :label="$t('update')"
+            :label="t('update')"
             type='submit'
             color='primary'
             v-close-popup
@@ -293,17 +293,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_interview_design_confirm')}}
+            {{t('study.delete_interview_design_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{ selectedStudyInterviewDesign.name }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudyInterviewDesign'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -320,17 +320,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_interview_designs_confirm')}}
+            {{t('study.delete_interview_designs_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudyInterviewDesigns'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -351,7 +351,6 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
-import { t } from '../../boot/i18n'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
@@ -359,7 +358,7 @@ import { useInterviewStore } from 'src/stores/interview'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
 
-const { t: $t } = useI18n()
+const { t } = useI18n()
 const route = useRoute()
 const interviewStore = useInterviewStore()
 const studyStore = useStudyStore()
@@ -427,7 +426,7 @@ const columns = computed(() => {
     {
       name: 'name',
       required: true,
-      label: $t('name'),
+      label: t('name'),
       align: 'left',
       field: 'name',
       sortable: true
@@ -435,39 +434,39 @@ const columns = computed(() => {
     {
       name: 'label',
       align: 'left',
-      label: $t('title'),
+      label: t('title'),
       field: 'label',
       sortable: true
     },
     {
       name: 'description',
       align: 'left',
-      label: $t('description'),
+      label: t('description'),
       field: 'description',
       sortable: true
     },
     {
       name: 'steps',
       align: 'left',
-      label: $t('interview.steps'),
+      label: t('interview.steps'),
       field: 'steps',
       sortable: true
     },
     {
       name: 'updatedAt',
       align: 'left',
-      label: $t('updated_at'),
+      label: t('updated_at'),
       field: 'updatedAt',
       sortable: true,
       format: val =>
-        `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : $t('unknown')}`
+        `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : t('unknown')}`
     }
   ]
   if (subjects.value && subjects.value.length > 0) {
     cols.push({
       name: 'permissions',
       align: 'left',
-      label: $t('restricted_access'),
+      label: t('restricted_access'),
       field: 'permissions',
       sortable: false
     })
@@ -475,7 +474,7 @@ const columns = computed(() => {
   cols.push({
     name: 'state',
     align: 'left',
-    label: $t('state'),
+    label: t('state'),
     field: 'state',
     sortable: true
   })
@@ -483,7 +482,7 @@ const columns = computed(() => {
     cols.push({
       name: 'action',
       align: 'left',
-      label: $t('action')
+      label: t('action')
     })
   }
   return cols

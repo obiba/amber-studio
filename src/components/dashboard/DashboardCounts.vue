@@ -16,8 +16,8 @@
               <span v-else>{{ item.value }}</span>
             </q-item-label>
             <q-item-label>
-              <router-link v-if="item.link" class="text-white" :to="item.link">{{ $t(item.title) }}</router-link>
-              <span v-else>{{ $t(item.title) }}</span>
+              <router-link v-if="item.link" class="text-white" :to="item.link">{{ t(item.title) }}</router-link>
+              <span v-else>{{ t(item.title) }}</span>
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -41,8 +41,8 @@
                   <span v-else>{{ item.value }}</span>
                 </q-item-label>
                 <q-item-label>
-                  <router-link v-if="item.link" class="text-white" :to="item.link">{{ $t(item.title) }}</router-link>
-                  <span v-else>{{ $t(item.title) }}</span>
+                  <router-link v-if="item.link" class="text-white" :to="item.link">{{ t(item.title) }}</router-link>
+                  <span v-else>{{ t(item.title) }}</span>
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -50,7 +50,7 @@
         </div>
         <records-chart
           chartId="case-reports"
-          :title="$t('chart.cumulated_case_reports')"
+          :title="t('chart.cumulated_case_reports')"
           :aggregations="case_reports_aggregations"/>
       </div>
       <div v-if="interviews_aggregations.length>0" class="col-md-6 col-sm-12 col-xs-12">
@@ -70,8 +70,8 @@
                   <span v-else>{{ item.value }}</span>
                 </q-item-label>
                 <q-item-label>
-                  <router-link v-if="item.link" class="text-white" :to="item.link">{{ $t(item.title) }}</router-link>
-                  <span v-else>{{ $t(item.title) }}</span>
+                  <router-link v-if="item.link" class="text-white" :to="item.link">{{ t(item.title) }}</router-link>
+                  <span v-else>{{ t(item.title) }}</span>
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -79,7 +79,7 @@
         </div>
         <records-chart
           chartId="interviews"
-          :title="$t('chart.cumulated_interviews')"
+          :title="t('chart.cumulated_interviews')"
           :aggregations="interviews_aggregations"/>
       </div>
     </div>
@@ -88,8 +88,11 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuth } from 'src/composables/useAuth'
 import RecordsChart from 'src/components/dashboard/RecordsChart.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   counts: {

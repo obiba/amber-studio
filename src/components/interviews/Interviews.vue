@@ -8,7 +8,7 @@
               class="q-mr-md"
               color="primary"
               icon="download"
-              :title="$t('study.export_interviews_hint')"
+              :title="t('study.export_interviews_hint')"
               :disable="interviews.length === 0">
               <q-list>
                 <q-item clickable v-close-popup @click="onExport('csv')">
@@ -41,7 +41,7 @@
               color="negative"
               icon="delete_outline"
               :disable="selected.length === 0"
-              :title="$t('study.delete_interviews_hint')"
+              :title="t('study.delete_interviews_hint')"
               @click="onConfirmDeleteMultiple()" />
         </div>
         <q-table
@@ -62,7 +62,7 @@
               :options="interviewDesignOptions"
               emit-value
               map-options
-              :label="$t('study.interview_design')"
+              :label="t('study.interview_design')"
               style="min-width: 150px"
               @update:model-value="onFilter" />
             <q-select
@@ -71,7 +71,7 @@
               :options="campaignOptions"
               emit-value
               map-options
-              :label="$t('study.campaign')"
+              :label="t('study.campaign')"
               style="min-width: 150px"
               @update:model-value="onFilter" />
             <q-select
@@ -80,7 +80,7 @@
               :options="stateOptions"
               emit-value
               map-options
-              :label="$t('state')"
+              :label="t('state')"
               style="min-width: 150px"
               @update:model-value="onFilter" />
             <q-select
@@ -89,17 +89,17 @@
               :options="eligibleOptions"
               emit-value
               map-options
-              :label="$t('interview.participant_eligibility')"
+              :label="t('interview.participant_eligibility')"
               style="min-width: 150px"
               @update:model-value="onFilter"/>
             <div class="q-mr-md" style="max-width: 250px">
-              <q-input filled v-model="fromDate" :placeholder="$t('from')">
+              <q-input filled v-model="fromDate" :placeholder="t('from')">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date v-model="fromDate" mask="YYYY-MM-DD HH:mm">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -108,7 +108,7 @@
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-time v-model="fromDate" mask="YYYY-MM-DD HH:mm" format24h>
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-time>
                     </q-popup-proxy>
@@ -121,13 +121,13 @@
               </q-input>
             </div>
             <div class="q-mr-md" style="max-width: 250px">
-              <q-input filled v-model="toDate" :placeholder="$t('to')">
+              <q-input filled v-model="toDate" :placeholder="t('to')">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date v-model="toDate" mask="YYYY-MM-DD HH:mm">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -136,7 +136,7 @@
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-time v-model="toDate" mask="YYYY-MM-DD HH:mm" format24h>
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-time>
                     </q-popup-proxy>
@@ -153,8 +153,8 @@
               dense
               debounce="300"
               v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('study.search_interview_hint')">
+              :placeholder="t('search')"
+              :title="t('study.search_interview_hint')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -172,12 +172,12 @@
           </template>
           <template v-slot:body-cell-revision='props'>
             <q-td :props='props'>
-              {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
+              {{ props.row.revision ? props.row.revision : t('study.latest_revision') }}
             </q-td>
           </template>
           <template v-slot:body-cell-state='props'>
             <q-td :props='props'>
-              {{ $t('study.interview_state.' + props.row.state) }}
+              {{ t('study.interview_state.' + props.row.state) }}
             </q-td>
           </template>
           <template v-slot:body-cell-participantValid='props'>
@@ -196,7 +196,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.edit_interview_filling_date_hint')"
+                :title="t('study.edit_interview_filling_date_hint')"
                 icon="access_time_filled"
                 @click='onShowEditFillingDate(props.row)'>
               </q-btn>
@@ -206,7 +206,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.view_interview_data_hint')"
+                :title="t('study.view_interview_data_hint')"
                 icon="visibility"
                 @click='onShow(props.row)'>
               </q-btn>
@@ -217,7 +217,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.delete_interview_hint')"
+                :title="t('study.delete_interview_hint')"
                 icon="delete"
                 @click='onConfirmDelete(props.row)'>
               </q-btn>
@@ -228,7 +228,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.reopen_interview_hint')"
+                :title="t('study.reopen_interview_hint')"
                 icon="replay"
                 @click='onReopen(props.row)'>
               </q-btn>
@@ -255,7 +255,7 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('close')" flat v-close-popup />
+          <q-btn :label="t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -264,17 +264,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_interview_confirm')}}
+            {{t('study.delete_interview_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{ getInterviewFullName(selectedInterview) }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteInterview'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -291,17 +291,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_interviews_confirm')}}
+            {{t('study.delete_interviews_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => getInterviewFullName(g)).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteInterviews'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -320,13 +320,13 @@
           <div class="q-mb-sm">
             <q-chip>{{ selectedInterview.code }}</q-chip>
           </div>
-          <q-input filled v-model="selectedFillingDate" :label="$t('study.interview_filling_date')" :hint="$t('study.interview_filling_date_hint')">
+          <q-input filled v-model="selectedFillingDate" :label="t('study.interview_filling_date')" :hint="t('study.interview_filling_date_hint')">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-date v-model="selectedFillingDate" mask="YYYY-MM-DD">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                      <q-btn v-close-popup :label="t('close')" color="primary" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -335,10 +335,10 @@
           </q-input>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='onEditFillingDate'
-            :label="$t('save')"
+            :label="t('save')"
             type='submit'
             color='primary'
             v-close-popup
@@ -359,13 +359,12 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { interviewService } from '../../services/interview'
-import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
 import { useInterviewStore } from 'src/stores/interview'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
 
-const { t: $t } = useI18n()
+const { t } = useI18n()
 const route = useRoute()
 const interviewStore = useInterviewStore()
 const studyStore = useStudyStore()
@@ -425,7 +424,7 @@ const columns = computed(() => [
   {
     name: 'interviewDesign',
     required: true,
-    label: $t('study.interview_design'),
+    label: t('study.interview_design'),
     align: 'left',
     field: 'interviewDesign',
     sortable: true
@@ -433,7 +432,7 @@ const columns = computed(() => [
   {
     name: 'campaign',
     required: true,
-    label: $t('study.campaign'),
+    label: t('study.campaign'),
     align: 'left',
     field: 'campaign',
     sortable: true,
@@ -443,7 +442,7 @@ const columns = computed(() => [
   {
     name: 'state',
     required: true,
-    label: $t('state'),
+    label: t('state'),
     align: 'left',
     field: 'state',
     sortable: true
@@ -451,16 +450,16 @@ const columns = computed(() => [
   {
     name: 'updatedAt',
     align: 'left',
-    label: $t('updated_at'),
+    label: t('updated_at'),
     field: 'updatedAt',
     sortable: true,
     format: val =>
-      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : $t('unknown')}`
+      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : t('unknown')}`
   },
   {
     name: 'fillingDate',
     align: 'left',
-    label: $t('study.interview_filling_date'),
+    label: t('study.interview_filling_date'),
     field: 'fillingDate',
     sortable: true,
     format: val =>
@@ -469,14 +468,14 @@ const columns = computed(() => [
   {
     name: 'participantValid',
     align: 'left',
-    label: $t('interview.eligibility'),
+    label: t('interview.eligibility'),
     field: 'participantValid',
     sortable: false
   },
   {
     name: 'action',
     align: 'left',
-    label: $t('action')
+    label: t('action')
   }
 ])
 

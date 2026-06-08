@@ -12,14 +12,14 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle">
-                    {{ $t('reset.title') }}
+                    {{ t('reset.title') }}
                   </div>
                 </div>
               </q-card-section>
               <q-card-section>
                 <q-form @submit="resetPassword" class="q-gutter-md">
                   <q-input :type="showPassword ? 'text' : 'password'" v-model="formData.password"
-                    :label="$t('password')" lazy-rules :hint="$t('password_hint')" @blur="v$.formData.password.$touch"
+                    :label="t('password')" lazy-rules :hint="t('password_hint')" @blur="v$.formData.password.$touch"
                     :error="v$.formData.password.$error">
                     <template v-slot:prepend>
                       <q-icon name="fas fa-lock" size="xs" />
@@ -35,8 +35,8 @@
                     </template>
                   </q-input>
                   <div class="q-pt-md">
-                    <q-btn :label="$t('reset.submit')" type="submit" color="primary" :disable="disableSubmit" />
-                    <q-btn :label="$t('cancel')" flat to="/login" stretch class="text-bold q-ml-md" />
+                    <q-btn :label="t('reset.submit')" type="submit" color="primary" :disable="disableSubmit" />
+                    <q-btn :label="t('cancel')" flat to="/login" stretch class="text-bold q-ml-md" />
                   </div>
                 </q-form>
               </q-card-section>

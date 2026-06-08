@@ -12,7 +12,7 @@
         />
         <q-toolbar-title>
           <q-btn flat to="/" no-caps size="lg">
-            {{$t('main.brand')}}
+            {{t('main.brand')}}
           </q-btn>
         </q-toolbar-title>
         <q-space/>
@@ -48,13 +48,13 @@
             <q-list>
               <q-item v-close-popup to="/account">
                 <q-item-section>
-                  <q-item-label>{{$t('main.profile')}}</q-item-label>
+                  <q-item-label>{{t('main.profile')}}</q-item-label>
                 </q-item-section>
               </q-item>
               <q-separator />
               <q-item clickable v-close-popup @click="onLogout">
                 <q-item-section>
-                  <q-item-label>{{$t('main.logout')}}</q-item-label>
+                  <q-item-label>{{t('main.logout')}}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -75,7 +75,7 @@
             <q-icon name="arrow_back"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('studies.title')}}</q-item-label>
+            <q-item-label>{{t('studies.title')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -84,18 +84,18 @@
             <q-icon name="dashboard"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('main.dashboard')}}</q-item-label>
+            <q-item-label>{{t('main.dashboard')}}</q-item-label>
           </q-item-section>
         </q-item>
 
-        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{$t('study.design')}}</q-item-label>
+        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{t('study.design')}}</q-item-label>
 
         <q-item v-if="!isGuest" :to="'/study/' + studyId + '/forms'" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="list_alt"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('study.forms')}}</q-item-label>
+            <q-item-label>{{t('study.forms')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -104,7 +104,7 @@
             <q-icon name="insert_drive_file" size="xs" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('study.case_report_forms')}}</q-item-label>
+            <q-item-label>{{t('study.case_report_forms')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -115,11 +115,11 @@
             <q-icon name="file_copy" size="xs" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('study.interview_designs')}}</q-item-label>
+            <q-item-label>{{t('study.interview_designs')}}</q-item-label>
           </q-item-section>
         </q-item>
 
-        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{$t('study.data_collection')}}</q-item-label>
+        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{t('study.data_collection')}}</q-item-label>
 
         <q-item
           v-if="!isGuest && hasCaseReportService"
@@ -128,7 +128,7 @@
             <q-icon name="help_center" size="xs" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('study.case_reports')}}</q-item-label>
+            <q-item-label>{{t('study.case_reports')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -139,13 +139,13 @@
             <q-icon name="quiz" size="xs" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('study.interviews')}}</q-item-label>
+            <q-item-label>{{t('study.interviews')}}</q-item-label>
           </q-item-section>
         </q-item>
 
         <q-item class="fixed-bottom text-caption">
           <div>
-            {{$t('main.powered_by')}} <a class="text-weight-bold" href="https://www.obiba.org" target="_blank">OBiBa Amber</a>
+            {{t('main.powered_by')}} <a class="text-weight-bold" href="https://www.obiba.org" target="_blank">OBiBa Amber</a>
           </div>
         </q-item>
 
@@ -156,12 +156,12 @@
     <q-page-container :class="settings.theme.page">
       <div class="q-pa-md" :class="settings.theme.header2">
         <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
-          <q-breadcrumbs-el icon="inventory_2" :title="$t('studies.title')" to="/studies"/>
+          <q-breadcrumbs-el icon="inventory_2" :title="t('studies.title')" to="/studies"/>
           <q-breadcrumbs-el :label="study.name" />
         </q-breadcrumbs>
         <q-btn
           @click='onEdit'
-          :title="$t('edit_settings')"
+          :title="t('edit_settings')"
           icon="settings"
           class="text-grey-7"
           flat
@@ -184,12 +184,12 @@
            <div class="col-12">
             <q-input
               v-model='studyData.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
               class='q-mb-sm'
               @blur="v$.studyData.name.$touch"
                   :error="v$.studyData.name.$error"
-                  :hint="$t('required')"
+                  :hint="t('required')"
                 >
               <template v-slot:error>
                 <div v-for="error in v$.studyData.name.$errors">
@@ -199,15 +199,15 @@
             </q-input>
             <q-input
               v-model='studyData.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               class='q-mb-sm'
             />
             <q-select
               v-model="studyData.services"
-              :label="$t('study.services')"
-              :hint="$t('study.services_hint')"
+              :label="t('study.services')"
+              :hint="t('study.services_hint')"
               :options="servicesOptions"
               multiple
               emit-value
@@ -217,11 +217,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='save'
             :disable='disableSave'
-            :label="$t('save')"
+            :label="t('save')"
             type='submit'
             color='primary'
             v-close-popup

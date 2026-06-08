@@ -11,7 +11,7 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle ellipsis">
-                    {{$t('forgot_password.title')}}
+                    {{t('forgot_password.title')}}
                   </div>
                 </div>
               </q-card-section>
@@ -20,9 +20,9 @@
                   <q-input
                     autofocus
                     v-model="resetEmail"
-                    :label="$t('email')"
+                    :label="t('email')"
                     type="email"
-                    :hint="$t('forgot_password.hint')"
+                    :hint="t('forgot_password.hint')"
                     @blur="v$.resetEmail.$touch"
                     :error="v$.resetEmail.$error"
                     lazy-rules>
@@ -37,12 +37,12 @@
                   </q-input>
                   <div class="q-pt-md">
                     <q-btn
-                      :label="$t('forgot_password.submit')"
+                      :label="t('forgot_password.submit')"
                       type="submit"
                       color="primary"
                       :disable="disableSubmit"/>
                     <q-btn
-                      :label="$t('forgot_password.login')"
+                      :label="t('forgot_password.login')"
                       flat
                       to="/login"
                       stretch
@@ -61,12 +61,15 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { required, email } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
 import useVuelidate from '@vuelidate/core'
 import { useAccountStore } from 'src/stores/account'
 
 import Banner from 'src/components/Banner.vue'
+
+const { t } = useI18n()
 
 const router = useRouter()
 const accountStore = useAccountStore()

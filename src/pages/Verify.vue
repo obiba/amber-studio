@@ -11,20 +11,20 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle ellipsis">
-                    {{$t('verify.title')}}
+                    {{t('verify.title')}}
                   </div>
                 </div>
               </q-card-section>
               <q-card-section class="row justify-center items-center content-center">
                 <div class="col-md-8 q-pa-lg text-center">
-                  <span v-if="success">{{$t('verify.success')}}</span>
-                  <span v-else-if="success === undefined">{{$t('verify.pending')}}</span>
-                  <span v-else>{{$t('verify.failure')}}</span>
+                  <span v-if="success">{{t('verify.success')}}</span>
+                  <span v-else-if="success === undefined">{{t('verify.pending')}}</span>
+                  <span v-else>{{t('verify.failure')}}</span>
                 </div>
               </q-card-section>
               <q-card-section v-if="success !== undefined" class="row justify-center items-center content-center">
                 <q-btn
-                  :label="$t('verify.login')"
+                  :label="t('verify.login')"
                   to="/login"
                   color="primary"
                   class="text-bold"/>

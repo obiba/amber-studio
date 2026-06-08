@@ -11,7 +11,7 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle">
-                    {{$t('register.title')}}
+                    {{t('register.title')}}
                   </div>
                 </div>
               </q-card-section>
@@ -21,8 +21,8 @@
                   <q-input
                     autofocus
                     v-model="formData.email"
-                    :label="$t('email')"
-                    :hint="$t('email_hint')"
+                    :label="t('email')"
+                    :hint="t('email_hint')"
                     type="email"
                     @blur="v$.formData.email.$touch"
                     :error="v$.formData.email.$error"
@@ -39,8 +39,8 @@
 
                   <q-input
                     v-model="formData.password"
-                    :label="$t('password')"
-                    :hint="$t('password_hint')"
+                    :label="t('password')"
+                    :hint="t('password_hint')"
                     type="password"
                     lazy-rules
                     @blur="v$.formData.password.$touch"
@@ -57,8 +57,8 @@
 
                   <q-input
                     v-model="formData.firstname"
-                    :label="$t('firstname')"
-                    :hint="$t('required')"
+                    :label="t('firstname')"
+                    :hint="t('required')"
                     @blur="v$.formData.firstname.$touch"
                     :error="v$.formData.firstname.$error"
                     lazy-rules>
@@ -74,8 +74,8 @@
 
                   <q-input
                     v-model="formData.lastname"
-                    :label="$t('lastname')"
-                    :hint="$t('required')"
+                    :label="t('lastname')"
+                    :hint="t('required')"
                     @blur="v$.formData.lastname.$touch"
                     :error="v$.formData.lastname.$error"
                     lazy-rules>
@@ -93,7 +93,7 @@
                     v-show="hasLocales"
                     v-model="locale"
                     :options="localeOptions"
-                    :label="$t('preferred_language')"
+                    :label="t('preferred_language')"
                     emit-value
                     map-options
                     options-dense
@@ -105,12 +105,12 @@
                   </q-select>
                   <div>
                     <q-btn
-                      :label="$t('register.submit')"
+                      :label="t('register.submit')"
                       type="submit"
                       color="primary"
                       :disable='disableSubmit'/>
                     <q-btn
-                      :label="$t('register.login')"
+                      :label="t('register.login')"
                       flat
                       to="/login"
                       stretch
@@ -119,13 +119,13 @@
                 </q-form>
               </q-card-section>
               <q-card-section v-if="!registrationComplete">
-                <span class="text-caption text-grey" v-html="$t('register.google_policy')">
+                <span class="text-caption text-grey" v-html="t('register.google_policy')">
                 </span>
               </q-card-section>
               <q-card-section v-if="registrationComplete">
                 <div class="text-center q-pt-lg">
                   <div class="col text-h6 ellipsis">
-                    {{$t('register.success')}}
+                    {{t('register.success')}}
                   </div>
                 </div>
               </q-card-section>

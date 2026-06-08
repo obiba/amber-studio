@@ -1,8 +1,8 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="text-h5 q-mb-md">{{$t('main.dashboard')}}</div>
+    <div class="text-h5 q-mb-md">{{t('main.dashboard')}}</div>
     <div v-if="myCampaigns.length" class="q-mb-md">
-      <div class="text-h6 q-mb-md">{{ $t('study.my_campaigns') }}</div>
+      <div class="text-h6 q-mb-md">{{ t('study.my_campaigns') }}</div>
       <div class="row q-col-gutter-lg">
         <div class="col-12 col-md-4">
           <q-list bordered separator>
@@ -25,18 +25,21 @@
         </div>
       </div>
     </div>
-    <div class="text-h6 q-mb-md">{{ $t('study.metrics') }}</div>
+    <div class="text-h6 q-mb-md">{{ t('study.metrics') }}</div>
     <dashboard-counts v-if="!isGuest" :counts="counts"/>
   </q-page>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import studyService from '../services/study'
 import { useAuth } from 'src/composables/useAuth'
 import DashboardCounts from 'src/components/dashboard/DashboardCounts.vue'
+
+const { t } = useI18n()
 
 const { isGuest, user } = useAuth()
 

@@ -2,9 +2,9 @@
   <q-page>
 
     <div class="q-ma-md">
-      <div class="text-h5 q-mb-md">{{ $t('study.dashboard') }}</div>
+      <div class="text-h5 q-mb-md">{{ t('study.dashboard') }}</div>
       <div v-if="myCampaigns.length" class="q-mb-md">
-        <div class="text-h6 q-mb-md">{{ $t('study.my_campaigns') }}</div>
+        <div class="text-h6 q-mb-md">{{ t('study.my_campaigns') }}</div>
         <div class="row q-col-gutter-lg">
           <div class="col-12 col-md-3">
             <q-list bordered separator>
@@ -28,34 +28,34 @@
         </div>
       </div>
       <div v-if="hasMetrics">
-        <div class="text-h6 q-mb-md">{{ $t('study.metrics') }}</div>
+        <div class="text-h6 q-mb-md">{{ t('study.metrics') }}</div>
         <dashboard-counts v-if="!isGuest" :counts="counts"/>
       </div>
       <div v-else>
         <div class="note note-info text-body2 text-secondary">
           <div v-if="hasForms">
-            <div>{{ $t('study.form_use') }}</div>
+            <div>{{ t('study.form_use') }}</div>
             <q-btn
               v-if="hasCaseReportService"
               color="primary"
               icon-right="arrow_forward"
-              :label="$t('study.case_report_forms')"
+              :label="t('study.case_report_forms')"
               :to="`/study/${studyId}/case-report-forms`"
               class="q-mt-md q-mr-md" />
             <q-btn
               v-if="hasInterviewService"
               color="primary"
               icon-right="arrow_forward"
-              :label="$t('study.interview_designs')"
+              :label="t('study.interview_designs')"
               :to="`/study/${studyId}/interview-designs`"
               class="q-mt-md" />
           </div>
           <div v-else class="q-mt-md">
-            <div>{{ $t('study.form_create') }}</div>
+            <div>{{ t('study.form_create') }}</div>
             <q-btn
               color="primary"
               icon-right="arrow_forward"
-              :label="$t('study.forms')"
+              :label="t('study.forms')"
               :to="`/study/${studyId}/forms`"
               class="q-mt-md" />
           </div>
@@ -69,11 +69,14 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
 import DashboardCounts from 'src/components/dashboard/DashboardCounts.vue'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const studyStore = useStudyStore()

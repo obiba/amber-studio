@@ -13,7 +13,7 @@
             round
             icon='chevron_left'
             :disable="!selectedItem"
-            :title="$t('form.select_previous')"
+            :title="t('form.select_previous')"
             @click='selectUpItem'>
           </q-btn>
           <q-btn
@@ -24,7 +24,7 @@
             round
             icon='chevron_right'
             :disable="!selectedItem"
-            :title="$t('form.select_next')"
+            :title="t('form.select_next')"
             @click='selectDownItem'>
           </q-btn>
           <q-btn
@@ -35,7 +35,7 @@
             dense
             round
             icon='add'
-            :title="$t('form.add_item_hint')"
+            :title="t('form.add_item_hint')"
             @click='addItem()'>
           </q-btn>
         </div>
@@ -57,7 +57,7 @@
                 <div>
                   <q-icon v-if="prop.node.name === '.'" name="feed"/>
                   <span v-else>{{ prop.node.name }}</span>
-                  <span class="text-caption text-grey q-ml-xs">[{{ $t('form.types.' + (prop.node.type ? prop.node.type : 'form')) }}]</span>
+                  <span class="text-caption text-grey q-ml-xs">[{{ t('form.types.' + (prop.node.type ? prop.node.type : 'form')) }}]</span>
                 </div>
               </div>
             </template>
@@ -73,8 +73,8 @@
           v-if="!isReadOnly"
           color="primary"
           icon="add"
-          :title="$t('form.add_item_hint')"
-          :label="$t('add')"
+          :title="t('form.add_item_hint')"
+          :label="t('add')"
           @click="addItem()"
           class="q-ma-md" />
         </div>
@@ -84,7 +84,7 @@
         <div v-if="selectedItem">
           <div class="row">
             <div class="float-left text-h6 q-mt-sm q-ml-md">
-              <span v-if="isRootSelected">{{ $t('form.types.form') }}</span>
+              <span v-if="isRootSelected">{{ t('form.types.form') }}</span>
               <span v-else>{{ selectedItem.name }}</span>
             </div>
             <div v-if="!isRootSelected" class="q-mt-sm q-ml-md">
@@ -96,7 +96,7 @@
                 dense
                 round
                 icon='arrow_upward'
-                :title="$t('form.move_up')"
+                :title="t('form.move_up')"
                 @click='moveUpItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -107,7 +107,7 @@
                 dense
                 round
                 icon='arrow_downward'
-                :title="$t('form.move_down')"
+                :title="t('form.move_down')"
                 @click='moveDownItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -118,7 +118,7 @@
                 dense
                 round
                 icon='content_copy'
-                :title="$t('form.copy_item')"
+                :title="t('form.copy_item')"
                 @click='copyItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -129,7 +129,7 @@
                 dense
                 round
                 icon='content_cut'
-                :title="$t('form.cut_item')"
+                :title="t('form.cut_item')"
                 @click='cutItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -141,7 +141,7 @@
                 round
                 icon='content_paste'
                 :disable="!canPaste"
-                :title="formItemCopied ? $t('form.paste_copied_item', { name: formItemCopied.name }) : (formItemCut ? $t('form.paste_cut_item', { name: formItemCut.name }) : $t('form.paste_item'))"
+                :title="formItemCopied ? t('form.paste_copied_item', { name: formItemCopied.name }) : (formItemCut ? t('form.paste_cut_item', { name: formItemCut.name }) : t('form.paste_item'))"
                 @click='pasteItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -152,7 +152,7 @@
                 dense
                 round
                 icon='delete'
-                :title="$t('form.delete')"
+                :title="t('form.delete')"
                 @click='deleteItem(formItemSelected)'>
               </q-btn>
             </div>
@@ -163,7 +163,7 @@
           </div>
         </div>
         <div v-else class="q-ma-md text-grey-6">
-          {{$t('form.no_item_selected')}}
+          {{t('form.no_item_selected')}}
         </div>
       </template>
 
@@ -173,9 +173,12 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuth } from 'src/composables/useAuth'
 import { useFormUtils } from 'src/composables/useFormUtils'
 import FormItem from 'src/components/forms/FormItem.vue'
+
+const { t } = useI18n()
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])

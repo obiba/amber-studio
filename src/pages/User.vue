@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="person" :title="$t('users.title')" to="/users"/>
+        <q-breadcrumbs-el icon="person" :title="t('users.title')" to="/users"/>
         <q-breadcrumbs-el :label="user.email" />
       </q-breadcrumbs>
     </div>
@@ -14,12 +14,12 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='profileData.firstname'
-              :label="$t('firstname')"
+              :label="t('firstname')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.firstname.$touch"
               :error="v$.firstname.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
@@ -34,12 +34,12 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='profileData.lastname'
-              :label="$t('lastname')"
+              :label="t('lastname')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.lastname.$touch"
               :error="v$.lastname.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:prepend>
                 <q-icon name='fas fa-user' size='xs' />
@@ -54,7 +54,7 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='profileData.institution'
-              :label="$t('institution')"
+              :label="t('institution')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -66,7 +66,7 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='profileData.city'
-              :label="$t('city')"
+              :label="t('city')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -78,7 +78,7 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='profileData.title'
-              :label="$t('title')"
+              :label="t('title')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -90,7 +90,7 @@
           <div class='col-12 col-md-6'>
             <q-input
               v-model='profileData.phone'
-              :label="$t('phone')"
+              :label="t('phone')"
               lazy-rules
               class='q-ma-sm'
             >
@@ -105,7 +105,7 @@
               v-show="hasLocales"
               v-model="profileData.language"
               :options="localeOptions"
-              :label="$t('preferred_language')"
+              :label="t('preferred_language')"
               emit-value
               map-options
               options-dense
@@ -120,7 +120,7 @@
               class='q-ma-sm text-capitalize'
               v-model='profileData.role'
               :options='rolesOptions'
-              :label="$t('role')"
+              :label="t('role')"
               emit-value
               map-options
               options-dense
@@ -130,13 +130,13 @@
           <div class='col-12 col-md-12'>
             <q-toggle
               v-model="profileData.with2fa"
-              :label="$t('users.with_2fa')"
+              :label="t('users.with_2fa')"
             />
           </div>
           <div v-if="profileData.with2fa" class='col-12 col-md-12'>
             <q-toggle
               v-model="profileData.totp2faRequired"
-              :label="$t('users.required_2fa')"
+              :label="t('users.required_2fa')"
             />
           </div>
         </div>
@@ -144,7 +144,7 @@
         <q-btn
           @click='saveUser'
           :disable='disableSaveUser'
-          :label="$t('save')"
+          :label="t('save')"
           type='submit'
           color='primary'
           class="q-ml-sm q-mt-md"
@@ -158,7 +158,7 @@
           v-show="profileData.with2fa && currentUser.totp2faRequired"
           @click='resetTotp2FA'
           :disable='disableTotp2FA'
-          :label="$t('users.reset_2fa')"
+          :label="t('users.reset_2fa')"
           type='submit'
           color='primary'
           class="q-ml-sm q-mt-md"

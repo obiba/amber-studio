@@ -8,7 +8,7 @@
               class="q-mr-md"
               color="primary"
               icon="download"
-              :title="$t('study.export_case_reports_hint')"
+              :title="t('study.export_case_reports_hint')"
               :disable="caseReports.length === 0">
               <q-list>
                 <q-item clickable v-close-popup @click="onExport('csv')">
@@ -41,7 +41,7 @@
               color="negative"
               icon="delete_outline"
               :disable="selected.length === 0"
-              :title="$t('study.delete_case_reports_hint')"
+              :title="t('study.delete_case_reports_hint')"
               @click="onConfirmDeleteMultiple()" />
         </div>
         <q-table
@@ -62,7 +62,7 @@
               :options="caseReportFormOptions"
               emit-value
               map-options
-              :label="$t('study.case_report_form')"
+              :label="t('study.case_report_form')"
               style="min-width: 200px" />
             <q-select
               class="q-mr-md"
@@ -70,16 +70,16 @@
               :options="formOptions"
               emit-value
               map-options
-              :label="$t('study.form')"
+              :label="t('study.form')"
               style="min-width: 200px" />
             <div class="q-mr-md" style="max-width: 250px">
-              <q-input filled v-model="fromDate" :placeholder="$t('from')">
+              <q-input filled v-model="fromDate" :placeholder="t('from')">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date v-model="fromDate" mask="YYYY-MM-DD HH:mm">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -88,7 +88,7 @@
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-time v-model="fromDate" mask="YYYY-MM-DD HH:mm" format24h>
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-time>
                     </q-popup-proxy>
@@ -101,13 +101,13 @@
               </q-input>
             </div>
             <div class="q-mr-md" style="max-width: 250px">
-              <q-input filled v-model="toDate" :placeholder="$t('to')">
+              <q-input filled v-model="toDate" :placeholder="t('to')">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date v-model="toDate" mask="YYYY-MM-DD HH:mm">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -116,7 +116,7 @@
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-time v-model="toDate" mask="YYYY-MM-DD HH:mm" format24h>
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-time>
                     </q-popup-proxy>
@@ -133,8 +133,8 @@
               dense
               debounce="300"
               v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('study.search_case_report_hint')">
+              :placeholder="t('search')"
+              :title="t('study.search_case_report_hint')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -152,12 +152,12 @@
           </template>
           <template v-slot:body-cell-revision='props'>
             <q-td :props='props'>
-              {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
+              {{ props.row.revision ? props.row.revision : t('study.latest_revision') }}
             </q-td>
           </template>
           <template v-slot:body-cell-state='props'>
             <q-td :props='props'>
-              {{ $t('study.case_report_state.' + props.row.state) }}
+              {{ t('study.case_report_state.' + props.row.state) }}
             </q-td>
           </template>
           <template v-slot:body-cell-action='props'>
@@ -168,7 +168,7 @@
                 flat
                 dense
                 round
-                :title="$t(isReadOnly ? 'study.view_case_report_hint' : 'study.edit_case_report_hint')"
+                :title="t(isReadOnly ? 'study.view_case_report_hint' : 'study.edit_case_report_hint')"
                 :icon="isReadOnly ? 'visibility' : 'edit'"
                 @click='onShow(props.row)'>
               </q-btn>
@@ -179,7 +179,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.delete_case_report_hint')"
+                :title="t('study.delete_case_report_hint')"
                 icon="delete"
                 @click='onConfirmDelete(props.row)'>
               </q-btn>
@@ -237,12 +237,12 @@
           </q-tab-panels>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn v-if="isReadOnly" :label="$t('close')" flat v-close-popup />
-          <q-btn v-if="!isReadOnly" :label="$t('cancel')" flat v-close-popup />
+          <q-btn v-if="isReadOnly" :label="t('close')" flat v-close-popup />
+          <q-btn v-if="!isReadOnly" :label="t('cancel')" flat v-close-popup />
           <q-btn
             v-if="!isReadOnly"
             @click='onSave'
-            :label="$t('save')"
+            :label="t('save')"
             type='submit'
             color='primary'
             v-close-popup
@@ -259,17 +259,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_case_report_confirm')}}
+            {{t('study.delete_case_report_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{ getCaseReportFullName(selectedCaseReport) }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteCaseReport'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -286,17 +286,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_case_reports_confirm')}}
+            {{t('study.delete_case_reports_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => getCaseReportFullName(g)).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteCaseReports'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -318,7 +318,6 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { formRevisionService } from '../../services/form'
 import { caseReportExportService } from '../../services/caseReport'
-import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
 import { useAuth } from 'src/composables/useAuth'
 import { useCaseReportStore } from 'src/stores/caseReport'
@@ -327,7 +326,7 @@ import { useFormStore } from 'src/stores/form'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
 
-const { t: $t } = useI18n()
+const { t } = useI18n()
 const route = useRoute()
 const { isReadOnly } = useAuth()
 const caseReportStore = useCaseReportStore()
@@ -371,7 +370,7 @@ const columns = computed(() => [
   {
     name: '_id',
     required: true,
-    label: $t('id'),
+    label: t('id'),
     align: 'left',
     field: row => (row.data && row.data._id) ? row.data._id : '',
     sortable: true
@@ -379,7 +378,7 @@ const columns = computed(() => [
   {
     name: 'caseReportForm',
     required: true,
-    label: $t('study.case_report_form'),
+    label: t('study.case_report_form'),
     align: 'left',
     field: 'caseReportForm',
     sortable: true
@@ -387,7 +386,7 @@ const columns = computed(() => [
   {
     name: 'form',
     required: true,
-    label: $t('study.form'),
+    label: t('study.form'),
     align: 'left',
     field: 'form',
     sortable: true
@@ -395,23 +394,23 @@ const columns = computed(() => [
   {
     name: 'revision',
     align: 'left',
-    label: $t('revision'),
+    label: t('revision'),
     field: 'revision',
     sortable: true
   },
   {
     name: 'updatedAt',
     align: 'left',
-    label: $t('updated_at'),
+    label: t('updated_at'),
     field: 'updatedAt',
     sortable: true,
     format: val =>
-      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : $t('unknown')}`
+      `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : t('unknown')}`
   },
   {
     name: 'action',
     align: 'left',
-    label: $t('action')
+    label: t('action')
   }
 ])
 

@@ -20,7 +20,7 @@
               v-if="!isReadOnly"
               color="primary"
               icon="add"
-              :title="$t('study.add_case_report_form_hint')"
+              :title="t('study.add_case_report_form_hint')"
               @click="onAdd()"
               class="q-mr-md" />
             <q-btn
@@ -31,15 +31,15 @@
               color="negative"
               icon="delete_outline"
               :disable="selected.length === 0"
-              :title="$t('study.delete_case_report_forms_hint')"
+              :title="t('study.delete_case_report_forms_hint')"
               @click="onConfirmDeleteMultiple()" />
             <q-space />
             <q-input
               dense
               debounce="300"
               v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('study.search_case_report_form_hint')">
+              :placeholder="t('search')"
+              :title="t('study.search_case_report_form_hint')">
               <template v-slot:append>
                 <q-icon name="search"/>
               </template>
@@ -52,7 +52,7 @@
           </template>
           <template v-slot:body-cell-revision='props'>
             <q-td :props='props'>
-              {{ props.row.revision ? props.row.revision : $t('study.latest_revision') }}
+              {{ props.row.revision ? props.row.revision : t('study.latest_revision') }}
             </q-td>
           </template>
           <template v-slot:body-cell-permissions='props'>
@@ -65,12 +65,12 @@
           </template>
           <template v-slot:body-cell-repeatPolicy='props'>
             <q-td :props='props'>
-              {{ props.row.repeatPolicy ? $t('study.case_report_form_repeat_policy.' + props.row.repeatPolicy) : '?' }}
+              {{ props.row.repeatPolicy ? t('study.case_report_form_repeat_policy.' + props.row.repeatPolicy) : '?' }}
             </q-td>
           </template>
           <template v-slot:body-cell-state='props'>
             <q-td :props='props'>
-              {{ $t('study.case_report_form_state.' + props.row.state) }}
+              {{ t('study.case_report_form_state.' + props.row.state) }}
               <q-icon v-if="props.row.permissions" name="lock"/>
             </q-td>
           </template>
@@ -82,7 +82,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.edit_case_report_form_hint')"
+                :title="t('study.edit_case_report_form_hint')"
                 icon="edit"
                 @click='onEdit(props.row)'>
               </q-btn>
@@ -93,7 +93,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.start_case_report_form_hint')"
+                :title="t('study.start_case_report_form_hint')"
                 icon="play_arrow"
                 @click='start(props.row)'>
               </q-btn>
@@ -104,7 +104,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.pause_case_report_form_hint')"
+                :title="t('study.pause_case_report_form_hint')"
                 icon="pause"
                 @click='pause(props.row)'>
               </q-btn>
@@ -114,7 +114,7 @@
                 flat
                 dense
                 round
-                :title="$t('study.delete_case_report_form_hint')"
+                :title="t('study.delete_case_report_form_hint')"
                 icon="delete"
                 @click='onConfirmDelete(props.row)'>
               </q-btn>
@@ -128,7 +128,7 @@
       v-else-if="!isReadOnly"
       color="primary"
       icon="add"
-      :label="$t('study.add_case_report_form_hint')"
+      :label="t('study.add_case_report_form_hint')"
       @click="onAdd()"
       class="q-ma-md" />
 
@@ -137,11 +137,11 @@
         <q-card-section>
           <q-input
             v-model='newStudyCaseReportFormData.name'
-            :label="$t('name')"
+            :label="t('name')"
             lazy-rules
             @blur="v$.newStudyCaseReportFormData.name.$touch"
             :error="v$.newStudyCaseReportFormData.name.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.newStudyCaseReportFormData.name.$errors">
@@ -151,7 +151,7 @@
           </q-input>
           <q-input
             v-model='newStudyCaseReportFormData.description'
-            :label="$t('description')"
+            :label="t('description')"
             autogrow
             lazy-rules
           />
@@ -162,13 +162,13 @@
             :options="formOptions"
             emit-value
             map-options
-            :label="$t('study.form')" />
+            :label="t('study.form')" />
           <q-select
             v-model="newStudyCaseReportFormData.revision"
             :options="revisionOptions"
             emit-value
             map-options
-            :label="$t('study.form_revision')"
+            :label="t('study.form_revision')"
             :disable="!newStudyCaseReportFormData.form" />
         </q-card-section>
         <q-card-section>
@@ -177,14 +177,14 @@
             :options="repeatOptions"
             emit-value
             map-options
-            :label="$t('study.case_report_form_repeat_policy.title')"
-            :hint="$t('study.case_report_form_repeat_policy.hint')" />
+            :label="t('study.case_report_form_repeat_policy.title')"
+            :hint="t('study.case_report_form_repeat_policy.hint')" />
         </q-card-section>
         <q-card-section>
           <q-toggle
             class="q-mt-md"
             v-model="newStudyCaseReportFormData.restrictedAccess"
-            :label="$t('restricted_access')"
+            :label="t('restricted_access')"
           />
           <q-select
             v-if="newStudyCaseReportFormData.restrictedAccess"
@@ -194,7 +194,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.permitted_users')" />
+            :label="t('study.permitted_users')" />
           <q-select
             v-if="newStudyCaseReportFormData.restrictedAccess"
             v-model="newStudyCaseReportFormData.permissions.groups"
@@ -203,14 +203,14 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.permitted_groups')" />
+            :label="t('study.permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudyCaseReportForm(true)'
             :disable='disableCreateStudyCaseReportForm'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -228,11 +228,11 @@
         <q-card-section>
           <q-input
             v-model='selectedStudyCaseReportForm.name'
-            :label="$t('name')"
+            :label="t('name')"
             lazy-rules
             @blur="v$.selectedStudyCaseReportForm.name.$touch"
             :error="v$.selectedStudyCaseReportForm.name.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.selectedStudyCaseReportForm.name.$errors">
@@ -242,7 +242,7 @@
           </q-input>
           <q-input
             v-model='selectedStudyCaseReportForm.description'
-            :label="$t('description')"
+            :label="t('description')"
             autogrow
             lazy-rules
           />
@@ -253,7 +253,7 @@
             :options="revisionOptions"
             emit-value
             map-options
-            :label="$t('study.form_revision')" />
+            :label="t('study.form_revision')" />
         </q-card-section>
         <q-card-section>
           <q-select
@@ -261,14 +261,14 @@
             :options="repeatOptions"
             emit-value
             map-options
-            :label="$t('study.case_report_form_repeat_policy.title')"
-            :hint="$t('study.case_report_form_repeat_policy.hint')" />
+            :label="t('study.case_report_form_repeat_policy.title')"
+            :hint="t('study.case_report_form_repeat_policy.hint')" />
         </q-card-section>
         <q-card-section>
           <q-toggle
             class="q-mt-md"
             v-model="selectedStudyCaseReportForm.restrictedAccess"
-            :label="$t('restricted_access')"
+            :label="t('restricted_access')"
           />
           <q-select
             v-if="selectedStudyCaseReportForm.restrictedAccess"
@@ -278,7 +278,7 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.permitted_users')" />
+            :label="t('study.permitted_users')" />
           <q-select
             v-if="selectedStudyCaseReportForm.restrictedAccess"
             v-model="selectedStudyCaseReportForm.permissions.groups"
@@ -287,14 +287,14 @@
             map-options
             multiple
             use-chips
-            :label="$t('study.permitted_groups')" />
+            :label="t('study.permitted_groups')" />
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudyCaseReportForm(false)'
             :disable='disableEditStudyCaseReportForm'
-            :label="$t('update')"
+            :label="t('update')"
             type='submit'
             color='primary'
             v-close-popup
@@ -311,17 +311,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.add_form_revision_confirm')}}
+            {{t('study.add_form_revision_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{ getFormName(newStudyCaseReportFormData.form) }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='createFormRevision'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -338,17 +338,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_case_report_form_confirm')}}
+            {{t('study.delete_case_report_form_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{ getCaseReportFormFullName(selectedStudyCaseReportForm) }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudyCaseReportForm'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -365,17 +365,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('study.delete_case_report_forms_confirm')}}
+            {{t('study.delete_case_report_forms_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => getCaseReportFormFullName(g)).join(', ')}}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudyCaseReportForms'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -396,7 +396,6 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { formRevisionService } from '../../services/form'
-import { t } from '../../boot/i18n'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
@@ -406,7 +405,7 @@ import { useStudyStore } from 'src/stores/study'
 import { useFormStore } from 'src/stores/form'
 import { useRoute } from 'vue-router'
 
-const { t: $t } = useI18n()
+const { t } = useI18n()
 const { isReadOnly } = useAuth()
 const caseReportStore = useCaseReportStore()
 const studyStore = useStudyStore()
@@ -469,7 +468,7 @@ const columns = computed(() => {
     {
       name: 'name',
       required: true,
-      label: $t('name'),
+      label: t('name'),
       align: 'left',
       field: 'name',
       sortable: true
@@ -477,14 +476,14 @@ const columns = computed(() => {
     {
       name: 'description',
       align: 'left',
-      label: $t('description'),
+      label: t('description'),
       field: 'description',
       sortable: true
     },
     {
       name: 'form',
       required: true,
-      label: $t('study.form'),
+      label: t('study.form'),
       align: 'left',
       field: 'form',
       sortable: true
@@ -492,32 +491,32 @@ const columns = computed(() => {
     {
       name: 'revision',
       align: 'left',
-      label: $t('revision'),
+      label: t('revision'),
       field: 'revision',
       sortable: true
     },
     {
       name: 'repeatPolicy',
       align: 'left',
-      label: $t('study.case_report_form_repeat_policy.title'),
+      label: t('study.case_report_form_repeat_policy.title'),
       field: 'repeatPolicy',
       sortable: true
     },
     {
       name: 'updatedAt',
       align: 'left',
-      label: $t('updated_at'),
+      label: t('updated_at'),
       field: 'updatedAt',
       sortable: true,
       format: val =>
-        `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : $t('unknown')}`
+        `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : t('unknown')}`
     }
   ]
   if (subjects.value && subjects.value.length > 0) {
     cols.push({
       name: 'permissions',
       align: 'left',
-      label: $t('restricted_access'),
+      label: t('restricted_access'),
       field: 'permissions',
       sortable: false
     })
@@ -525,7 +524,7 @@ const columns = computed(() => {
   cols.push({
     name: 'state',
     align: 'left',
-    label: $t('state'),
+    label: t('state'),
     field: 'state',
     sortable: true
   })
@@ -533,7 +532,7 @@ const columns = computed(() => {
     cols.push({
       name: 'action',
       align: 'left',
-      label: $t('action')
+      label: t('action')
     })
   }
   return cols
@@ -554,7 +553,7 @@ const repeatOptions = computed(() => {
   ].map(opt => {
     return {
       value: opt,
-      label: $t('study.case_report_form_repeat_policy.' + opt)
+      label: t('study.case_report_form_repeat_policy.' + opt)
     }
   })
 })

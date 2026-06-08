@@ -1,12 +1,12 @@
 <template>
-  <p class="q-mb-sm q-mt-md">{{ $t('form.options') }}</p>
-  <p class="text-grey">{{ $t('form.options_hint') }}</p>
+  <p class="q-mb-sm q-mt-md">{{ t('form.options') }}</p>
+  <p class="text-grey">{{ t('form.options_hint') }}</p>
   <div class="row q-col-gutter-lg" v-for="option in optionsList" :key="option.value">
     <div class="col-4">
-      <q-input class="q-mb-md" v-model="option.value" :label="$t('form.option_value')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="option.value" :label="t('form.option_value')" :disable="readOnly" />
     </div>
     <div :class="readOnly ? 'col-8' : 'col-7'">
-      <q-input class="q-mb-md" v-model="option.label" :label="$t('form.option_label')" :disable="readOnly" />
+      <q-input class="q-mb-md" v-model="option.label" :label="t('form.option_label')" :disable="readOnly" />
     </div>
     <div class="col-1">
       <q-btn
@@ -27,13 +27,13 @@
     size="sm"
     flat
     @click="showMoreOptions"
-    :label="$t('form.show_more_options')"/>
+    :label="t('form.show_more_options')"/>
   <div class="row q-col-gutter-sm" v-if="!readOnly">
     <div class="col-4">
       <q-btn
         color="primary"
         icon="add"
-        :title="$t('form.add_option_hint')"
+        :title="t('form.add_option_hint')"
         @click="addOption()"
         class="q-mr-sm"
       />
@@ -42,7 +42,7 @@
         round
         color="negative"
         icon="delete_outline"
-        :title="$t('form.delete_options_hint')"
+        :title="t('form.delete_options_hint')"
         @click="deleteOptions()"
       />
     </div>
@@ -53,13 +53,13 @@
         clearable
         v-model="optionsFile"
         accept=".txt,.csv,.tsv"
-        :label="$t('form.upload_options')">
+        :label="t('form.upload_options')">
         <template v-slot:prepend>
           <q-icon name="add" @click.stop />
         </template>
 
         <template v-slot:hint>
-          {{ $t('form.upload_options_hint') }}
+          {{ t('form.upload_options_hint') }}
         </template>
       </q-file>
     </div>
@@ -69,6 +69,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import * as Papa from 'papaparse'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps(['modelValue', 'readOnly'])
 const emit = defineEmits(['update:modelValue'])

@@ -4,7 +4,7 @@
       v-if="!isReadOnly"
       color="primary"
       icon="add"
-      :label="$t('interview.add_campaign_hint')"
+      :label="t('interview.add_campaign_hint')"
       @click="onAddCampaign()"/>
 
     <div v-if="campaigns && campaigns.length>0" class="q-mt-md">
@@ -31,14 +31,14 @@
           <div class="col-12 col-md-6">
             <records-chart
               chartId="interviews"
-              :title="$t('chart.cumulated_interviews')"
+              :title="t('chart.cumulated_interviews')"
               :aggregations="counts.interviews_agg"
               height="300px"/>
           </div>
           <div class="col-12 col-md-6">
             <pie-chart
               chartId="interviewsState"
-              :title="$t('chart.interview_states')"
+              :title="t('chart.interview_states')"
               :frequencies="interviewStateFrequencies"
               height="250px"/>
           </div>
@@ -56,7 +56,7 @@
               dense
               round
               icon="edit"
-              :title="$t('interview.edit_campaign_hint')"
+              :title="t('interview.edit_campaign_hint')"
               @click='onEditCampaign(campaign)'>
             </q-btn>
             <q-btn
@@ -66,28 +66,28 @@
               round
               color="negative"
               icon="delete_outline"
-              :title="$t('interview.delete_campaign_hint')"
+              :title="t('interview.delete_campaign_hint')"
               @click='onConfirmDeleteCampaign(campaign)'>
             </q-btn>
           </div>
           <div class="q-mt-md">
             <div class="row q-col-gutter-lg">
               <div class="col-12 col-md-6">
-                <p class="text-weight-bold q-mb-sm">{{ $t('interview.definition') }}</p>
+                <p class="text-weight-bold q-mb-sm">{{ t('interview.definition') }}</p>
                 <q-list bordered separator>
                   <q-item>
                     <q-item-section>
-                      <q-item-label>{{ $t('name') }}</q-item-label>
+                      <q-item-label>{{ t('name') }}</q-item-label>
                       <q-item-label caption>{{ campaign.name }}</q-item-label>
                     </q-item-section>
                     <q-item-section>
-                      <q-item-label>{{ $t('description') }}</q-item-label>
+                      <q-item-label>{{ t('description') }}</q-item-label>
                       <q-item-label caption>{{ campaign.description || '-' }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_investigators_hint')">
-                      <q-item-label>{{ $t('interview.campaign_investigators') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_investigators_hint')">
+                      <q-item-label>{{ t('interview.campaign_investigators') }}</q-item-label>
                       <div>
                         <q-chip v-for="sub in investigatorSubjects" icon="person" size="sm" :label="sub.name" :key="sub._id"/>
                       </div>
@@ -96,50 +96,50 @@
                           color="primary"
                           split
                           icon="send"
-                          :label="$t('interview.campaign_notifications')"
+                          :label="t('interview.campaign_notifications')"
                           size="sm">
                           <q-list>
                             <q-item clickable v-close-popup @click="onParticipantsTask('participants-info-activate')">
                               <q-item-section>
-                                <q-item-label>{{$t('tasks.types.participants-info-activate')}}</q-item-label>
+                                <q-item-label>{{t('tasks.types.participants-info-activate')}}</q-item-label>
                               </q-item-section>
                             </q-item>
 
                             <q-item clickable v-close-popup @click="onParticipantsTask('participants-activate')">
                               <q-item-section>
-                                <q-item-label>{{$t('tasks.types.participants-activate')}}</q-item-label>
+                                <q-item-label>{{t('tasks.types.participants-activate')}}</q-item-label>
                               </q-item-section>
                             </q-item>
 
                             <q-item clickable v-close-popup @click="onParticipantsTask('participants-reminder')">
                               <q-item-section>
-                                <q-item-label>{{$t('tasks.types.participants-reminder')}}</q-item-label>
+                                <q-item-label>{{t('tasks.types.participants-reminder')}}</q-item-label>
                               </q-item-section>
                             </q-item>
 
                             <q-item clickable v-close-popup @click="onParticipantsTask('participants-info-expire')">
                               <q-item-section>
-                                <q-item-label>{{$t('tasks.types.participants-info-expire')}}</q-item-label>
+                                <q-item-label>{{t('tasks.types.participants-info-expire')}}</q-item-label>
                               </q-item-section>
                             </q-item>
 
                             <q-item clickable v-close-popup @click="onParticipantsTask('participants-summary')">
                               <q-item-section>
-                                <q-item-label>{{$t('tasks.types.participants-summary')}}</q-item-label>
+                                <q-item-label>{{t('tasks.types.participants-summary')}}</q-item-label>
                               </q-item-section>
                             </q-item>
 
                             <q-item clickable v-close-popup @click="onParticipantsTask('participants-deactivate')">
                               <q-item-section>
-                                <q-item-label>{{$t('tasks.types.participants-deactivate')}}</q-item-label>
+                                <q-item-label>{{t('tasks.types.participants-deactivate')}}</q-item-label>
                               </q-item-section>
                             </q-item>
                           </q-list>
                         </q-btn-dropdown>
                       </div>
                     </q-item-section>
-                    <q-item-section :title="$t('interview.campaign_supporters_hint')">
-                      <q-item-label>{{ $t('interview.campaign_supporters') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_supporters_hint')">
+                      <q-item-label>{{ t('interview.campaign_supporters') }}</q-item-label>
                       <div>
                         <q-chip v-for="sub in supporterSubjects" icon="person" size="sm" :label="sub.name" :key="sub._id"/>
                         <span v-if="supporterSubjects.length === 0">-</span>
@@ -147,21 +147,21 @@
                     </q-item-section>
                   </q-item>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_notify_on_interview_completion_hint')">
-                      <q-item-label>{{ $t('interview.campaign_notify_on_interview_completion') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_notify_on_interview_completion_hint')">
+                      <q-item-label>{{ t('interview.campaign_notify_on_interview_completion') }}</q-item-label>
                       <q-toggle v-model="campaign.notifyOnInterviewCompletion" disable />
                     </q-item-section>
                   </q-item>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_visit_hint')">
-                      <q-item-label>{{ $t('interview.campaign_visit') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_visit_hint')">
+                      <q-item-label>{{ t('interview.campaign_visit') }}</q-item-label>
                       <q-item-label caption>
                         <a v-if="campaign.visitUrl" :href="campaign.visitUrl" target="_blank">{{ campaign.visitUrl }}</a>
                         <span v-else>-</span>
                       </q-item-label>
                     </q-item-section>
-                    <q-item-section :title="$t('interview.campaign_completion_hint')">
-                      <q-item-label>{{ $t('interview.campaign_completion') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_completion_hint')">
+                      <q-item-label>{{ t('interview.campaign_completion') }}</q-item-label>
                       <q-item-label caption>
                         <a v-if="campaign.completionUrl" :href="campaign.completionUrl" target="_blank">{{ campaign.completionUrl }}</a>
                         <span v-else>-</span>
@@ -169,77 +169,77 @@
                     </q-item-section>
                   </q-item>
                 </q-list>
-                <p class="text-weight-bold q-mt-md q-mb-sm">{{ $t('interview.campaign_security') }}</p>
+                <p class="text-weight-bold q-mt-md q-mb-sm">{{ t('interview.campaign_security') }}</p>
                 <q-list bordered separator>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_with_password_hint')">
-                      <q-item-label>{{ $t('interview.campaign_with_password') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_with_password_hint')">
+                      <q-item-label>{{ t('interview.campaign_with_password') }}</q-item-label>
                       <q-toggle v-model="campaign.withPassword" disable />
                     </q-item-section>
                   </q-item>
                 </q-list>
               </div>
               <div class="col-12 col-md-6">
-                <p class="text-weight-bold q-mb-sm">{{ $t('interview.schedule') }}</p>
+                <p class="text-weight-bold q-mb-sm">{{ t('interview.schedule') }}</p>
                 <q-list bordered separator>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_valid_from_hint')">
-                      <q-item-label>{{ $t('interview.campaign_valid_from') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_valid_from_hint')">
+                      <q-item-label>{{ t('interview.campaign_valid_from') }}</q-item-label>
                       <q-item-label caption>{{ campaign.validFrom ? date.formatDate(campaign.validFrom, 'YYYY-MM-DD') : '-' }}</q-item-label>
                     </q-item-section>
-                    <q-item-section :title="$t('interview.campaign_valid_until_hint')">
-                      <q-item-label>{{ $t('interview.campaign_valid_until') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_valid_until_hint')">
+                      <q-item-label>{{ t('interview.campaign_valid_until') }}</q-item-label>
                       <q-item-label caption>{{ campaign.validUntil ? date.formatDate(campaign.validUntil, 'YYYY-MM-DD') : '-' }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_weeks_info_before_activate_hint')">
-                      <q-item-label>{{ $t('interview.campaign_weeks_info_before_activate') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_weeks_info_before_activate_hint')">
+                      <q-item-label>{{ t('interview.campaign_weeks_info_before_activate') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksInfoBeforeActivation }}</q-item-label>
                     </q-item-section>
-                    <q-item-section :title="$t('interview.campaign_weeks_reminder_hint')">
-                      <q-item-label>{{ $t('interview.campaign_weeks_reminder') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_weeks_reminder_hint')">
+                      <q-item-label>{{ t('interview.campaign_weeks_reminder') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksBetweenReminders }}</q-item-label>
                     </q-item-section>
-                    <q-item-section :title="$t('interview.campaign_reminders_count_hint')">
-                      <q-item-label>{{ $t('interview.campaign_reminders_count') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_reminders_count_hint')">
+                      <q-item-label>{{ t('interview.campaign_reminders_count') }}</q-item-label>
                       <q-item-label caption>{{ campaign.numberOfReminders }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_weeks_info_before_expire_hint')">
-                      <q-item-label>{{ $t('interview.campaign_weeks_info_before_expire') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_weeks_info_before_expire_hint')">
+                      <q-item-label>{{ t('interview.campaign_weeks_info_before_expire') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksInfoBeforeDeactivation }}</q-item-label>
                     </q-item-section>
-                    <q-item-section :title="$t('interview.campaign_weeks_deactivate_hint')">
-                      <q-item-label>{{ $t('interview.campaign_weeks_deactivate') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_weeks_deactivate_hint')">
+                      <q-item-label>{{ t('interview.campaign_weeks_deactivate') }}</q-item-label>
                       <q-item-label caption>{{ campaign.weeksToDeactivate }}</q-item-label>
                     </q-item-section>
                     <q-item-section />
                   </q-item>
                 </q-list>
-                <p class="text-weight-bold q-mt-md q-mb-sm">{{ $t('interview.campaign_walkin_participants') }}</p>
+                <p class="text-weight-bold q-mt-md q-mb-sm">{{ t('interview.campaign_walkin_participants') }}</p>
                 <q-list bordered separator>
                   <q-item>
-                    <q-item-section :title="$t('interview.campaign_with_walkin_participants_hint')">
-                      <q-item-label>{{ $t('interview.campaign_with_walkin_participants') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_with_walkin_participants_hint')">
+                      <q-item-label>{{ t('interview.campaign_with_walkin_participants') }}</q-item-label>
                       <q-toggle v-model="campaign.walkInEnabled" disable />
                     </q-item-section>
                   </q-item>
                   <q-item v-if="campaign.walkInEnabled && campaign.walkInData">
-                    <q-item-section :title="$t('interview.campaign_walkin_url_parameters_hint')">
-                      <q-item-label>{{ $t('interview.campaign_walkin_url_parameters') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_walkin_url_parameters_hint')">
+                      <q-item-label>{{ t('interview.campaign_walkin_url_parameters') }}</q-item-label>
                       <q-item-label caption>{{ getWalkInParameters(campaign).join(', ') || '-' }}</q-item-label>
                     </q-item-section>
-                    <q-item-section :title="$t('interview.campaign_walkin_participant_attributes_hint')">
-                      <q-item-label>{{ $t('interview.campaign_walkin_participant_attributes') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_walkin_participant_attributes_hint')">
+                      <q-item-label>{{ t('interview.campaign_walkin_participant_attributes') }}</q-item-label>
                       <q-item-label caption>{{ getWalkInAttributesArray(campaign).map((entry) => `${entry.key}=${entry.value}`).join('; ') }}</q-item-label>
                     </q-item-section>
                   </q-item>
                   <q-item v-if="campaign.walkInEnabled">
-                    <q-item-section :title="$t('interview.campaign_walkin_visit_hint')">
-                      <q-item-label v-if="hasWalkInParameters(campaign)">{{ $t('interview.campaign_external_visit') }}</q-item-label>
-                      <q-item-label v-else>{{ $t('interview.campaign_walkin_visit') }}</q-item-label>
+                    <q-item-section :title="t('interview.campaign_walkin_visit_hint')">
+                      <q-item-label v-if="hasWalkInParameters(campaign)">{{ t('interview.campaign_external_visit') }}</q-item-label>
+                      <q-item-label v-else>{{ t('interview.campaign_walkin_visit') }}</q-item-label>
                       <q-item-label caption>
                         <span v-if="campaign.visitUrl && hasWalkInParameters(campaign)">{{ makeWalkInUrl(campaign) }}</span>
                         <a v-else-if="campaign.visitUrl" :href="makeWalkInUrl(campaign)" target="_blank" >{{ makeWalkInUrl(campaign) }}</a>
@@ -252,7 +252,7 @@
             </div>
           </div>
           <div class="q-mt-md">
-            <div class="text-h6 text-capitalize">{{ $t('participants') }}</div>
+            <div class="text-h6 text-capitalize">{{ t('participants') }}</div>
             <participants :campaign="campaign"/>
           </div>
         </q-tab-panel>
@@ -265,11 +265,11 @@
         <q-card-section>
           <q-input
             v-model='campaignData.name'
-            :label="$t('name')"
+            :label="t('name')"
             lazy-rules
             @blur="v$.campaignData.name.$touch"
             :error="v$.campaignData.name.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.campaignData.name.$errors">
@@ -279,7 +279,7 @@
           </q-input>
           <q-input
             v-model='campaignData.description'
-            :label="$t('description')"
+            :label="t('description')"
             autogrow
             lazy-rules
           />
@@ -292,8 +292,8 @@
             map-options
             multiple
             use-chips
-            :label="$t('interview.campaign_investigators')"
-            :hint="$t('interview.campaign_investigators_hint')" />
+            :label="t('interview.campaign_investigators')"
+            :hint="t('interview.campaign_investigators_hint')" />
         </q-card-section>
         <q-card-section>
           <q-select
@@ -303,8 +303,8 @@
             map-options
             multiple
             use-chips
-            :label="$t('interview.campaign_supporters')"
-            :hint="$t('interview.campaign_supporters_hint')" />
+            :label="t('interview.campaign_supporters')"
+            :hint="t('interview.campaign_supporters_hint')" />
         </q-card-section>
         <q-card-section>
           <div class="row q-mb-md q-col-gutter-md">
@@ -312,14 +312,14 @@
               <q-input
                 filled
                 v-model="campaignData.validFrom"
-                :label="$t('interview.campaign_valid_from')"
-                :hint="$t('interview.campaign_valid_from_hint')">
+                :label="t('interview.campaign_valid_from')"
+                :hint="t('interview.campaign_valid_from_hint')">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy>
                       <q-date v-model="campaignData.validFrom" mask="YYYY-MM-DD">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -331,14 +331,14 @@
               <q-input
                 filled
                 v-model="campaignData.validUntil"
-                :label="$t('interview.campaign_valid_until')"
-                :hint="$t('interview.campaign_valid_until_hint')">
+                :label="t('interview.campaign_valid_until')"
+                :hint="t('interview.campaign_valid_until_hint')">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy>
                       <q-date v-model="campaignData.validUntil" mask="YYYY-MM-DD">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -349,11 +349,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='addCampaign'
             :disable="disableSaveCampaign"
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -371,11 +371,11 @@
         <q-card-section>
           <q-input
             v-model='campaignData.name'
-            :label="$t('name')"
+            :label="t('name')"
             lazy-rules
             @blur="v$.campaignData.name.$touch"
             :error="v$.campaignData.name.$error"
-            :hint="$t('required')"
+            :hint="t('required')"
           >
             <template v-slot:error>
               <div v-for="error in v$.campaignData.name.$errors">
@@ -385,14 +385,14 @@
           </q-input>
           <q-input
             v-model='campaignData.description'
-            :label="$t('description')"
+            :label="t('description')"
             autogrow
             lazy-rules
           />
           <q-input
             v-model='campaignData.visitUrl'
-            :label="$t('interview.campaign_visit')"
-            :hint="$t('interview.campaign_visit_hint')"
+            :label="t('interview.campaign_visit')"
+            :hint="t('interview.campaign_visit_hint')"
             placeholder="https://"
             @blur="v$.campaignData.name.$touch"
             :error="v$.campaignData.name.$error"
@@ -406,8 +406,8 @@
           </q-input>
           <q-input
             v-model='campaignData.completionUrl'
-            :label="$t('interview.campaign_completion')"
-            :hint="$t('interview.campaign_completion_hint')"
+            :label="t('interview.campaign_completion')"
+            :hint="t('interview.campaign_completion_hint')"
             placeholder="https://"
             @blur="v$.campaignData.name.$touch"
             :error="v$.campaignData.name.$error"
@@ -430,8 +430,8 @@
                 map-options
                 multiple
                 use-chips
-                :label="$t('interview.campaign_investigators')"
-                :hint="$t('interview.campaign_investigators_hint')" />
+                :label="t('interview.campaign_investigators')"
+                :hint="t('interview.campaign_investigators_hint')" />
             </div>
             <div class="col-6">
               <q-select
@@ -441,16 +441,16 @@
                 map-options
                 multiple
                 use-chips
-                :label="$t('interview.campaign_supporters')"
-                :hint="$t('interview.campaign_supporters_hint')" />
+                :label="t('interview.campaign_supporters')"
+                :hint="t('interview.campaign_supporters_hint')" />
             </div>
           </div>
         </q-card-section>
         <q-card-section>
           <q-toggle
             v-model="campaignData.notifyOnInterviewCompletion"
-            :label="$t('interview.campaign_notify_on_interview_completion')" />
-          <div class="text-caption text-grey-7">{{ $t('interview.campaign_notify_on_interview_completion_hint') }}</div>
+            :label="t('interview.campaign_notify_on_interview_completion')" />
+          <div class="text-caption text-grey-7">{{ t('interview.campaign_notify_on_interview_completion_hint') }}</div>
         </q-card-section>
         <q-card-section>
           <div class="row q-col-gutter-md">
@@ -458,14 +458,14 @@
               <q-input
                 filled
                 v-model="campaignData.validFrom"
-                :label="$t('interview.campaign_valid_from')"
-                :hint="$t('interview.campaign_valid_from_hint')">
+                :label="t('interview.campaign_valid_from')"
+                :hint="t('interview.campaign_valid_from_hint')">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy>
                       <q-date v-model="campaignData.validFrom" mask="YYYY-MM-DD">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -477,14 +477,14 @@
               <q-input
                 filled
                 v-model="campaignData.validUntil"
-                :label="$t('interview.campaign_valid_until')"
-                :hint="$t('interview.campaign_valid_until_hint')">
+                :label="t('interview.campaign_valid_until')"
+                :hint="t('interview.campaign_valid_until_hint')">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy>
                       <q-date v-model="campaignData.validUntil" mask="YYYY-MM-DD">
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="$t('close')" color="primary" flat />
+                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -500,8 +500,8 @@
               <q-input
                 v-model.number="campaignData.weeksInfoBeforeActivation"
                 type="number"
-                :label="$t('interview.campaign_weeks_info_before_activate')"
-                :hint="$t('interview.campaign_weeks_info_before_activate_hint')"
+                :label="t('interview.campaign_weeks_info_before_activate')"
+                :hint="t('interview.campaign_weeks_info_before_activate_hint')"
                 lazy-rules
               />
             </div>
@@ -515,8 +515,8 @@
               <q-input
                 v-model.number="campaignData.weeksBetweenReminders"
                 type="number"
-                :label="$t('interview.campaign_weeks_reminder')"
-                :hint="$t('interview.campaign_weeks_reminder_hint')"
+                :label="t('interview.campaign_weeks_reminder')"
+                :hint="t('interview.campaign_weeks_reminder_hint')"
                 lazy-rules
               />
             </div>
@@ -524,8 +524,8 @@
               <q-input
                 v-model.number="campaignData.numberOfReminders"
                 type="number"
-                :label="$t('interview.campaign_reminders_count')"
-                :hint="$t('interview.campaign_reminders_count_hint')"
+                :label="t('interview.campaign_reminders_count')"
+                :hint="t('interview.campaign_reminders_count_hint')"
                 lazy-rules
               />
             </div>
@@ -537,8 +537,8 @@
               <q-input
                 v-model.number="campaignData.weeksInfoBeforeDeactivation"
                 type="number"
-                :label="$t('interview.campaign_weeks_info_before_expire')"
-                :hint="$t('interview.campaign_weeks_info_before_expire_hint')"
+                :label="t('interview.campaign_weeks_info_before_expire')"
+                :hint="t('interview.campaign_weeks_info_before_expire_hint')"
                 lazy-rules
               />
             </div>
@@ -546,8 +546,8 @@
               <q-input
                 v-model.number="campaignData.weeksToDeactivate"
                 type="number"
-                :label="$t('interview.campaign_weeks_deactivate')"
-                :hint="$t('interview.campaign_weeks_deactivate_hint')"
+                :label="t('interview.campaign_weeks_deactivate')"
+                :hint="t('interview.campaign_weeks_deactivate_hint')"
                 lazy-rules
               />
             </div>
@@ -558,28 +558,28 @@
             <div class="col-6">
               <q-toggle
                 v-model="campaignData.withPassword"
-                :label="$t('interview.campaign_with_password')" />
-              <div class="text-caption text-grey-7">{{ $t('interview.campaign_with_password_hint') }}</div>
+                :label="t('interview.campaign_with_password')" />
+              <div class="text-caption text-grey-7">{{ t('interview.campaign_with_password_hint') }}</div>
             </div>
             <div class="col-6">
               <q-toggle
                 v-model="campaignData.walkInEnabled"
-                :label="$t('interview.campaign_with_walkin_participants')" />
-              <div class="text-caption text-grey-7">{{ $t('interview.campaign_with_walkin_participants_hint') }}</div>
+                :label="t('interview.campaign_with_walkin_participants')" />
+              <div class="text-caption text-grey-7">{{ t('interview.campaign_with_walkin_participants_hint') }}</div>
               <div v-if="campaignData.walkInEnabled">
                 <q-input
                   v-model="campaignData.walkinParamsStr"
-                  :label="$t('interview.campaign_walkin_url_parameters')"
-                  :hint="$t('interview.campaign_walkin_url_parameters_hint')"
+                  :label="t('interview.campaign_walkin_url_parameters')"
+                  :hint="t('interview.campaign_walkin_url_parameters_hint')"
                 />
-                <p class="q-mb-xs q-mt-md">{{ $t('interview.campaign_walkin_participant_attributes') }}</p>
-                <p class="text-secondary text-caption">{{ $t('interview.campaign_walkin_participant_attributes_hint') }}</p>
+                <p class="q-mb-xs q-mt-md">{{ t('interview.campaign_walkin_participant_attributes') }}</p>
+                <p class="text-secondary text-caption">{{ t('interview.campaign_walkin_participant_attributes_hint') }}</p>
                 <div class="row q-col-gutter-md" v-for="(attribute, key) in campaignData.walkinAttributes" :key="campaignData.walkinAttributes.indexOf(attribute)">
                   <div class="col-4">
-                    <q-input class="q-mb-md" v-model="attribute.key" :label="$t('key')"/>
+                    <q-input class="q-mb-md" v-model="attribute.key" :label="t('key')"/>
                   </div>
                   <div class="col-7">
-                    <q-input class="q-mb-md" v-model="attribute.value" :label="$t('value')"/>
+                    <q-input class="q-mb-md" v-model="attribute.value" :label="t('value')"/>
                   </div>
                   <div class="col-1">
                     <q-btn
@@ -599,7 +599,7 @@
                     <q-btn
                       color="primary"
                       icon="add"
-                      :title="$t('interview.add_participant_attribute_hint')"
+                      :title="t('interview.add_participant_attribute_hint')"
                       @click="addWalkInAttribute()"
                       class="q-mr-sm"
                     />
@@ -608,7 +608,7 @@
                       round
                       color="negative"
                       icon="delete_outline"
-                      :title="$t('interview.delete_participant_attributes_hint')"
+                      :title="t('interview.delete_participant_attributes_hint')"
                       @click="deleteWalkInAttributes()"
                     />
                   </div>
@@ -618,11 +618,11 @@
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='editCampaign'
             :disable="disableSaveCampaign"
-            :label="$t('save')"
+            :label="t('save')"
             type='submit'
             color='primary'
             v-close-popup
@@ -639,17 +639,17 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('interview.delete_campaign_confirm')}}
+            {{t('interview.delete_campaign_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{ campaignData.name }}
           </div>
         </q-card-section>
         <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='removeCampaign'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -680,7 +680,7 @@ import { useStudyStore } from 'src/stores/study'
 import { useAdminStore } from 'src/stores/admin'
 import { useAuth } from 'src/composables/useAuth'
 
-const { t: $t } = useI18n()
+const { t } = useI18n()
 const route = useRoute()
 const interviewStore = useInterviewStore()
 const studyStore = useStudyStore()
@@ -761,7 +761,7 @@ const interviewStateFrequencies = computed(() => {
   if (counts.value.interviews_freq) {
     itwFreqs = counts.value.interviews_freq.map((f) => {
       return {
-        name: $t(`study.interview_state.${f._id}`),
+        name: t(`study.interview_state.${f._id}`),
         value: f.count
       }
     })
@@ -772,7 +772,7 @@ const interviewStateFrequencies = computed(() => {
       : 0
     const totalPart = counts.value.participants_freq.map((f) => f.count).reduce((a, b) => a + b, 0)
     itwFreqs.push({
-      name: $t('study.interview_state.not_started'),
+      name: t('study.interview_state.not_started'),
       value: totalPart - totalItw
     })
   }

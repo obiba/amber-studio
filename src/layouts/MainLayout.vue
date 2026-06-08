@@ -12,7 +12,7 @@
         />
         <q-toolbar-title>
           <q-btn flat to="/" no-caps size="lg">
-            {{$t('main.brand')}}
+            {{t('main.brand')}}
           </q-btn>
         </q-toolbar-title>
         <q-space/>
@@ -48,13 +48,13 @@
             <q-list>
               <q-item v-close-popup to="/account">
                 <q-item-section>
-                  <q-item-label>{{$t('main.profile')}}</q-item-label>
+                  <q-item-label>{{t('main.profile')}}</q-item-label>
                 </q-item-section>
               </q-item>
               <q-separator />
               <q-item clickable v-close-popup @click="onLogout">
                 <q-item-section>
-                  <q-item-label>{{$t('main.logout')}}</q-item-label>
+                  <q-item-label>{{t('main.logout')}}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -75,18 +75,18 @@
             <q-icon name="dashboard"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('main.dashboard')}}</q-item-label>
+            <q-item-label>{{t('main.dashboard')}}</q-item-label>
           </q-item-section>
         </q-item>
 
-        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{$t('main.content')}}</q-item-label>
+        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{t('main.content')}}</q-item-label>
 
         <q-item v-if="!isGuest" to="/studies" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="inventory_2"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('studies.title')}}</q-item-label>
+            <q-item-label>{{t('studies.title')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -95,18 +95,18 @@
             <q-icon name="storage"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('datasets.title')}}</q-item-label>
+            <q-item-label>{{t('datasets.title')}}</q-item-label>
           </q-item-section>
         </q-item-->
 
-        <q-item-label v-if="isAdministrator" header class="text-weight-bolder text-white">{{$t('main.administration')}}</q-item-label>
+        <q-item-label v-if="isAdministrator" header class="text-weight-bolder text-white">{{t('main.administration')}}</q-item-label>
 
         <q-item v-if="isAdministrator" to="/users" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="person"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('users.title')}}</q-item-label>
+            <q-item-label>{{t('users.title')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -115,7 +115,7 @@
             <q-icon name="groups"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('groups.title')}}</q-item-label>
+            <q-item-label>{{t('groups.title')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -124,7 +124,7 @@
             <q-icon name="tasks" class="q-ml-sm"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('tasks.title')}}</q-item-label>
+            <q-item-label>{{t('tasks.title')}}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -133,13 +133,13 @@
             <q-icon name="settings"/>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{$t('main.settings')}}</q-item-label>
+            <q-item-label>{{t('main.settings')}}</q-item-label>
           </q-item-section>
         </q-item-->
 
         <q-item class="fixed-bottom text-caption">
           <div>
-            {{$t('main.powered_by')}} <a class="text-weight-bold" href="https://www.obiba.org" target="_blank">OBiBa Amber</a>
+            {{t('main.powered_by')}} <a class="text-weight-bold" href="https://www.obiba.org" target="_blank">OBiBa Amber</a>
           </div>
         </q-item>
 
