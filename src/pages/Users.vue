@@ -436,13 +436,13 @@
 
 <script>
 import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, email } from '../boot/vuelidate'
 import { date } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { useAdminStore } from 'src/stores/admin'
+import { useAccountStore } from 'src/stores/account'
 
 export default {
   mounted: function () {
@@ -452,7 +452,7 @@ export default {
   },
   setup () {
     const adminStore = useAdminStore()
-    const vuexStore = useStore()
+    const accountStore = useAccountStore()
 
     return {
       v$: useVuelidate(),
@@ -462,7 +462,7 @@ export default {
       selectedGroup: ref(null),
       settings,
       adminStore,
-      vuexStore
+      accountStore
     }
   },
   data () {
@@ -683,9 +683,7 @@ export default {
       }
     },
     resendEmailVerification (email) {
-      this.vuexStore.dispatch('account/resendVerification', {
-        email: email
-      })
+      this.accountStore.resendVerification(email)
     },
     async saveUser () {
       this.v$.$reset()
@@ -694,9 +692,7 @@ export default {
       await this.adminStore.createUser(userData, this.paginationOpts)
     },
     resetPassword (email) {
-      this.vuexStore.dispatch('account/forgotPassword', {
-        emailAddress: email
-      })
+      this.accountStore.forgotPassword(email)
     },
     deleteUser () {
       this.adminStore.deleteUser(this.selectedUser._id, this.paginationOpts)
