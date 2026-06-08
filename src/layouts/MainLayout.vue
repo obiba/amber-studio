@@ -154,72 +154,60 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
-import { defineComponent, ref, watch } from 'vue'
-import { useQuasar } from 'quasar'
 import { useAuth } from '../composables/useAuth'
 
-export default defineComponent({
-  name: 'MainLayout',
-  setup () {
-    const $q = useQuasar()
-    const { locale } = useI18n({ useScope: 'global' })
-    const { userEmail, isGuest, isAdministrator } = useAuth()
+const $q = useQuasar()
+const { locale, t } = useI18n({ useScope: 'global' })
+const { userEmail, isGuest, isAdministrator, logout } = useAuth()
 
-    watch(locale, val => {
-      // dynamic import, so loading on demand only
-      const langIso = val === 'en' ? 'en-US' : val
-      import('quasar/lang/' + langIso)
-        .then(lang => {
-          $q.lang.set(lang.default)
-        })
+// Watch locale changes to update Quasar language
+watch(locale, val => {
+  // dynamic import, so loading on demand only
+  const langIso = val === 'en' ? 'en-US' : val
+  import('quasar/lang/' + langIso)
+    .then(lang => {
+      $q.lang.set(lang.default)
     })
-
-    const leftDrawerOpen = ref(false)
-
-    return {
-      locale,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
-      settings,
-      userEmail,
-      isGuest,
-      isAdministrator
-    }
-  },
-  computed: {
-    localeOptions () {
-      return locales.map(loc => {
-        return {
-          value: loc,
-          label: this.$t('locales.' + loc)
-        }
-      })
-        .sort((loc1, loc2) => {
-          if (loc1.label > loc2.label) return 1
-          if (loc1.label < loc2.label) return -1
-          return 0
-        })
-    },
-    hasLocales () {
-      return locales.length > 1
-    },
-    userName () {
-      return this.userEmail.split('@')[0]
-    }
-  },
-  methods: {
-    onLocaleSelection (opt) {
-      this.locale = opt.value
-    },
-    onLogout () {
-      this.$store.dispatch('auth/logout')
-    }
-  }
 })
+
+// Drawer state
+const leftDrawerOpen = ref(false)
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+// Computed properties
+const localeOptions = computed(() => {
+  return locales.map(loc => {
+    return {
+      value: loc,
+      label: t('locales.' + loc)
+    }
+  })
+    .sort((loc1, loc2) => {
+      if (loc1.label > loc2.label) return 1
+      if (loc1.label < loc2.label) return -1
+      return 0
+    })
+})
+
+const hasLocales = computed(() => locales.length > 1)
+
+const userName = computed(() => userEmail.value.split('@')[0])
+
+// Methods
+function onLocaleSelection(opt) {
+  locale.value = opt.value
+}
+
+function onLogout() {
+  logout()
+}
 </script>

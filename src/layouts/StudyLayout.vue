@@ -237,135 +237,130 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
+import useVuelidate from '@vuelidate/core'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
-import { defineComponent, ref, watch } from 'vue'
-import { useQuasar } from 'quasar'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
-import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 
-export default defineComponent({
-  name: 'MainLayout',
-  mounted: function () {
-    this.initStudyData()
-  },
-  setup () {
-    const $q = useQuasar()
-    const { locale } = useI18n({ useScope: 'global' })
-    const studyStore = useStudyStore()
-    const { userEmail, isGuest } = useAuth()
+const route = useRoute()
+const $q = useQuasar()
+const { locale, t } = useI18n({ useScope: 'global' })
+const studyStore = useStudyStore()
+const { userEmail, isGuest, logout } = useAuth()
 
-    watch(locale, val => {
-      // dynamic import, so loading on demand only
-      const langIso = val === 'en' ? 'en-US' : val
-      import('quasar/lang/' + langIso)
-        .then(lang => {
-          $q.lang.set(lang.default)
-        })
+// Watch locale changes to update Quasar language
+watch(locale, val => {
+  // dynamic import, so loading on demand only
+  const langIso = val === 'en' ? 'en-US' : val
+  import('quasar/lang/' + langIso)
+    .then(lang => {
+      $q.lang.set(lang.default)
     })
+})
 
-    const leftDrawerOpen = ref(false)
+// Drawer state
+const leftDrawerOpen = ref(false)
 
-    return {
-      studyStore,
-      userEmail,
-      isGuest,
-      locale,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
-      v$: useVuelidate(),
-      settings
-    }
-  },
-  data () {
-    return {
-      showEditDefinition: false,
-      studyData: {
-        name: '',
-        description: ''
-      },
-      selectedUserOptions: '',
-      userOptionsLoading: false
-    }
-  },
-  validations: {
-    studyData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
-    }
-  },
-  computed: {
-    study () {
-      return this.studyStore.study
-    },
-    localeOptions () {
-      return locales.map(loc => {
-        return {
-          value: loc,
-          label: this.$t('locales.' + loc)
-        }
-      })
-        .sort((loc1, loc2) => {
-          if (loc1.label > loc2.label) return 1
-          if (loc1.label < loc2.label) return -1
-          return 0
-        })
-    },
-    hasLocales () {
-      return locales.length > 1
-    },
-    userName () {
-      return this.userEmail.split('@')[0]
-    },
-    studyId () {
-      return this.$route.params.id
-    },
-    currentStudy () {
-      return this.studyStore.study
-    },
-    disableSave () {
-      return this.v$.studyData.$invalid
-    },
-    servicesOptions () {
-      return [
-        { label: this.$t('study.case_reports'), value: 'case-reports' },
-        { label: this.$t('study.interviews'), value: 'interviews' }]
-    },
-    hasCaseReportService () {
-      return !this.study.services || this.study.services.length === 0 || this.study.services?.includes('case-reports')
-    },
-    hasInterviewService () {
-      return !this.study.services || this.study.services.length === 0 || this.study.services?.includes('interviews')
-    }
-  },
-  methods: {
-    async initStudyData () {
-      await this.studyStore.getStudy(this.$route.params.id)
-      this.studyData = { ...JSON.parse(JSON.stringify(this.study)) }
-    },
-    onEdit () {
-      this.showEditDefinition = true
-    },
-    async save () {
-      this.v$.$reset()
-      const toSave = { ...this.studyData }
-      this.studyStore.updateStudy(toSave)
-    },
-    onLocaleSelection (opt) {
-      this.locale = opt.value
-    },
-    onLogout () {
-      this.$store.dispatch('auth/logout')
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+// Data (formerly from data())
+const showEditDefinition = ref(false)
+const studyData = reactive({
+  name: '',
+  description: '',
+  services: []
+})
+const selectedUserOptions = ref('')
+const userOptionsLoading = ref(false)
+
+// Validation rules
+const rules = {
+  studyData: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     }
   }
+}
+
+const v$ = useVuelidate(rules, { studyData })
+
+// Computed properties
+const study = computed(() => studyStore.study)
+
+const localeOptions = computed(() => {
+  return locales.map(loc => {
+    return {
+      value: loc,
+      label: t('locales.' + loc)
+    }
+  })
+    .sort((loc1, loc2) => {
+      if (loc1.label > loc2.label) return 1
+      if (loc1.label < loc2.label) return -1
+      return 0
+    })
+})
+
+const hasLocales = computed(() => locales.length > 1)
+
+const userName = computed(() => userEmail.value.split('@')[0])
+
+const studyId = computed(() => route.params.id)
+
+const currentStudy = computed(() => studyStore.study)
+
+const disableSave = computed(() => v$.value.studyData.$invalid)
+
+const servicesOptions = computed(() => [
+  { label: t('study.case_reports'), value: 'case-reports' },
+  { label: t('study.interviews'), value: 'interviews' }
+])
+
+const hasCaseReportService = computed(() => 
+  !study.value.services || study.value.services.length === 0 || study.value.services?.includes('case-reports')
+)
+
+const hasInterviewService = computed(() => 
+  !study.value.services || study.value.services.length === 0 || study.value.services?.includes('interviews')
+)
+
+// Methods
+async function initStudyData() {
+  await studyStore.getStudy(route.params.id)
+  Object.assign(studyData, JSON.parse(JSON.stringify(study.value)))
+}
+
+function onEdit() {
+  showEditDefinition.value = true
+}
+
+async function save() {
+  v$.value.$reset()
+  const toSave = { ...studyData }
+  studyStore.updateStudy(toSave)
+}
+
+function onLocaleSelection(opt) {
+  locale.value = opt.value
+}
+
+function onLogout() {
+  logout()
+}
+
+// Lifecycle
+onMounted(() => {
+  initStudyData()
 })
 </script>
