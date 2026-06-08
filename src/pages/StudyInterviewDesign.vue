@@ -165,14 +165,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref, toRaw } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
-import AuthMixin from '../mixins/AuthMixin'
 import InterviewDesignSteps from 'src/components/interviews/InterviewDesignSteps.vue'
 import InterviewDesignTranslations from 'src/components/interviews/InterviewDesignTranslations.vue'
 import Campaigns from 'src/components/interviews/Campaigns.vue'
+import { useInterviewStore } from 'src/stores/interview'
+import { useStudyStore } from 'src/stores/study'
+import { useAuth } from 'src/composables/useAuth'
 
 export default defineComponent({
   components: {
@@ -180,7 +181,28 @@ export default defineComponent({
     InterviewDesignTranslations,
     Campaigns
   },
-  mixins: [AuthMixin],
+  setup () {
+    const interviewStore = useInterviewStore()
+    const studyStore = useStudyStore()
+    const { isReadOnly } = useAuth()
+
+    return {
+      interviewStore,
+      studyStore,
+      isReadOnly,
+      v$: useVuelidate(),
+      tab: ref('design'),
+      innerTab: ref('steps'),
+      splitterModel: ref(15),
+      selected: ref([]),
+      reload: ref(0),
+      paginationOpts: {
+        descending: true,
+        page: 1,
+        rowsPerPage: 10
+      }
+    }
+  },
   mounted () {
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
@@ -199,21 +221,6 @@ export default defineComponent({
   beforeUnmount () {
     if (this.saveIntervalId) {
       clearInterval(this.saveIntervalId)
-    }
-  },
-  setup () {
-    return {
-      v$: useVuelidate(),
-      tab: ref('design'),
-      innerTab: ref('steps'),
-      splitterModel: ref(15),
-      selected: ref([]),
-      reload: ref(0),
-      paginationOpts: {
-        descending: true,
-        page: 1,
-        rowsPerPage: 10
-      }
     }
   },
   data () {
@@ -241,10 +248,12 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study,
-      interviewDesign: state => state.interview.interviewDesign
-    }),
+    study () {
+      return this.studyStore.study
+    },
+    interviewDesign () {
+      return this.interviewStore.interviewDesign
+    },
     studyId () {
       return this.$route.params.id
     },
@@ -262,11 +271,6 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getStudy: 'study/getStudy',
-      getStudyInterviewDesign: 'interview/getInterviewDesign',
-      updateStudyInterviewDesign: 'interview/updateInterviewDesign'
-    }),
     asReference () {
       return { steps: this.interviewDesignData.steps, i18n: this.interviewDesignData.i18n }
     },
@@ -275,10 +279,10 @@ export default defineComponent({
       this.originalInterviewDesign.i18n = this.interviewDesignData.i18n ? JSON.parse(JSON.stringify(this.interviewDesignData.i18n)) : undefined
     },
     async initStudyInterviewDesignData () {
-      await this.getStudyInterviewDesign({ id: this.$route.params.itwid })
+      await this.interviewStore.getInterviewDesign(this.$route.params.itwid)
       this.interviewDesignData = JSON.parse(JSON.stringify(this.interviewDesign))
       this.initOriginalInterviewDesign()
-      await this.getStudy({ id: this.interviewDesign.study })
+      await this.studyStore.getStudy(this.interviewDesign.study)
     },
     hasInterviewDesignChanged () {
       return JSON.stringify(this.originalInterviewDesign.steps) !== JSON.stringify(this.interviewDesignData.steps) ||
@@ -288,7 +292,7 @@ export default defineComponent({
       this.v$.$reset()
       this.changeDetected = -1
       const toSave = interviewDesign || toRaw(this.interviewDesignData)
-      return this.updateStudyInterviewDesign({ interviewDesign: toSave, notification: notification }).then(() => {
+      return this.interviewStore.updateInterviewDesign(toSave, undefined, undefined, notification).then(() => {
         this.initOriginalInterviewDesign()
         this.changeDetected = 0
       })
