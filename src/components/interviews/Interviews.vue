@@ -355,26 +355,25 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { interviewService } from '../../services/interview'
 import { t } from '../../boot/i18n'
 import { date, Notify } from 'quasar'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useInterviewStore } from 'src/stores/interview'
+import { useStudyStore } from 'src/stores/study'
+import { useAuth } from 'src/composables/useAuth'
 
 export default defineComponent({
   name: 'StudyInterviews',
-  mixins: [AuthMixin],
-  mounted: function () {
-    this.setPagination()
-    if (this.study) {
-      this.getInterviewDesigns({ study: this.studyId })
-      this.getCampaigns({ study: this.studyId })
-      this.getTableInterviews()
-    }
-  },
   setup () {
+    const interviewStore = useInterviewStore()
+    const studyStore = useStudyStore()
+    const { isReadOnly } = useAuth()
+
     return {
+      interviewStore,
+      studyStore,
+      isReadOnly,
       remountCounter: 0,
       locale: ref('en'),
       tab: ref('definition'),
@@ -387,6 +386,14 @@ export default defineComponent({
       fromDate: ref(''),
       toDate: ref(''),
       maximizedToggle: ref(false)
+    }
+  },
+  mounted: function () {
+    this.setPagination()
+    if (this.study) {
+      this.interviewStore.getInterviewDesigns(undefined, this.studyId)
+      this.interviewStore.getCampaigns(undefined, undefined, this.studyId)
+      this.getTableInterviews()
     }
   },
   data () {
@@ -482,12 +489,18 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study,
-      interviews: state => state.interview ? state.interview.interviews : [],
-      interviewDesigns: state => state.interview ? state.interview.interviewDesigns : [],
-      campaigns: state => state.interview ? state.interview.campaigns : []
-    }),
+    study () {
+      return this.studyStore.study
+    },
+    interviews () {
+      return this.interviewStore.interviews
+    },
+    interviewDesigns () {
+      return this.interviewStore.interviewDesigns
+    },
+    campaigns () {
+      return this.interviewStore.campaigns
+    },
     studyId () {
       return this.$route.params.id
     },
@@ -583,24 +596,19 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getInterviews: 'interview/getInterviews',
-      getInterviewDesigns: 'interview/getInterviewDesigns',
-      getCampaigns: 'interview/getCampaigns'
-    }),
     onFilter () {
       this.selected = []
-      this.getInterviews({
-        paginationOpts: this.paginationOpts,
-        study: this.studyId,
-        interviewDesign: this.interviewDesignFilter,
-        campaign: this.campaignFilter,
-        state: this.stateFilter,
-        participantValid: this.eligibleFilter === 'true' ? true : this.eligibleFilter === 'false' ? false : undefined,
-        filter: this.filter,
-        from: this.fromDate,
-        to: this.toDate
-      })
+      this.interviewStore.getInterviews(
+        this.paginationOpts,
+        this.studyId,
+        this.interviewDesignFilter,
+        this.campaignFilter,
+        this.stateFilter,
+        this.eligibleFilter === 'true' ? true : this.eligibleFilter === 'false' ? false : undefined,
+        this.filter,
+        this.fromDate,
+        this.toDate
+      )
     },
     onExport (format) {
       let accept = 'application/json'
@@ -652,21 +660,21 @@ export default defineComponent({
       this.selectedFillingDate = studyInterview.fillingDate ? date.formatDate(studyInterview.fillingDate, 'YYYY-MM-DD') : null
     },
     onEditFillingDate () {
-      this.$store.dispatch('interview/updateInterview', {
-        id: this.selectedInterview._id,
-        interview: { fillingDate: new Date(this.selectedFillingDate) },
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.interviewStore.updateInterview(
+        { fillingDate: new Date(this.selectedFillingDate) },
+        this.selectedInterview._id,
+        this.paginationOpts,
+        this.studyId
+      )
     },
     onSave () {
       const updatedData = { ...this.modelData }
-      this.$store.dispatch('interview/updateInterview', {
-        id: this.selectedInterview._id,
-        interview: { data: updatedData },
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.interviewStore.updateInterview(
+        { data: updatedData },
+        this.selectedInterview._id,
+        this.paginationOpts,
+        this.studyId
+      )
     },
     onConfirmDelete (studyInterview) {
       this.showConfirmDeleteInterview = true
@@ -678,12 +686,12 @@ export default defineComponent({
       }
     },
     onReopen (studyInterview) {
-      this.$store.dispatch('interview/updateInterview', {
-        id: studyInterview._id,
-        interview: { state: 'in_progress' },
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.interviewStore.updateInterview(
+        { state: 'in_progress' },
+        studyInterview._id,
+        this.paginationOpts,
+        this.studyId
+      )
     },
     onClearDate (name) {
       if (name === 'from') {
@@ -704,48 +712,50 @@ export default defineComponent({
     async getTableInterviews (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('interview/setInterviewPagination', {
-          interviewPaginationOpts: requestProp.pagination
-        })
-        await this.getInterviews({
-          paginationOpts: requestProp.pagination,
-          study: this.studyId,
-          interviewDesign: this.interviewDesignFilter,
-          state: this.stateFilter,
-          filter: requestProp.filter,
-          from: this.fromDate,
-          to: this.toDate
-        })
+        this.interviewStore.setInterviewPagination(requestProp.pagination)
+        await this.interviewStore.getInterviews(
+          requestProp.pagination,
+          this.studyId,
+          this.interviewDesignFilter,
+          undefined,
+          this.stateFilter,
+          undefined,
+          requestProp.filter,
+          this.fromDate,
+          this.toDate
+        )
       } else {
-        await this.getInterviews({
-          paginationOpts: this.paginationOpts,
-          study: this.studyId,
-          interviewDesign: this.interviewDesignFilter,
-          state: this.stateFilter,
-          filter: this.filter,
-          from: this.fromDate,
-          to: this.toDate
-        })
+        await this.interviewStore.getInterviews(
+          this.paginationOpts,
+          this.studyId,
+          this.interviewDesignFilter,
+          undefined,
+          this.stateFilter,
+          undefined,
+          this.filter,
+          this.fromDate,
+          this.toDate
+        )
       }
-      this.paginationOpts.rowsNumber = this.$store.state.interview.interviewPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.interviewStore.interviewPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.interview.interviewPaginationOpts
+      this.paginationOpts = this.interviewStore.interviewPaginationOpts
     },
     deleteInterview () {
-      this.$store.dispatch('interview/deleteInterview', {
-        id: this.selectedInterview._id,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.interviewStore.deleteInterview(
+        this.selectedInterview._id,
+        this.paginationOpts,
+        this.studyId
+      )
     },
     deleteInterviews () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('interview/deleteInterviews', {
-        ids: ids,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.interviewStore.deleteInterviews(
+        ids,
+        this.paginationOpts,
+        this.studyId
+      )
       this.selected = []
     }
   }

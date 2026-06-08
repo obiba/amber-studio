@@ -299,21 +299,25 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { t } from '../../boot/i18n'
 import { formRevisionService } from '../../services/form'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useFormStore } from 'src/stores/form'
+import { useAuth } from 'src/composables/useAuth'
 
 export default defineComponent({
   name: 'Steps',
   props: ['modelValue'],
   emits: ['update:modelValue'],
-  mixins: [AuthMixin],
   setup () {
+    const formStore = useFormStore()
+    const { isReadOnly } = useAuth()
+
     return {
+      formStore,
+      isReadOnly,
       v$: useVuelidate(),
       splitterModel: ref(20),
       selected: ref(null),
@@ -364,13 +368,13 @@ export default defineComponent({
   },
   mounted () {
     if (this.studyId) {
-      this.getStudyForms({ study: this.studyId })
+      this.formStore.getForms(undefined, this.studyId)
     }
   },
   computed: {
-    ...mapState({
-      forms: state => state.form.forms
-    }),
+    forms () {
+      return this.formStore.forms
+    },
     value: {
       get () {
         return this.modelValue
@@ -401,9 +405,6 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getStudyForms: 'form/getForms'
-    }),
     updateRevisionOptions (form) {
       formRevisionService.getFormRevisionsDigest(this.studyId, form)
         .then((response) => {

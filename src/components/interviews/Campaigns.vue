@@ -665,16 +665,18 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService, metricsService } from '../../services/utils'
-import AuthMixin from '../../mixins/AuthMixin'
 import { date } from 'quasar'
 import Participants from 'src/components/interviews/Participants.vue'
 import RecordsChart from 'components/dashboard/RecordsChart.vue'
 import PieChart from 'components/charts/PieChart.vue'
+import { useInterviewStore } from 'src/stores/interview'
+import { useStudyStore } from 'src/stores/study'
+import { useAdminStore } from 'src/stores/admin'
+import { useAuth } from 'src/composables/useAuth'
 
 export default defineComponent({
   components: {
@@ -683,14 +685,17 @@ export default defineComponent({
     PieChart
   },
   name: 'StudyCaseReportForms',
-  mixins: [AuthMixin],
-  mounted () {
-    subjectsService.getSubjects().then((result) => {
-      this.subjects = result
-    })
-  },
   setup () {
+    const interviewStore = useInterviewStore()
+    const studyStore = useStudyStore()
+    const adminStore = useAdminStore()
+    const { isReadOnly } = useAuth()
+
     return {
+      interviewStore,
+      studyStore,
+      adminStore,
+      isReadOnly,
       v$: useVuelidate(),
       tab: ref(''),
       selected: ref([]),
@@ -708,6 +713,11 @@ export default defineComponent({
       date,
       counts: ref({})
     }
+  },
+  mounted () {
+    subjectsService.getSubjects().then((result) => {
+      this.subjects = result
+    })
   },
   validations: {
     campaignData: {
@@ -730,11 +740,15 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study,
-      interviewDesign: state => state.interview.interviewDesign,
-      campaigns: state => state.interview.campaigns
-    }),
+    study () {
+      return this.studyStore.study
+    },
+    interviewDesign () {
+      return this.interviewStore.interviewDesign
+    },
+    campaigns () {
+      return this.interviewStore.campaigns
+    },
     disableSaveCampaign () {
       return this.v$.campaignData.$invalid || this.campaignData.investigators.length === 0
     },
@@ -788,14 +802,8 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getCampaigns: 'interview/getCampaigns',
-      createCampaign: 'interview/createCampaign',
-      updateCampaign: 'interview/updateCampaign',
-      deleteCampaign: 'interview/deleteCampaign'
-    }),
     async initCampaigns () {
-      await this.getCampaigns({ paginationOpts: this.paginationOpts, interviewDesign: this.interviewDesign._id })
+      await this.interviewStore.getCampaigns(this.paginationOpts, this.interviewDesign._id)
       if (this.campaigns.length > 0) {
         this.tab = this.$route.query.c
           ? (this.campaigns.find(c => c._id === this.$route.query.c) || this.campaigns[0]).name
@@ -882,10 +890,11 @@ export default defineComponent({
     addCampaign () {
       const toSave = { ...this.campaignData }
       toSave.interviewDesign = this.interviewDesign._id
-      this.createCampaign({
-        campaign: toSave,
-        interviewDesign: this.interviewDesign
-      }).then(() => {
+      this.interviewStore.createCampaign(
+        toSave,
+        this.paginationOpts,
+        this.interviewDesign._id
+      ).then(() => {
         this.tab = this.campaignData.name
         this.getCampaignMetrics()
       })
@@ -908,19 +917,22 @@ export default defineComponent({
       }
       delete toSave.walkinParamsStr
       delete toSave.walkinAttributes
-      this.updateCampaign({
-        campaign: toSave,
-        interviewDesign: this.interviewDesign
-      }).then(() => { this.tab = this.campaignData.name })
+      this.interviewStore.updateCampaign(
+        toSave,
+        undefined,
+        this.paginationOpts,
+        this.interviewDesign._id
+      ).then(() => { this.tab = this.campaignData.name })
     },
     removeCampaign () {
       const idx = this.campaigns.map(campaign => campaign.name).indexOf(this.campaignData.name)
       const nextidx = idx === this.campaigns.length - 1 ? idx - 1 : idx + 1
       const nexttab = nextidx < 0 ? undefined : this.campaigns[nextidx].name
-      this.deleteCampaign({
-        id: this.campaignData._id,
-        interviewDesign: this.interviewDesign
-      }).then(() => {
+      this.interviewStore.deleteCampaign(
+        this.campaignData._id,
+        this.paginationOpts,
+        this.interviewDesign._id
+      ).then(() => {
         this.tab = nexttab
         this.getCampaignMetrics()
       })
@@ -977,16 +989,14 @@ export default defineComponent({
     },
     onParticipantsTask (type) {
       const campaign = this.campaigns.find((cmp) => cmp.name === this.tab)
-      this.$store.dispatch('admin/createTask', {
-        task: {
-          type: type,
-          arguments: {
-            interviewDesign: {
-              _id: this.interviewDesign._id
-            },
-            campaign: {
-              _id: campaign._id
-            }
+      this.adminStore.createTask({
+        type: type,
+        arguments: {
+          interviewDesign: {
+            _id: this.interviewDesign._id
+          },
+          campaign: {
+            _id: campaign._id
           }
         }
       })

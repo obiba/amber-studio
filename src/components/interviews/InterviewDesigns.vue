@@ -347,18 +347,33 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import { defineComponent, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { t } from '../../boot/i18n'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useInterviewStore } from 'src/stores/interview'
+import { useStudyStore } from 'src/stores/study'
+import { useAuth } from 'src/composables/useAuth'
 
 export default defineComponent({
   name: 'StudyInterviewDesigns',
-  mixins: [AuthMixin],
+  setup () {
+    const interviewStore = useInterviewStore()
+    const studyStore = useStudyStore()
+    const { isReadOnly } = useAuth()
+
+    return {
+      interviewStore,
+      studyStore,
+      isReadOnly,
+      v$: useVuelidate(),
+      tab: ref('definition'),
+      selected: ref([]),
+      filter: ref('')
+    }
+  },
   mounted: function () {
     this.setPagination()
     if (this.studyId) {
@@ -367,14 +382,6 @@ export default defineComponent({
     subjectsService.getSubjects().then((result) => {
       this.subjects = result
     })
-  },
-  setup () {
-    return {
-      v$: useVuelidate(),
-      tab: ref('definition'),
-      selected: ref([]),
-      filter: ref('')
-    }
   },
   data () {
     return {
@@ -424,10 +431,12 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study,
-      studyInterviewDesigns: state => state.interview ? state.interview.interviewDesigns : []
-    }),
+    study () {
+      return this.studyStore.study
+    },
+    studyInterviewDesigns () {
+      return this.interviewStore.interviewDesigns
+    },
     studyId () {
       return this.$route.params.id
     },
@@ -519,11 +528,6 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getStudyInterviewDesigns: 'interview/getInterviewDesigns',
-      createStudyInterviewDesign: 'interview/createInterviewDesign',
-      updateStudyInterviewDesign: 'interview/updateInterviewDesign'
-    }),
     onAdd () {
       this.newStudyInterviewDesignData = {
         name: '',
@@ -572,17 +576,15 @@ export default defineComponent({
     async getTableStudyInterviewDesigns (requestProp) {
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('interview/setInterviewDesignPagination', {
-          interviewDesignPaginationOpts: requestProp.pagination
-        })
-        await this.getStudyInterviewDesigns({ paginationOpts: requestProp.pagination, study: this.studyId, filter: requestProp.filter })
+        this.interviewStore.setInterviewDesignPagination(requestProp.pagination)
+        await this.interviewStore.getInterviewDesigns(requestProp.pagination, this.studyId, requestProp.filter)
       } else {
-        await this.getStudyInterviewDesigns({ paginationOpts: this.paginationOpts, study: this.studyId, filter: this.filter })
+        await this.interviewStore.getInterviewDesigns(this.paginationOpts, this.studyId, this.filter)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.interview.interviewDesignPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = this.interviewStore.interviewDesignPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.interview.interviewDesignPaginationOpts
+      this.paginationOpts = this.interviewStore.interviewDesignPaginationOpts
     },
     start (studyInterviewDesign) {
       this.setState(studyInterviewDesign, 'active')
@@ -593,25 +595,26 @@ export default defineComponent({
     setState (studyInterviewDesign, state) {
       const toSave = { ...studyInterviewDesign }
       toSave.state = state
-      this.updateStudyInterviewDesign({
-        interviewDesign: toSave,
-        paginationOpts: this.paginationOpts
-      })
+      this.interviewStore.updateInterviewDesign(
+        toSave,
+        undefined,
+        this.paginationOpts
+      )
     },
     deleteStudyInterviewDesign () {
-      this.$store.dispatch('interview/deleteInterviewDesign', {
-        id: this.selectedStudyInterviewDesign._id,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.interviewStore.deleteInterviewDesign(
+        this.selectedStudyInterviewDesign._id,
+        this.paginationOpts,
+        this.studyId
+      )
     },
     deleteStudyInterviewDesigns () {
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('interview/deleteInterviewDesigns', {
-        ids: ids,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      this.interviewStore.deleteInterviewDesigns(
+        ids,
+        this.paginationOpts,
+        this.studyId
+      )
       this.selected = []
     },
     async saveStudyInterviewDesign (create) {
@@ -627,9 +630,10 @@ export default defineComponent({
         } else {
           toSave.permissions = null
         }
-        this.createStudyInterviewDesign({
-          interviewDesign: toSave
-        })
+        this.interviewStore.createInterviewDesign(
+          toSave,
+          this.paginationOpts
+        )
       } else {
         const toSave = { ...this.selectedStudyInterviewDesign }
         if (this.selectedStudyInterviewDesign.restrictedAccess) {
@@ -644,10 +648,11 @@ export default defineComponent({
         if (toSave.revision === t('study.latest_revision')) {
           delete toSave.revision
         }
-        this.updateStudyInterviewDesign({
-          interviewDesign: toSave,
-          paginationOpts: this.paginationOpts
-        })
+        this.interviewStore.updateInterviewDesign(
+          toSave,
+          undefined,
+          this.paginationOpts
+        )
       }
     }
   }
