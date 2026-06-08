@@ -201,16 +201,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useFormStore } from 'src/stores/form'
+import { useAuth } from 'src/composables/useAuth'
 
 export default defineComponent({
   name: 'StudyForms',
-  mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     if (this.studyId) {
@@ -218,11 +217,18 @@ export default defineComponent({
     }
   },
   setup () {
+    const formStore = useFormStore()
+    const { isReadOnly } = useAuth()
+
     return {
       v$: useVuelidate(),
       tab: ref('definition'),
       selected: ref([]),
-      filter: ref('')
+      filter: ref(''),
+      // Store refs
+      studyForms: computed(() => formStore.forms),
+      formPaginationOpts: computed(() => formStore.formPaginationOpts),
+      isReadOnly
     }
   },
   data () {
@@ -254,10 +260,6 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study,
-      studyForms: state => state.form.forms
-    }),
     studyId () {
       return this.$route.params.id
     },
@@ -310,10 +312,6 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getStudyForms: 'form/getForms',
-      createStudyForm: 'form/createForm'
-    }),
     onAdd () {
       this.newStudyFormData = {}
       this.showCreateStudyForm = true
@@ -329,37 +327,32 @@ export default defineComponent({
       }
     },
     async getTableStudyForms (requestProp) {
+      const formStore = useFormStore()
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('form/setFormPagination', {
-          formPaginationOpts: requestProp.pagination
-        })
-        await this.getStudyForms({ paginationOpts: requestProp.pagination, study: this.studyId, filter: requestProp.filter })
+        formStore.setFormPagination(requestProp.pagination)
+        await formStore.getForms(requestProp.pagination, this.studyId, requestProp.filter)
       } else {
-        await this.getStudyForms({ paginationOpts: this.paginationOpts, study: this.studyId, filter: this.filter })
+        await formStore.getForms(this.paginationOpts, this.studyId, this.filter)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.form.formPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = formStore.formPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.form.formPaginationOpts
+      const formStore = useFormStore()
+      this.paginationOpts = { ...formStore.formPaginationOpts }
     },
     deleteStudyForm () {
-      this.$store.dispatch('form/deleteForm', {
-        id: this.selectedStudyForm._id,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      const formStore = useFormStore()
+      formStore.deleteForm(this.selectedStudyForm._id, this.paginationOpts, this.studyId)
     },
     deleteStudyForms () {
+      const formStore = useFormStore()
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('form/deleteForms', {
-        ids: ids,
-        study: this.studyId,
-        paginationOpts: this.paginationOpts
-      })
+      formStore.deleteForms(ids, this.paginationOpts, this.studyId)
       this.selected = []
     },
     async saveStudyForm () {
+      const formStore = useFormStore()
       this.v$.$reset()
       const toSave = { ...this.newStudyFormData }
       toSave.study = this.studyId
@@ -378,9 +371,7 @@ export default defineComponent({
           if (!toSave.schema.description) {
             toSave.schema.description = toSave.description
           }
-          this.createStudyForm({
-            form: toSave
-          })
+          formStore.createForm(toSave, this.paginationOpts, this.studyId)
         }
         reader.onerror = evt => {
           console.error(evt)
@@ -390,9 +381,7 @@ export default defineComponent({
           label: toSave.name,
           description: toSave.description
         }
-        this.createStudyForm({
-          form: toSave
-        })
+        formStore.createForm(toSave, this.paginationOpts, this.studyId)
       }
     }
   }

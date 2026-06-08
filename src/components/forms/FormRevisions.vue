@@ -225,30 +225,36 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { date } from 'quasar'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useFormStore } from 'src/stores/form'
+import { useAuth } from 'src/composables/useAuth'
 
 export default defineComponent({
   name: 'FormRevisions',
   props: ['form'],
   emits: ['reinstate'],
   components: { BlitzForm },
-  mixins: [AuthMixin],
   mounted: function () {
     this.setPagination()
     this.getTableFormRevisions()
   },
   setup () {
+    const formStore = useFormStore()
+    const { isReadOnly } = useAuth()
+
     return {
       remountCounter: 0,
       modelData: ref({}),
       selected: ref([]),
       filter: ref(''),
-      locale: ref('en')
+      locale: ref('en'),
+      // Store refs
+      formRevisions: computed(() => formStore.formRevisions),
+      formRevisionPaginationOpts: computed(() => formStore.formRevisionPaginationOpts),
+      isReadOnly
     }
   },
   data () {
@@ -300,9 +306,6 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      formRevisions: state => state.form.formRevisions
-    }),
     locales () {
       return Object.keys(this.selectedRevision.schema.i18n).filter(loc => this.locale !== loc)
     },
@@ -314,10 +317,6 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      updateStudyForm: 'form/updateForm',
-      getFormRevisions: 'form/getFormRevisions'
-    }),
     formatDate (dateStr) {
       return date.formatDate(date.extractDate(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ'), 'YYYY-MM-DD HH:mm:ss')
     },
@@ -357,39 +356,35 @@ export default defineComponent({
       }
     },
     async getTableFormRevisions (requestProp) {
+      const formStore = useFormStore()
       if (requestProp) {
         this.paginationOpts = requestProp.pagination
-        this.$store.commit('form/setFormRevisionPagination', {
-          formRevisionPaginationOpts: requestProp.pagination
-        })
-        await this.getFormRevisions({ paginationOpts: requestProp.pagination, form: this.form._id, filter: requestProp.filter })
+        formStore.setFormRevisionPagination(requestProp.pagination)
+        await formStore.getFormRevisions(requestProp.pagination, this.form._id, requestProp.filter)
       } else {
-        await this.getFormRevisions({ paginationOpts: this.paginationOpts, form: this.form._id, filter: this.filter })
+        await formStore.getFormRevisions(this.paginationOpts, this.form._id, this.filter)
       }
-      this.paginationOpts.rowsNumber = this.$store.state.form.formRevisionPaginationOpts.rowsNumber
+      this.paginationOpts.rowsNumber = formStore.formRevisionPaginationOpts.rowsNumber
     },
     setPagination () {
-      this.paginationOpts = this.$store.state.form.formRevisionPaginationOpts
+      const formStore = useFormStore()
+      this.paginationOpts = { ...formStore.formRevisionPaginationOpts }
     },
     async reinstateFormRevision () {
+      const formStore = useFormStore()
       const toSave = { ...this.form }
       toSave.schema = this.selectedRevision.schema
-      this.updateStudyForm({ form: toSave, notification: true }).then(() => this.$emit('reinstate'))
+      await formStore.updateForm(toSave, undefined, true)
+      this.$emit('reinstate')
     },
     deleteFormRevision () {
-      this.$store.dispatch('form/deleteFormRevision', {
-        id: this.selectedRevision._id,
-        form: this.form._id,
-        paginationOpts: this.paginationOpts
-      })
+      const formStore = useFormStore()
+      formStore.deleteFormRevision(this.selectedRevision._id, this.paginationOpts, this.form._id)
     },
     deleteFormRevisions () {
+      const formStore = useFormStore()
       const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('form/deleteFormRevisions', {
-        ids: ids,
-        form: this.form._id,
-        paginationOpts: this.paginationOpts
-      })
+      formStore.deleteFormRevisions(ids, this.paginationOpts, this.form._id)
       this.selected = []
     }
   }

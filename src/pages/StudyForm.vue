@@ -252,11 +252,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref, toRaw } from 'vue'
+import { defineComponent, ref, toRaw, computed } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
-import AuthMixin from '../mixins/AuthMixin'
+import { useFormStore } from 'src/stores/form'
+import { useStudyStore } from 'src/stores/study'
+import { useAuth } from 'src/composables/useAuth'
 import FormMixin from '../mixins/FormMixin'
 import FormItems from 'src/components/forms/FormItems.vue'
 import FormTranslations from 'src/components/forms/FormTranslations.vue'
@@ -268,7 +269,7 @@ export default defineComponent({
     FormTranslations,
     FormRevisions
   },
-  mixins: [AuthMixin, FormMixin],
+  mixins: [FormMixin],
   mounted () {
     // check for changes every 2 seconds
     this.saveIntervalId = setInterval(() => {
@@ -290,13 +291,20 @@ export default defineComponent({
     }
   },
   setup () {
+    const formStore = useFormStore()
+    const studyStore = useStudyStore()
+    const { isReadOnly } = useAuth()
+
     return {
       v$: useVuelidate(),
       tab: ref('schema'),
       innerTab: ref('items'),
       splitterModel: ref(15),
       importSchemaFile: ref(null),
-      reload: ref(0)
+      reload: ref(0),
+      // Store refs
+      studyForm: computed(() => formStore.form),
+      isReadOnly
     }
   },
   data () {
@@ -321,10 +329,6 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState({
-      study: state => state.study.study,
-      studyForm: state => state.form.form
-    }),
     studyId () {
       return this.$route.params.id
     },
@@ -348,25 +352,22 @@ export default defineComponent({
     }
   },
   methods: {
-    ...mapActions({
-      getStudy: 'study/getStudy',
-      getStudyForm: 'form/getForm',
-      updateStudyForm: 'form/updateForm',
-      createStudyFormRevision: 'form/createFormRevision'
-    }),
     async initStudyFormData () {
-      await this.getStudyForm({ id: this.$route.params.fid })
+      const formStore = useFormStore()
+      const studyStore = useStudyStore()
+      await formStore.getForm(this.$route.params.fid)
       this.studyFormData = JSON.parse(JSON.stringify(this.studyForm))
       this.generateIds(this.studyFormData.schema.items)
       this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
-      await this.getStudy({ id: this.studyForm.study })
+      await studyStore.getStudy(this.studyForm.study)
     },
     async save (notification) {
+      const formStore = useFormStore()
       this.v$.$reset()
       this.changeDetected = -1
       this.originalSchemaStr = JSON.stringify(this.studyFormData.schema)
       const toSave = toRaw(this.studyFormData)
-      return this.updateStudyForm({ form: toSave, notification: notification }).then(() => {
+      return formStore.updateForm(toSave, undefined, notification).then(() => {
         this.changeDetected = 0
       })
     },
@@ -417,6 +418,7 @@ export default defineComponent({
       }
     },
     tag () {
+      const formStore = useFormStore()
       const toSave = {
         form: this.studyFormData._id,
         study: this.studyFormData.study
@@ -424,9 +426,7 @@ export default defineComponent({
       if (this.publicationComment) {
         toSave.comment = this.publicationComment
       }
-      this.createStudyFormRevision({
-        formRevision: toSave
-      })
+      formStore.createFormRevision(toSave)
     }
   }
 })
