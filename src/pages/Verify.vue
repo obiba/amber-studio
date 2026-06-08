@@ -45,7 +45,7 @@ import userService from '../services/user'
 import { Notify } from 'quasar'
 import { settings } from '../boot/settings'
 
-import Banner from 'components/Banner.vue'
+import Banner from 'src/components/Banner.vue'
 
 const route = useRoute()
 const { t } = useI18n({ useScope: 'global' })

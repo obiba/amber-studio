@@ -148,7 +148,7 @@ import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { useAccountStore } from 'src/stores/account'
 
-import Banner from 'components/Banner'
+import Banner from 'src/components/Banner.vue'
 
 const router = useRouter()
 const { t, locale } = useI18n({ useScope: 'global' })

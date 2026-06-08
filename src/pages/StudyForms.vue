@@ -14,5 +14,5 @@
 </template>
 
 <script setup>
-import Forms from 'components/forms/Forms.vue'
+import Forms from 'src/components/forms/Forms.vue'
 </script>

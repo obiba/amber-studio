@@ -66,7 +66,7 @@ import { settings } from '../boot/settings'
 import useVuelidate from '@vuelidate/core'
 import { useAccountStore } from 'src/stores/account'
 
-import Banner from 'components/Banner'
+import Banner from 'src/components/Banner.vue'
 
 const router = useRouter()
 const accountStore = useAccountStore()

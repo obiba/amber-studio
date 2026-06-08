@@ -36,7 +36,7 @@ import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import studyService from '../services/study'
 import { useAuth } from 'src/composables/useAuth'
-import DashboardCounts from 'components/dashboard/DashboardCounts.vue'
+import DashboardCounts from 'src/components/dashboard/DashboardCounts.vue'
 
 const { isGuest, user } = useAuth()
 

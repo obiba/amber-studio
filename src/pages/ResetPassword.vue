@@ -58,7 +58,7 @@ import { Notify } from 'quasar'
 import { settings } from '../boot/settings'
 import { useAccountStore } from 'src/stores/account'
 
-import Banner from 'components/Banner'
+import Banner from 'src/components/Banner.vue'
 
 const router = useRouter()
 const route = useRoute()

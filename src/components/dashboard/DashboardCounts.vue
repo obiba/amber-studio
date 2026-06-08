@@ -89,7 +89,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useAuth } from 'src/composables/useAuth'
-import RecordsChart from 'components/dashboard/RecordsChart.vue'
+import RecordsChart from 'src/components/dashboard/RecordsChart.vue'
 
 const props = defineProps({
   counts: {

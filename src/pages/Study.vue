@@ -73,7 +73,7 @@ import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
-import DashboardCounts from 'components/dashboard/DashboardCounts.vue'
+import DashboardCounts from 'src/components/dashboard/DashboardCounts.vue'
 
 const route = useRoute()
 const studyStore = useStudyStore()

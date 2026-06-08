@@ -120,7 +120,7 @@ import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { useAuthStore } from 'src/stores/auth'
 
-import Banner from 'components/Banner'
+import Banner from 'src/components/Banner.vue'
 
 const $q = useQuasar()
 const router = useRouter()
