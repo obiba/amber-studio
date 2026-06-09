@@ -19,7 +19,7 @@
         <q-separator/>
         <div>
           <q-list v-if="steps.length>0" separator>
-            <template v-for="step in steps" :key="step._id">
+            <template v-for="step in steps" :key="step.name">
               <q-item clickable :active="isStepActive(step)" active-class="bg-grey-4" @click="onStepSelection(step)">
                 <q-item-section>
                   <q-item-label>{{ step.name }}</q-item-label>
@@ -320,7 +320,7 @@ const formStore = useFormStore()
 const { isReadOnly } = useAuth()
 
 // Refs
-const splitterModel = ref(20)
+const splitterModel = ref(25)
 const selected = ref(null)
 const showConfirmDeleteStep = ref(false)
 const showAddStep = ref(false)
@@ -402,11 +402,11 @@ function updateRevisionOptions(form) {
 }
 
 function isStepActive(step) {
-  return selected.value?._id === step._id
+  return selected.value?.name === step.name
 }
 
 function onStepSelection(step) {
-  if (selected.value?._id === step._id) {
+  if (selected.value?.name === step.name) {
     selected.value = null
   } else {
     selected.value = step
@@ -447,7 +447,7 @@ function moveDownStep() {
 
 function deleteStep() {
   const idx = value.value.steps.indexOf(selected.value)
-  value.value.steps = value.value.steps.filter(step => step._id !== selected.value._id)
+  value.value.steps = value.value.steps.filter(step => step.name !== selected.value.name)
   selected.value = value.value.steps.length === 0 ? null : (idx === value.value.steps.length ? value.value.steps[idx - 1] : value.value.steps[idx])
 }
 
