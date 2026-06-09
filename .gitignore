@@ -136,6 +136,7 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+.vscode
 
 .yarnrc
 .serena
