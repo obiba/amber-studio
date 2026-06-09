@@ -1,13 +1,16 @@
 import { boot } from 'quasar/wrappers'
 import { LocalStorage, Notify } from 'quasar'
+import { useAuthStore } from '../stores/auth'
 import { feathersClient } from './feathersClient'
 
-export default boot(async ({ router, store }) => {
+export default boot(async ({ router, app }) => {
   router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
-      // if requires admin
-      const user = store.state.auth.payload && store.state.auth.payload.user ? store.state.auth.payload.user : undefined
+      const authStore = useAuthStore()
+      const user = authStore.user
+
       if (user) {
+        // Check role-based access
         if (to.meta.requiresAdmin && (!user.role || user.role !== 'administrator')) {
           Notify.create({
             message: 'Your account is not authorized to see this view. If this is in error, please contact support.',
@@ -27,13 +30,12 @@ export default boot(async ({ router, store }) => {
         }
       } else if (LocalStorage.getItem('feathers-jwt')) {
         next('/loading')
-        // could be not expired but also still not valid, then reauth
+        // Could be not expired but also still not valid, then reauth
         feathersClient.reAuthenticate().then((response) => {
-          // show application page
-          store.dispatch('auth/responseHandler', response)
+          authStore.responseHandler(response)
           router.push(to.path)
         }).catch(() => {
-          // remove expired/unusable token
+          // Remove expired/unusable token
           LocalStorage.remove('feathers-jwt')
           router.push('/login')
         })

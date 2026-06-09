@@ -18,7 +18,7 @@
           v-if="!isReadOnly"
           color="primary"
           icon="add"
-          :title="$t('form.tr_add_key')"
+          :title="t('form.tr_add_key')"
           @click="onAddTranslation()"
           class="q-mr-md" />
         <q-btn
@@ -28,7 +28,7 @@
           round
           color="black"
           icon="merge"
-          :title="$t('form.tr_merge_items')"
+          :title="t('form.tr_merge_items')"
           @click="onConfirmMergeObservedKeys()" />
         <q-btn
           v-if="false"
@@ -37,7 +37,7 @@
           round
           color="black"
           icon="cleaning_services"
-          :title="$t('form.tr_clean')"
+          :title="t('form.tr_clean')"
           @click="onConfirmClean()" />
         <q-btn
           v-if="!isReadOnly"
@@ -47,12 +47,12 @@
           color="negative"
           icon="delete_outline"
           :disable="selected.length === 0"
-          :title="$t('form.tr_delete_selected')"
+          :title="t('form.tr_delete_selected')"
           @click="onConfirmDeleteMultiple()" />
         <q-btn-dropdown
           flat
           icon="translate"
-          :title="$t('form.tr_locales_hint')">
+          :title="t('form.tr_locales_hint')">
           <q-list>
             <q-item v-for="loc in allLocales" :key="loc">
               <q-item-section>
@@ -60,7 +60,7 @@
               </q-item-section>
               <q-item-section>
                 <q-item-label class="text-uppercase">{{loc}}</q-item-label>
-                <q-item-label caption>{{$t('locales.' + loc) === 'locales.' + loc ? '' : $t('locales.' + loc)}}</q-item-label>
+                <q-item-label caption>{{t('locales.' + loc) === 'locales.' + loc ? '' : t('locales.' + loc)}}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -69,13 +69,13 @@
           v-if="!isReadOnly"
           flat
           icon="file_upload"
-          :title="$t('form.tr_import_hint')"
+          :title="t('form.tr_import_hint')"
           @click="onImportTranslations()"
           class="q-mr-md" />
         <q-btn-dropdown
           flat
           icon="download"
-          :title="$t('form.tr_export_hint')">
+          :title="t('form.tr_export_hint')">
           <q-list>
             <q-item clickable v-close-popup @click="onExport('csv')">
               <q-item-section>
@@ -99,8 +99,8 @@
           dense
           debounce="300"
           v-model="filter"
-          :placeholder="$t('search')"
-          :title="$t('form.tr_search_hint')">
+          :placeholder="t('search')"
+          :title="t('form.tr_search_hint')">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -122,17 +122,17 @@
         v-if="!isReadOnly"
         color="primary"
         icon="add"
-        :label="$t('form.tr_add')">
+        :label="t('form.tr_add')">
         <q-menu>
           <q-list style="min-width: 100px">
             <q-item clickable v-close-popup>
-              <q-item-section @click="onAddTranslation()">{{ $t('form.tr_add_key') }}</q-item-section>
+              <q-item-section @click="onAddTranslation()">{{ t('form.tr_add_key') }}</q-item-section>
             </q-item>
             <q-item clickable v-close-popup>
-              <q-item-section @click="mergeObservedKeys()">{{ $t('form.tr_merge_items') }}</q-item-section>
+              <q-item-section @click="mergeObservedKeys()">{{ t('form.tr_merge_items') }}</q-item-section>
             </q-item>
             <q-item clickable v-close-popup>
-              <q-item-section @click="onImportTranslations()">{{ $t('form.tr_import') }}</q-item-section>
+              <q-item-section @click="onImportTranslations()">{{ t('form.tr_import') }}</q-item-section>
             </q-item>
           </q-list>
         </q-menu>
@@ -145,12 +145,12 @@
            <div class="col-12">
             <q-input
               v-model='newTranslationData.key'
-              :label="$t('form.tr_key')"
+              :label="t('form.tr_key')"
               lazy-rules
               class="q-ma-sm"
               @blur="v$.newTranslationData.key.$touch"
               :error="v$.newTranslationData.key.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:error>
                 <div v-for="error in v$.newTranslationData.key.$errors">
@@ -160,12 +160,13 @@
             </q-input>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='addTranslation'
             :disable='disableAddTranslation'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -182,14 +183,15 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.tr_merge_confirm')}}
+            {{t('form.tr_merge_confirm')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='mergeObservedKeys'
-            :label="$t('merge')"
+            :label="t('merge')"
             type='submit'
             color='primary'
             v-close-popup
@@ -206,14 +208,15 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.tr_clean_confirm')}}
+            {{t('form.tr_clean_confirm')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='cleanKeys'
-            :label="$t('clean')"
+            :label="t('clean')"
             type='submit'
             color='primary'
             v-close-popup
@@ -230,14 +233,15 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.tr_delete_selected_confirm')}}
+            {{t('form.tr_delete_selected_confirm')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteSelected'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -254,17 +258,18 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.tr_delete_locale_confirm')}}
+            {{t('form.tr_delete_locale_confirm')}}
           </div>
           <div class="q-mt-md">
             <span class="text-weight-bold text-uppercase">{{localeToDelete}}</span>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteLocale'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -286,22 +291,23 @@
             clearable
             v-model="translationsFile"
             accept=".txt,.csv,.tsv"
-            :label="$t('form.tr_import_file')">
+            :label="t('form.tr_import_file')">
             <template v-slot:prepend>
               <q-icon name="add" @click.stop />
             </template>
 
             <template v-slot:hint>
-              {{ $t('form.tr_import_hint') }}
+              {{ t('form.tr_import_hint') }}
             </template>
           </q-file>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='importTranslations'
             :disable="disableImportTranslations"
-            :label="$t('import')"
+            :label="t('import')"
             type='submit'
             color='primary'
             v-close-popup
@@ -317,326 +323,341 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, watch, onMounted, getCurrentInstance } from 'vue'
 import { formI18nService } from '../../services/form'
 import { locales } from '../../boot/i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { Notify } from 'quasar'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
+import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'FormTranslations',
-  props: ['modelValue'],
-  emits: ['update:modelValue'],
-  mixins: [AuthMixin],
-  setup () {
-    return {
-      locales: locales,
-      v$: useVuelidate(),
-      selected: ref([]),
-      filter: ref(''),
-      showImportTranslations: ref(false),
-      translationsFile: ref(null)
-    }
-  },
-  data () {
-    return {
-      showAddTranslation: false,
-      showConfirmDelete: false,
-      showConfirmDeleteLocale: false,
-      showConfirmClean: false,
-      showConfirmMerge: false,
-      localeToDelete: ref(null),
-      paginationOpts: {
-        sortBy: 'key',
-        descending: false,
-        rowsPerPage: 10
-      },
-      rows: ref([]),
-      newTranslationData: {
-        key: ''
-      }
-    }
-  },
-  validations: {
-    newTranslationData: {
-      key: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
-    }
-  },
-  watch: {
-    modelValue: function (newValue, oldValue) {
-      this.initRows()
-    }
-  },
-  computed: {
-    value: {
-      get () {
-        return this.modelValue
-      },
-      set (value) {
-        this.$emit('update:modelValue', value)
-      }
-    },
-    columns () {
-      const cols = [
-        {
-          name: 'key',
-          required: true,
-          label: this.$t('form.tr_key'),
-          align: 'left',
-          field: 'key',
-          sortable: true
-        }
-      ]
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
-      this.formLocales.forEach(loc => {
-        cols.push({
-          name: loc,
-          label: loc.toUpperCase(),
-          align: 'left',
-          field: loc,
-          sortable: true
-        })
-      })
+const { isReadOnly } = useAuth()
+const { t } = useI18n()
+const { proxy } = getCurrentInstance()
 
-      return cols
-    },
-    disableAddTranslation () {
-      return this.v$.newTranslationData.$invalid
-    },
-    disableImportTranslations () {
-      return this.translationsFile === null
-    },
-    formLocales () {
-      return this.value.schema.i18n && Object.keys(this.value.schema.i18n).length > 0 ? Object.keys(this.value.schema.i18n).sort() : ['en']
-    },
-    allLocales () {
-      const allLocales = [...this.locales]
-      this.formLocales.forEach((loc) => {
-        if (!allLocales.includes(loc)) {
-          allLocales.push(loc)
-        }
-      })
-      return allLocales
+// Refs
+const selected = ref([])
+const filter = ref('')
+const showImportTranslations = ref(false)
+const translationsFile = ref(null)
+const showAddTranslation = ref(false)
+const showConfirmDelete = ref(false)
+const showConfirmDeleteLocale = ref(false)
+const showConfirmClean = ref(false)
+const showConfirmMerge = ref(false)
+const localeToDelete = ref(null)
+const paginationOpts = ref({
+  sortBy: 'key',
+  descending: false,
+  rowsPerPage: 10
+})
+const rows = ref([])
+const newTranslationData = ref({
+  key: ''
+})
+
+// Validation rules
+const rules = {
+  newTranslationData: {
+    key: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     }
+  }
+}
+
+const v$ = useVuelidate(rules, { newTranslationData })
+
+// Computed
+const value = computed({
+  get () {
+    return props.modelValue
   },
-  mounted () {
-    if (this.value) {
-      this.initRows()
+  set (val) {
+    emit('update:modelValue', val)
+  }
+})
+
+const columns = computed(() => {
+  const cols = [
+    {
+      name: 'key',
+      required: true,
+      label: t('form.tr_key'),
+      align: 'left',
+      field: 'key',
+      sortable: true
     }
-  },
-  methods: {
-    initRows () {
-      // read i18n object and make rows
-      if (this.value && this.value.schema) {
-        if (this.value.schema.i18n) {
-          this.formLocales.forEach(loc => {
-            if (this.value.schema.i18n[loc]) {
-              Object.entries(this.value.schema.i18n[loc]).forEach(([key, value]) => {
-                let found = false
-                for (let i = 0; i < this.rows.length; i++) {
-                  if (!found && this.rows[i].key === key) {
-                    found = true
-                    this.rows[i][loc] = value
-                  }
-                }
-                if (!found) {
-                  const row = { key: key }
-                  row[loc] = value
-                  this.rows.push(row)
-                }
-              })
+  ]
+
+  formLocales.value.forEach(loc => {
+    cols.push({
+      name: loc,
+      label: loc.toUpperCase(),
+      align: 'left',
+      field: loc,
+      sortable: true
+    })
+  })
+
+  return cols
+})
+
+const disableAddTranslation = computed(() => v$.value.newTranslationData.$invalid)
+
+const disableImportTranslations = computed(() => translationsFile.value === null)
+
+const formLocales = computed(() => {
+  return value.value.schema.i18n && Object.keys(value.value.schema.i18n).length > 0 ? Object.keys(value.value.schema.i18n).sort() : ['en']
+})
+
+const allLocales = computed(() => {
+  const all = [...locales]
+  formLocales.value.forEach((loc) => {
+    if (!all.includes(loc)) {
+      all.push(loc)
+    }
+  })
+  return all
+})
+
+// Watch
+watch(() => props.modelValue, () => {
+  initRows()
+})
+
+// Methods
+function initRows () {
+  // read i18n object and make rows
+  if (value.value && value.value.schema) {
+    if (value.value.schema.i18n) {
+      formLocales.value.forEach(loc => {
+        if (value.value.schema.i18n[loc]) {
+          Object.entries(value.value.schema.i18n[loc]).forEach(([key, val]) => {
+            let found = false
+            for (let i = 0; i < rows.value.length; i++) {
+              if (!found && rows.value[i].key === key) {
+                found = true
+                rows.value[i][loc] = val
+              }
+            }
+            if (!found) {
+              const row = { key: key }
+              row[loc] = val
+              rows.value.push(row)
             }
           })
         }
-      }
-    },
-    mergeObservedKeys () {
-      // read items texts and merge/append to rows
-      if (this.value && this.value.schema) {
-        let obsKeys = []
-        if (this.rows && this.rows.length > 0) {
-          this.rows.forEach(row => {
-            if (!obsKeys.includes(row.key)) {
-              obsKeys.push(row.key)
-            }
-          })
-        } else if (this.value.schema.i18n && this.value.schema.i18n.en) {
-          obsKeys = Object.keys(this.value.schema.i18n.en)
-        }
-        this.appendObservedKeys([this.value.schema], obsKeys)
-      }
-      this.onRowEdit()
-    },
-    appendObservedKeys (items, keys) {
-      let obsKeys = keys
-      const addObsKey = (key) => {
-        if (key && key.trim().length > 0 && !key.includes('.') && !obsKeys.includes(key)) {
-          const row = { key: key }
-          this.formLocales.forEach(loc => { row[loc] = key })
-          this.rows.push(row)
-          obsKeys.push(key)
-        }
-      }
-      if (items) {
-        items.forEach(item => {
-          ['label', 'description', 'placeholder', 'hint', 'validationMessage', 'closeLabel', 'idLabel', 'idDescription', 'idValidationMessage'].forEach(field => addObsKey(item[field]))
-          if (!item.type || item.type === 'group') {
-            obsKeys = this.appendObservedKeys(item.items, obsKeys)
-          } else if (item.options) {
-            item.options.forEach(option => addObsKey(option.label))
-          }
-        })
-      }
-      return obsKeys
-    },
-    onExport (format) {
-      let accept = 'application/json'
-      if (format === 'csv') {
-        accept = 'text/csv'
-      } else if (format === 'xlsx') {
-        accept = 'application/vnd.ms-excel'
-      } else if (format === 'zip') {
-        accept = 'application/zip'
-      }
-      formI18nService.downloadTranslations(accept, this.value._id)
-        .then(response => {
-          if (response.status === 200) {
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-            const ext = format
-            link.setAttribute('download', `${this.value.name}-i18n.${ext}`)
-            document.body.appendChild(link)
-            link.click()
-            link.remove()
-          } else {
-            Notify.create({
-              message: 'Form translations export failed.',
-              color: 'negative'
-            })
-          }
-        })
-    },
-    keyExists (key) {
-      return this.rows.map(row => row.key).includes(key)
-    },
-    onRowEdit () {
-      // do not know whether there was a change but update i18n anyway
-      const toSave = this.value
-      if (!toSave.schema.i18n) {
-        toSave.schema.i18n = {}
-      }
-      if (Object.keys(toSave.schema.i18n).length === 0) {
-        toSave.schema.i18n.en = {}
-      }
-      Object.keys(toSave.schema.i18n).forEach(loc => {
-        toSave.schema.i18n[loc] = {}
-        this.rows.forEach(row => {
-          if (row.key && row.key.trim().length > 0 && row[loc]) {
-            toSave.schema.i18n[loc][row.key] = row[loc]
-          }
-        })
       })
-      this.value = toSave
-    },
-    onAddTranslation () {
-      this.newTranslationData = {}
-      this.showAddTranslation = true
-    },
-    onToggleFormLocale (locale) {
-      if (this.value.schema.i18n[locale]) {
-        this.localeToDelete = locale
-        this.showConfirmDeleteLocale = true
-      } else {
-        this.value.schema.i18n[locale] = {}
-        this.onRowEdit()
+    }
+  }
+}
+
+function mergeObservedKeys () {
+  // read items texts and merge/append to rows
+  if (value.value && value.value.schema) {
+    let obsKeys = []
+    if (rows.value && rows.value.length > 0) {
+      rows.value.forEach(row => {
+        if (!obsKeys.includes(row.key)) {
+          obsKeys.push(row.key)
+        }
+      })
+    } else if (value.value.schema.i18n && value.value.schema.i18n.en) {
+      obsKeys = Object.keys(value.value.schema.i18n.en)
+    }
+    appendObservedKeys([value.value.schema], obsKeys)
+  }
+  onRowEdit()
+}
+
+function appendObservedKeys (items, keys) {
+  let obsKeys = keys
+  const addObsKey = (key) => {
+    if (key && key.trim().length > 0 && !key.includes('.') && !obsKeys.includes(key)) {
+      const row = { key: key }
+      formLocales.value.forEach(loc => { row[loc] = key })
+      rows.value.push(row)
+      obsKeys.push(key)
+    }
+  }
+  if (items) {
+    items.forEach(item => {
+      ['label', 'description', 'placeholder', 'hint', 'validationMessage', 'closeLabel', 'idLabel', 'idDescription', 'idValidationMessage'].forEach(field => addObsKey(item[field]))
+      if (!item.type || item.type === 'group') {
+        obsKeys = appendObservedKeys(item.items, obsKeys)
+      } else if (item.options) {
+        item.options.forEach(option => addObsKey(option.label))
       }
-    },
-    addTranslation () {
-      if (!this.keyExists(this.newTranslationData.key)) {
-        this.rows.push({ key: this.newTranslationData.key })
-        this.onRowEdit()
+    })
+  }
+  return obsKeys
+}
+
+function onExport (format) {
+  let accept = 'application/json'
+  if (format === 'csv') {
+    accept = 'text/csv'
+  } else if (format === 'xlsx') {
+    accept = 'application/vnd.ms-excel'
+  } else if (format === 'zip') {
+    accept = 'application/zip'
+  }
+  formI18nService.downloadTranslations(accept, value.value._id)
+    .then(response => {
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        const ext = format
+        link.setAttribute('download', `${value.value.name}-i18n.${ext}`)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
       } else {
         Notify.create({
-          message: 'Translation key already exists.',
+          message: 'Form translations export failed.',
           color: 'negative'
         })
       }
-    },
-    onImportTranslations () {
-      this.translationsFile = null
-      this.showImportTranslations = true
-    },
-    importTranslations () {
-      const that = this
-      const toSave = this.value
-      const delim = this.translationsFile.name.endsWith('.tsv') ? '\t' : ','
-      this.$papa.parse(this.translationsFile, {
-        header: true,
-        delimiter: delim,
-        complete: function (results, file) {
-          if (results.errors.length === 0) {
-            console.error(results.error)
-          }
-          if (results.data.length > 0 && results.meta.fields.includes('key')) {
-            const locales = results.meta.fields.filter((f) => f !== 'key')
-            if (!toSave.schema.i18n) {
-              toSave.schema.i18n = {}
-            }
-            // array of row objects
-            results.data
-              .filter((row) => row.key.trim().length > 0)
-              .forEach((row) => {
-                locales.forEach((locale) => {
-                  if (!toSave.schema.i18n[locale]) {
-                    toSave.schema.i18n[locale] = {}
-                  }
-                  toSave.schema.i18n[locale][row.key] = row[locale]
-                })
-              })
-            that.initRows()
-          } else {
-            console.error(results.error)
-          }
-        }
-      })
-    },
-    onConfirmClean () {
-      this.showConfirmClean = true
-    },
-    cleanKeys () {
-      // TODO
-    },
-    onConfirmMergeObservedKeys () {
-      this.showConfirmMerge = true
-    },
-    onConfirmDeleteMultiple () {
-      if (this.selected.length > 0) {
-        this.showConfirmDelete = true
+    })
+}
+
+function keyExists (key) {
+  return rows.value.map(row => row.key).includes(key)
+}
+
+function onRowEdit () {
+  // do not know whether there was a change but update i18n anyway
+  const toSave = value.value
+  if (!toSave.schema.i18n) {
+    toSave.schema.i18n = {}
+  }
+  if (Object.keys(toSave.schema.i18n).length === 0) {
+    toSave.schema.i18n.en = {}
+  }
+  Object.keys(toSave.schema.i18n).forEach(loc => {
+    toSave.schema.i18n[loc] = {}
+    rows.value.forEach(row => {
+      if (row.key && row.key.trim().length > 0 && row[loc]) {
+        toSave.schema.i18n[loc][row.key] = row[loc]
       }
-    },
-    deleteSelected () {
-      const selectedKeys = this.selected.map(row => row.key)
-      this.rows = this.rows.filter(row => !selectedKeys.includes(row.key))
-      this.selected = []
-      this.onRowEdit()
-    },
-    deleteLocale () {
-      if (this.localeToDelete) {
-        delete this.value.schema.i18n[this.localeToDelete]
-        this.rows.forEach(row => {
-          delete row[this.localeToDelete]
-        })
-        this.onRowEdit()
+    })
+  })
+  value.value = toSave
+}
+
+function onAddTranslation () {
+  newTranslationData.value = {}
+  showAddTranslation.value = true
+}
+
+function onToggleFormLocale (locale) {
+  if (value.value.schema.i18n[locale]) {
+    localeToDelete.value = locale
+    showConfirmDeleteLocale.value = true
+  } else {
+    value.value.schema.i18n[locale] = {}
+    onRowEdit()
+  }
+}
+
+function addTranslation () {
+  if (!keyExists(newTranslationData.value.key)) {
+    rows.value.push({ key: newTranslationData.value.key })
+    onRowEdit()
+  } else {
+    Notify.create({
+      message: 'Translation key already exists.',
+      color: 'negative'
+    })
+  }
+}
+
+function onImportTranslations () {
+  translationsFile.value = null
+  showImportTranslations.value = true
+}
+
+function importTranslations () {
+  const toSave = value.value
+  const delim = translationsFile.value.name.endsWith('.tsv') ? '\t' : ','
+  proxy.$papa.parse(translationsFile.value, {
+    header: true,
+    delimiter: delim,
+    complete: function (results, file) {
+      if (results.errors.length === 0) {
+        console.error(results.error)
+      }
+      if (results.data.length > 0 && results.meta.fields.includes('key')) {
+        const importLocales = results.meta.fields.filter((f) => f !== 'key')
+        if (!toSave.schema.i18n) {
+          toSave.schema.i18n = {}
+        }
+        // array of row objects
+        results.data
+          .filter((row) => row.key.trim().length > 0)
+          .forEach((row) => {
+            importLocales.forEach((locale) => {
+              if (!toSave.schema.i18n[locale]) {
+                toSave.schema.i18n[locale] = {}
+              }
+              toSave.schema.i18n[locale][row.key] = row[locale]
+            })
+          })
+        initRows()
+      } else {
+        console.error(results.error)
       }
     }
+  })
+}
+
+function onConfirmClean () {
+  showConfirmClean.value = true
+}
+
+function cleanKeys () {
+  // TODO
+}
+
+function onConfirmMergeObservedKeys () {
+  showConfirmMerge.value = true
+}
+
+function onConfirmDeleteMultiple () {
+  if (selected.value.length > 0) {
+    showConfirmDelete.value = true
+  }
+}
+
+function deleteSelected () {
+  const selectedKeys = selected.value.map(row => row.key)
+  rows.value = rows.value.filter(row => !selectedKeys.includes(row.key))
+  selected.value = []
+  onRowEdit()
+}
+
+function deleteLocale () {
+  if (localeToDelete.value) {
+    delete value.value.schema.i18n[localeToDelete.value]
+    rows.value.forEach(row => {
+      delete row[localeToDelete.value]
+    })
+    onRowEdit()
+  }
+}
+
+// Lifecycle
+onMounted(() => {
+  if (value.value) {
+    initRows()
   }
 })
 </script>

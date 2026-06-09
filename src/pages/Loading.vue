@@ -17,10 +17,10 @@
             <div class="col-lg-12 col-md-12 cl-sm-12 col-xs-12">
               <div>
                 <div class="text-h3 text-center">
-                  {{$t('loading.title')}}
+                  {{t('loading.title')}}
                 </div>
                 <div class="text-h6 text-center">
-                  {{$t('loading.caption')}}
+                  {{t('loading.caption')}}
                 </div>
               </div>
             </div>
@@ -31,18 +31,11 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { useI18n } from 'vue-i18n'
 import { settings } from '../boot/settings'
 
-export default defineComponent({
-  name: 'Loading',
-  setup () {
-    return {
-      settings: settings
-    }
-  }
-})
+const { t } = useI18n()
 </script>
 
 <style>

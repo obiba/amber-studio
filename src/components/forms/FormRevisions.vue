@@ -21,15 +21,15 @@
           color="negative"
           icon="delete_outline"
           :disable="selected.length === 0"
-          :title="$t('form.delete_form_revisions_hint')"
+          :title="t('form.delete_form_revisions_hint')"
           @click="onConfirmDeleteMultiple()" />
         <q-space />
         <q-input
           dense
           debounce="300"
           v-model="filter"
-          :placeholder="$t('search')"
-          :title="$t('form.search_form_revision_hint')">
+          :placeholder="t('search')"
+          :title="t('form.search_form_revision_hint')">
           <template v-slot:append>
             <q-icon name="search"/>
           </template>
@@ -48,7 +48,7 @@
             flat
             dense
             round
-            :title="$t('form.export_form_revision_hint')"
+            :title="t('form.export_form_revision_hint')"
             icon="file_download"
             @click='onExport(props.row)'>
           </q-btn>
@@ -59,7 +59,7 @@
             flat
             dense
             round
-            :title="$t('form.reinstate_form_revision_hint')"
+            :title="t('form.reinstate_form_revision_hint')"
             icon="undo"
             @click='onReinstate(props.row)'>
           </q-btn>
@@ -69,7 +69,7 @@
             flat
             dense
             round
-            :title="$t('form.view_form_revision_hint')"
+            :title="t('form.view_form_revision_hint')"
             icon="visibility"
             @click='onView(props.row)'>
           </q-btn>
@@ -80,7 +80,7 @@
             flat
             dense
             round
-            :title="$t('form.delete_form_revision_hint')"
+            :title="t('form.delete_form_revision_hint')"
             icon="delete"
             @click='onConfirmDelete(props.row)'>
           </q-btn>
@@ -89,7 +89,7 @@
     </q-table>
 
     <div v-else class="text-grey-6">
-      {{ $t('form.no_revision') }}
+      {{ t('form.no_revision') }}
     </div>
 
     <q-dialog v-model='showViewRevision' persistent>
@@ -134,8 +134,9 @@
             </q-tab-panel>
           </q-tab-panels>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('close')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -144,17 +145,18 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.reinstate_form_revision_confirm')}}
+            {{t('form.reinstate_form_revision_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedRevision.revision}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='reinstateFormRevision'
-            :label="$t('reinstate')"
+            :label="t('reinstate')"
             type='submit'
             color='primary'
             v-close-popup
@@ -171,17 +173,18 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.delete_form_revision_confirm')}}
+            {{t('form.delete_form_revision_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedRevision.revision}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteFormRevision'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -198,17 +201,18 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('form.delete_form_revisions_confirm')}}
+            {{t('form.delete_form_revisions_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => g.revision).join(', ')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteFormRevisions'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -224,174 +228,171 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex'
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import { date } from 'quasar'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
-import AuthMixin from '../../mixins/AuthMixin'
+import { useFormStore } from 'src/stores/form'
+import { useAuth } from 'src/composables/useAuth'
+import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  name: 'FormRevisions',
-  props: ['form'],
-  emits: ['reinstate'],
-  components: { BlitzForm },
-  mixins: [AuthMixin],
-  mounted: function () {
-    this.setPagination()
-    this.getTableFormRevisions()
+const props = defineProps(['form'])
+const emit = defineEmits(['reinstate'])
+
+const formStore = useFormStore()
+const { isReadOnly } = useAuth()
+const { t } = useI18n()
+
+// Refs
+const remountCounter = ref(0)
+const modelData = ref({})
+const selected = ref([])
+const filter = ref('')
+const locale = ref('en')
+const viewTab = ref('form')
+const selectedRevision = ref({})
+const showViewRevision = ref(false)
+const showConfirmReinstateRevision = ref(false)
+const showConfirmDeleteRevision = ref(false)
+const showConfirmDeleteRevisions = ref(false)
+const paginationOpts = ref({
+  sortBy: 'revision',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+
+const columns = [
+  {
+    name: 'revision',
+    required: true,
+    label: t('revision'),
+    align: 'left',
+    field: 'revision',
+    sortable: true
   },
-  setup () {
-    return {
-      remountCounter: 0,
-      modelData: ref({}),
-      selected: ref([]),
-      filter: ref(''),
-      locale: ref('en')
-    }
+  {
+    name: 'comment',
+    required: true,
+    label: t('comment'),
+    align: 'left',
+    field: 'comment',
+    sortable: true
   },
-  data () {
-    return {
-      viewTab: 'form',
-      selectedRevision: {},
-      showViewRevision: false,
-      showConfirmReinstateRevision: false,
-      showConfirmDeleteRevision: false,
-      showConfirmDeleteRevisions: false,
-      paginationOpts: {
-        sortBy: 'revision',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      columns: [
-        {
-          name: 'revision',
-          required: true,
-          label: this.$t('revision'),
-          align: 'left',
-          field: 'revision',
-          sortable: true
-        },
-        {
-          name: 'comment',
-          required: true,
-          label: this.$t('comment'),
-          align: 'left',
-          field: 'comment',
-          sortable: true
-        },
-        {
-          name: 'createdAt',
-          required: true,
-          label: this.$t('date'),
-          align: 'left',
-          field: 'createdAt',
-          sortable: true
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ]
-    }
+  {
+    name: 'createdAt',
+    required: true,
+    label: t('date'),
+    align: 'left',
+    field: 'createdAt',
+    sortable: true
   },
-  computed: {
-    ...mapState({
-      formRevisions: state => state.form.formRevisions
-    }),
-    locales () {
-      return Object.keys(this.selectedRevision.schema.i18n).filter(loc => this.locale !== loc)
-    },
-    blitzarSchema () {
-      return makeBlitzarQuasarSchemaForm(this.selectedRevision.schema, { locale: this.locale, debug: true })
-    },
-    modelDataStr () {
-      return JSON.stringify(this.modelData, null, '  ')
-    }
-  },
-  methods: {
-    ...mapActions({
-      updateStudyForm: 'form/updateForm',
-      getFormRevisions: 'form/getFormRevisions'
-    }),
-    formatDate (dateStr) {
-      return date.formatDate(date.extractDate(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ'), 'YYYY-MM-DD HH:mm:ss')
-    },
-    onLocale (newLocale) {
-      this.locale = newLocale
-    },
-    onExport (formRevision) {
-      const data = { ...formRevision.schema }
-      delete data._id
-      delete data.name
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-      const a = document.createElement('a')
-      a.download = `${this.form.name}-${formRevision.revision}-schema.json`
-      a.href = window.URL.createObjectURL(blob)
-      a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
-      a.click()
-      a.remove()
-    },
-    onReinstate (formRevision) {
-      this.showConfirmReinstateRevision = true
-      this.selectedRevision = formRevision
-    },
-    onView (formRevision) {
-      this.showViewRevision = true
-      this.selectedRevision = formRevision
-      this.modelData = {}
-      this.remountCounter++
-      this.viewTab = 'form'
-    },
-    onConfirmDelete (formRevision) {
-      this.showConfirmDeleteRevision = true
-      this.selectedRevision = formRevision
-    },
-    onConfirmDeleteMultiple () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteRevisions = true
-      }
-    },
-    async getTableFormRevisions (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.$store.commit('form/setFormRevisionPagination', {
-          formRevisionPaginationOpts: requestProp.pagination
-        })
-        await this.getFormRevisions({ paginationOpts: requestProp.pagination, form: this.form._id, filter: requestProp.filter })
-      } else {
-        await this.getFormRevisions({ paginationOpts: this.paginationOpts, form: this.form._id, filter: this.filter })
-      }
-      this.paginationOpts.rowsNumber = this.$store.state.form.formRevisionPaginationOpts.rowsNumber
-    },
-    setPagination () {
-      this.paginationOpts = this.$store.state.form.formRevisionPaginationOpts
-    },
-    async reinstateFormRevision () {
-      const toSave = { ...this.form }
-      toSave.schema = this.selectedRevision.schema
-      this.updateStudyForm({ form: toSave, notification: true }).then(() => this.$emit('reinstate'))
-    },
-    deleteFormRevision () {
-      this.$store.dispatch('form/deleteFormRevision', {
-        id: this.selectedRevision._id,
-        form: this.form._id,
-        paginationOpts: this.paginationOpts
-      })
-    },
-    deleteFormRevisions () {
-      const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('form/deleteFormRevisions', {
-        ids: ids,
-        form: this.form._id,
-        paginationOpts: this.paginationOpts
-      })
-      this.selected = []
-    }
+  {
+    name: 'action',
+    align: 'left',
+    label: t('action')
   }
+]
+
+// Computed
+const formRevisions = computed(() => formStore.formRevisions)
+const formRevisionPaginationOpts = computed(() => formStore.formRevisionPaginationOpts)
+
+const locales = computed(() => {
+  return Object.keys(selectedRevision.value.schema.i18n).filter(loc => locale.value !== loc)
+})
+
+const blitzarSchema = computed(() => {
+  return makeBlitzarQuasarSchemaForm(selectedRevision.value.schema, { locale: locale.value, debug: true })
+})
+
+const modelDataStr = computed(() => {
+  return JSON.stringify(modelData.value, null, '  ')
+})
+
+// Methods
+function formatDate (dateStr) {
+  return date.formatDate(date.extractDate(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ'), 'YYYY-MM-DD HH:mm:ss')
+}
+
+function onLocale (newLocale) {
+  locale.value = newLocale
+}
+
+function onExport (formRevision) {
+  const data = { ...formRevision.schema }
+  delete data._id
+  delete data.name
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
+  const a = document.createElement('a')
+  a.download = `${props.form.name}-${formRevision.revision}-schema.json`
+  a.href = window.URL.createObjectURL(blob)
+  a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
+  a.click()
+  a.remove()
+}
+
+function onReinstate (formRevision) {
+  showConfirmReinstateRevision.value = true
+  selectedRevision.value = formRevision
+}
+
+function onView (formRevision) {
+  showViewRevision.value = true
+  selectedRevision.value = formRevision
+  modelData.value = {}
+  remountCounter.value++
+  viewTab.value = 'form'
+}
+
+function onConfirmDelete (formRevision) {
+  showConfirmDeleteRevision.value = true
+  selectedRevision.value = formRevision
+}
+
+function onConfirmDeleteMultiple () {
+  if (selected.value.length > 0) {
+    showConfirmDeleteRevisions.value = true
+  }
+}
+
+async function getTableFormRevisions (requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    formStore.setFormRevisionPagination(requestProp.pagination)
+    await formStore.getFormRevisions(requestProp.pagination, props.form._id, requestProp.filter)
+  } else {
+    await formStore.getFormRevisions(paginationOpts.value, props.form._id, filter.value)
+  }
+  paginationOpts.value.rowsNumber = formStore.formRevisionPaginationOpts.rowsNumber
+}
+
+function setPagination () {
+  paginationOpts.value = { ...formStore.formRevisionPaginationOpts }
+}
+
+async function reinstateFormRevision () {
+  const toSave = { ...props.form }
+  toSave.schema = selectedRevision.value.schema
+  await formStore.updateForm(toSave, undefined, true)
+  emit('reinstate')
+}
+
+function deleteFormRevision () {
+  formStore.deleteFormRevision(selectedRevision.value._id, paginationOpts.value, props.form._id)
+}
+
+function deleteFormRevisions () {
+  const ids = selected.value.map(u => u._id)
+  formStore.deleteFormRevisions(ids, paginationOpts.value, props.form._id)
+  selected.value = []
+}
+
+// Lifecycle
+onMounted(() => {
+  setPagination()
+  getTableFormRevisions()
 })
 </script>

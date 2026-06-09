@@ -2,16 +2,17 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="inventory_2" :label="$t('studies.title')" />
+        <q-breadcrumbs-el icon="home" to="/" />
+        <q-breadcrumbs-el :label="t('studies.title')" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
 
     <div v-cloak>
-      <q-card class="q-ma-md"
-            v-if="studies && studies.length > 0">
-        <q-card-section>
+      
           <q-table
+            class="q-ma-md"
+            v-if="studies && studies.length > 0"
             flat
             :rows="studies"
             :columns="columns"
@@ -27,7 +28,8 @@
                 v-if="!isReadOnly"
                 color="primary"
                 icon="add"
-                :title="$t('studies.add_study_hint')"
+                size="sm"
+                :title="t('studies.add_study_hint')"
                 @click="createStudy()"
                 class="q-mr-md" />
               <q-btn
@@ -37,16 +39,17 @@
                 round
                 color="negative"
                 icon="delete_outline"
+                size="sm"
                 :disable="selected.length === 0"
-                :title="$t('studies.delete_studies_hint')"
+                :title="t('studies.delete_studies_hint')"
                 @click="confirmDeleteStudies()" />
               <q-space />
               <q-input
                 dense
                 debounce="300"
                 v-model="filter"
-                :placeholder="$t('search')"
-                :title="$t('studies.search_hint')">
+                :placeholder="t('search')"
+                :title="t('studies.search_hint')">
                 <template v-slot:append>
                   <q-icon name="search"/>
                 </template>
@@ -77,7 +80,7 @@
                   flat
                   dense
                   round
-                  :title="$t('studies.edit_study_hint')"
+                  :title="t('studies.edit_study_hint')"
                   icon='edit'
                   :to="'/study/' + props.row._id">
                 </q-btn>
@@ -87,21 +90,19 @@
                   flat
                   dense
                   round
-                  :title="$t('studies.delete_study_hint')"
+                  :title="t('studies.delete_study_hint')"
                   icon='delete'
                   @click='confirmDeleteStudy(props.row)'>
                 </q-btn>
               </q-td>
             </template>
           </q-table>
-        </q-card-section>
-      </q-card>
 
       <q-btn
         v-else
         color="primary"
         icon="add"
-        :label="$t('studies.add_study_hint')"
+        :label="t('studies.add_study_hint')"
         @click="createStudy()"
         class="q-mt-md q-ml-md" />
     </div>
@@ -112,12 +113,12 @@
             <div class='col-12'>
             <q-input
               v-model='newStudyData.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
               class='q-ma-sm'
               @blur="v$.newStudyData.name.$touch"
               :error="v$.newStudyData.name.$error"
-              :hint="$t('required')"
+              :hint="t('required')"
             >
               <template v-slot:error>
                 <div v-for="error in v$.newStudyData.name.$errors">
@@ -129,15 +130,15 @@
           <div class='col-12'>
             <q-input
               v-model='newStudyData.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               class='q-ma-sm'
             />
             <q-select
               v-model="newStudyData.services"
-              :label="$t('study.services')"
-              :hint="$t('study.services_hint')"
+              :label="t('study.services')"
+              :hint="t('study.services_hint')"
               :options="servicesOptions"
               multiple
               emit-value
@@ -146,12 +147,13 @@
             />
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudy'
             :disable='disableCreateStudy'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -168,17 +170,18 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('studies.delete_study_confirm')}}
+            {{t('studies.delete_study_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedStudy.name}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudy'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -195,17 +198,18 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('studies.delete_studies_confirm')}}
+            {{t('studies.delete_studies_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudies'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -221,185 +225,169 @@
   </q-page>
 </template>
 
-<script>
-import { mapState, mapActions } from 'vuex'
-import { ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { date } from 'quasar'
+import { useI18n } from 'vue-i18n'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
-import AuthMixin from '../mixins/AuthMixin'
+import { useStudyStore } from 'src/stores/study'
+import { useAuth } from 'src/composables/useAuth'
 
-export default {
-  mixins: [AuthMixin],
-  mounted: function () {
-    this.getTableStudies()
-    this.setPagination()
-  },
-  setup () {
-    return {
-      v$: useVuelidate(),
-      selected: ref([]),
-      filter: ref(''),
-      settings
-    }
-  },
-  data () {
-    return {
-      selectedStudy: {},
-      showCreateStudy: false,
-      showConfirmDeleteStudy: false,
-      showConfirmDeleteStudies: false,
-      paginationOpts: {
-        sortBy: 'name',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      studyData: {
-        name: '',
-        description: ''
-      },
-      newStudyData: {
-        name: '',
-        description: ''
-      }
-    }
-  },
-  validations: {
-    newStudyData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      description: {
-        minLength: minLength(2),
-        maxLength: maxLength(500)
-      }
-    }
-  },
-  computed: {
-    ...mapState({
-      studies: state => state.study.studies
-    }),
-    disableCreateStudy () {
-      return this.v$.newStudyData.$invalid
+const { t } = useI18n()
+const studyStore = useStudyStore()
+const { isReadOnly } = useAuth()
+
+// data
+const selected = ref([])
+const filter = ref('')
+const selectedStudy = ref({})
+const showCreateStudy = ref(false)
+const showConfirmDeleteStudy = ref(false)
+const showConfirmDeleteStudies = ref(false)
+const paginationOpts = ref({
+  sortBy: 'name',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+const newStudyData = ref({
+  name: '',
+  description: '',
+  services: undefined
+})
+
+// validations
+const rules = {
+  newStudyData: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    columns () {
-      const cols = [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left',
-          field: 'name',
-          sortable: true
-        },
-        {
-          name: 'description',
-          align: 'left',
-          label: this.$t('description'),
-          field: 'description',
-          sortable: true
-        },
-        {
-          name: 'forms',
-          align: 'left',
-          label: this.$t('study.forms'),
-          field: 'forms',
-          sortable: true
-        },
-        {
-          name: 'updatedAt',
-          align: 'left',
-          label: this.$t('updated_at'),
-          field: 'updatedAt',
-          sortable: true,
-          format: val =>
-            `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : this.$t('unknown')}`
-        }
-      ]
-      if (!this.isReadOnly) {
-        cols.push({
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        })
-      }
-      return cols
-    },
-    servicesOptions () {
-      return [
-        { label: this.$t('study.case_reports'), value: 'case-reports' },
-        { label: this.$t('study.interviews'), value: 'interviews' }]
-    }
-  },
-  methods: {
-    makeEllipsis (text, length) {
-      if (text && text.length > length) {
-        return text.substring(0, length) + ' ...'
-      }
-      return text
-    },
-    setPagination () {
-      this.paginationOpts = this.$store.state.study.studyPaginationOpts
-    },
-    async getTableStudies (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.$store.commit('study/setStudyPagination', {
-          studyPaginationOpts: requestProp.pagination
-        })
-        await this.getStudies({ paginationOpts: requestProp.pagination, filter: requestProp.filter })
-      } else {
-        await this.getStudies({ paginationOpts: this.paginationOpts, filter: this.filter })
-      }
-      this.paginationOpts.rowsNumber = this.$store.state.study.studyPaginationOpts.rowsNumber
-    },
-    ...mapActions({
-      getStudies: 'study/getStudies'
-    }),
-    createStudy () {
-      this.newStudyData = {}
-      this.showCreateStudy = true
-      this.selectedStudy = undefined
-    },
-    confirmDeleteStudy (study) {
-      this.showConfirmDeleteStudy = true
-      this.selectedStudy = study
-    },
-    confirmDeleteStudies () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteStudies = true
-      }
-    },
-    async saveStudy () {
-      this.v$.$reset()
-      // create
-      const createdData = { ...this.newStudyData }
-      this.$store.dispatch('study/createStudy', {
-        study: createdData,
-        paginationOpts: this.paginationOpts
-      })
-    },
-    deleteStudy () {
-      this.$store.dispatch('study/deleteStudy', {
-        id: this.selectedStudy._id,
-        paginationOpts: this.paginationOpts
-      })
-    },
-    deleteStudies () {
-      const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('study/deleteStudies', {
-        ids: ids,
-        paginationOpts: this.paginationOpts
-      })
-      this.selected = []
+    description: {
+      minLength: minLength(2),
+      maxLength: maxLength(500)
     }
   }
 }
+const v$ = useVuelidate(rules, { newStudyData })
+
+// computed
+const studies = computed(() => studyStore.studies)
+const disableCreateStudy = computed(() => v$.value.newStudyData.$invalid)
+const columns = computed(() => {
+  const cols = [
+    {
+      name: 'name',
+      required: true,
+      label: t('name'),
+      align: 'left',
+      field: 'name',
+      sortable: true
+    },
+    {
+      name: 'description',
+      align: 'left',
+      label: t('description'),
+      field: 'description',
+      sortable: true
+    },
+    {
+      name: 'forms',
+      align: 'left',
+      label: t('study.forms'),
+      field: 'forms',
+      sortable: true
+    },
+    {
+      name: 'updatedAt',
+      align: 'left',
+      label: t('updated_at'),
+      field: 'updatedAt',
+      sortable: true,
+      format: val =>
+        `${val ? date.formatDate(val, 'YYYY-MM-DD HH:mm:ss') : t('unknown')}`
+    }
+  ]
+  if (!isReadOnly.value) {
+    cols.push({
+      name: 'action',
+      align: 'left',
+      label: t('action')
+    })
+  }
+  return cols
+})
+const servicesOptions = computed(() => [
+  { label: t('study.case_reports'), value: 'case-reports' },
+  { label: t('study.interviews'), value: 'interviews' }
+])
+
+// methods
+function makeEllipsis(text, length) {
+  if (text && text.length > length) {
+    return text.substring(0, length) + ' ...'
+  }
+  return text
+}
+
+function setPagination() {
+  paginationOpts.value = { ...studyStore.studyPaginationOpts }
+}
+
+async function getTableStudies(requestProp) {
+  if (requestProp) {
+    paginationOpts.value = { ...requestProp.pagination }
+    studyStore.setStudyPagination(requestProp.pagination)
+    await studyStore.getStudies(requestProp.pagination, requestProp.filter)
+  } else {
+    await studyStore.getStudies(paginationOpts.value, filter.value)
+  }
+  paginationOpts.value.rowsNumber = studyStore.studyPaginationOpts.rowsNumber
+}
+
+function createStudy() {
+  newStudyData.value = { name: '', description: '', services: undefined }
+  showCreateStudy.value = true
+  selectedStudy.value = undefined
+}
+
+function confirmDeleteStudy(study) {
+  showConfirmDeleteStudy.value = true
+  selectedStudy.value = study
+}
+
+function confirmDeleteStudies() {
+  if (selected.value.length > 0) {
+    showConfirmDeleteStudies.value = true
+  }
+}
+
+async function saveStudy() {
+  v$.value.$reset()
+  // create
+  const createdData = { ...newStudyData.value }
+  studyStore.createStudy(createdData, paginationOpts.value)
+}
+
+function deleteStudy() {
+  studyStore.deleteStudy(selectedStudy.value._id, paginationOpts.value)
+}
+
+function deleteStudies() {
+  const ids = selected.value.map(u => u._id)
+  studyStore.deleteStudies(ids, paginationOpts.value)
+  selected.value = []
+}
+
+// mounted
+onMounted(() => {
+  getTableStudies()
+  setPagination()
+})
 </script>
 
 <style scoped>

@@ -58,38 +58,32 @@
   </q-page>
 </template>
 
-<script>
-import {defineComponent, defineAsyncComponent} from 'vue'
+<script setup>
+import { defineAsyncComponent } from 'vue'
 
-export default defineComponent({
-  name: "Cards",
-  components: {
-    CardItem: defineAsyncComponent(() => import('components/cards/CardItem')),
-    CardCafe: defineAsyncComponent(() => import('components/cards/CardCafe')),
-    CardCompany: defineAsyncComponent(() => import('components/cards/CardCompany')),
-    CardProfileDark: defineAsyncComponent(() => import('components/cards/CardProfileDark')),
-    CardProfile: defineAsyncComponent(() => import('components/cards/CardProfile')),
-    BasicCard: defineAsyncComponent(() => import('components/cards/CardBasic'))
-  },
-  setup() {
-    const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
-    return {
-      text,
-      profile_card_data: {
-        name: 'Pratik Patel',
-        des: 'Solutions Developer',
-        avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
-      },
-      profile_data: {
-        name: 'Pratik Patel',
-        des: '--- Solution Developer, Pune',
-        text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-      },
-      background_img1: 'linear-gradient(to top, #30cfd0 0%, #330867 100%)',
-      background_img2: 'linear-gradient(87deg, rgb(45, 206, 137), rgb(45, 206, 204)) !important'
-    }
-  },
-})
+const CardItem = defineAsyncComponent(() => import('components/cards/CardItem'))
+const CardCafe = defineAsyncComponent(() => import('components/cards/CardCafe'))
+const CardCompany = defineAsyncComponent(() => import('components/cards/CardCompany'))
+const CardProfileDark = defineAsyncComponent(() => import('components/cards/CardProfileDark'))
+const CardProfile = defineAsyncComponent(() => import('components/cards/CardProfile'))
+const BasicCard = defineAsyncComponent(() => import('components/cards/CardBasic'))
+
+const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+
+const profile_card_data = {
+  name: 'Pratik Patel',
+  des: 'Solutions Developer',
+  avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+}
+
+const profile_data = {
+  name: 'Pratik Patel',
+  des: '--- Solution Developer, Pune',
+  text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+}
+
+const background_img1 = 'linear-gradient(to top, #30cfd0 0%, #330867 100%)'
+const background_img2 = 'linear-gradient(87deg, rgb(45, 206, 137), rgb(45, 206, 204)) !important'
 </script>
 
 <style scoped>

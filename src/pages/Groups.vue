@@ -2,99 +2,99 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="groups" :label="$t('groups.title')" />
+        <q-breadcrumbs-el icon="home" to="/" />
+        <q-breadcrumbs-el :label="t('groups.title')" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
 
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <q-table
+    <q-table
+        class="q-ma-md"
+        flat
+        :rows='groups'
+        :columns='columns'
+        :filter='filter'
+        row-key='name'
+        selection="multiple"
+        v-model:selected="selected"
+        v-model:pagination='paginationOpts'
+        @request='getTableGroups'
+      >
+      <template v-slot:top>
+        <q-btn
+          color="primary"
+          icon="add"
+          :title="t('groups.add_group_hint')"
+          size="sm"
+          @click="createGroup()"
+          class="q-mr-md" />
+        <q-btn
+          class="q-mr-md"
+          flat
+          round
+          color="negative"
+          icon="delete_outline"
+          size="sm"
+          :disable="selected.length === 0"
+          :title="t('groups.delete_groups_hint')"
+          @click="confirmDeleteGroups()" />
+        <q-space />
+        <q-input
+          dense
+          debounce="300"
+          v-model="filter"
+          :placeholder="t('search')"
+          :title="t('groups.search_hint')">
+          <template v-slot:append>
+            <q-icon name="search"/>
+          </template>
+        </q-input>
+      </template>
+      <template v-slot:body-cell-name='props'>
+        <q-td :props='props'>
+          <router-link :to="'/group/' + props.row._id">{{ props.row.name }}</router-link>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-description='props'>
+        <q-td :props='props'>
+          <div style="white-space: normal">
+            {{ makeEllipsis(props.row.description, 100) }}
+          </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-members='props'>
+        <q-td :props='props'>
+          <q-badge v-if="props.row.users.length>0" color="info">
+            {{ props.row.users.length }}
+          </q-badge>
+          <span v-else>0</span>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-action='props'>
+        <q-td :props='props'>
+          <q-btn
+            color="secondary"
+            size="12px"
             flat
-            :rows='groups'
-            :columns='columns'
-            :filter='filter'
-            row-key='name'
-            selection="multiple"
-            v-model:selected="selected"
-            v-model:pagination='paginationOpts'
-            @request='getTableGroups'
-          >
-          <template v-slot:top>
-            <q-btn
-              color="primary"
-              icon="add"
-              :title="$t('groups.add_group_hint')"
-              @click="createGroup()"
-              class="q-mr-md" />
-            <q-btn
-              class="q-mr-md"
-              flat
-              round
-              color="negative"
-              icon="delete_outline"
-              :disable="selected.length === 0"
-              :title="$t('groups.delete_groups_hint')"
-              @click="confirmDeleteGroups()" />
-            <q-space />
-            <q-input
-              dense
-              debounce="300"
-              v-model="filter"
-              :placeholder="$t('search')"
-              :title="$t('groups.search_hint')">
-              <template v-slot:append>
-                <q-icon name="search"/>
-              </template>
-            </q-input>
-          </template>
-          <template v-slot:body-cell-name='props'>
-            <q-td :props='props'>
-              <router-link :to="'/group/' + props.row._id">{{ props.row.name }}</router-link>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-description='props'>
-            <q-td :props='props'>
-              <div style="white-space: normal">
-                {{ makeEllipsis(props.row.description, 100) }}
-              </div>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-members='props'>
-            <q-td :props='props'>
-              <q-badge v-if="props.row.users.length>0" color="info">
-                {{ props.row.users.length }}
-              </q-badge>
-              <span v-else>0</span>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-action='props'>
-            <q-td :props='props'>
-              <q-btn
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="$t('groups.edit_group_hint')"
-                icon='edit'
-                :to="'/group/' + props.row._id">
-              </q-btn>
-              <q-btn
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="$t('groups.delete_group_hint')"
-                icon='delete'
-                @click='confirmDeleteGroup(props.row)'>
-              </q-btn>
-            </q-td>
-          </template>
-        </q-table>
-      </q-card-section>
-    </q-card>
+            dense
+            round
+            :title="t('groups.edit_group_hint')"
+            icon='edit'
+            :to="'/group/' + props.row._id">
+          </q-btn>
+          <q-btn
+            color="secondary"
+            size="12px"
+            flat
+            dense
+            round
+            :title="t('groups.delete_group_hint')"
+            icon='delete'
+            @click='confirmDeleteGroup(props.row)'>
+          </q-btn>
+        </q-td>
+      </template>
+    </q-table>
 
     <q-dialog v-model='showCreateGroup' persistent>
       <q-card>
@@ -102,15 +102,15 @@
            <div class='col-12'>
             <q-input
               v-model='newGroupData.name'
-              :label="$t('name')"
+              :label="t('name')"
               lazy-rules
               class='q-ma-sm'
-              @blur="v$.newGroupData.name.$touch"
-              :error="v$.newGroupData.name.$error"
-              :hint="$t('required')"
+              @blur="v$.name.$touch"
+              :error="v$.name.$error"
+              :hint="t('required')"
             >
               <template v-slot:error>
-                <div v-for="error in v$.newGroupData.name.$errors">
+                <div v-for="error in v$.name.$errors">
                   {{error.$message}}
                 </div>
               </template>
@@ -119,19 +119,20 @@
           <div class='col-12'>
             <q-input
               v-model='newGroupData.description'
-              :label="$t('description')"
+              :label="t('description')"
               autogrow
               lazy-rules
               class='q-ma-sm'
             />
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveGroup'
             :disable='disableCreateGroup'
-            :label="$t('add')"
+            :label="t('add')"
             type='submit'
             color='primary'
             v-close-popup
@@ -148,17 +149,18 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('groups.delete_group_confirm')}}
+            {{t('groups.delete_group_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selectedGroup.name}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteGroup'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -175,17 +177,18 @@
       <q-card>
         <q-card-section>
           <div>
-            {{$t('groups.delete_groups_confirm')}}
+            {{t('groups.delete_groups_confirm')}}
           </div>
           <div class="text-weight-bold text-center q-mt-md">
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
-          <q-btn :label="$t('cancel')" flat v-close-popup />
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteGroups'
-            :label="$t('delete')"
+            :label="t('delete')"
             type='submit'
             color='primary'
             v-close-popup
@@ -201,164 +204,153 @@
   </q-page>
 </template>
 
-<script>
-import { mapState, mapActions } from 'vuex'
-import { ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
+import { useAdminStore } from 'src/stores/admin'
 
-export default {
-  mounted: function () {
-    this.getTableGroups()
-    this.setPagination()
+const { t } = useI18n()
+const adminStore = useAdminStore()
+
+// Reactive state
+const selected = ref([])
+const filter = ref('')
+const selectedGroup = ref({})
+const showCreateGroup = ref(false)
+const showConfirmDeleteGroup = ref(false)
+const showConfirmDeleteGroups = ref(false)
+const paginationOpts = ref({
+  sortBy: 'name',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: 10
+})
+const groupData = ref({
+  name: '',
+  description: ''
+})
+const newGroupData = ref({
+  name: '',
+  description: ''
+})
+
+// Columns definition
+const columns = [
+  {
+    name: 'name',
+    required: true,
+    label: t('name'),
+    align: 'left',
+    field: 'name',
+    sortable: true
   },
-  setup () {
-    return {
-      v$: useVuelidate(),
-      selected: ref([]),
-      filter: ref(''),
-      settings
-    }
+  {
+    name: 'description',
+    align: 'left',
+    label: t('description'),
+    field: 'description',
+    sortable: true
   },
-  data () {
-    return {
-      columns: [
-        {
-          name: 'name',
-          required: true,
-          label: this.$t('name'),
-          align: 'left',
-          field: 'name',
-          sortable: true
-        },
-        {
-          name: 'description',
-          align: 'left',
-          label: this.$t('description'),
-          field: 'description',
-          sortable: true
-        },
-        {
-          name: 'members',
-          align: 'left',
-          label: this.$t('members'),
-          field: 'users',
-          format: val => {
-            return val ? val.length : 0
-          },
-          sortable: false
-        },
-        {
-          name: 'action',
-          align: 'left',
-          label: this.$t('action')
-        }
-      ],
-      selectedGroup: {},
-      showCreateGroup: false,
-      showConfirmDeleteGroup: false,
-      showConfirmDeleteGroups: false,
-      paginationOpts: {
-        sortBy: 'name',
-        descending: true,
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 10
-      },
-      groupData: {
-        name: '',
-        description: ''
-      },
-      newGroupData: {
-        name: '',
-        description: ''
-      }
-    }
+  {
+    name: 'members',
+    align: 'left',
+    label: t('members'),
+    field: 'users',
+    format: val => {
+      return val ? val.length : 0
+    },
+    sortable: false
   },
-  validations: {
-    newGroupData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      description: {
-        minLength: minLength(2),
-        maxLength: maxLength(500)
-      }
-    }
+  {
+    name: 'action',
+    align: 'left',
+    label: t('action')
+  }
+]
+
+// Validation rules
+const rules = {
+  name: {
+    required,
+    minLength: minLength(2),
+    maxLength: maxLength(30)
   },
-  computed: {
-    ...mapState({
-      groups: state => state.admin.groups
-    }),
-    disableCreateGroup () {
-      return this.v$.newGroupData.$invalid
-    }
-  },
-  methods: {
-    makeEllipsis (text, length) {
-      if (text && text.length > length) {
-        return text.substring(0, length) + ' ...'
-      }
-      return text
-    },
-    setPagination () {
-      this.paginationOpts = this.$store.state.admin.groupPaginationOpts
-    },
-    async getTableGroups (requestProp) {
-      if (requestProp) {
-        this.paginationOpts = requestProp.pagination
-        this.$store.commit('admin/setGroupPagination', {
-          groupPaginationOpts: requestProp.pagination
-        })
-        await this.getGroups({ paginationOpts: requestProp.pagination, filter: requestProp.filter })
-      } else {
-        await this.getGroups({ paginationOpts: this.paginationOpts, filter: this.filter })
-      }
-      this.paginationOpts.rowsNumber = this.$store.state.admin.groupPaginationOpts.rowsNumber
-    },
-    ...mapActions({
-      getGroups: 'admin/getGroups'
-    }),
-    createGroup () {
-      this.newGroupData = {}
-      this.showCreateGroup = true
-      this.selectedGroup = undefined
-    },
-    confirmDeleteGroup (group) {
-      this.showConfirmDeleteGroup = true
-      this.selectedGroup = group
-    },
-    confirmDeleteGroups () {
-      if (this.selected.length > 0) {
-        this.showConfirmDeleteGroups = true
-      }
-    },
-    async saveGroup () {
-      this.v$.$reset()
-      // create
-      const createdData = { ...this.newGroupData }
-      this.$store.dispatch('admin/createGroup', {
-        group: createdData,
-        paginationOpts: this.paginationOpts
-      })
-    },
-    deleteGroup () {
-      this.$store.dispatch('admin/deleteGroup', {
-        id: this.selectedGroup._id,
-        paginationOpts: this.paginationOpts
-      })
-    },
-    deleteGroups () {
-      const ids = this.selected.map(u => u._id)
-      this.$store.dispatch('admin/deleteGroups', {
-        ids: ids,
-        paginationOpts: this.paginationOpts
-      })
-      this.selected = []
-    }
+  description: {
+    minLength: minLength(2),
+    maxLength: maxLength(500)
   }
 }
+
+const v$ = useVuelidate(rules, newGroupData)
+
+// Computed
+const groups = computed(() => adminStore.groups)
+const disableCreateGroup = computed(() => v$.value.$invalid)
+
+// Methods
+function makeEllipsis(text, length) {
+  if (text && text.length > length) {
+    return text.substring(0, length) + ' ...'
+  }
+  return text
+}
+
+function setPagination() {
+  paginationOpts.value = adminStore.groupPaginationOpts
+}
+
+async function getTableGroups(requestProp) {
+  if (requestProp) {
+    paginationOpts.value = requestProp.pagination
+    adminStore.setGroupPagination(requestProp.pagination)
+    await adminStore.getGroups(requestProp.pagination, requestProp.filter)
+  } else {
+    await adminStore.getGroups(paginationOpts.value, filter.value)
+  }
+  paginationOpts.value.rowsNumber = adminStore.groupPaginationOpts.rowsNumber
+}
+
+function createGroup() {
+  newGroupData.value = {}
+  showCreateGroup.value = true
+  selectedGroup.value = undefined
+}
+
+function confirmDeleteGroup(group) {
+  showConfirmDeleteGroup.value = true
+  selectedGroup.value = group
+}
+
+function confirmDeleteGroups() {
+  if (selected.value.length > 0) {
+    showConfirmDeleteGroups.value = true
+  }
+}
+
+async function saveGroup() {
+  v$.value.$reset()
+  // create
+  const createdData = { ...newGroupData.value }
+  await adminStore.createGroup(createdData, paginationOpts.value)
+}
+
+function deleteGroup() {
+  adminStore.deleteGroup(selectedGroup.value._id, paginationOpts.value)
+}
+
+function deleteGroups() {
+  const ids = selected.value.map(u => u._id)
+  adminStore.deleteGroups(ids, paginationOpts.value)
+  selected.value = []
+}
+
+// Lifecycle
+onMounted(() => {
+  getTableGroups()
+  setPagination()
+})
 </script>

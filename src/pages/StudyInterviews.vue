@@ -2,9 +2,9 @@
   <q-page>
 
     <div class="q-ma-md">
-      <div class="text-h5 q-mb-md">{{$t('study.interview_records')}}</div>
+      <div class="text-h5 q-mb-md">{{t('study.interview_records')}}</div>
       <div class="note note-info text-body2 text-secondary">
-        <span v-html="$t('study.interview_records_hint')"/>
+        <span v-html="t('study.interview_records_hint')"/>
       </div>
     </div>
 
@@ -13,12 +13,9 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+<script setup>
+import { useI18n } from 'vue-i18n'
+import Interviews from 'src/components/interviews/Interviews.vue'
 
-export default defineComponent({
-  components: {
-    Interviews: defineAsyncComponent(() => import('src/components/interviews/Interviews.vue'))
-  }
-})
+const { t } = useI18n()
 </script>

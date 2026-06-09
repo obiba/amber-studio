@@ -1,72 +1,109 @@
+// Layouts
+import MainLayout from 'layouts/MainLayout.vue'
+import StudyLayout from 'layouts/StudyLayout.vue'
+
+// Main pages
+import Dashboard from 'pages/Dashboard.vue'
+import Account from 'pages/Account.vue'
+import Users from 'pages/Users.vue'
+import User from 'pages/User.vue'
+import Groups from 'pages/Groups.vue'
+import Group from 'pages/Group.vue'
+import Tasks from 'pages/Tasks.vue'
+import Studies from 'pages/Studies.vue'
+import Datasets from 'pages/Datasets.vue'
+
+// Study pages
+import Study from 'pages/Study.vue'
+import StudyForms from 'pages/StudyForms.vue'
+import StudyForm from 'pages/StudyForm.vue'
+import StudyCaseReportForms from 'pages/StudyCaseReportForms.vue'
+import StudyCaseReports from 'pages/StudyCaseReports.vue'
+import StudyInterviewDesigns from 'pages/StudyInterviewDesigns.vue'
+import StudyInterviewDesign from 'pages/StudyInterviewDesign.vue'
+import StudyInterviews from 'pages/StudyInterviews.vue'
+
+// Auth pages
+import Login from 'pages/Login.vue'
+import Register from 'pages/Register.vue'
+import ForgotPassword from 'pages/ForgotPassword.vue'
+import ResetPassword from 'pages/ResetPassword.vue'
+import Verify from 'pages/Verify.vue'
+
+// Other pages
+import Maintenance from 'pages/Maintenance.vue'
+import Loading from 'pages/Loading.vue'
+import Error404 from 'pages/Error404.vue'
+
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: MainLayout,
     children: [
       {
         path: '',
-        component: () => import('pages/Dashboard.vue'),
+        component: Dashboard,
         meta: { requiresAuth: true }
       },
       {
         path: '/account',
-        component: () => import('pages/Account.vue'),
+        component: Account,
         meta: { requiresAuth: true }
       },
       {
         path: '/users',
-        component: () => import('pages/Users.vue'),
+        component: Users,
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: '/user/:id',
-        component: () => import('pages/User.vue'),
+        component: User,
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: '/groups',
-        component: () => import('pages/Groups.vue'),
+        component: Groups,
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: '/group/:id',
-        component: () => import('pages/Group.vue'),
+        component: Group,
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: '/tasks',
-        component: () => import('pages/Tasks.vue'),
+        component: Tasks,
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: '/studies',
-        component: () => import('pages/Studies.vue'),
+        component: Studies,
         meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/datasets',
-        component: () => import('pages/Datasets.vue'),
+        component: Datasets,
         meta: { requiresAuth: true, noGuest: true }
       }
     ]
   },
   {
     path: '/study',
-    component: () => import('layouts/StudyLayout.vue'),
+    component: StudyLayout,
     children: [
       {
         path: '/study/:id',
-        component: () => import('pages/Study.vue'),
+        component: Study,
         meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/study/:id/forms',
-        component: () => import('pages/StudyForms.vue'),
+        component: StudyForms,
         meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/study/:id/form/:fid',
-        component: () => import('pages/StudyForm.vue'),
+        component: StudyForm,
         meta: { requiresAuth: true, noGuest: true }
       },
       { // deprecated
@@ -77,7 +114,7 @@ const routes = [
       },
       {
         path: '/study/:id/case-report-forms',
-        component: () => import('pages/StudyCaseReportForms.vue'),
+        component: StudyCaseReportForms,
         meta: { requiresAuth: true, noGuest: true }
       },
       { // deprecated
@@ -88,22 +125,22 @@ const routes = [
       },
       {
         path: '/study/:id/case-reports',
-        component: () => import('pages/StudyCaseReports.vue'),
+        component: StudyCaseReports,
         meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/study/:id/interview-designs',
-        component: () => import('pages/StudyInterviewDesigns.vue'),
+        component: StudyInterviewDesigns,
         meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/study/:id/interview-design/:itwid',
-        component: () => import('pages/StudyInterviewDesign.vue'),
+        component: StudyInterviewDesign,
         meta: { requiresAuth: true, noGuest: true }
       },
       {
         path: '/study/:id/interviews',
-        component: () => import('pages/StudyInterviews.vue'),
+        component: StudyInterviews,
         meta: { requiresAuth: true, noGuest: true }
       }
     ]
@@ -111,37 +148,37 @@ const routes = [
   },
   {
     path: '/maintenance',
-    component: () => import('pages/Maintenance.vue')
+    component: Maintenance
   },
   {
     path: '/loading',
-    component: () => import('pages/Loading.vue')
+    component: Loading
   },
   {
     path: '/login',
-    component: () => import('pages/Login.vue')
+    component: Login
   },
   {
     path: '/register',
-    component: () => import('pages/Register.vue')
+    component: Register
   },
   {
     path: '/forgot-password',
-    component: () => import('pages/ForgotPassword.vue')
+    component: ForgotPassword
   },
   {
     path: '/reset-password',
-    component: () => import('pages/ResetPassword.vue')
+    component: ResetPassword
   },
   {
     path: '/verify',
-    component: () => import('pages/Verify.vue')
+    component: Verify
   },
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/Error404.vue')
+    component: Error404
   }
 ]
 

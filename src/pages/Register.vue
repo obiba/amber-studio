@@ -11,7 +11,7 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle">
-                    {{$t('register.title')}}
+                    {{t('register.title')}}
                   </div>
                 </div>
               </q-card-section>
@@ -21,8 +21,8 @@
                   <q-input
                     autofocus
                     v-model="formData.email"
-                    :label="$t('email')"
-                    :hint="$t('email_hint')"
+                    :label="t('email')"
+                    :hint="t('email_hint')"
                     type="email"
                     @blur="v$.formData.email.$touch"
                     :error="v$.formData.email.$error"
@@ -39,8 +39,8 @@
 
                   <q-input
                     v-model="formData.password"
-                    :label="$t('password')"
-                    :hint="$t('password_hint')"
+                    :label="t('password')"
+                    :hint="t('password_hint')"
                     type="password"
                     lazy-rules
                     @blur="v$.formData.password.$touch"
@@ -57,8 +57,8 @@
 
                   <q-input
                     v-model="formData.firstname"
-                    :label="$t('firstname')"
-                    :hint="$t('required')"
+                    :label="t('firstname')"
+                    :hint="t('required')"
                     @blur="v$.formData.firstname.$touch"
                     :error="v$.formData.firstname.$error"
                     lazy-rules>
@@ -74,8 +74,8 @@
 
                   <q-input
                     v-model="formData.lastname"
-                    :label="$t('lastname')"
-                    :hint="$t('required')"
+                    :label="t('lastname')"
+                    :hint="t('required')"
                     @blur="v$.formData.lastname.$touch"
                     :error="v$.formData.lastname.$error"
                     lazy-rules>
@@ -93,7 +93,7 @@
                     v-show="hasLocales"
                     v-model="locale"
                     :options="localeOptions"
-                    :label="$t('preferred_language')"
+                    :label="t('preferred_language')"
                     emit-value
                     map-options
                     options-dense
@@ -105,12 +105,12 @@
                   </q-select>
                   <div>
                     <q-btn
-                      :label="$t('register.submit')"
+                      :label="t('register.submit')"
                       type="submit"
                       color="primary"
                       :disable='disableSubmit'/>
                     <q-btn
-                      :label="$t('register.login')"
+                      :label="t('register.login')"
                       flat
                       to="/login"
                       stretch
@@ -119,13 +119,13 @@
                 </q-form>
               </q-card-section>
               <q-card-section v-if="!registrationComplete">
-                <span class="text-caption text-grey" v-html="$t('register.google_policy')">
+                <span class="text-caption text-grey" v-html="t('register.google_policy')">
                 </span>
               </q-card-section>
               <q-card-section v-if="registrationComplete">
                 <div class="text-center q-pt-lg">
                   <div class="col text-h6 ellipsis">
-                    {{$t('register.success')}}
+                    {{t('register.success')}}
                   </div>
                 </div>
               </q-card-section>
@@ -137,115 +137,107 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
+import { useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { useReCaptcha } from 'vue-recaptcha-v3'
 import { required, minLength, maxLength, email, strongPassword } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
+import { useAccountStore } from 'src/stores/account'
 
-import Banner from 'components/Banner'
+import Banner from 'src/components/Banner.vue'
 
-export default defineComponent({
-  components: { Banner },
-  setup () {
-    const { locale } = useI18n({ useScope: 'global' })
-    const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
+const router = useRouter()
+const { t, locale } = useI18n({ useScope: 'global' })
+const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
+const accountStore = useAccountStore()
 
-    const recaptcha = async () => {
-      // (optional) Wait until recaptcha has been loaded.
-      await recaptchaLoaded()
+// data
+const formData = reactive({
+  firstname: '',
+  lastname: '',
+  language: '',
+  email: '',
+  password: ''
+})
+const registrationComplete = ref(false)
 
-      // Execute reCAPTCHA with action "login".
-      const token = await executeRecaptcha('login')
-
-      // Do stuff with the received token.
-      return token
-    }
-
-    return {
-      locale,
-      v$: useVuelidate(),
-      recaptcha,
-      settings
-    }
-  },
-  data () {
-    return {
-      formData: {
-        firstname: '',
-        lastname: '',
-        language: '',
-        email: '',
-        password: ''
-      }
-    }
-  },
-  validations: {
-    formData: {
-      firstname: {
-        required,
-        minLength: minLength(2)
-      },
-      lastname: {
-        required,
-        minLength: minLength(2)
-      },
-      email: {
-        required,
-        email
-      },
-      password: {
-        required,
-        minLength: minLength(8),
-        maxLength: maxLength(64),
-        strongPassword
-      }
-    }
-  },
-  mounted () {
-    if (!this.settings.register_enabled) {
-      this.$router.push('/')
-    }
-  },
-  computed: {
-    ...mapState({
-      submitting: state => state.auth.showLoading,
-      registrationComplete: state => state.auth.registrationComplete
-    }),
-    disableSubmit () {
-      return this.v$.formData.$invalid
+// validations
+const rules = {
+  formData: {
+    firstname: {
+      required,
+      minLength: minLength(2)
     },
-    localeOptions () {
-      return locales.map(loc => {
-        return {
-          value: loc,
-          label: this.$t('locales.' + loc)
-        }
-      })
-        .sort((loc1, loc2) => {
-          if (loc1.label > loc2.label) return 1
-          if (loc1.label < loc2.label) return -1
-          return 0
-        })
+    lastname: {
+      required,
+      minLength: minLength(2)
     },
-    hasLocales () {
-      return locales.length > 1
-    }
-  },
-  methods: {
-    onSubmit () {
-      // Execute reCAPTCHA with action "login".
-      this.recaptcha().then((token) => {
-        const data = this.formData
-        data.language = this.locale
-        data.token = token
-        this.$store.dispatch('account/registerUser', { formData: data })
-      })
+    email: {
+      required,
+      email
+    },
+    password: {
+      required,
+      minLength: minLength(8),
+      maxLength: maxLength(64),
+      strongPassword
     }
   }
+}
+const v$ = useVuelidate(rules, { formData })
+
+// recaptcha helper
+async function recaptcha() {
+  await recaptchaLoaded()
+  const token = await executeRecaptcha('login')
+  return token
+}
+
+// mounted
+onMounted(() => {
+  if (!settings.register_enabled) {
+    router.push('/')
+  }
 })
+
+// computed
+const disableSubmit = computed(() => {
+  return v$.value.formData.$invalid
+})
+
+const localeOptions = computed(() => {
+  return locales.map(loc => {
+    return {
+      value: loc,
+      label: t('locales.' + loc)
+    }
+  })
+    .sort((loc1, loc2) => {
+      if (loc1.label > loc2.label) return 1
+      if (loc1.label < loc2.label) return -1
+      return 0
+    })
+})
+
+const hasLocales = computed(() => {
+  return locales.length > 1
+})
+
+// methods
+async function onSubmit() {
+  try {
+    const token = await recaptcha()
+    const data = { ...formData }
+    data.language = locale.value
+    data.token = token
+    await accountStore.registerUser(data)
+    registrationComplete.value = true
+  } catch (err) {
+    // Error handled by store
+  }
+}
 </script>

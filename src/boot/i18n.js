@@ -13,6 +13,7 @@ if (!locales.includes(detectedLocale)) {
 }
 
 const i18n = createI18n({
+  legacy: false,
   locale: detectedLocale,
   fallbackLocale: locales[0],
   warnHtmlInMessage: 'off',

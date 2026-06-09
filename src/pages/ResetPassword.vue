@@ -12,14 +12,14 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle">
-                    {{ $t('reset.title') }}
+                    {{ t('reset.title') }}
                   </div>
                 </div>
               </q-card-section>
               <q-card-section>
                 <q-form @submit="resetPassword" class="q-gutter-md">
                   <q-input :type="showPassword ? 'text' : 'password'" v-model="formData.password"
-                    :label="$t('password')" lazy-rules :hint="$t('password_hint')" @blur="v$.formData.password.$touch"
+                    :label="t('password')" lazy-rules :hint="t('password_hint')" @blur="v$.formData.password.$touch"
                     :error="v$.formData.password.$error">
                     <template v-slot:prepend>
                       <q-icon name="fas fa-lock" size="xs" />
@@ -35,8 +35,8 @@
                     </template>
                   </q-input>
                   <div class="q-pt-md">
-                    <q-btn :label="$t('reset.submit')" type="submit" color="primary" :disable="disableSubmit" />
-                    <q-btn :label="$t('cancel')" flat to="/login" stretch class="text-bold q-ml-md" />
+                    <q-btn :label="t('reset.submit')" type="submit" color="primary" :disable="disableSubmit" />
+                    <q-btn :label="t('cancel')" flat to="/login" stretch class="text-bold q-ml-md" />
                   </div>
                 </q-form>
               </q-card-section>
@@ -48,85 +48,75 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
+<script setup>
+import { ref, reactive, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, strongPassword } from '../boot/vuelidate'
-import userService from '../services/user'
 import { Notify } from 'quasar'
 import { settings } from '../boot/settings'
+import { useAccountStore } from 'src/stores/account'
 
-import Banner from 'components/Banner'
+import Banner from 'src/components/Banner.vue'
 
-export default defineComponent({
-  components: { Banner },
-  setup() {
-    return {
-      v$: useVuelidate(),
-      settings
-    }
-  },
-  data() {
-    return {
-      valid: false,
-      success: false,
-      showPassword: false,
-      formData: {
-        password: ''
-      }
-    }
-  },
-  validations: {
-    formData: {
-      password: {
-        required,
-        minLength: minLength(8),
-        maxLength: maxLength(64),
-        strongPassword
-      }
-    }
-  },
-  computed: {
-    ...mapState({
-      submitting: state => state.auth.showLoading
-    }),
-    disableSubmit() {
-      return this.v$.formData.$invalid
-    }
-  },
-  methods: {
-    async resetPassword() {
-      const token = this.$route.query.token
-      let result
-      if (token) {
-        result = await userService
-          .resetPassword(token, this.formData.password)
-          .catch(err => {
-            if (err.response) {
-              Notify.create({
-                message: this.$t('reset.failure'),
-                color: 'negative',
-                icon: 'fas fa-times'
-              })
-            }
-          })
-      } else {
-        Notify.create({
-          message: this.$t('reset.bad_link'),
-          color: 'negative',
-          icon: 'fas fa-times'
-        })
-      }
-      if (result && result.status === 201) {
-        Notify.create({
-          message: this.$t('reset.success'),
-          color: 'positive',
-          icon: 'fas fa-check'
-        })
-        this.$router.push('/')
-      }
+const router = useRouter()
+const route = useRoute()
+const { t } = useI18n({ useScope: 'global' })
+const accountStore = useAccountStore()
+
+// data
+const showPassword = ref(false)
+const formData = reactive({
+  password: ''
+})
+
+// validations
+const rules = {
+  formData: {
+    password: {
+      required,
+      minLength: minLength(8),
+      maxLength: maxLength(64),
+      strongPassword
     }
   }
+}
+const v$ = useVuelidate(rules, { formData })
+
+// computed
+const disableSubmit = computed(() => {
+  return v$.value.formData.$invalid
 })
+
+// methods
+async function resetPassword() {
+  const token = route.query.token
+  if (!token) {
+    Notify.create({
+      message: t('reset.bad_link'),
+      color: 'negative',
+      icon: 'fas fa-times'
+    })
+    return
+  }
+
+  try {
+    const result = await accountStore.resetPassword(token, formData.password)
+    if (result && result.status === 201) {
+      Notify.create({
+        message: t('reset.success'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+      router.push('/')
+    }
+  } catch (err) {
+    Notify.create({
+      message: t('reset.failure'),
+      color: 'negative',
+      icon: 'fas fa-times'
+    })
+  }
+}
 </script>

@@ -11,7 +11,7 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle ellipsis">
-                    {{$t('forgot_password.title')}}
+                    {{t('forgot_password.title')}}
                   </div>
                 </div>
               </q-card-section>
@@ -20,9 +20,9 @@
                   <q-input
                     autofocus
                     v-model="resetEmail"
-                    :label="$t('email')"
+                    :label="t('email')"
                     type="email"
-                    :hint="$t('forgot_password.hint')"
+                    :hint="t('forgot_password.hint')"
                     @blur="v$.resetEmail.$touch"
                     :error="v$.resetEmail.$error"
                     lazy-rules>
@@ -37,12 +37,12 @@
                   </q-input>
                   <div class="q-pt-md">
                     <q-btn
-                      :label="$t('forgot_password.submit')"
+                      :label="t('forgot_password.submit')"
                       type="submit"
                       color="primary"
                       :disable="disableSubmit"/>
                     <q-btn
-                      :label="$t('forgot_password.login')"
+                      :label="t('forgot_password.login')"
                       flat
                       to="/login"
                       stretch
@@ -58,52 +58,46 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
+<script setup>
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { required, email } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
 import useVuelidate from '@vuelidate/core'
+import { useAccountStore } from 'src/stores/account'
 
-import Banner from 'components/Banner'
+import Banner from 'src/components/Banner.vue'
 
-export default defineComponent({
-  components: { Banner },
-  setup () {
-    return {
-      settings
-    }
-  },
-  data () {
-    return {
-      v$: useVuelidate(),
-      resetEmail: ''
-    }
-  },
-  validations: {
-    resetEmail: {
-      required,
-      email
-    }
-  },
-  computed: {
-    ...mapState({
-      submitting: state => state.auth.showLoading
-    }),
-    disableSubmit () {
-      return this.v$.resetEmail.$invalid
-    }
-  },
-  methods: {
-    forgotPassword () {
-      this.$store
-        .dispatch('account/forgotPassword', {
-          emailAddress: this.resetEmail
-        })
-        .then(() => {
-          this.$router.push('/login')
-        })
-    }
+const { t } = useI18n()
+
+const router = useRouter()
+const accountStore = useAccountStore()
+
+// data
+const resetEmail = ref('')
+
+// validations
+const rules = {
+  resetEmail: {
+    required,
+    email
   }
+}
+const v$ = useVuelidate(rules, { resetEmail })
+
+// computed
+const disableSubmit = computed(() => {
+  return v$.value.resetEmail.$invalid
 })
+
+// methods
+async function forgotPassword() {
+  try {
+    await accountStore.forgotPassword(resetEmail.value)
+    router.push('/login')
+  } catch (err) {
+    // Error handled by store
+  }
+}
 </script>

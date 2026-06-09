@@ -4,7 +4,6 @@ import rest from '@feathersjs/rest-client'
 import auth from '@feathersjs/authentication-client'
 import { iff, discard } from 'feathers-hooks-common'
 import { axios } from './axios'
-import feathersVuex from '@feathersjs/vuex'
 
 const restClient = rest(process.env.API)
 
@@ -27,21 +26,8 @@ const feathersClient = feathers()
     }
   })
 
-// Setting up feathers-vuex
-const {
-  makeServicePlugin,
-  makeAuthPlugin,
-  BaseModel,
-  models,
-  FeathersVuex
-} = feathersVuex(feathersClient, {
-  serverAlias: 'api', // optional for working with multiple APIs (this is the default value)
-  idField: '_id', // Must match the id field in your database table/collection
-  whitelist: ['$regex', '$options']
-})
-
 export default boot(({ app }) => {
-  app.use(FeathersVuex)
+  // Feathers client is available globally through imports
 })
 
-export { feathersClient, makeAuthPlugin, makeServicePlugin, BaseModel, models, FeathersVuex }
+export { feathersClient }

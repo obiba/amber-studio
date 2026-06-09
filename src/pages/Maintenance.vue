@@ -25,12 +25,7 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'Maintenance'
-})
+<script setup>
 </script>
 
 <style>

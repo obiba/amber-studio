@@ -1,29 +1,30 @@
+/* eslint-env node */
+
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
  * the ES6 features that are supported by your Node version. https://node.green/
  */
 
 // Configuration for your app
-// https://quasar.dev/quasar-cli/quasar-conf-js
+// https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-const { configure } = require('quasar/wrappers')
-const fs = require('fs')
-const packageJson = fs.readFileSync('./package.json')
-const version = JSON.parse(packageJson).version || 0
-const settingsJson = fs.readFileSync('./settings.json', 'utf8')
-const path = require('path')
+import { configure } from 'quasar/wrappers'
+import { fileURLToPath } from 'node:url'
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
 
-module.exports = configure(function (ctx) {
+export default configure(function (ctx) {
+  const packageJson = readFileSync('./package.json', 'utf8')
+  const version = JSON.parse(packageJson).version || 0
+  const settingsJson = readFileSync('./settings.json', 'utf8')
+
   return {
-    // https://quasar.dev/quasar-cli/supporting-ts
-    supportTS: false,
-
-    // https://quasar.dev/quasar-cli/prefetch-feature
+    // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
 
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
-    // https://quasar.dev/quasar-cli/boot-files
+    // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
       'axios',
       'feathersClient',
@@ -36,7 +37,7 @@ module.exports = configure(function (ctx) {
       'csv'
     ],
 
-    // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
+    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: [
       'app.scss',
       'custom.scss'
@@ -44,70 +45,61 @@ module.exports = configure(function (ctx) {
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
-      // 'ionicons-v4',
-      // 'mdi-v5',
-      'fontawesome-v5',
-      // 'eva-icons',
-      // 'themify',
-      // 'line-awesome',
-      // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
-
+      'fontawesome-v7',
       'roboto-font', // optional, you are not bound to it
       'material-icons' // optional, you are not bound to it
     ],
 
-    // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
+    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
-      vueRouterMode: 'history', // available values: 'hash', 'history'
+      target: {
+        browser: 'baseline-widely-available',
+        node: 'node22'
+      },
 
+      vueRouterMode: 'history', // available values: 'hash', 'history'
+      vitePlugins: [],
+
+      // Environment variables
       env: {
         API: ctx.dev ? 'http://localhost:3030' : process.env.AMBER_URL,
         RECAPTCHA_SITE_KEY: ctx.dev ? '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u' : process.env.RECAPTCHA_SITE_KEY,
         SETTINGS: ctx.dev ? settingsJson : (process.env.SETTINGS ? process.env.SETTINGS : settingsJson),
-        REGISTER_ENABLED: ctx.dev ? true : (process.env.RECAPTCHA_SITE_KEY !== undefined),
+        REGISTER_ENABLED: ctx.dev ? 'true' : String(process.env.RECAPTCHA_SITE_KEY !== undefined),
         VERSION: version
       },
 
-      // transpile: false,
       publicPath: process.env.PATH_PREFIX ? process.env.PATH_PREFIX : '/',
-
-      // Add dependencies for transpiling with Babel (Array of string/regex)
-      // (from node_modules, which are by default not transpiled).
-      // Applies only if "transpile" is set to true.
-      // transpileDependencies: [],
-
-      rtl: true, // https://quasar.dev/options/rtl-support
-      // preloadChunks: true,
-      // showProgress: false,
-      // gzip: true,
-      // analyze: true,
-
-      // Options below are automatically set depending on the env, set them if you want to override
-      // extractCSS: false,
-
-      // https://quasar.dev/quasar-cli/handling-webpack
-      // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpack (chain) {
-        chain.resolve.alias
-          .set('vue', path.resolve(__dirname, './node_modules/vue'))
+      
+      // https://v2.quasar.dev/quasar-cli-vite/handling-vite
+      extendViteConf (viteConf) {
+        const __dirname = fileURLToPath(new URL('.', import.meta.url))
+        
+        if (!viteConf.resolve) {
+          viteConf.resolve = {}
+        }
+        if (!viteConf.resolve.alias) {
+          viteConf.resolve.alias = {}
+        }
+        viteConf.resolve.alias.vue = path.resolve(__dirname, './node_modules/vue')
       }
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
+    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devserver
     devServer: {
       https: false,
-      port: 3080,
-      open: false // opens browser window automatically
+      open: false, // opens browser window automatically
+      port: 3080
     },
 
-    // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
+    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
       config: {},
 
       // iconSet: 'material-icons', // Quasar icon set
-      // lang: 'en', // Quasar language pack
+      // lang: 'en-US', // Quasar language pack
 
-      // For special cases outside of where the auto-import stategy can have an impact
+      // For special cases outside of where the auto-import strategy can have an impact
       // (like functional components as one of the examples),
       // you can manually specify Quasar components/directives to be available everywhere:
       //
@@ -124,18 +116,29 @@ module.exports = configure(function (ctx) {
     },
 
     // animations: 'all', // --- includes all animations
-    // https://quasar.dev/options/animations
+    // https://v2.quasar.dev/options/animations
     animations: [],
 
-    // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
+    // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
     ssr: {
-      pwa: false
+      pwa: false,
+      prodPort: 3000,
+      middlewares: [
+        'render' // keep this as last one
+      ]
     },
 
-    // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
+    // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
-      workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
-      workboxOptions: {}, // only for GenerateSW
+      workboxMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+      injectPwaMetaTags: true,
+      swFilename: 'sw.js',
+      manifestFilename: 'manifest.json',
+      useCredentialsForManifestTag: false,
+      extendGenerateSWOptions (cfg) {},
+      extendInjectManifestOptions (cfg) {},
+      extendManifestJson (json) {},
+      extendPWACustomSWConf (esbuildConf) {},
       manifest: {
         name: 'Amber Studio',
         short_name: 'Amber Studio',
@@ -174,18 +177,20 @@ module.exports = configure(function (ctx) {
       }
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
+    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
     cordova: {
       // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
+    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-capacitor-apps/configuring-capacitor
     capacitor: {
       hideSplashscreen: true
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
+    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/configuring-electron
     electron: {
+      inspectPort: 5858,
+
       bundler: 'packager', // 'packager' or 'builder'
 
       packager: {
@@ -205,15 +210,17 @@ module.exports = configure(function (ctx) {
         // https://www.electron.build/configuration/configuration
 
         appId: 'test'
-      },
-
-      // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
-      nodeIntegration: true,
-
-      extendWebpack (/* cfg */) {
-        // do something with Electron main process Webpack cfg
-        // chainWebpack also available besides this extendWebpack
       }
+    },
+
+    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
+    bex: {
+      contentScripts: [
+        'my-content-script'
+      ],
+
+      // extendBexScriptsConf (esbuildConf) {}
+      // extendBexManifestJson (json) {}
     }
   }
 })

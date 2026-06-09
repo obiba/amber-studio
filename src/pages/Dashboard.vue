@@ -1,8 +1,8 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="text-h5 q-mb-md">{{$t('main.dashboard')}}</div>
+    <div class="text-h5 q-mb-md">{{t('main.dashboard')}}</div>
     <div v-if="myCampaigns.length" class="q-mb-md">
-      <div class="text-h6 q-mb-md">{{ $t('study.my_campaigns') }}</div>
+      <div class="text-h6 q-mb-md">{{ t('study.my_campaigns') }}</div>
       <div class="row q-col-gutter-lg">
         <div class="col-12 col-md-4">
           <q-list bordered separator>
@@ -25,55 +25,53 @@
         </div>
       </div>
     </div>
-    <div class="text-h6 q-mb-md">{{ $t('study.metrics') }}</div>
+    <div class="text-h6 q-mb-md">{{ t('study.metrics') }}</div>
     <dashboard-counts v-if="!isGuest" :counts="counts"/>
   </q-page>
 </template>
 
-<script>
-import { defineComponent, defineAsyncComponent } from 'vue'
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import studyService from '../services/study'
-import AuthMixin from '../mixins/AuthMixin'
+import { useAuth } from 'src/composables/useAuth'
+import DashboardCounts from 'src/components/dashboard/DashboardCounts.vue'
 
-export default defineComponent({
-  name: 'Dashboard',
-  components: {
-    DashboardCounts: defineAsyncComponent(() => import('components/dashboard/DashboardCounts'))
-  },
-  mixins: [AuthMixin],
-  data () {
-    return {
-      counts: {},
-      studies: [],
-      interviewDesigns: [],
-      myCampaigns: []
+const { t } = useI18n()
+
+const { isGuest, user } = useAuth()
+
+// data
+const counts = ref({})
+const studies = ref([])
+const interviewDesigns = ref([])
+const myCampaigns = ref([])
+
+// methods
+function getCampaignLabel(campaign) {
+  return `${studies.value.find(std => std._id === campaign.study).name} / ${interviewDesigns.value.find(itwd => itwd._id === campaign.interviewDesign).name} / ${campaign.name}`
+}
+
+// mounted
+onMounted(() => {
+  metricsService.getMetrics().then((result) => {
+    counts.value = result.counts ? result.counts : {}
+  })
+  studyService.getStudies().then((result) => {
+    studies.value = result.data ? result.data : []
+    if (studies.value.length > 0) {
+      interviewDesignService.getInterviewDesignsByStudy().then((result) => {
+        interviewDesigns.value = result.data ? result.data : []
+        if (interviewDesigns.value.length > 0) {
+          campaignService.getCampaigns().then((result) => {
+            myCampaigns.value = (result.data ? result.data : [])
+              .filter((c) => (c.investigators && c.investigators.includes(user.value._id)) || (c.supporters && c.supporters.includes(user.value._id)))
+          })
+        }
+      })
     }
-  },
-  mounted () {
-    metricsService.getMetrics().then((result) => {
-      this.counts = result.counts ? result.counts : {}
-    })
-    studyService.getStudies().then((result) => {
-      this.studies = result.data ? result.data : []
-      if (this.studies.length > 0) {
-        interviewDesignService.getInterviewDesignsByStudy(this.studyId).then((result) => {
-          this.interviewDesigns = result.data ? result.data : []
-          if (this.interviewDesigns.length > 0) {
-            campaignService.getCampaigns().then((result) => {
-              this.myCampaigns = (result.data ? result.data : [])
-                .filter((c) => (c.investigators && c.investigators.includes(this.user._id)) || (c.supporters && c.supporters.includes(this.user._id)))
-            })
-          }
-        })
-      }
-    })
-  },
-  methods: {
-    getCampaignLabel (campaign) {
-      return `${this.studies.find(std => std._id === campaign.study).name} / ${this.interviewDesigns.find(itwd => itwd._id === campaign.interviewDesign).name} / ${campaign.name}`
-    }
-  }
+  })
 })
 </script>

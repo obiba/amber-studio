@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="person" :label="$t('account.title') + ' [' + $t('roles.' + user.role) + ']'" />
+        <q-breadcrumbs-el icon="person" :label="t('account.title') + ' [' + t('roles.' + user.role) + ']'" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
@@ -14,12 +14,12 @@
             <div class='col-12 col-md-6'>
               <q-input
                 v-model='profileData.firstname'
-                :label="$t('firstname')"
+                :label="t('firstname')"
                 lazy-rules
                 class='q-ma-sm'
                 @blur="v$.profileData.firstname.$touch"
                 :error="v$.profileData.firstname.$error"
-                :hint="$t('required')"
+                :hint="t('required')"
               >
                 <template v-slot:prepend>
                   <q-icon name='fas fa-user' size='xs' />
@@ -34,12 +34,12 @@
             <div class='col-12 col-md-6'>
               <q-input
                 v-model='profileData.lastname'
-                :label="$t('lastname')"
+                :label="t('lastname')"
                 lazy-rules
                 class='q-ma-sm'
                 @blur="v$.profileData.lastname.$touch"
                 :error="v$.profileData.lastname.$error"
-                :hint="$t('required')"
+                :hint="t('required')"
               >
                 <template v-slot:prepend>
                   <q-icon name='fas fa-user' size='xs' />
@@ -54,7 +54,7 @@
             <div class='col-12 col-md-6'>
               <q-input
                 v-model='profileData.institution'
-                :label="$t('institution')"
+                :label="t('institution')"
                 lazy-rules
                 class='q-ma-sm'
               >
@@ -66,7 +66,7 @@
             <div class='col-12 col-md-6'>
               <q-input
                 v-model='profileData.city'
-                :label="$t('city')"
+                :label="t('city')"
                 lazy-rules
                 class='q-ma-sm'
               >
@@ -78,7 +78,7 @@
             <div class='col-12 col-md-6'>
               <q-input
                 v-model='profileData.title'
-                :label="$t('title')"
+                :label="t('title')"
                 lazy-rules
                 class='q-ma-sm'
               >
@@ -90,7 +90,7 @@
             <div class='col-12 col-md-6'>
               <q-input
                 v-model='profileData.phone'
-                :label="$t('phone')"
+                :label="t('phone')"
                 lazy-rules
                 class='q-ma-sm'
               >
@@ -105,7 +105,7 @@
                   v-show="hasLocales"
                   v-model="profileData.language"
                   :options="localeOptions"
-                  :label="$t('preferred_language')"
+                  :label="t('preferred_language')"
                   emit-value
                   map-options
                   options-dense
@@ -120,7 +120,7 @@
           <q-btn
             @click='saveUser'
             :disable='disableSaveUser'
-            :label="$t('save')"
+            :label="t('save')"
             type='submit'
             color='primary'
             class="q-mt-md"
@@ -135,118 +135,119 @@
   </q-page>
 </template>
 
-<script>
-import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
+import { useAuthStore } from 'src/stores/auth'
+import { useAccountStore } from 'src/stores/account'
+import { useAdminStore } from 'src/stores/admin'
 
-export default defineComponent({
-  mounted: function () {
-    this.initData()
-  },
-  setup () {
-    const userOptions = ref([])
-    return {
-      v$: useVuelidate(),
-      userOptions,
-      settings
-    }
-  },
-  data () {
-    return {
-      profileData: {
-        firstname: '',
-        lastname: '',
-        institution: '',
-        city: '',
-        title: '',
-        phone: '',
-        language: ''
-      }
-    }
-  },
-  validations: {
-    profileData: {
-      firstname: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      lastname: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      institution: {
-        minLength: minLength(2),
-        maxLength: maxLength(100)
-      },
-      city: {
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      },
-      language: {
-        required
-      }
-    }
-  },
-  computed: {
-    ...mapState({
-      currentUser: state => state.admin.user,
-      user: state => state.auth.payload.user
-    }),
-    disableSaveUser () {
-      return this.v$.profileData.$invalid
+const { t } = useI18n({ useScope: 'global' })
+const authStore = useAuthStore()
+const accountStore = useAccountStore()
+const adminStore = useAdminStore()
+
+// data
+const profileData = ref({
+  firstname: '',
+  lastname: '',
+  institution: '',
+  city: '',
+  title: '',
+  phone: '',
+  language: ''
+})
+
+// validations
+const rules = {
+  profileData: {
+    firstname: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    localeOptions () {
-      return locales.map(loc => {
-        return {
-          value: loc,
-          label: this.$t('locales.' + loc)
-        }
-      })
-        .sort((loc1, loc2) => {
-          if (loc1.label > loc2.label) return 1
-          if (loc1.label < loc2.label) return -1
-          return 0
-        })
+    lastname: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    hasLocales () {
-      return locales.length > 1
-    }
-  },
-  methods: {
-    ...mapActions({
-      getUser: 'admin/getUser',
-      updateProfile: 'account/updateProfile'
-    }),
-    copyUserProfile (user) {
-      return {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        city: user.city,
-        institution: user.institution,
-        title: user.title,
-        phone: user.phone,
-        language: user.language,
-        role: user.role
-      }
+    institution: {
+      minLength: minLength(2),
+      maxLength: maxLength(100)
     },
-    async initData () {
-      await this.getUser({ id: this.user._id })
-      this.profileData = this.copyUserProfile(this.currentUser)
+    city: {
+      minLength: minLength(2),
+      maxLength: maxLength(30)
     },
-    async saveUser () {
-      this.v$.$reset()
-      const toSave = { ...this.profileData }
-      this.updateProfile({
-        profileData: toSave,
-        id: this.user._id
-      })
+    language: {
+      required
     }
   }
+}
+const v$ = useVuelidate(rules, { profileData })
+
+// computed
+const currentUser = computed(() => {
+  return adminStore.user
+})
+
+const user = computed(() => {
+  return authStore.user
+})
+
+const disableSaveUser = computed(() => {
+  return v$.value.profileData.$invalid
+})
+
+const localeOptions = computed(() => {
+  return locales.map(loc => {
+    return {
+      value: loc,
+      label: t('locales.' + loc)
+    }
+  })
+    .sort((loc1, loc2) => {
+      if (loc1.label > loc2.label) return 1
+      if (loc1.label < loc2.label) return -1
+      return 0
+    })
+})
+
+const hasLocales = computed(() => {
+  return locales.length > 1
+})
+
+// methods
+function copyUserProfile(userObj) {
+  return {
+    firstname: userObj.firstname,
+    lastname: userObj.lastname,
+    city: userObj.city,
+    institution: userObj.institution,
+    title: userObj.title,
+    phone: userObj.phone,
+    language: userObj.language,
+    role: userObj.role
+  }
+}
+
+async function initData() {
+  await adminStore.getUser(user.value._id)
+  profileData.value = copyUserProfile(currentUser.value)
+}
+
+async function saveUser() {
+  v$.value.$reset()
+  const toSave = { ...profileData.value }
+  await accountStore.updateProfile(user.value._id, toSave)
+}
+
+// mounted
+onMounted(() => {
+  initData()
 })
 </script>

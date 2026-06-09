@@ -13,7 +13,7 @@
             round
             icon='chevron_left'
             :disable="!selectedItem"
-            :title="$t('form.select_previous')"
+            :title="t('form.select_previous')"
             @click='selectUpItem'>
           </q-btn>
           <q-btn
@@ -24,7 +24,7 @@
             round
             icon='chevron_right'
             :disable="!selectedItem"
-            :title="$t('form.select_next')"
+            :title="t('form.select_next')"
             @click='selectDownItem'>
           </q-btn>
           <q-btn
@@ -35,7 +35,7 @@
             dense
             round
             icon='add'
-            :title="$t('form.add_item_hint')"
+            :title="t('form.add_item_hint')"
             @click='addItem()'>
           </q-btn>
         </div>
@@ -57,7 +57,7 @@
                 <div>
                   <q-icon v-if="prop.node.name === '.'" name="feed"/>
                   <span v-else>{{ prop.node.name }}</span>
-                  <span class="text-caption text-grey q-ml-xs">[{{ $t('form.types.' + (prop.node.type ? prop.node.type : 'form')) }}]</span>
+                  <span class="text-caption text-grey q-ml-xs">[{{ t('form.types.' + (prop.node.type ? prop.node.type : 'form')) }}]</span>
                 </div>
               </div>
             </template>
@@ -73,8 +73,8 @@
           v-if="!isReadOnly"
           color="primary"
           icon="add"
-          :title="$t('form.add_item_hint')"
-          :label="$t('add')"
+          :title="t('form.add_item_hint')"
+          :label="t('add')"
           @click="addItem()"
           class="q-ma-md" />
         </div>
@@ -84,7 +84,7 @@
         <div v-if="selectedItem">
           <div class="row">
             <div class="float-left text-h6 q-mt-sm q-ml-md">
-              <span v-if="isRootSelected">{{ $t('form.types.form') }}</span>
+              <span v-if="isRootSelected">{{ t('form.types.form') }}</span>
               <span v-else>{{ selectedItem.name }}</span>
             </div>
             <div v-if="!isRootSelected" class="q-mt-sm q-ml-md">
@@ -96,7 +96,7 @@
                 dense
                 round
                 icon='arrow_upward'
-                :title="$t('form.move_up')"
+                :title="t('form.move_up')"
                 @click='moveUpItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -107,7 +107,7 @@
                 dense
                 round
                 icon='arrow_downward'
-                :title="$t('form.move_down')"
+                :title="t('form.move_down')"
                 @click='moveDownItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -118,7 +118,7 @@
                 dense
                 round
                 icon='content_copy'
-                :title="$t('form.copy_item')"
+                :title="t('form.copy_item')"
                 @click='copyItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -129,7 +129,7 @@
                 dense
                 round
                 icon='content_cut'
-                :title="$t('form.cut_item')"
+                :title="t('form.cut_item')"
                 @click='cutItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -141,7 +141,7 @@
                 round
                 icon='content_paste'
                 :disable="!canPaste"
-                :title="formItemCopied ? $t('form.paste_copied_item', { name: formItemCopied.name }) : (formItemCut ? $t('form.paste_cut_item', { name: formItemCut.name }) : $t('form.paste_item'))"
+                :title="formItemCopied ? t('form.paste_copied_item', { name: formItemCopied.name }) : (formItemCut ? t('form.paste_cut_item', { name: formItemCut.name }) : t('form.paste_item'))"
                 @click='pasteItem(formItemSelected)'>
               </q-btn>
               <q-btn
@@ -152,7 +152,7 @@
                 dense
                 round
                 icon='delete'
-                :title="$t('form.delete')"
+                :title="t('form.delete')"
                 @click='deleteItem(formItemSelected)'>
               </q-btn>
             </div>
@@ -163,7 +163,7 @@
           </div>
         </div>
         <div v-else class="q-ma-md text-grey-6">
-          {{$t('form.no_item_selected')}}
+          {{t('form.no_item_selected')}}
         </div>
       </template>
 
@@ -171,300 +171,315 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, defineAsyncComponent, ref } from 'vue'
-import AuthMixin from '../../mixins/AuthMixin'
-import FormMixin from '../../mixins/FormMixin'
+<script setup>
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useAuth } from 'src/composables/useAuth'
+import { useFormUtils } from 'src/composables/useFormUtils'
+import FormItem from 'src/components/forms/FormItem.vue'
 
-export default defineComponent({
-  name: 'FormItems',
-  props: ['modelValue'],
-  emits: ['update:modelValue'],
-  components: {
-    FormItem: defineAsyncComponent(() => import('src/components/forms/FormItem.vue'))
+const { t } = useI18n()
+
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
+
+const { isReadOnly } = useAuth()
+const { generateId } = useFormUtils()
+
+// Refs
+const splitterModel = ref(20)
+const formItemSelected = ref(null)
+const selected = ref(null)
+const formItemCut = ref(null)
+const formItemCopied = ref(null)
+
+// Computed
+const value = computed({
+  get () {
+    return props.modelValue
   },
-  mixins: [AuthMixin, FormMixin],
-  setup () {
-    return {
-      splitterModel: ref(20),
-      formItemSelected: ref(null),
-      selected: ref(null),
-      formItemCut: ref(null),
-      formItemCopied: ref(null)
-    }
-  },
-  computed: {
-    value: {
-      get () {
-        return this.modelValue
-      },
-      set (value) {
-        this.$emit('update:modelValue', value)
-      }
-    },
-    i18n () {
-      return this.modelValue.schema.i18n
-    },
-    selectedItem () {
-      return this.formItemSelected
-    },
-    isRootSelected () {
-      return this.formItemSelected && this.formItemSelected.name === '.'
-    },
-    items () {
-      if (this.value && this.value.schema) {
-        return [this.value.schema]
-      }
-      return []
-    },
-    canPaste () {
-      return this.formItemCut !== null || this.formItemCopied !== null
-    }
-  },
-  watch: {
-    selected (newValue, oldValue) {
-      if (newValue === null) {
-        this.selected = oldValue
-      } else {
-        const found = this.findItemAndParent(newValue)
-        this.selectItem(found.item)
-      }
-    }
-  },
-  methods: {
-    selectItem (item) {
-      this.formItemSelected = item
-    },
-    addItem (itemToAdd, name) {
-      const found = this.findItemAndParent(this.selected)
-
-      const makeNewName = function (items) {
-        let i = 1
-        if (items) {
-          let found = items.filter(item => item.name === 'ITEM' + i).pop()
-          while (found) {
-            i++
-            found = items.filter(item => item.name === 'ITEM' + i).pop()
-          }
-        }
-        return 'ITEM' + i
-      }
-
-      const newItem = itemToAdd ? { ...itemToAdd } : {
-        type: 'text',
-        label: 'item_label'
-      }
-      newItem._id = this.generateId()
-      if (found.item !== null && found.item.type === 'group') {
-        newItem.name = name || makeNewName(found.item.items)
-        // add last in the group
-        if (!found.item.items) {
-          found.item.items = [newItem]
-        } else {
-          found.item.items.push(newItem)
-        }
-      } else if (found.parent) {
-        newItem.name = name || makeNewName(found.parent.items)
-        // add after selected one
-        const idx = found.parent.items.indexOf(found.item)
-        found.parent.items.splice(idx + 1, 0, newItem)
-      } else {
-        newItem.name = name || makeNewName(found.item.items)
-        found.item.items.push(newItem)
-      }
-      this.selected = newItem._id
-    },
-    selectUpItem () {
-      if (this.selected === null) {
-        return
-      }
-      const found = this.findItemAndParent(this.selected)
-      if (found.parent === null) {
-        return
-      }
-      const idx = found.parent.items.indexOf(found.item)
-      if (idx === 0 && (!found.parent.type || found.parent.type === 'group')) {
-        this.selected = found.parent._id // case selected item is a group or main form
-      } else if (idx > 0) {
-        const upItem = found.parent.items[idx - 1]
-        if (upItem.type === 'group' && upItem.items && upItem.items.length > 0) {
-          this.selected = upItem.items[upItem.items.length - 1]._id // case selected item is after a group with items
-        } else {
-          this.selected = upItem._id // case regular up item
-        }
-      }
-    },
-    moveUpItem (item) {
-      let found = this.findItemAndParent(item._id)
-      if (found.item === null) {
-        return
-      }
-
-      let idx = found.parent.items.indexOf(item)
-      if (found.parent.type === 'group') {
-        found.parent.items.splice(idx, 1)
-        if (idx === 0) {
-          // case first in a group, move item before the group
-          found = this.findItemAndParent(found.parent._id)
-          idx = found.parent.items.indexOf(found.item)
-          found.parent.items.splice(idx, 0, item)
-        } else {
-          // case move up in the group
-          found.parent.items.splice(idx - 1, 0, item)
-        }
-      } else if (idx > 0) {
-        found.parent.items.splice(idx, 1)
-        const upItem = found.parent.items[idx - 1]
-        if (upItem.type === 'group') {
-          // case up item is a group, then insert it as last item
-          if (!upItem.items) {
-            upItem.items = [item]
-          } else {
-            upItem.items.push(item)
-          }
-        } else {
-          // regular case
-          found.parent.items.splice(idx - 1, 0, item)
-        }
-      }
-    },
-    selectDownItem () {
-      console.log(this.selected)
-      if (this.selected === null) {
-        return
-      }
-
-      let found = this.findItemAndParent(this.selected)
-      if (found.item.type === 'group' && found.item.items && found.item.items.length > 0) {
-        this.selected = found.item.items[0]._id // case selected item is a group with items
-      } else if (found.parent) {
-        let idx = found.parent.items.indexOf(found.item)
-        if (idx === found.parent.items.length - 1 && found.parent.type === 'group') {
-          found = this.findItemAndParent(found.parent._id)
-          idx = found.parent.items.indexOf(found.item) // case selected item is last item in a group
-        }
-        if (idx < found.parent.items.length - 1) {
-          this.selected = found.parent.items[idx + 1]._id // case selected is last in the group
-        }
-      } else if (found.item.items && found.item.items.length > 0) {
-        this.selected = found.item.items[0]._id
-      }
-    },
-    moveDownItem (item) {
-      let found = this.findItemAndParent(item._id)
-      if (found.item === null) {
-        return
-      }
-
-      let idx = found.parent.items.indexOf(item)
-      if (found.parent.type === 'group') {
-        found.parent.items.splice(idx, 1)
-        if (idx === found.parent.items.length) {
-          // case it was last, move it after the parent
-          found = this.findItemAndParent(found.parent._id)
-          idx = found.parent.items.indexOf(found.item)
-        }
-        found.parent.items.splice(idx + 1, 0, item)
-      } else if (idx < found.parent.items.length - 1) {
-        found.parent.items.splice(idx, 1)
-        const downItem = found.parent.items[idx]
-        if (downItem.type === 'group') {
-          if (!downItem.items) {
-            downItem.items = [item]
-          } else {
-            downItem.items.splice(0, 0, item)
-          }
-        } else {
-          // regular case
-          found.parent.items.splice(idx + 1, 0, item)
-        }
-      }
-    },
-    copyItem (item) {
-      this.formItemCopied = item
-      this.formItemCut = null
-    },
-    cutItem (item) {
-      this.formItemCut = item
-      this.formItemCopied = null
-    },
-    pasteItem (item) {
-      if (this.formItemCopied !== null) {
-        this.addItem(this.formItemCopied)
-      } else if (this.formItemCut !== null) {
-        // cannot cut and paste the selected item
-        if (this.selected !== this.formItemCut.name) {
-          const found = this.findItemAndParent(this.formItemCut._id)
-          const idx = found.parent.items.indexOf(this.formItemCut)
-          found.parent.items.splice(idx, 1)
-          this.addItem(this.formItemCut, this.formItemCut.name)
-        }
-      }
-      this.formItemCut = null
-      this.formItemCopied = null
-    },
-    deleteItem (item) {
-      const found = this.findItemAndParent(item._id)
-      if (found.item === null) {
-        return
-      }
-
-      const idx = found.parent.items.indexOf(item)
-      if (idx === 0) {
-        if (found.parent.type === 'group') {
-          this.selected = found.parent.name
-        } else {
-          this.selectDownItem(item)
-        }
-      } else {
-        this.selectUpItem(item)
-      }
-      found.parent.items.splice(idx, 1)
-      if (this.value.schema.items.length === 0) {
-        this.selectItem(this.value.schema)
-      }
-    },
-    isItemSelected (item) {
-      return this.formItemSelected && this.formItemSelected.name === item.name
-    },
-    findItemAndParent (id) {
-      if (id === this.value.schema._id) {
-        return {
-          parent: null,
-          _id: id,
-          item: this.value.schema
-        }
-      }
-      return this.findItemInParent(this.value.schema, id)
-    },
-    findItemInParent (parent, id) {
-      let rval = {
-        parent: parent,
-        _id: id,
-        item: null
-      }
-
-      if (parent.items) {
-        const item = parent.items.filter(it => it._id === id).pop()
-        if (item) {
-          rval.item = item
-          return rval
-        } else {
-          const groups = parent.items.filter(it => it.type === 'group')
-          if (groups) {
-            groups.forEach(group => {
-              if (rval.item === null) {
-                const grval = this.findItemInParent(group, id)
-                if (grval.item !== null) {
-                  rval = grval
-                }
-              }
-            })
-          }
-        }
-      }
-      return rval
-    }
+  set (val) {
+    emit('update:modelValue', val)
   }
 })
+
+const i18n = computed(() => {
+  return props.modelValue.schema.i18n
+})
+
+const selectedItem = computed(() => {
+  return formItemSelected.value
+})
+
+const isRootSelected = computed(() => {
+  return formItemSelected.value && formItemSelected.value.name === '.'
+})
+
+const items = computed(() => {
+  if (value.value && value.value.schema) {
+    return [value.value.schema]
+  }
+  return []
+})
+
+const canPaste = computed(() => {
+  return formItemCut.value !== null || formItemCopied.value !== null
+})
+
+// Watch
+watch(selected, (newValue, oldValue) => {
+  if (newValue === null) {
+    selected.value = oldValue
+  } else {
+    const found = findItemAndParent(newValue)
+    selectItem(found.item)
+  }
+})
+
+// Methods
+function selectItem (item) {
+  formItemSelected.value = item
+}
+
+function addItem (itemToAdd, name) {
+  const found = findItemAndParent(selected.value)
+
+  const makeNewName = function (items) {
+    let i = 1
+    if (items) {
+      let found = items.filter(item => item.name === 'ITEM' + i).pop()
+      while (found) {
+        i++
+        found = items.filter(item => item.name === 'ITEM' + i).pop()
+      }
+    }
+    return 'ITEM' + i
+  }
+
+  const newItem = itemToAdd ? { ...itemToAdd } : {
+    type: 'text',
+    label: 'item_label'
+  }
+  newItem._id = generateId()
+  if (found.item !== null && found.item.type === 'group') {
+    newItem.name = name || makeNewName(found.item.items)
+    // add last in the group
+    if (!found.item.items) {
+      found.item.items = [newItem]
+    } else {
+      found.item.items.push(newItem)
+    }
+  } else if (found.parent) {
+    newItem.name = name || makeNewName(found.parent.items)
+    // add after selected one
+    const idx = found.parent.items.indexOf(found.item)
+    found.parent.items.splice(idx + 1, 0, newItem)
+  } else {
+    newItem.name = name || makeNewName(found.item.items)
+    found.item.items.push(newItem)
+  }
+  selected.value = newItem._id
+}
+
+function selectUpItem () {
+  if (selected.value === null) {
+    return
+  }
+  const found = findItemAndParent(selected.value)
+  if (found.parent === null) {
+    return
+  }
+  const idx = found.parent.items.indexOf(found.item)
+  if (idx === 0 && (!found.parent.type || found.parent.type === 'group')) {
+    selected.value = found.parent._id // case selected item is a group or main form
+  } else if (idx > 0) {
+    const upItem = found.parent.items[idx - 1]
+    if (upItem.type === 'group' && upItem.items && upItem.items.length > 0) {
+      selected.value = upItem.items[upItem.items.length - 1]._id // case selected item is after a group with items
+    } else {
+      selected.value = upItem._id // case regular up item
+    }
+  }
+}
+
+function moveUpItem (item) {
+  let found = findItemAndParent(item._id)
+  if (found.item === null) {
+    return
+  }
+
+  let idx = found.parent.items.indexOf(item)
+  if (found.parent.type === 'group') {
+    found.parent.items.splice(idx, 1)
+    if (idx === 0) {
+      // case first in a group, move item before the group
+      found = findItemAndParent(found.parent._id)
+      idx = found.parent.items.indexOf(found.item)
+      found.parent.items.splice(idx, 0, item)
+    } else {
+      // case move up in the group
+      found.parent.items.splice(idx - 1, 0, item)
+    }
+  } else if (idx > 0) {
+    found.parent.items.splice(idx, 1)
+    const upItem = found.parent.items[idx - 1]
+    if (upItem.type === 'group') {
+      // case up item is a group, then insert it as last item
+      if (!upItem.items) {
+        upItem.items = [item]
+      } else {
+        upItem.items.push(item)
+      }
+    } else {
+      // regular case
+      found.parent.items.splice(idx - 1, 0, item)
+    }
+  }
+}
+
+function selectDownItem () {
+  console.log(selected.value)
+  if (selected.value === null) {
+    return
+  }
+
+  let found = findItemAndParent(selected.value)
+  if (found.item.type === 'group' && found.item.items && found.item.items.length > 0) {
+    selected.value = found.item.items[0]._id // case selected item is a group with items
+  } else if (found.parent) {
+    let idx = found.parent.items.indexOf(found.item)
+    if (idx === found.parent.items.length - 1 && found.parent.type === 'group') {
+      found = findItemAndParent(found.parent._id)
+      idx = found.parent.items.indexOf(found.item) // case selected item is last item in a group
+    }
+    if (idx < found.parent.items.length - 1) {
+      selected.value = found.parent.items[idx + 1]._id // case selected is last in the group
+    }
+  } else if (found.item.items && found.item.items.length > 0) {
+    selected.value = found.item.items[0]._id
+  }
+}
+
+function moveDownItem (item) {
+  let found = findItemAndParent(item._id)
+  if (found.item === null) {
+    return
+  }
+
+  let idx = found.parent.items.indexOf(item)
+  if (found.parent.type === 'group') {
+    found.parent.items.splice(idx, 1)
+    if (idx === found.parent.items.length) {
+      // case it was last, move it after the parent
+      found = findItemAndParent(found.parent._id)
+      idx = found.parent.items.indexOf(found.item)
+    }
+    found.parent.items.splice(idx + 1, 0, item)
+  } else if (idx < found.parent.items.length - 1) {
+    found.parent.items.splice(idx, 1)
+    const downItem = found.parent.items[idx]
+    if (downItem.type === 'group') {
+      if (!downItem.items) {
+        downItem.items = [item]
+      } else {
+        downItem.items.splice(0, 0, item)
+      }
+    } else {
+      // regular case
+      found.parent.items.splice(idx + 1, 0, item)
+    }
+  }
+}
+
+function copyItem (item) {
+  formItemCopied.value = item
+  formItemCut.value = null
+}
+
+function cutItem (item) {
+  formItemCut.value = item
+  formItemCopied.value = null
+}
+
+function pasteItem (item) {
+  if (formItemCopied.value !== null) {
+    addItem(formItemCopied.value)
+  } else if (formItemCut.value !== null) {
+    // cannot cut and paste the selected item
+    if (selected.value !== formItemCut.value.name) {
+      const found = findItemAndParent(formItemCut.value._id)
+      const idx = found.parent.items.indexOf(formItemCut.value)
+      found.parent.items.splice(idx, 1)
+      addItem(formItemCut.value, formItemCut.value.name)
+    }
+  }
+  formItemCut.value = null
+  formItemCopied.value = null
+}
+
+function deleteItem (item) {
+  const found = findItemAndParent(item._id)
+  if (found.item === null) {
+    return
+  }
+
+  const idx = found.parent.items.indexOf(item)
+  if (idx === 0) {
+    if (found.parent.type === 'group') {
+      selected.value = found.parent.name
+    } else {
+      selectDownItem(item)
+    }
+  } else {
+    selectUpItem(item)
+  }
+  found.parent.items.splice(idx, 1)
+  if (value.value.schema.items.length === 0) {
+    selectItem(value.value.schema)
+  }
+}
+
+function isItemSelected (item) {
+  return formItemSelected.value && formItemSelected.value.name === item.name
+}
+
+function findItemAndParent (id) {
+  if (id === value.value.schema._id) {
+    return {
+      parent: null,
+      _id: id,
+      item: value.value.schema
+    }
+  }
+  return findItemInParent(value.value.schema, id)
+}
+
+function findItemInParent (parent, id) {
+  let rval = {
+    parent: parent,
+    _id: id,
+    item: null
+  }
+
+  if (parent.items) {
+    const item = parent.items.filter(it => it._id === id).pop()
+    if (item) {
+      rval.item = item
+      return rval
+    } else {
+      const groups = parent.items.filter(it => it.type === 'group')
+      if (groups) {
+        groups.forEach(group => {
+          if (rval.item === null) {
+            const grval = findItemInParent(group, id)
+            if (grval.item !== null) {
+              rval = grval
+            }
+          }
+        })
+      }
+    }
+  }
+  return rval
+}
 </script>

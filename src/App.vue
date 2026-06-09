@@ -1,31 +1,21 @@
 <template>
   <router-view />
 </template>
-<script>
+<script setup>
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from 'src/stores/auth'
 
-export default defineComponent({
-  name: 'App',
-  watch: {
-    currentUser (newUser, oldUser) {
-      if (newUser === null) {
-        this.$router.push('/login')
-      } else {
-        this.locale = this.$store.state.auth.payload.user.language
-      }
-    }
-  },
-  setup () {
-    const { locale } = useI18n({ useScope: 'global' })
-    return {
-      locale
-    }
-  },
-  computed: {
-    currentUser () {
-      return this.$store.state.auth.user
-    }
+const router = useRouter()
+const authStore = useAuthStore()
+const { locale } = useI18n({ useScope: 'global' })
+
+watch(() => authStore.user, (newUser) => {
+  if (newUser === null) {
+    router.push('/login')
+  } else if (newUser?.language) {
+    locale.value = newUser.language
   }
 })
 </script>

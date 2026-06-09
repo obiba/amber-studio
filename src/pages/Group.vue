@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="groups" :title="$t('groups.title')" to="/groups"/>
+        <q-breadcrumbs-el icon="groups" :title="t('groups.title')" to="/groups"/>
         <q-breadcrumbs-el :label="group.name" />
       </q-breadcrumbs>
     </div>
@@ -16,15 +16,15 @@
               <div class='col-12'>
                 <q-input
                   v-model='groupData.name'
-                  :label="$t('name')"
+                  :label="t('name')"
                   lazy-rules
                   class='q-mb-sm'
-                  @blur="v$.groupData.name.$touch"
-                      :error="v$.groupData.name.$error"
-                      :hint="$t('required')"
+                  @blur="v$.name.$touch"
+                      :error="v$.name.$error"
+                      :hint="t('required')"
                     >
                   <template v-slot:error>
-                    <div v-for="error in v$.groupData.name.$errors">
+                    <div v-for="error in v$.name.$errors">
                       {{error.$message}}
                     </div>
                   </template>
@@ -35,7 +35,7 @@
               <div class='col-12'>
                 <q-input
                   v-model='groupData.description'
-                  :label="$t('description')"
+                  :label="t('description')"
                   autogrow
                   lazy-rules
                   class='q-mb-sm'
@@ -46,11 +46,11 @@
 
           <div class="col-12 col-md-6 q-pa-sm">
             <div>
-              {{ $t('members')}}
+              {{ t('members')}}
             </div>
             <q-select
-              :label="$t('group.search_users')"
-              :hint="$t('group.search_users_hint')"
+              :label="t('group.search_users')"
+              :hint="t('group.search_users_hint')"
               :options="userOptions"
               :loading="userOptionsLoading"
               v-model="selectedUserOptions"
@@ -88,7 +88,7 @@
         <q-btn
           @click='saveGroup'
           :disable='disableSaveGroup'
-          :label="$t('save')"
+          :label="t('save')"
           type='submit'
           color='primary'
           class="q-ml-sm q-mt-md"
@@ -102,121 +102,107 @@
   </q-page>
 </template>
 
-<script>
-import { mapState, mapActions } from 'vuex'
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
+import { useAdminStore } from 'src/stores/admin'
 
-export default defineComponent({
-  mounted: function () {
-    this.initData()
-  },
-  setup () {
-    const userOptions = ref([])
-    return {
-      v$: useVuelidate(),
-      userOptions,
-      settings
-    }
-  },
-  data () {
-    return {
-      groupData: {
-        name: '',
-        description: '',
-        users: []
-      },
-      selectedUserOptions: '',
-      userOptionsLoading: false
-    }
-  },
-  validations: {
-    groupData: {
-      name: {
-        required,
-        minLength: minLength(2),
-        maxLength: maxLength(30)
-      }
-    }
-  },
-  computed: {
-    ...mapState({
-      filteredUsers: state => state.admin.users,
-      group: state => state.admin.group,
-      groupUsers: state => state.admin.groupUsers
-    }),
-    currentGroup () {
-      return this.$store.state.admin.group
-    },
-    disableSaveGroup () {
-      return this.v$.groupData.$invalid
-    }
-  },
-  methods: {
-    ...mapActions({
-      getUsers: 'admin/getUsers',
-      getGroup: 'admin/getGroup',
-      getGroupUsers: 'admin/getGroupUsers',
-      updateGroup: 'admin/updateGroup'
-    }),
-    async initData () {
-      await this.getGroup({ id: this.$route.params.id })
-      this.groupData = { ...this.group }
-      await this.getGroupUsers({ group: this.group })
-      this.groupData.users = [...this.groupUsers]
-    },
-    async saveGroup () {
-      this.v$.$reset()
-      const toSave = { ...this.groupData }
-      toSave.users = this.groupData.users.map(u => u._id)
-      this.updateGroup({
-        group: toSave
-      })
-    },
-    filterUserOptions (val, update, abort) {
-      const filter = val.trim()
-      if (filter.length < 2) {
-        // not enough type ahead
-        update(() => {
-          this.userOptions = []
-        })
-        return
-      }
-      this.userOptionsLoading = true
-      this.getUsers({
-        paginationOpts: {
-          sortBy: 'email',
-          rowsPerPage: 5,
-          page: 1,
-          descending: -1
-        },
-        filter: filter
-      }).then(() => {
-        update(() => {
-          this.userOptions = this.filteredUsers.map(u => {
-            return {
-              label: u.email,
-              value: u._id,
-              object: u
-            }
-          })
-          this.userOptionsLoading = false
-        })
-      })
-    },
-    addUserOption (value) {
-      // add value if not present
-      if (this.groupData.users.filter(u => u.email === value.object.email).length === 0) {
-        this.groupData.users.push(value.object)
-      }
-      // FIXME: does not clear the select
-      this.selectedUserOptions = ''
-    },
-    removeUser (user) {
-      this.groupData.users = this.groupData.users.filter(u => u.email !== user.email)
-    }
+const { t } = useI18n()
+
+const route = useRoute()
+const adminStore = useAdminStore()
+
+// Reactive state
+const userOptions = ref([])
+const groupData = ref({
+  name: '',
+  description: '',
+  users: []
+})
+const selectedUserOptions = ref('')
+const userOptionsLoading = ref(false)
+
+// Validation rules
+const rules = {
+  name: {
+    required,
+    minLength: minLength(2),
+    maxLength: maxLength(30)
   }
+}
+
+const v$ = useVuelidate(rules, groupData)
+
+// Computed
+const filteredUsers = computed(() => adminStore.users)
+const group = computed(() => adminStore.group)
+const groupUsers = computed(() => adminStore.groupUsers)
+const currentGroup = computed(() => adminStore.group)
+const disableSaveGroup = computed(() => v$.value.$invalid)
+
+// Methods
+async function initData() {
+  await adminStore.getGroup(route.params.id)
+  groupData.value = { ...group.value }
+  await adminStore.getGroupUsers(group.value)
+  groupData.value.users = [...groupUsers.value]
+}
+
+async function saveGroup() {
+  v$.value.$reset()
+  const toSave = { ...groupData.value }
+  toSave.users = groupData.value.users.map(u => u._id)
+  await adminStore.updateGroup(toSave)
+}
+
+function filterUserOptions(val, update, abort) {
+  const filter = val.trim()
+  if (filter.length < 2) {
+    // not enough type ahead
+    update(() => {
+      userOptions.value = []
+    })
+    return
+  }
+  userOptionsLoading.value = true
+  adminStore.getUsers({
+    sortBy: 'email',
+    rowsPerPage: 5,
+    page: 1,
+    descending: -1
+  }, filter).then(() => {
+    update(() => {
+      userOptions.value = filteredUsers.value.map(u => {
+        return {
+          label: u.email,
+          value: u._id,
+          object: u
+        }
+      })
+      userOptionsLoading.value = false
+    })
+  })
+}
+
+function addUserOption(value) {
+  // add value if not present
+  if (groupData.value.users.filter(u => u.email === value.object.email).length === 0) {
+    groupData.value.users.push(value.object)
+  }
+  // FIXME: does not clear the select
+  selectedUserOptions.value = ''
+}
+
+function removeUser(user) {
+  groupData.value.users = groupData.value.users.filter(u => u.email !== user.email)
+}
+
+// Lifecycle
+onMounted(() => {
+  initData()
 })
 </script>

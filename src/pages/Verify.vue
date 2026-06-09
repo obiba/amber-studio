@@ -11,20 +11,20 @@
               <q-card-section>
                 <div class="text-center q-pt-sm">
                   <div class="col text-subtitle ellipsis">
-                    {{$t('verify.title')}}
+                    {{t('verify.title')}}
                   </div>
                 </div>
               </q-card-section>
               <q-card-section class="row justify-center items-center content-center">
                 <div class="col-md-8 q-pa-lg text-center">
-                  <span v-if="success">{{$t('verify.success')}}</span>
-                  <span v-else-if="success === undefined">{{$t('verify.pending')}}</span>
-                  <span v-else>{{$t('verify.failure')}}</span>
+                  <span v-if="success">{{t('verify.success')}}</span>
+                  <span v-else-if="success === undefined">{{t('verify.pending')}}</span>
+                  <span v-else>{{t('verify.failure')}}</span>
                 </div>
               </q-card-section>
               <q-card-section v-if="success !== undefined" class="row justify-center items-center content-center">
                 <q-btn
-                  :label="$t('verify.login')"
+                  :label="t('verify.login')"
                   to="/login"
                   color="primary"
                   class="text-bold"/>
@@ -37,64 +37,60 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import userService from '../services/user'
 import { Notify } from 'quasar'
 import { settings } from '../boot/settings'
 
-import Banner from 'components/Banner'
+import Banner from 'src/components/Banner.vue'
 
-export default defineComponent({
-  components: { Banner },
-  setup () {
-    return {
-      settings
-    }
-  },
-  data () {
-    return {
-      success: undefined
-    }
-  },
-  mounted () {
-    this.verifyAccount()
-  },
-  methods: {
-    async verifyAccount () {
-      const token = this.$route.query.token
-      let result
-      if (token) {
-        result = await userService.verifyAccount(token)
-          .catch(err => {
-            if (err.response) {
-              this.success = false
-              Notify.create({
-                message: this.$t('verify.failure'),
-                color: 'negative',
-                icon: 'fas fa-times'
-              })
-            }
-          })
-        this.success = result && result.status === 201
-        if (this.success) {
+const route = useRoute()
+const { t } = useI18n({ useScope: 'global' })
+
+// data
+const success = ref(undefined)
+
+// methods
+async function verifyAccount() {
+  const token = route.query.token
+  let result
+  if (token) {
+    result = await userService.verifyAccount(token)
+      .catch(err => {
+        if (err.response) {
+          success.value = false
           Notify.create({
-            message: this.$t('verify.success'),
-            color: 'positive',
-            icon: 'fas fa-check'
+            message: t('verify.failure'),
+            color: 'negative',
+            icon: 'fas fa-times'
           })
-        } else {
-          this.success = false
         }
-      } else {
-        this.success = false
-        Notify.create({
-          message: this.$t('verify.bad_link'),
-          color: 'negative',
-          icon: 'fas fa-times'
-        })
-      }
+      })
+    success.value = result && result.status === 201
+    if (success.value) {
+      Notify.create({
+        message: t('verify.success'),
+        color: 'positive',
+        icon: 'fas fa-check'
+      })
+    } else {
+      success.value = false
     }
+  } else {
+    success.value = false
+    Notify.create({
+      message: t('verify.bad_link'),
+      color: 'negative',
+      icon: 'fas fa-times'
+    })
   }
+}
+
+// mounted
+onMounted(() => {
+  verifyAccount()
 })
 </script>

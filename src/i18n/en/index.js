@@ -245,7 +245,7 @@ export default {
     title: 'Datasets'
   },
   main: {
-    brand: 'Amber Studio',
+    brand: 'Amber',
     organisation: 'OBiBa',
     profile: 'Profile',
     my_profile: 'My profile',

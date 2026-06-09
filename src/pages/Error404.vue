@@ -6,7 +6,7 @@
       </div>
 
       <div class="text-h2" style="opacity:.4">
-        {{ $t('nothing_here') }}
+        {{ t('nothing_here') }}
       </div>
 
       <q-btn
@@ -15,23 +15,16 @@
         text-color="blue"
         unelevated
         to="/"
-        :label="$t('go_home')"
+        :label="t('go_home')"
         no-caps
       />
     </div>
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { useI18n } from 'vue-i18n'
 import { settings } from '../boot/settings'
 
-export default defineComponent({
-  name: 'Error404',
-  setup () {
-    return {
-      settings: settings
-    }
-  }
-})
+const { t } = useI18n()
 </script>
