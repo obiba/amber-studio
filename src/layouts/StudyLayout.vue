@@ -69,15 +69,13 @@
       bordered
       :class="settings.theme.drawer"
     >
+      <h6 class="q-mt-none q-mb-none q-pa-md">
+        <q-btn flat round dense icon="arrow_back" to="/studies" />
+        <span class="q-ml-md">
+          {{ study.name }}
+        </span>
+      </h6>
       <q-list>
-        <q-item to="/studies">
-          <q-item-section avatar>
-            <q-icon name="arrow_back"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>{{t('studies.title')}}</q-item-label>
-          </q-item-section>
-        </q-item>
 
         <q-item :to="'/study/' + studyId">
           <q-item-section avatar>

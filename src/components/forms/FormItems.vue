@@ -270,11 +270,17 @@ function addItem (itemToAdd, name) {
       found.item.items.push(newItem)
     }
   } else if (found.parent) {
+    if (!found.parent.items) {
+      found.parent.items = []
+    }
     newItem.name = name || makeNewName(found.parent.items)
     // add after selected one
     const idx = found.parent.items.indexOf(found.item)
     found.parent.items.splice(idx + 1, 0, newItem)
   } else {
+    if (!found.item.items) {
+      found.item.items = []
+    }
     newItem.name = name || makeNewName(found.item.items)
     found.item.items.push(newItem)
   }

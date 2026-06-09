@@ -31,7 +31,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div v-if="studyForm.description" class="row q-mb-md">
         <div class="text-caption text-secondary col-12">
           {{ studyForm.description }}
         </div>
