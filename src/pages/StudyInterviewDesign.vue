@@ -44,50 +44,43 @@
         </div>
       </div>
     </div>
-    <q-card class="q-ma-md">
 
-      <q-card-section v-if="!isReadOnly">
-        <div class="text-h5 q-mb-md">{{ t('interview.design') }}</div>
-        <q-separator/>
-        <q-splitter
-          v-model="splitterModel"
-        >
-          <template v-slot:before>
-            <q-tabs
-              v-model="innerTab"
-              vertical
-              class="text-teal"
-            >
-              <q-tab name="steps" icon="category" :label="t('interview.steps')" />
-              <q-tab name="translations" icon="translate" :label="t('form.translations')" />
-            </q-tabs>
-          </template>
-          <template v-slot:after>
-            <q-tab-panels
-              v-model="innerTab"
-            >
-              <q-tab-panel name="steps" class="q-pa-none">
-                <interview-design-steps v-model="interviewDesignData"/>
-              </q-tab-panel>
+    <div class="q-ma-md" v-if="!isReadOnly">
+      <div class="text-h5 q-mb-md">{{ t('interview.design') }}</div>
+      <q-separator/>
+      <q-splitter
+        v-model="splitterModel"
+      >
+        <template v-slot:before>
+          <q-tabs
+            v-model="innerTab"
+            vertical
+            class="text-teal"
+          >
+            <q-tab name="steps" icon="category" :label="t('interview.steps')" />
+            <q-tab name="translations" icon="translate" :label="t('form.translations')" />
+          </q-tabs>
+        </template>
+        <template v-slot:after>
+          <q-tab-panels
+            v-model="innerTab"
+          >
+            <q-tab-panel name="steps" class="q-pa-none">
+              <interview-design-steps v-model="interviewDesignData"/>
+            </q-tab-panel>
 
-              <q-tab-panel name="translations">
-                <interview-design-translations v-model="interviewDesignData"/>
-              </q-tab-panel>
-            </q-tab-panels>
-          </template>
-        </q-splitter>
-      </q-card-section>
+            <q-tab-panel name="translations">
+              <interview-design-translations v-model="interviewDesignData"/>
+            </q-tab-panel>
+          </q-tab-panels>
+        </template>
+      </q-splitter>
+    </div>
 
-    </q-card>
-
-    <q-card class="q-ma-md">
-
-      <q-card-section>
-        <div class="text-h5 q-mb-md">{{ t('interview.campaigns') }}</div>
-        <campaigns/>
-      </q-card-section>
-
-    </q-card>
+    <div class="q-ma-md">
+      <div class="text-h5 q-mb-md">{{ t('interview.campaigns') }}</div>
+      <campaigns/>
+    </div>
 
     <q-dialog v-model='showEditDefinition' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
@@ -143,7 +136,8 @@
               class='q-mb-sm'/>
            </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='save(true)'

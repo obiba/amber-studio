@@ -3,7 +3,7 @@ export default {
     title: 'Compte utilisateur'
   },
   login: {
-    brand: 'Amber Studio',
+    brand: 'Amber',
     brand_caption: 'Système de rapport de cas et de gestion d\'entrevues',
     title: 'Identifiez vous pour commencer une session',
     submit: 'Connexion',

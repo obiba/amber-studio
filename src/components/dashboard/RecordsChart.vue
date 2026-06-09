@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-mb-sm">
+  <q-card flat bordered class="q-mb-sm">
     <div class="q-pa-sm">
       <div class="text-caption text-center text-weight-bold">{{ title }}</div>
       <div ref="chart" :id="chartId" :style="`height: ${height}`"></div>

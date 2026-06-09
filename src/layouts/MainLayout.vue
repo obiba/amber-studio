@@ -10,11 +10,9 @@
           icon="menu"
           aria-label="Menu"
         />
-        <q-toolbar-title>
-          <q-btn flat to="/" no-caps size="lg">
-            {{t('main.brand')}}
-          </q-btn>
-        </q-toolbar-title>
+        <q-btn flat to="/" no-caps size="lg">
+          {{t('main.brand')}}
+        </q-btn>
         <q-space/>
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn round dense flat :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
@@ -79,9 +77,9 @@
           </q-item-section>
         </q-item>
 
-        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{t('main.content')}}</q-item-label>
+        <q-item-label v-if="!isGuest" header class="text-weight-bolder">{{t('main.content')}}</q-item-label>
 
-        <q-item v-if="!isGuest" to="/studies" active-class="q-item-no-link-highlighting">
+        <q-item v-if="!isGuest" to="/studies">
           <q-item-section avatar>
             <q-icon name="inventory_2"/>
           </q-item-section>
@@ -90,7 +88,7 @@
           </q-item-section>
         </q-item>
 
-        <!--q-item v-if="isAdministrator || isManager" to="/datasets" active-class="q-item-no-link-highlighting">
+        <!--q-item v-if="isAdministrator || isManager" to="/datasets">
           <q-item-section avatar>
             <q-icon name="storage"/>
           </q-item-section>
@@ -99,9 +97,9 @@
           </q-item-section>
         </q-item-->
 
-        <q-item-label v-if="isAdministrator" header class="text-weight-bolder text-white">{{t('main.administration')}}</q-item-label>
+        <q-item-label v-if="isAdministrator" header class="text-weight-bolder">{{t('main.administration')}}</q-item-label>
 
-        <q-item v-if="isAdministrator" to="/users" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdministrator" to="/users">
           <q-item-section avatar>
             <q-icon name="person"/>
           </q-item-section>
@@ -110,7 +108,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="isAdministrator" to="/groups" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdministrator" to="/groups">
           <q-item-section avatar>
             <q-icon name="groups"/>
           </q-item-section>
@@ -119,7 +117,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="isAdministrator" to="/tasks" active-class="q-item-no-link-highlighting">
+        <q-item v-if="isAdministrator" to="/tasks">
           <q-item-section avatar>
             <q-icon name="tasks" class="q-ml-sm"/>
           </q-item-section>
@@ -128,7 +126,7 @@
           </q-item-section>
         </q-item>
 
-        <!--q-item v-if="isAdministrator" to="/settings" active-class="q-item-no-link-highlighting">
+        <!--q-item v-if="isAdministrator" to="/settings">
           <q-item-section avatar>
             <q-icon name="settings"/>
           </q-item-section>

@@ -4,6 +4,7 @@
       v-if="!isReadOnly"
       color="primary"
       icon="add"
+      size="sm"
       :label="t('interview.add_campaign_hint')"
       @click="onAddCampaign()"/>
 
@@ -48,32 +49,35 @@
       <q-tab-panels v-model="tab">
 
         <q-tab-panel v-for="campaign in campaigns" :key="campaign._id" :name="campaign.name" class="q-pa-none">
-          <div v-if="!isReadOnly" class="q-mt-md q-mb-md">
-            <q-btn
-              color="secondary"
-              size="12px"
-              flat
-              dense
-              round
-              icon="edit"
-              :title="t('interview.edit_campaign_hint')"
-              @click='onEditCampaign(campaign)'>
-            </q-btn>
-            <q-btn
-              size="12px"
-              flat
-              dense
-              round
-              color="negative"
-              icon="delete_outline"
-              :title="t('interview.delete_campaign_hint')"
-              @click='onConfirmDeleteCampaign(campaign)'>
-            </q-btn>
+          <div class="row q-my-md">
+            <div class="text-h6">{{ campaign.name }}</div>
+            <div v-if="!isReadOnly" class="on-right">
+              <q-btn
+                color="secondary"
+                size="12px"
+                flat
+                dense
+                round
+                icon="edit"
+                :title="t('interview.edit_campaign_hint')"
+                @click='onEditCampaign(campaign)'>
+              </q-btn>
+              <q-btn
+                size="12px"
+                flat
+                dense
+                round
+                color="negative"
+                icon="delete_outline"
+                :title="t('interview.delete_campaign_hint')"
+                @click='onConfirmDeleteCampaign(campaign)'>
+              </q-btn>
+            </div>
           </div>
           <div class="q-mt-md">
             <div class="row q-col-gutter-lg">
               <div class="col-12 col-md-6">
-                <p class="text-weight-bold q-mb-sm">{{ t('interview.definition') }}</p>
+                <div class="text-weight-bold q-mb-sm">{{ t('interview.definition') }}</div>
                 <q-list bordered separator>
                   <q-item>
                     <q-item-section>
@@ -169,7 +173,7 @@
                     </q-item-section>
                   </q-item>
                 </q-list>
-                <p class="text-weight-bold q-mt-md q-mb-sm">{{ t('interview.campaign_security') }}</p>
+                <div class="text-weight-bold q-mt-md q-mb-sm">{{ t('interview.campaign_security') }}</div>
                 <q-list bordered separator>
                   <q-item>
                     <q-item-section :title="t('interview.campaign_with_password_hint')">
@@ -180,7 +184,7 @@
                 </q-list>
               </div>
               <div class="col-12 col-md-6">
-                <p class="text-weight-bold q-mb-sm">{{ t('interview.schedule') }}</p>
+                <div class="text-weight-bold q-mb-sm">{{ t('interview.schedule') }}</div>
                 <q-list bordered separator>
                   <q-item>
                     <q-item-section :title="t('interview.campaign_valid_from_hint')">
@@ -218,7 +222,7 @@
                     <q-item-section />
                   </q-item>
                 </q-list>
-                <p class="text-weight-bold q-mt-md q-mb-sm">{{ t('interview.campaign_walkin_participants') }}</p>
+                <div class="text-weight-bold q-mt-md q-mb-sm">{{ t('interview.campaign_walkin_participants') }}</div>
                 <q-list bordered separator>
                   <q-item>
                     <q-item-section :title="t('interview.campaign_with_walkin_participants_hint')">
@@ -252,7 +256,7 @@
             </div>
           </div>
           <div class="q-mt-md">
-            <div class="text-h6 text-capitalize">{{ t('participants') }}</div>
+            <div class="text-bold text-capitalize">{{ t('participants') }}</div>
             <participants :campaign="campaign"/>
           </div>
         </q-tab-panel>
@@ -348,7 +352,8 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='addCampaign'
@@ -617,7 +622,8 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='editCampaign'
@@ -645,7 +651,8 @@
             {{ campaignData.name }}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='removeCampaign'

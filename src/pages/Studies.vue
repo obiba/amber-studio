@@ -2,16 +2,17 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="inventory_2" :label="t('studies.title')" />
+        <q-breadcrumbs-el icon="home" to="/" />
+        <q-breadcrumbs-el :label="t('studies.title')" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
 
     <div v-cloak>
-      <q-card class="q-ma-md"
-            v-if="studies && studies.length > 0">
-        <q-card-section>
+      
           <q-table
+            class="q-ma-md"
+            v-if="studies && studies.length > 0"
             flat
             :rows="studies"
             :columns="columns"
@@ -27,6 +28,7 @@
                 v-if="!isReadOnly"
                 color="primary"
                 icon="add"
+                size="sm"
                 :title="t('studies.add_study_hint')"
                 @click="createStudy()"
                 class="q-mr-md" />
@@ -37,6 +39,7 @@
                 round
                 color="negative"
                 icon="delete_outline"
+                size="sm"
                 :disable="selected.length === 0"
                 :title="t('studies.delete_studies_hint')"
                 @click="confirmDeleteStudies()" />
@@ -94,8 +97,6 @@
               </q-td>
             </template>
           </q-table>
-        </q-card-section>
-      </q-card>
 
       <q-btn
         v-else
@@ -146,7 +147,8 @@
             />
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudy'
@@ -174,7 +176,8 @@
             {{selectedStudy.name}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudy'
@@ -201,7 +204,8 @@
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudies'

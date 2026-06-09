@@ -2,99 +2,99 @@
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
       <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="groups" :label="t('groups.title')" />
+        <q-breadcrumbs-el icon="home" to="/" />
+        <q-breadcrumbs-el :label="t('groups.title')" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
 
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <q-table
+    <q-table
+        class="q-ma-md"
+        flat
+        :rows='groups'
+        :columns='columns'
+        :filter='filter'
+        row-key='name'
+        selection="multiple"
+        v-model:selected="selected"
+        v-model:pagination='paginationOpts'
+        @request='getTableGroups'
+      >
+      <template v-slot:top>
+        <q-btn
+          color="primary"
+          icon="add"
+          :title="t('groups.add_group_hint')"
+          size="sm"
+          @click="createGroup()"
+          class="q-mr-md" />
+        <q-btn
+          class="q-mr-md"
+          flat
+          round
+          color="negative"
+          icon="delete_outline"
+          size="sm"
+          :disable="selected.length === 0"
+          :title="t('groups.delete_groups_hint')"
+          @click="confirmDeleteGroups()" />
+        <q-space />
+        <q-input
+          dense
+          debounce="300"
+          v-model="filter"
+          :placeholder="t('search')"
+          :title="t('groups.search_hint')">
+          <template v-slot:append>
+            <q-icon name="search"/>
+          </template>
+        </q-input>
+      </template>
+      <template v-slot:body-cell-name='props'>
+        <q-td :props='props'>
+          <router-link :to="'/group/' + props.row._id">{{ props.row.name }}</router-link>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-description='props'>
+        <q-td :props='props'>
+          <div style="white-space: normal">
+            {{ makeEllipsis(props.row.description, 100) }}
+          </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-members='props'>
+        <q-td :props='props'>
+          <q-badge v-if="props.row.users.length>0" color="info">
+            {{ props.row.users.length }}
+          </q-badge>
+          <span v-else>0</span>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-action='props'>
+        <q-td :props='props'>
+          <q-btn
+            color="secondary"
+            size="12px"
             flat
-            :rows='groups'
-            :columns='columns'
-            :filter='filter'
-            row-key='name'
-            selection="multiple"
-            v-model:selected="selected"
-            v-model:pagination='paginationOpts'
-            @request='getTableGroups'
-          >
-          <template v-slot:top>
-            <q-btn
-              color="primary"
-              icon="add"
-              :title="t('groups.add_group_hint')"
-              @click="createGroup()"
-              class="q-mr-md" />
-            <q-btn
-              class="q-mr-md"
-              flat
-              round
-              color="negative"
-              icon="delete_outline"
-              :disable="selected.length === 0"
-              :title="t('groups.delete_groups_hint')"
-              @click="confirmDeleteGroups()" />
-            <q-space />
-            <q-input
-              dense
-              debounce="300"
-              v-model="filter"
-              :placeholder="t('search')"
-              :title="t('groups.search_hint')">
-              <template v-slot:append>
-                <q-icon name="search"/>
-              </template>
-            </q-input>
-          </template>
-          <template v-slot:body-cell-name='props'>
-            <q-td :props='props'>
-              <router-link :to="'/group/' + props.row._id">{{ props.row.name }}</router-link>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-description='props'>
-            <q-td :props='props'>
-              <div style="white-space: normal">
-                {{ makeEllipsis(props.row.description, 100) }}
-              </div>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-members='props'>
-            <q-td :props='props'>
-              <q-badge v-if="props.row.users.length>0" color="info">
-                {{ props.row.users.length }}
-              </q-badge>
-              <span v-else>0</span>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-action='props'>
-            <q-td :props='props'>
-              <q-btn
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('groups.edit_group_hint')"
-                icon='edit'
-                :to="'/group/' + props.row._id">
-              </q-btn>
-              <q-btn
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('groups.delete_group_hint')"
-                icon='delete'
-                @click='confirmDeleteGroup(props.row)'>
-              </q-btn>
-            </q-td>
-          </template>
-        </q-table>
-      </q-card-section>
-    </q-card>
+            dense
+            round
+            :title="t('groups.edit_group_hint')"
+            icon='edit'
+            :to="'/group/' + props.row._id">
+          </q-btn>
+          <q-btn
+            color="secondary"
+            size="12px"
+            flat
+            dense
+            round
+            :title="t('groups.delete_group_hint')"
+            icon='delete'
+            @click='confirmDeleteGroup(props.row)'>
+          </q-btn>
+        </q-td>
+      </template>
+    </q-table>
 
     <q-dialog v-model='showCreateGroup' persistent>
       <q-card>
@@ -126,7 +126,8 @@
             />
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveGroup'
@@ -154,7 +155,8 @@
             {{selectedGroup.name}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteGroup'
@@ -181,7 +183,8 @@
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteGroups'

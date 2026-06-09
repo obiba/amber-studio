@@ -2,7 +2,7 @@
   <q-page>
 
     <div class="q-ma-md">
-      <div class="text-h5 q-mb-md">{{t('study.interview_designs')}}</div>
+      <div class="text-h5 q-mb-sm">{{t('study.interview_designs')}}</div>
       <div class="note note-info text-body2 text-secondary">
         <span v-html="t('study.interview_designs_hint')"/>
       </div>

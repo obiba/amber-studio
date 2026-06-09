@@ -19,6 +19,7 @@
           color="primary"
           icon="add"
           :title="t('interview.add_participant_hint')"
+          size="sm"
           @click="onAddParticipant()"
           class="q-mr-md" />
         <q-btn
@@ -27,6 +28,7 @@
           round
           color="negative"
           icon="delete_outline"
+          size="sm"
           :disable="selected.length === 0"
           :title="t('interview.delete_participants_hint')"
           @click="onConfirmDeleteMultiple()" />
@@ -36,7 +38,8 @@
           :title="t('import')"
           icon="file_upload"
           flat
-          round>
+          round
+          size="sm">
           <template v-slot:loading>
           <q-spinner-facebook />
           </template>
@@ -44,6 +47,7 @@
         <q-btn-dropdown
           flat
           icon="download"
+          size="sm"
           :disable="!hasParticipants"
           :title="t('export')">
           <q-list>
@@ -284,7 +288,8 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='addParticipant'
@@ -392,7 +397,8 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='editParticipant'
@@ -436,7 +442,8 @@
             :label="t('delimiter')"
             :hint="t('delimiter_hint')" />
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='importParticipants'
@@ -461,7 +468,8 @@
             <pre>{{ participantDataStr }}</pre>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
@@ -477,7 +485,8 @@
             <q-chip>{{ participantData.code }}</q-chip>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteParticipant'
@@ -504,7 +513,8 @@
             <q-chip v-for="p in selected" :key="p.code">{{ p.code }}</q-chip>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteParticipants'

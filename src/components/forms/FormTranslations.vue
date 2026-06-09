@@ -160,7 +160,8 @@
             </q-input>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='addTranslation'
@@ -185,7 +186,8 @@
             {{t('form.tr_merge_confirm')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='mergeObservedKeys'
@@ -209,7 +211,8 @@
             {{t('form.tr_clean_confirm')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='cleanKeys'
@@ -233,7 +236,8 @@
             {{t('form.tr_delete_selected_confirm')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteSelected'
@@ -260,7 +264,8 @@
             <span class="text-weight-bold text-uppercase">{{localeToDelete}}</span>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteLocale'
@@ -296,7 +301,8 @@
             </template>
           </q-file>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='importTranslations'

@@ -1,242 +1,241 @@
 <template>
   <div v-cloak>
-
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <div class="q-ml-md q-mr-d">
-          <q-btn-dropdown
-              class="q-mr-md"
-              color="primary"
-              icon="download"
-              :title="t('study.export_interviews_hint')"
-              :disable="interviews.length === 0">
-              <q-list>
-                <q-item clickable v-close-popup @click="onExport('csv')">
-                  <q-item-section>
-                    <q-item-label>CSV</q-item-label>
-                  </q-item-section>
-                </q-item>
-                <q-item clickable v-close-popup @click="onExport('zip')">
-                  <q-item-section>
-                    <q-item-label>CSV (zip)</q-item-label>
-                  </q-item-section>
-                </q-item>
-                <q-item clickable v-close-popup @click="onExport('xlsx')">
-                  <q-item-section>
-                    <q-item-label>Excel</q-item-label>
-                  </q-item-section>
-                </q-item>
-                <q-item clickable v-close-popup @click="onExport('json')">
-                  <q-item-section>
-                    <q-item-label>JSON</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
-            <q-btn
-              v-if="!isReadOnly"
-              class="q-mr-md"
-              flat
-              round
-              color="negative"
-              icon="delete_outline"
-              :disable="selected.length === 0"
-              :title="t('study.delete_interviews_hint')"
-              @click="onConfirmDeleteMultiple()" />
-        </div>
-        <q-table
-          flat
-          :rows="interviews"
-          :columns="columns"
-          :filter="filter"
-          row-key="_id"
-          :selection="isReadOnly ? 'none' : 'multiple'"
-          v-model:selected="selected"
-          v-model:pagination='paginationOpts'
-          @request='getTableInterviews'
-        >
-          <template v-slot:top>
-            <q-select
-              class="q-mr-md"
-              v-model="interviewDesignFilter"
-              :options="interviewDesignOptions"
-              emit-value
-              map-options
-              :label="t('study.interview_design')"
-              style="min-width: 150px"
-              @update:model-value="onFilter" />
-            <q-select
-              class="q-mr-md"
-              v-model="campaignFilter"
-              :options="campaignOptions"
-              emit-value
-              map-options
-              :label="t('study.campaign')"
-              style="min-width: 150px"
-              @update:model-value="onFilter" />
-            <q-select
-              class="q-mr-md"
-              v-model="stateFilter"
-              :options="stateOptions"
-              emit-value
-              map-options
-              :label="t('state')"
-              style="min-width: 150px"
-              @update:model-value="onFilter" />
-            <q-select
-              class="q-mr-md"
-              v-model="eligibleFilter"
-              :options="eligibleOptions"
-              emit-value
-              map-options
-              :label="t('interview.participant_eligibility')"
-              style="min-width: 150px"
-              @update:model-value="onFilter"/>
-            <div class="q-mr-md" style="max-width: 250px">
-              <q-input filled v-model="fromDate" :placeholder="t('from')">
-                <template v-slot:prepend>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="fromDate" mask="YYYY-MM-DD HH:mm">
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-time v-model="fromDate" mask="YYYY-MM-DD HH:mm" format24h>
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-                <template v-slot:append>
-                  <q-icon name="close" class="cursor-pointer" @click="onClearDate('from')">
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-            <div class="q-mr-md" style="max-width: 250px">
-              <q-input filled v-model="toDate" :placeholder="t('to')">
-                <template v-slot:prepend>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="toDate" mask="YYYY-MM-DD HH:mm">
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                  <q-icon name="access_time" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-time v-model="toDate" mask="YYYY-MM-DD HH:mm" format24h>
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup :label="t('close')" color="primary" flat />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-                <template v-slot:append>
-                  <q-icon name="close" class="cursor-pointer" @click="onClearDate('to')">
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-            <q-space />
-            <q-input
-              dense
-              debounce="300"
-              v-model="filter"
-              :placeholder="t('search')"
-              :title="t('study.search_interview_hint')">
+    <div class="q-ma-md">
+      <div class="q-ml-md q-mr-d">
+        <q-btn-dropdown
+            class="q-mr-md"
+            color="primary"
+            icon="download"
+            size="sm"
+            :title="t('study.export_interviews_hint')"
+            :disable="interviews.length === 0">
+            <q-list>
+              <q-item clickable v-close-popup @click="onExport('csv')">
+                <q-item-section>
+                  <q-item-label>CSV</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup @click="onExport('zip')">
+                <q-item-section>
+                  <q-item-label>CSV (zip)</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup @click="onExport('xlsx')">
+                <q-item-section>
+                  <q-item-label>Excel</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup @click="onExport('json')">
+                <q-item-section>
+                  <q-item-label>JSON</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+          <q-btn
+            v-if="!isReadOnly"
+            class="q-mr-md"
+            flat
+            round
+            color="negative"
+            icon="delete_outline"
+            size="sm"
+            :disable="selected.length === 0"
+            :title="t('study.delete_interviews_hint')"
+            @click="onConfirmDeleteMultiple()" />
+      </div>
+      <q-table
+        flat
+        :rows="interviews"
+        :columns="columns"
+        :filter="filter"
+        row-key="_id"
+        :selection="isReadOnly ? 'none' : 'multiple'"
+        v-model:selected="selected"
+        v-model:pagination='paginationOpts'
+        @request='getTableInterviews'
+      >
+        <template v-slot:top>
+          <q-select
+            class="q-mr-md"
+            v-model="interviewDesignFilter"
+            :options="interviewDesignOptions"
+            emit-value
+            map-options
+            :label="t('study.interview_design')"
+            style="min-width: 150px"
+            @update:model-value="onFilter" />
+          <q-select
+            class="q-mr-md"
+            v-model="campaignFilter"
+            :options="campaignOptions"
+            emit-value
+            map-options
+            :label="t('study.campaign')"
+            style="min-width: 150px"
+            @update:model-value="onFilter" />
+          <q-select
+            class="q-mr-md"
+            v-model="stateFilter"
+            :options="stateOptions"
+            emit-value
+            map-options
+            :label="t('state')"
+            style="min-width: 150px"
+            @update:model-value="onFilter" />
+          <q-select
+            class="q-mr-md"
+            v-model="eligibleFilter"
+            :options="eligibleOptions"
+            emit-value
+            map-options
+            :label="t('interview.participant_eligibility')"
+            style="min-width: 150px"
+            @update:model-value="onFilter"/>
+          <div class="q-mr-md" style="max-width: 250px">
+            <q-input filled v-model="fromDate" :placeholder="t('from')">
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="fromDate" mask="YYYY-MM-DD HH:mm">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup :label="t('close')" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-time v-model="fromDate" mask="YYYY-MM-DD HH:mm" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup :label="t('close')" color="primary" flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
               <template v-slot:append>
-                <q-icon name="search"/>
+                <q-icon name="close" class="cursor-pointer" @click="onClearDate('from')">
+                </q-icon>
               </template>
             </q-input>
-          </template>
-          <template v-slot:body-cell-code="props">
-            <q-td :props="props">
-              <q-chip>{{ props.row.code }}</q-chip>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-interviewDesign='props'>
-            <q-td :props='props'>
-              <router-link :to="'/study/' + studyId + '/interview-design/' + props.row.interviewDesign">{{ getInterviewDesignName(props.row.interviewDesign) }}</router-link>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-revision='props'>
-            <q-td :props='props'>
-              {{ props.row.revision ? props.row.revision : t('study.latest_revision') }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-state='props'>
-            <q-td :props='props'>
-              {{ t('study.interview_state.' + props.row.state) }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-participantValid='props'>
-            <q-td :props='props'>
-              <q-icon v-if="props.row.participantValid" name="done"
-                size="sm"
-                color="secondary"/>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-action='props'>
-            <q-td :props='props'>
-              <q-btn
-                v-if="!isReadOnly"
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('study.edit_interview_filling_date_hint')"
-                icon="access_time_filled"
-                @click='onShowEditFillingDate(props.row)'>
-              </q-btn>
-              <q-btn
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('study.view_interview_data_hint')"
-                icon="visibility"
-                @click='onShow(props.row)'>
-              </q-btn>
-              <q-btn
-                v-if="!isReadOnly"
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('study.delete_interview_hint')"
-                icon="delete"
-                @click='onConfirmDelete(props.row)'>
-              </q-btn>
-              <q-btn
-                v-if="!isReadOnly && props.row.state === 'completed' && props.row.participantValid"
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('study.reopen_interview_hint')"
-                icon="replay"
-                @click='onReopen(props.row)'>
-              </q-btn>
-            </q-td>
-          </template>
-        </q-table>
-      </q-card-section>
-    </q-card>
+          </div>
+          <div class="q-mr-md" style="max-width: 250px">
+            <q-input filled v-model="toDate" :placeholder="t('to')">
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="toDate" mask="YYYY-MM-DD HH:mm">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup :label="t('close')" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-time v-model="toDate" mask="YYYY-MM-DD HH:mm" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup :label="t('close')" color="primary" flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+              <template v-slot:append>
+                <q-icon name="close" class="cursor-pointer" @click="onClearDate('to')">
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+          <q-space />
+          <q-input
+            dense
+            debounce="300"
+            v-model="filter"
+            :placeholder="t('search')"
+            :title="t('study.search_interview_hint')">
+            <template v-slot:append>
+              <q-icon name="search"/>
+            </template>
+          </q-input>
+        </template>
+        <template v-slot:body-cell-code="props">
+          <q-td :props="props">
+            <q-chip>{{ props.row.code }}</q-chip>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-interviewDesign='props'>
+          <q-td :props='props'>
+            <router-link :to="'/study/' + studyId + '/interview-design/' + props.row.interviewDesign">{{ getInterviewDesignName(props.row.interviewDesign) }}</router-link>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-revision='props'>
+          <q-td :props='props'>
+            {{ props.row.revision ? props.row.revision : t('study.latest_revision') }}
+          </q-td>
+        </template>
+        <template v-slot:body-cell-state='props'>
+          <q-td :props='props'>
+            {{ t('study.interview_state.' + props.row.state) }}
+          </q-td>
+        </template>
+        <template v-slot:body-cell-participantValid='props'>
+          <q-td :props='props'>
+            <q-icon v-if="props.row.participantValid" name="done"
+              size="sm"
+              color="secondary"/>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-action='props'>
+          <q-td :props='props'>
+            <q-btn
+              v-if="!isReadOnly"
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('study.edit_interview_filling_date_hint')"
+              icon="access_time_filled"
+              @click='onShowEditFillingDate(props.row)'>
+            </q-btn>
+            <q-btn
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('study.view_interview_data_hint')"
+              icon="visibility"
+              @click='onShow(props.row)'>
+            </q-btn>
+            <q-btn
+              v-if="!isReadOnly"
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('study.delete_interview_hint')"
+              icon="delete"
+              @click='onConfirmDelete(props.row)'>
+            </q-btn>
+            <q-btn
+              v-if="!isReadOnly && props.row.state === 'completed' && props.row.participantValid"
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('study.reopen_interview_hint')"
+              icon="replay"
+              @click='onReopen(props.row)'>
+            </q-btn>
+          </q-td>
+        </template>
+      </q-table>
+    </div>
 
     <q-dialog v-model='showInterview' persistent :maximized="maximizedToggle">
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
@@ -254,7 +253,8 @@
             <pre>{{ modelDataStr }}</pre>
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
@@ -270,7 +270,8 @@
             {{ getInterviewFullName(selectedInterview) }}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteInterview'
@@ -297,7 +298,8 @@
             {{selected.map(g => getInterviewFullName(g)).join(', ')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteInterviews'
@@ -334,7 +336,8 @@
             </template>
           </q-input>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='onEditFillingDate'

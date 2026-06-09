@@ -3,9 +3,33 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap'); */
 
 a {
-  color: #007bff;
+  color: $primary;
   text-decoration: none;
   background-color: transparent;
+}
+
+a.q-btn {
+  line-height: 2em;
+}
+
+p:last-of-type {
+  margin: 0;
+}
+
+.q-tab-panel {
+  padding: 1em 0 1em 0;
+}
+
+.q-table {
+  th {
+    background-color: $blue-grey-1;
+  }
+  tr:nth-child(even) {
+    background-color: $grey-2;
+  }
+  tr:nth-child(odd) {
+    background-color: white;
+  }
 }
 
 .q-drawer .fixed-bottom a {
@@ -15,24 +39,6 @@ a {
 .bg-base {
   background: #e9ecef;
   /*background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);*/
-}
-
-.note {
-  background-color: #f5f5f5;
-  border-color: #eee;
-  border-radius: 4px;
-  border-style: solid;
-  border-width: 0 5px;
-  font-size: 1em;
-  letter-spacing: 0.5px;
-  line-height: 1.35em;
-  margin: 16px 0;
-  padding: 16px 24px;
-}
-
-.note-info {
-  background-color: #e8eaf6;
-  border-color: #c5cae9;
 }
 
 .note-tip {

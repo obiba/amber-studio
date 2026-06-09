@@ -1,123 +1,121 @@
 <template>
   <div v-cloak>
-
-    <q-card class="q-ma-md"
-          v-if="hasStudyInterviewDesigns">
-      <q-card-section>
-        <q-table
+    <q-table
+      class="q-ma-md"
+      v-if="hasStudyInterviewDesigns"
+      flat
+      :rows="studyInterviewDesigns"
+      :columns="columns"
+      :filter="filter"
+      row-key="_id"
+      :selection="isReadOnly ? 'none' : 'multiple'"
+      v-model:selected="selected"
+      v-model:pagination='paginationOpts'
+      @request='getTableStudyInterviewDesigns'
+    >
+      <template v-slot:top>
+        <q-btn
+          v-if="!isReadOnly"
+          color="primary"
+          icon="add"
+          :title="t('study.add_interview_design_hint')"
+          size="sm"
+          @click="onAdd()"
+          class="q-mr-md" />
+        <q-btn
+          v-if="!isReadOnly"
+          class="q-mr-md"
           flat
-          :rows="studyInterviewDesigns"
-          :columns="columns"
-          :filter="filter"
-          row-key="_id"
-          :selection="isReadOnly ? 'none' : 'multiple'"
-          v-model:selected="selected"
-          v-model:pagination='paginationOpts'
-          @request='getTableStudyInterviewDesigns'
-        >
-          <template v-slot:top>
-            <q-btn
-              v-if="!isReadOnly"
-              color="primary"
-              icon="add"
-              :title="t('study.add_interview_design_hint')"
-              @click="onAdd()"
-              class="q-mr-md" />
-            <q-btn
-              v-if="!isReadOnly"
-              class="q-mr-md"
-              flat
-              round
-              color="negative"
-              icon="delete_outline"
-              :disable="selected.length === 0"
-              :title="t('study.delete_interview_designs_hint')"
-              @click="onConfirmDeleteMultiple()" />
-            <q-space />
-            <q-input
-              dense
-              debounce="300"
-              v-model="filter"
-              :placeholder="t('search')"
-              :title="t('study.search_interview_design_hint')">
-              <template v-slot:append>
-                <q-icon name="search"/>
-              </template>
-            </q-input>
+          round
+          color="negative"
+          icon="delete_outline"
+          size="sm"
+          :disable="selected.length === 0"
+          :title="t('study.delete_interview_designs_hint')"
+          @click="onConfirmDeleteMultiple()" />
+        <q-space />
+        <q-input
+          dense
+          debounce="300"
+          v-model="filter"
+          :placeholder="t('search')"
+          :title="t('study.search_interview_design_hint')">
+          <template v-slot:append>
+            <q-icon name="search"/>
           </template>
-          <template v-slot:body-cell-name='props'>
-            <q-td :props='props'>
-              <router-link :to="'/study/' + studyId + '/interview-design/' + props.row._id">{{ props.row.name }}</router-link>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-steps='props'>
-            <q-td :props='props'>
-              {{ props.row.steps ? props.row.steps.length : 0 }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-permissions='props'>
-            <q-td :props='props'>
-              <div v-if="props.row.permissions">
-                <q-chip v-for="id in props.row.permissions.users" icon="person" size="sm" :label="getSubject(id, 'user').name" :key="id"/>
-                <q-chip v-for="id in props.row.permissions.groups" icon="people" size="sm" :label="getSubject(id, 'group').name" :key="id"/>
-              </div>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-state='props'>
-            <q-td :props='props'>
-              {{ t('study.interview_design_state.' + props.row.state) }}
-              <q-icon v-if="props.row.permissions" name="lock"/>
-            </q-td>
-          </template>
-          <template v-slot:body-cell-action='props'>
-            <q-td :props='props'>
-              <q-btn
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('study.edit_interview_design_hint')"
-                icon="edit"
-                @click='onEdit(props.row)'>
-              </q-btn>
-              <q-btn
-                v-if="props.row.state === 'paused'"
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('study.start_interview_design_hint')"
-                icon="play_arrow"
-                @click='start(props.row)'>
-              </q-btn>
-              <q-btn
-                v-if="props.row.state === 'active'"
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('study.pause_interview_design_hint')"
-                icon="pause"
-                @click='pause(props.row)'>
-              </q-btn>
-              <q-btn
-                color="secondary"
-                size="12px"
-                flat
-                dense
-                round
-                :title="t('study.delete_interview_design_hint')"
-                icon="delete"
-                @click='onConfirmDelete(props.row)'>
-              </q-btn>
-            </q-td>
-          </template>
-        </q-table>
-      </q-card-section>
-    </q-card>
+        </q-input>
+      </template>
+      <template v-slot:body-cell-name='props'>
+        <q-td :props='props'>
+          <router-link :to="'/study/' + studyId + '/interview-design/' + props.row._id">{{ props.row.name }}</router-link>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-steps='props'>
+        <q-td :props='props'>
+          {{ props.row.steps ? props.row.steps.length : 0 }}
+        </q-td>
+      </template>
+      <template v-slot:body-cell-permissions='props'>
+        <q-td :props='props'>
+          <div v-if="props.row.permissions">
+            <q-chip v-for="id in props.row.permissions.users" icon="person" size="sm" :label="getSubject(id, 'user').name" :key="id"/>
+            <q-chip v-for="id in props.row.permissions.groups" icon="people" size="sm" :label="getSubject(id, 'group').name" :key="id"/>
+          </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-state='props'>
+        <q-td :props='props'>
+          {{ t('study.interview_design_state.' + props.row.state) }}
+          <q-icon v-if="props.row.permissions" name="lock"/>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-action='props'>
+        <q-td :props='props'>
+          <q-btn
+            color="secondary"
+            size="12px"
+            flat
+            dense
+            round
+            :title="t('study.edit_interview_design_hint')"
+            icon="edit"
+            @click='onEdit(props.row)'>
+          </q-btn>
+          <q-btn
+            v-if="props.row.state === 'paused'"
+            color="secondary"
+            size="12px"
+            flat
+            dense
+            round
+            :title="t('study.start_interview_design_hint')"
+            icon="play_arrow"
+            @click='start(props.row)'>
+          </q-btn>
+          <q-btn
+            v-if="props.row.state === 'active'"
+            color="secondary"
+            size="12px"
+            flat
+            dense
+            round
+            :title="t('study.pause_interview_design_hint')"
+            icon="pause"
+            @click='pause(props.row)'>
+          </q-btn>
+          <q-btn
+            color="secondary"
+            size="12px"
+            flat
+            dense
+            round
+            :title="t('study.delete_interview_design_hint')"
+            icon="delete"
+            @click='onConfirmDelete(props.row)'>
+          </q-btn>
+        </q-td>
+      </template>
+    </q-table>
 
     <q-btn
       v-else-if="!isReadOnly"
@@ -190,7 +188,8 @@
             use-chips
             :label="t('study.permitted_groups')" />
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudyInterviewDesign(true)'
@@ -271,7 +270,8 @@
             use-chips
             :label="t('study.permitted_groups')" />
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='saveStudyInterviewDesign(false)'
@@ -299,7 +299,8 @@
             {{ selectedStudyInterviewDesign.name }}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudyInterviewDesign'
@@ -326,7 +327,8 @@
             {{selected.map(g => g.name).join(', ')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteStudyInterviewDesigns'

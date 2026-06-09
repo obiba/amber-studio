@@ -70,7 +70,7 @@
       :class="settings.theme.drawer"
     >
       <q-list>
-        <q-item to="/studies" active-class="q-item-no-link-highlighting">
+        <q-item to="/studies">
           <q-item-section avatar>
             <q-icon name="arrow_back"/>
           </q-item-section>
@@ -79,7 +79,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item :to="'/study/' + studyId" active-class="q-item-no-link-highlighting">
+        <q-item :to="'/study/' + studyId">
           <q-item-section avatar>
             <q-icon name="dashboard"/>
           </q-item-section>
@@ -88,9 +88,9 @@
           </q-item-section>
         </q-item>
 
-        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{t('study.design')}}</q-item-label>
+        <q-item-label v-if="!isGuest" header class="text-weight-bolder">{{t('study.design')}}</q-item-label>
 
-        <q-item v-if="!isGuest" :to="'/study/' + studyId + '/forms'" active-class="q-item-no-link-highlighting">
+        <q-item v-if="!isGuest" :to="'/study/' + studyId + '/forms'">
           <q-item-section avatar>
             <q-icon name="list_alt"/>
           </q-item-section>
@@ -99,7 +99,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item v-if="!isGuest && hasCaseReportService" :to="'/study/' + studyId + '/case-report-forms'" active-class="q-item-no-link-highlighting">
+        <q-item v-if="!isGuest && hasCaseReportService" :to="'/study/' + studyId + '/case-report-forms'">
           <q-item-section avatar>
             <q-icon name="insert_drive_file" size="xs" />
           </q-item-section>
@@ -110,7 +110,7 @@
 
         <q-item
           v-if="!isGuest && hasInterviewService"
-          :to="'/study/' + studyId + '/interview-designs'" active-class="q-item-no-link-highlighting">
+          :to="'/study/' + studyId + '/interview-designs'">
           <q-item-section avatar>
             <q-icon name="file_copy" size="xs" />
           </q-item-section>
@@ -119,11 +119,11 @@
           </q-item-section>
         </q-item>
 
-        <q-item-label v-if="!isGuest" header class="text-weight-bolder text-white">{{t('study.data_collection')}}</q-item-label>
+        <q-item-label v-if="!isGuest" header class="text-weight-bolder">{{t('study.data_collection')}}</q-item-label>
 
         <q-item
           v-if="!isGuest && hasCaseReportService"
-          :to="'/study/' + studyId + '/case-reports'" active-class="q-item-no-link-highlighting">
+          :to="'/study/' + studyId + '/case-reports'">
           <q-item-section avatar>
             <q-icon name="help_center" size="xs" />
           </q-item-section>
@@ -134,7 +134,7 @@
 
         <q-item
           v-if="!isGuest && hasInterviewService"
-          :to="'/study/' + studyId + '/interviews'" active-class="q-item-no-link-highlighting">
+          :to="'/study/' + studyId + '/interviews'">
           <q-item-section avatar>
             <q-icon name="quiz" size="xs" />
           </q-item-section>
@@ -154,9 +154,10 @@
     </q-drawer>
 
     <q-page-container :class="settings.theme.page">
-      <div class="q-pa-md" :class="settings.theme.header2">
+      <q-toolbar :class="settings.theme.header2">
         <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
-          <q-breadcrumbs-el icon="inventory_2" :title="t('studies.title')" to="/studies"/>
+          <q-breadcrumbs-el icon="home" to="/" />
+          <q-breadcrumbs-el :label="t('studies.title')" to="/studies"/>
           <q-breadcrumbs-el :label="study.name" />
         </q-breadcrumbs>
         <q-btn
@@ -164,15 +165,12 @@
           :title="t('edit_settings')"
           icon="settings"
           class="text-grey-7"
+          size="sm"
           flat
           dense
           round>
         </q-btn>
-        <div class="text-caption text-secondary">
-          {{ study.description }}
-        </div>
-      </div>
-      <q-separator/>
+      </q-toolbar>
 
       <router-view />
 
@@ -216,7 +214,8 @@
             />
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='save'

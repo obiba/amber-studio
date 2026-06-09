@@ -134,7 +134,8 @@
             </q-tab-panel>
           </q-tab-panels>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('close')" flat v-close-popup />
         </q-card-actions>
       </q-card>
@@ -150,7 +151,8 @@
             {{selectedRevision.revision}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='reinstateFormRevision'
@@ -177,7 +179,8 @@
             {{selectedRevision.revision}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteFormRevision'
@@ -204,7 +207,8 @@
             {{selected.map(g => g.revision).join(', ')}}
           </div>
         </q-card-section>
-        <q-card-actions align='right'>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
           <q-btn :label="t('cancel')" flat v-close-popup />
           <q-btn
             @click='deleteFormRevisions'

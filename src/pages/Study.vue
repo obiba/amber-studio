@@ -2,8 +2,11 @@
   <q-page>
 
     <div class="q-ma-md">
-      <div class="text-h5 q-mb-md">{{ t('study.dashboard') }}</div>
-      <div v-if="myCampaigns.length" class="q-mb-md">
+      <div class="text-h5 q-mb-sm">{{ study.name }}</div>
+      <div v-if="study.description" class="text-caption text-secondary">
+        {{ study.description }}
+      </div>
+      <div v-if="myCampaigns.length" class="q-mt-md q-mb-md">
         <div class="text-h6 q-mb-md">{{ t('study.my_campaigns') }}</div>
         <div class="row q-col-gutter-lg">
           <div class="col-12 col-md-3">
@@ -32,7 +35,7 @@
         <dashboard-counts v-if="!isGuest" :counts="counts"/>
       </div>
       <div v-else>
-        <div class="note note-info text-body2 text-secondary">
+        <div class="text-body2 text-secondary">
           <div v-if="hasForms">
             <div>{{ t('study.form_use') }}</div>
             <q-btn
