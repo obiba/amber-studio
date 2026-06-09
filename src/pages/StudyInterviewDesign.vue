@@ -47,35 +47,35 @@
 
     <div class="q-ma-md" v-if="!isReadOnly">
       <div class="text-h5 q-mb-md">{{ t('interview.design') }}</div>
-      <q-separator/>
-      <q-splitter
-        v-model="splitterModel"
-      >
-        <template v-slot:before>
-          <q-tabs
-            v-model="innerTab"
-            vertical
-            class="text-teal"
-          >
-            <q-tab name="steps" icon="category" :label="t('interview.steps')" />
-            <q-tab name="translations" icon="translate" :label="t('form.translations')" />
-          </q-tabs>
-        </template>
-        <template v-slot:after>
-          <q-tab-panels
-            v-model="innerTab"
-          >
-            <q-tab-panel name="steps" class="q-pa-none">
-              <interview-design-steps v-model="interviewDesignData"/>
-            </q-tab-panel>
+        <div class="row q-ma-sm">
+          <q-btn 
+            @click='innerTab = "steps"' 
+            :label="t('interview.steps')" 
+            icon="category"
+            size="sm"
+            color="teal" 
+            :outline="innerTab !== 'steps'" />
+          <q-btn 
+            @click='innerTab = "translations"' 
+            :label="t('form.translations')" 
+            icon="translate"
+            size="sm"
+            color="teal"
+            :outline="innerTab !== 'translations'" 
+            class="on-right" />
+        </div>
+        <q-tab-panels
+          v-model="innerTab"
+        >
+          <q-tab-panel name="steps" class="q-pa-none">
+            <interview-design-steps v-model="interviewDesignData"/>
+          </q-tab-panel>
 
-            <q-tab-panel name="translations">
-              <interview-design-translations v-model="interviewDesignData"/>
-            </q-tab-panel>
-          </q-tab-panels>
-        </template>
-      </q-splitter>
-    </div>
+          <q-tab-panel name="translations">
+            <interview-design-translations v-model="interviewDesignData"/>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
 
     <div class="q-ma-md">
       <div class="text-h5 q-mb-md">{{ t('interview.campaigns') }}</div>
@@ -181,7 +181,6 @@ const { isReadOnly } = useAuth()
 // data
 const tab = ref('design')
 const innerTab = ref('steps')
-const splitterModel = ref(15)
 const selected = ref([])
 const reload = ref(0)
 const paginationOpts = ref({

@@ -18,6 +18,7 @@
           v-if="!isReadOnly"
           color="primary"
           icon="add"
+          size="sm"
           :title="t('form.tr_add_key')"
           @click="onAddTranslation()"
           class="q-mr-md" />
@@ -28,6 +29,7 @@
           round
           color="black"
           icon="merge"
+          size="sm"
           :title="t('form.tr_merge_items')"
           @click="onConfirmMergeObservedKeys()" />
         <q-btn
@@ -37,6 +39,7 @@
           round
           color="black"
           icon="cleaning_services"
+          size="sm"
           :title="t('form.tr_clean')"
           @click="onConfirmClean()" />
         <q-btn
@@ -46,12 +49,14 @@
           round
           color="negative"
           icon="delete_outline"
+          size="sm"
           :disable="selected.length === 0"
           :title="t('form.tr_delete_selected')"
           @click="onConfirmDeleteMultiple()" />
         <q-btn-dropdown
           flat
           icon="translate"
+          size="sm"
           :title="t('form.tr_locales_hint')">
           <q-list>
             <q-item v-for="loc in allLocales" :key="loc">
@@ -69,12 +74,14 @@
           v-if="!isReadOnly"
           flat
           icon="file_upload"
+          size="sm"
           :title="t('form.tr_import_hint')"
           @click="onImportTranslations()"
           class="q-mr-md" />
         <q-btn-dropdown
           flat
           icon="download"
+          size="sm"
           :title="t('form.tr_export_hint')">
           <q-list>
             <q-item clickable v-close-popup @click="onExport('csv')">

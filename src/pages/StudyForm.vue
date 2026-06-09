@@ -64,7 +64,23 @@
 
         <q-tab-panel name="schema" class="q-pa-none">
 
-          <div class="q-ma-sm">
+          <div class="row q-ma-sm">
+            <q-btn 
+              @click='innerTab = "items"' 
+              :label="t('form.items')" 
+              icon="category"
+              size="sm"
+              color="teal" 
+              :outline="innerTab !== 'items'" />
+            <q-btn 
+              @click='innerTab = "translations"' 
+              :label="t('form.translations')" 
+              icon="translate"
+              size="sm"
+              color="teal"
+              :outline="innerTab !== 'translations'" 
+              class="on-right" />
+              <q-space />
             <q-btn
               @click='onExport'
               :label="t('export')"
@@ -102,37 +118,17 @@
           </div>
 
           <q-separator/>
-
-          <q-splitter
-            v-model="splitterModel"
+          <q-tab-panels
+            v-model="innerTab"
           >
+            <q-tab-panel name="items" style="padding: 0;">
+              <form-items :key="reload" v-model="studyFormData" />
+            </q-tab-panel>
 
-            <template v-slot:before>
-              <q-tabs
-                v-model="innerTab"
-                vertical
-                class="text-teal"
-              >
-                <q-tab name="items" icon="category" :label="t('form.items')" />
-                <q-tab name="translations" icon="translate" :label="t('form.translations')" />
-              </q-tabs>
-            </template>
-
-            <template v-slot:after>
-              <q-tab-panels
-                v-model="innerTab"
-              >
-                <q-tab-panel name="items" class="q-pa-none">
-                  <form-items :key="reload" v-model="studyFormData" />
-                </q-tab-panel>
-
-                <q-tab-panel name="translations">
-                  <form-translations :key="reload" v-model="studyFormData" />
-                </q-tab-panel>
-              </q-tab-panels>
-            </template>
-
-          </q-splitter>
+            <q-tab-panel name="translations">
+              <form-translations :key="reload" v-model="studyFormData" />
+            </q-tab-panel>
+          </q-tab-panels>
         </q-tab-panel>
 
         <q-tab-panel name="revisions">
@@ -276,7 +272,6 @@ const { generateIds, deleteIds } = useFormUtils()
 // data
 const tab = ref('schema')
 const innerTab = ref('items')
-const splitterModel = ref(15)
 const importSchemaFile = ref(null)
 const reload = ref(0)
 const saveIntervalId = ref(null)

@@ -187,7 +187,7 @@ const { isReadOnly } = useAuth()
 const { generateId } = useFormUtils()
 
 // Refs
-const splitterModel = ref(20)
+const splitterModel = ref(25)
 const formItemSelected = ref(null)
 const selected = ref(null)
 const formItemCut = ref(null)
