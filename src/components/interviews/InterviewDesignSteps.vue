@@ -197,7 +197,7 @@
       size="sm"
       :label="t('interview.add_step_hint')"
       @click="onAddStep()"
-      class="q-ma-md" />
+      class="q-mt-sm" />
 
     <q-dialog v-model='showAddStep' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
@@ -466,6 +466,13 @@ watch(() => selected.value?.form, () => {
     updateRevisionOptions(selected.value.form)
   } else {
     revisionOptions.value = []
+  }
+})
+
+watch(() => props.modelValue, () => {
+  // init selected with first step (if any) or null if no step
+  if (value.value.steps.length > 0 && !value.value.steps.find(step => step.name === selected.value?.name)) {
+    selected.value = value.value.steps[0]
   }
 })
 
