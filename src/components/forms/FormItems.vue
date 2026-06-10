@@ -73,6 +73,7 @@
           v-if="!isReadOnly"
           color="primary"
           icon="add"
+          size="sm"
           :title="t('form.add_item_hint')"
           :label="t('add')"
           @click="addItem()"

@@ -273,6 +273,7 @@
               <q-btn
                 color="primary"
                 icon="add"
+                size="sm"
                 :title="t('interview.add_participant_attribute_hint')"
                 @click="addAttribute()"
                 class="q-mr-sm"
@@ -282,6 +283,7 @@
                 round
                 color="negative"
                 icon="delete_outline"
+        size="sm"
                 :title="t('interview.delete_participant_attributes_hint')"
                 @click="deleteAttributes()"
               />
@@ -385,6 +387,7 @@
                 :title="t('interview.add_participant_attribute_hint')"
                 @click="addAttribute()"
                 class="q-mr-sm"
+                size="sm"
               />
               <q-btn
                 flat
@@ -393,6 +396,7 @@
                 icon="delete_outline"
                 :title="t('interview.delete_participant_attributes_hint')"
                 @click="deleteAttributes()"
+                size="sm"
               />
             </div>
           </div>

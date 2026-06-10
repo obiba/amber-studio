@@ -121,6 +121,7 @@
       v-else-if="!isReadOnly"
       color="primary"
       icon="add"
+      size="sm"
       :label="t('study.add_interview_design_hint')"
       @click="onAdd()"
       class="q-ma-md" />

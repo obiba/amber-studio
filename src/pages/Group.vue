@@ -1,104 +1,103 @@
 <template>
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
-      <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="groups" :title="t('groups.title')" to="/groups"/>
+      <q-breadcrumbs>
+        <q-breadcrumbs-el icon="home" to="/" />
+        <q-breadcrumbs-el :label="t('groups.title')" to="/groups"/>
         <q-breadcrumbs-el :label="group.name" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
 
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <div class="row">
-          <div class="col-12 col-md-6 q-pa-sm">
-            <div class="row">
-              <div class='col-12'>
-                <q-input
-                  v-model='groupData.name'
-                  :label="t('name')"
-                  lazy-rules
-                  class='q-mb-sm'
-                  @blur="v$.name.$touch"
-                      :error="v$.name.$error"
-                      :hint="t('required')"
-                    >
-                  <template v-slot:error>
-                    <div v-for="error in v$.name.$errors">
-                      {{error.$message}}
-                    </div>
-                  </template>
-                </q-input>
-              </div>
+    <div class="q-ma-md">
+      <div class="row">
+        <div class="col-12 col-md-6 q-pa-sm">
+          <div class="row">
+            <div class='col-12'>
+              <q-input
+                v-model='groupData.name'
+                :label="t('name')"
+                lazy-rules
+                class='q-mb-sm'
+                @blur="v$.name.$touch"
+                    :error="v$.name.$error"
+                    :hint="t('required')"
+                  >
+                <template v-slot:error>
+                  <div v-for="error in v$.name.$errors">
+                    {{error.$message}}
+                  </div>
+                </template>
+              </q-input>
             </div>
-            <div class="row">
-              <div class='col-12'>
-                <q-input
-                  v-model='groupData.description'
-                  :label="t('description')"
-                  autogrow
-                  lazy-rules
-                  class='q-mb-sm'
-                />
-              </div>
-            </div>  
           </div>
-
-          <div class="col-12 col-md-6 q-pa-sm">
-            <div>
-              {{ t('members')}}
+          <div class="row">
+            <div class='col-12'>
+              <q-input
+                v-model='groupData.description'
+                :label="t('description')"
+                autogrow
+                lazy-rules
+                class='q-mb-sm'
+              />
             </div>
-            <q-select
-              :label="t('group.search_users')"
-              :hint="t('group.search_users_hint')"
-              :options="userOptions"
-              :loading="userOptionsLoading"
-              v-model="selectedUserOptions"
-              @filter="filterUserOptions"
-              @update:model-value="addUserOption"
-              fill-input
-              hide-selected
-              use-input
-              class="q-mb-sm"
-            >
-            </q-select>
-            <q-list v-if="groupData.users && groupData.users.length>0" bordered separator class="q-mb-sm q-mt-md">
-              <q-item clickable v-ripple :key="user.email" v-for="user in groupData.users">
-                <q-item-section>
-                  <q-item-label>{{user.email}}</q-item-label>
-                  <q-item-label caption>{{user.firstname}} {{user.lastname}}</q-item-label>
-                </q-item-section>
-                <q-item-section side >
-                  <q-btn
-                    color="secondary"
-                    size="12px"
-                    flat
-                    dense
-                    round
-                    icon='delete'
-                    @click="removeUser(user)">
-              </q-btn>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </div>
-
+          </div>  
         </div>
 
-        <q-btn
-          @click='saveGroup'
-          :disable='disableSaveGroup'
-          :label="t('save')"
-          type='submit'
-          color='primary'
-          class="q-ml-sm q-mt-md"
-        >
-          <template v-slot:loading>
-            <q-spinner-facebook />
-          </template>
-        </q-btn>
-      </q-card-section>
-    </q-card>
+        <div class="col-12 col-md-6 q-pa-sm">
+          <div>
+            {{ t('members')}}
+          </div>
+          <q-select
+            :label="t('group.search_users')"
+            :hint="t('group.search_users_hint')"
+            :options="userOptions"
+            :loading="userOptionsLoading"
+            v-model="selectedUserOptions"
+            @filter="filterUserOptions"
+            @update:model-value="addUserOption"
+            fill-input
+            hide-selected
+            use-input
+            class="q-mb-sm"
+          >
+          </q-select>
+          <q-list v-if="groupData.users && groupData.users.length>0" bordered separator class="q-mb-sm q-mt-md">
+            <q-item clickable v-ripple :key="user.email" v-for="user in groupData.users">
+              <q-item-section>
+                <q-item-label>{{user.email}}</q-item-label>
+                <q-item-label caption>{{user.firstname}} {{user.lastname}}</q-item-label>
+              </q-item-section>
+              <q-item-section side >
+                <q-btn
+                  color="secondary"
+                  size="12px"
+                  flat
+                  dense
+                  round
+                  icon='delete'
+                  @click="removeUser(user)">
+            </q-btn>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+
+      </div>
+
+      <q-btn
+        @click='saveGroup'
+        :disable='disableSaveGroup'
+        :label="t('save')"
+        type='submit'
+        color='primary'
+        class="q-ml-sm q-mt-md"
+      >
+        <template v-slot:loading>
+          <q-spinner-facebook />
+        </template>
+      </q-btn>
+    </div>
   </q-page>
 </template>
 

@@ -129,6 +129,7 @@
         v-if="!isReadOnly"
         color="primary"
         icon="add"
+        size="sm"
         :label="t('form.tr_add')">
         <q-menu>
           <q-list style="min-width: 100px">

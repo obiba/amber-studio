@@ -152,85 +152,8 @@
     </q-drawer>
 
     <q-page-container :class="settings.theme.page">
-      <q-toolbar :class="settings.theme.header2">
-        <q-breadcrumbs class="float-left q-mt-sm q-mr-md">
-          <q-breadcrumbs-el icon="home" to="/" />
-          <q-breadcrumbs-el :label="t('studies.title')" to="/studies"/>
-          <q-breadcrumbs-el :label="study.name" />
-        </q-breadcrumbs>
-        <q-btn
-          @click='onEdit'
-          :title="t('edit_settings')"
-          icon="settings"
-          class="text-grey-7"
-          size="sm"
-          flat
-          dense
-          round>
-        </q-btn>
-      </q-toolbar>
-
       <router-view />
-
     </q-page-container>
-
-    <q-dialog v-model='showEditDefinition' persistent>
-      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
-        <q-card-section class="row items-center">
-           <div class="col-12">
-            <q-input
-              v-model='studyData.name'
-              :label="t('name')"
-              lazy-rules
-              class='q-mb-sm'
-              @blur="v$.studyData.name.$touch"
-                  :error="v$.studyData.name.$error"
-                  :hint="t('required')"
-                >
-              <template v-slot:error>
-                <div v-for="error in v$.studyData.name.$errors">
-                  {{error.$message}}
-                </div>
-              </template>
-            </q-input>
-            <q-input
-              v-model='studyData.description'
-              :label="t('description')"
-              autogrow
-              lazy-rules
-              class='q-mb-sm'
-            />
-            <q-select
-              v-model="studyData.services"
-              :label="t('study.services')"
-              :hint="t('study.services_hint')"
-              :options="servicesOptions"
-              multiple
-              emit-value
-              map-options
-              clearable
-            />
-          </div>
-        </q-card-section>
-        <q-separator />
-        <q-card-actions align="right" class="bg-grey-3">
-          <q-btn :label="t('cancel')" flat v-close-popup />
-          <q-btn
-            @click='save'
-            :disable='disableSave'
-            :label="t('save')"
-            type='submit'
-            color='primary'
-            v-close-popup
-          >
-           <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
   </q-layout>
 </template>
 
@@ -239,12 +162,10 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
-import useVuelidate from '@vuelidate/core'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { useStudyStore } from 'src/stores/study'
 import { useAuth } from 'src/composables/useAuth'
-import { required, minLength, maxLength } from '../boot/vuelidate'
 
 // Import Quasar language files statically
 import langEnUS from 'quasar/lang/en-US'
@@ -276,29 +197,6 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-// Data (formerly from data())
-const showEditDefinition = ref(false)
-const studyData = ref({
-  name: '',
-  description: '',
-  services: []
-})
-const selectedUserOptions = ref('')
-const userOptionsLoading = ref(false)
-
-// Validation rules
-const rules = {
-  studyData: {
-    name: {
-      required,
-      minLength: minLength(2),
-      maxLength: maxLength(30)
-    }
-  }
-}
-
-const v$ = useVuelidate(rules, { studyData })
-
 // Computed properties
 const study = computed(() => studyStore.study)
 
@@ -321,40 +219,12 @@ const hasLocales = computed(() => locales.length > 1)
 const userName = computed(() => userEmail.value.split('@')[0])
 
 const studyId = computed(() => route.params.id)
-
-const currentStudy = computed(() => studyStore.study)
-
-const disableSave = computed(() => v$.value.studyData.$invalid)
-
-const servicesOptions = computed(() => [
-  { label: t('study.case_reports'), value: 'case-reports' },
-  { label: t('study.interviews'), value: 'interviews' }
-])
-
-const hasCaseReportService = computed(() => 
-  !study.value.services || study.value.services.length === 0 || study.value.services?.includes('case-reports')
-)
-
-const hasInterviewService = computed(() => 
-  !study.value.services || study.value.services.length === 0 || study.value.services?.includes('interviews')
-)
-
-// Methods
-async function initStudyData() {
-  await studyStore.getStudy(route.params.id)
-  studyData.value = JSON.parse(JSON.stringify(study.value))
-}
-
-function onEdit() {
-  showEditDefinition.value = true
-}
-
-async function save() {
-  v$.value.$reset()
-  const toSave = { ...studyData.value }
-  studyStore.updateStudy(toSave)
-}
-
+const hasCaseReportService = computed(() => {
+  return study.value && (!study.value.services || study.value.services.length === 0 || study.value.services?.includes('case-reports'))
+})
+const hasInterviewService = computed(() => {
+  return study.value && (!study.value.services || study.value.services.length === 0 || study.value.services?.includes('interviews'))
+})
 function onLocaleSelection(opt) {
   locale.value = opt.value
 }
@@ -367,4 +237,8 @@ function onLogout() {
 onMounted(() => {
   initStudyData()
 })
+
+async function initStudyData() {
+  await studyStore.getStudy(route.params.id)
+}
 </script>

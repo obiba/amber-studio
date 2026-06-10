@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
-      <q-breadcrumbs class="q-mt-sm">
+      <q-breadcrumbs>
         <q-breadcrumbs-el icon="home" to="/" />
         <q-breadcrumbs-el :label="t('tasks.title')" />
       </q-breadcrumbs>

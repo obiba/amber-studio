@@ -67,7 +67,27 @@
       bordered
       :class="settings.theme.drawer"
     >
+      <div v-if="userName" class="q-mt-none q-mb-none q-pa-md">
+        <span class="text-bold text-grey-6">{{ userName }}</span>
+      </div>
       <q-list>
+        <q-item to="/account" v-if="userName">
+          <q-item-section avatar>
+            <q-icon name="person" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ t('main.profile') }}</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item clickable @click="onLogout" v-if="userName">
+          <q-item-section avatar>
+            <q-icon name="logout" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ t('main.logout') }}</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator v-if="userName" />
         <q-item to="/" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
             <q-icon name="dashboard"/>

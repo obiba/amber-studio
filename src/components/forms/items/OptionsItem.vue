@@ -33,6 +33,7 @@
       <q-btn
         color="primary"
         icon="add"
+        size="sm"
         :title="t('form.add_option_hint')"
         @click="addOption()"
         class="q-mr-sm"
@@ -42,6 +43,7 @@
         round
         color="negative"
         icon="delete_outline"
+        size="sm"
         :title="t('form.delete_options_hint')"
         @click="deleteOptions()"
       />

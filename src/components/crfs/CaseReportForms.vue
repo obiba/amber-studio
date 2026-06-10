@@ -126,6 +126,7 @@
       v-else-if="!isReadOnly"
       color="primary"
       icon="add"
+      size="sm"
       :label="t('study.add_case_report_form_hint')"
       @click="onAdd()"
       class="q-ma-md" />

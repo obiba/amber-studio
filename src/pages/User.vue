@@ -1,174 +1,173 @@
 <template>
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
-      <q-breadcrumbs class="q-mt-sm">
-        <q-breadcrumbs-el icon="person" :title="t('users.title')" to="/users"/>
+      <q-breadcrumbs>
+        <q-breadcrumbs-el icon="home" to="/" />
+        <q-breadcrumbs-el :label="t('users.title')" to="/users"/>
         <q-breadcrumbs-el :label="user.email" />
       </q-breadcrumbs>
     </div>
     <q-separator/>
 
-    <q-card class="q-ma-md">
-      <q-card-section>
-        <div class="row">
-          <div class='col-12 col-md-6'>
-            <q-input
-              v-model='profileData.firstname'
-              :label="t('firstname')"
-              lazy-rules
-              class='q-ma-sm'
-              @blur="v$.firstname.$touch"
-              :error="v$.firstname.$error"
-              :hint="t('required')"
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user' size='xs' />
-              </template>
-              <template v-slot:error>
-                <div v-for="error in v$.firstname.$errors">
-                  {{error.$message}}
-                </div>
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              v-model='profileData.lastname'
-              :label="t('lastname')"
-              lazy-rules
-              class='q-ma-sm'
-              @blur="v$.lastname.$touch"
-              :error="v$.lastname.$error"
-              :hint="t('required')"
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user' size='xs' />
-              </template>
-              <template v-slot:error>
-                <div v-for="error in v$.lastname.$errors">
-                  {{error.$message}}
-                </div>
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              v-model='profileData.institution'
-              :label="t('institution')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-building' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              v-model='profileData.city'
-              :label="t('city')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-city' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              v-model='profileData.title'
-              :label="t('title')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-user-tie' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-input
-              v-model='profileData.phone'
-              :label="t('phone')"
-              lazy-rules
-              class='q-ma-sm'
-            >
-              <template v-slot:prepend>
-                <q-icon name='fas fa-phone' size='xs' />
-              </template>
-            </q-input>
-          </div>
-          <div class="col-12 col-md-6">
-            <q-select
-              class='q-ma-sm'
-              v-show="hasLocales"
-              v-model="profileData.language"
-              :options="localeOptions"
-              :label="t('preferred_language')"
-              emit-value
-              map-options
-              options-dense
-            >
-              <template v-slot:prepend>
-                <q-icon name="fas fa-language" size="xs" />
-              </template>
-            </q-select>
-          </div>
-          <div class='col-12 col-md-6'>
-            <q-select
-              class='q-ma-sm text-capitalize'
-              v-model='profileData.role'
-              :options='rolesOptions'
-              :label="t('role')"
-              emit-value
-              map-options
-              options-dense
-            >
-            </q-select>
-          </div>
-          <div class='col-12 col-md-12'>
-            <q-toggle
-              v-model="profileData.with2fa"
-              :label="t('users.with_2fa')"
-            />
-          </div>
-          <div v-if="profileData.with2fa" class='col-12 col-md-12'>
-            <q-toggle
-              v-model="profileData.totp2faRequired"
-              :label="t('users.required_2fa')"
-            />
-          </div>
+    <div class="q-ma-md">
+      <div class="row">
+        <div class='col-12 col-md-6'>
+          <q-input
+            v-model='profileData.firstname'
+            :label="t('firstname')"
+            lazy-rules
+            class='q-ma-sm'
+            @blur="v$.firstname.$touch"
+            :error="v$.firstname.$error"
+            :hint="t('required')"
+          >
+            <template v-slot:prepend>
+              <q-icon name='fas fa-user' size='xs' />
+            </template>
+            <template v-slot:error>
+              <div v-for="error in v$.firstname.$errors">
+                {{error.$message}}
+              </div>
+            </template>
+          </q-input>
         </div>
+        <div class='col-12 col-md-6'>
+          <q-input
+            v-model='profileData.lastname'
+            :label="t('lastname')"
+            lazy-rules
+            class='q-ma-sm'
+            @blur="v$.lastname.$touch"
+            :error="v$.lastname.$error"
+            :hint="t('required')"
+          >
+            <template v-slot:prepend>
+              <q-icon name='fas fa-user' size='xs' />
+            </template>
+            <template v-slot:error>
+              <div v-for="error in v$.lastname.$errors">
+                {{error.$message}}
+              </div>
+            </template>
+          </q-input>
+        </div>
+        <div class='col-12 col-md-6'>
+          <q-input
+            v-model='profileData.institution'
+            :label="t('institution')"
+            lazy-rules
+            class='q-ma-sm'
+          >
+            <template v-slot:prepend>
+              <q-icon name='fas fa-building' size='xs' />
+            </template>
+          </q-input>
+        </div>
+        <div class='col-12 col-md-6'>
+          <q-input
+            v-model='profileData.city'
+            :label="t('city')"
+            lazy-rules
+            class='q-ma-sm'
+          >
+            <template v-slot:prepend>
+              <q-icon name='fas fa-city' size='xs' />
+            </template>
+          </q-input>
+        </div>
+        <div class='col-12 col-md-6'>
+          <q-input
+            v-model='profileData.title'
+            :label="t('title')"
+            lazy-rules
+            class='q-ma-sm'
+          >
+            <template v-slot:prepend>
+              <q-icon name='fas fa-user-tie' size='xs' />
+            </template>
+          </q-input>
+        </div>
+        <div class='col-12 col-md-6'>
+          <q-input
+            v-model='profileData.phone'
+            :label="t('phone')"
+            lazy-rules
+            class='q-ma-sm'
+          >
+            <template v-slot:prepend>
+              <q-icon name='fas fa-phone' size='xs' />
+            </template>
+          </q-input>
+        </div>
+        <div class="col-12 col-md-6">
+          <q-select
+            class='q-ma-sm'
+            v-show="hasLocales"
+            v-model="profileData.language"
+            :options="localeOptions"
+            :label="t('preferred_language')"
+            emit-value
+            map-options
+            options-dense
+          >
+            <template v-slot:prepend>
+              <q-icon name="fas fa-language" size="xs" />
+            </template>
+          </q-select>
+        </div>
+        <div class='col-12 col-md-6'>
+          <q-select
+            class='q-ma-sm text-capitalize'
+            v-model='profileData.role'
+            :options='rolesOptions'
+            :label="t('role')"
+            emit-value
+            map-options
+            options-dense
+          >
+          </q-select>
+        </div>
+        <div class='col-12 col-md-12'>
+          <q-toggle
+            v-model="profileData.with2fa"
+            :label="t('users.with_2fa')"
+          />
+        </div>
+        <div v-if="profileData.with2fa" class='col-12 col-md-12'>
+          <q-toggle
+            v-model="profileData.totp2faRequired"
+            :label="t('users.required_2fa')"
+          />
+        </div>
+      </div>
 
-        <q-btn
-          @click='saveUser'
-          :disable='disableSaveUser'
-          :label="t('save')"
-          type='submit'
-          color='primary'
-          class="q-ml-sm q-mt-md"
-        >
-          <template v-slot:loading>
-            <q-spinner-facebook />
-          </template>
-        </q-btn>
+      <q-btn
+        @click='saveUser'
+        :disable='disableSaveUser'
+        :label="t('save')"
+        type='submit'
+        color='primary'
+        class="q-ml-sm q-mt-md"
+      >
+        <template v-slot:loading>
+          <q-spinner-facebook />
+        </template>
+      </q-btn>
 
-        <q-btn
-          v-show="profileData.with2fa && currentUser.totp2faRequired"
-          @click='resetTotp2FA'
-          :disable='disableTotp2FA'
-          :label="t('users.reset_2fa')"
-          type='submit'
-          color='primary'
-          class="q-ml-sm q-mt-md"
-        >
-          <template v-slot:loading>
-            <q-spinner-facebook />
-          </template>
-        </q-btn>
-      </q-card-section>
-    </q-card>
+      <q-btn
+        v-show="profileData.with2fa && currentUser.totp2faRequired"
+        @click='resetTotp2FA'
+        :disable='disableTotp2FA'
+        :label="t('users.reset_2fa')"
+        type='submit'
+        color='primary'
+        class="q-ml-sm q-mt-md"
+      >
+        <template v-slot:loading>
+          <q-spinner-facebook />
+        </template>
+      </q-btn>
+    </div>
   </q-page>
 </template>
 

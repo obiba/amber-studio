@@ -604,6 +604,7 @@
                     <q-btn
                       color="primary"
                       icon="add"
+                      size="sm"
                       :title="t('interview.add_participant_attribute_hint')"
                       @click="addWalkInAttribute()"
                       class="q-mr-sm"
@@ -613,6 +614,7 @@
                       round
                       color="negative"
                       icon="delete_outline"
+                      size="sm"
                       :title="t('interview.delete_participant_attributes_hint')"
                       @click="deleteWalkInAttributes()"
                     />

@@ -82,6 +82,7 @@
           <q-btn
             color="primary"
             icon="add"
+            size="sm"
             :title="t('form.add_area_hint')"
             @click="addArea()"
             class="q-mr-sm"
@@ -91,6 +92,7 @@
             round
             color="negative"
             icon="delete_outline"
+            size="sm"
             :title="t('form.delete_areas_hint')"
             @click="deleteAreas()"
           />

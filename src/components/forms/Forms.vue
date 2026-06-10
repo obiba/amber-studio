@@ -80,6 +80,7 @@
       v-else
       color="primary"
       icon="add"
+      size="sm"
       :label="t('study.add_study_form_hint')"
       @click="onAdd()"
       class="q-ma-md" />

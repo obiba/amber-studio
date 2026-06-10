@@ -194,6 +194,7 @@
       v-else-if="!isReadOnly"
       color="primary"
       icon="add"
+      size="sm"
       :label="t('interview.add_step_hint')"
       @click="onAddStep()"
       class="q-ma-md" />

@@ -1,46 +1,67 @@
 <template>
   <q-page>
+    <q-toolbar class="q-pa-md" :class="settings.theme.header2">
+      <q-breadcrumbs class="q-mr-md">
+        <q-breadcrumbs-el icon="home" to="/" />
+        <q-breadcrumbs-el :label="t('studies.title')" to="/studies"/>
+        <q-breadcrumbs-el :label="studyStore.study?.name" :to="'/study/' + studyId" />
+        <q-breadcrumbs-el :label="t('study.forms')" :to="'/study/' + studyId + '/forms'"/>
+        <q-breadcrumbs-el :label="studyForm.name" />
+      </q-breadcrumbs>
+    </q-toolbar>
+    <q-separator/>
 
-    <div class="q-ml-md q-mr-md q-mt-sm q-mb-md">
+    <div class="q-ma-md">
       <div class="row">
-        <div class="col-12">
-          <q-breadcrumbs class="q-mt-sm q-mr-md text-h5" :class="isReadOnly ? '' : 'float-left'">
-            <q-breadcrumbs-el :label="t('study.forms')" :to="'/study/' + studyId + '/forms'"/>
-            <q-breadcrumbs-el :label="studyForm.name" />
-          </q-breadcrumbs>
-          <div class="text-grey-7 q-mt-sm">
-            <q-btn
-              v-if="!isReadOnly"
-              @click='onEdit'
-              :title="t('edit_settings')"
-              icon="settings"
-              flat
-              dense
-              round>
-            </q-btn>
-            <q-btn
-              v-if="!isReadOnly"
-              @click='save'
-              :title="t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
-              :icon="saveIcon"
-              :disable="changeDetected < 0"
-              flat
-              dense
-              round>
-            </q-btn>
-          </div>
+        <div class="q-mr-md text-h5">
+          {{ t('study.form') }}
         </div>
+        <q-btn
+          v-if="!isReadOnly"
+          @click='onEdit'
+          :title="t('edit_settings')"
+          icon="settings"
+          color="grey-7"
+          flat
+          dense
+          round
+          class="on-right">
+        </q-btn>
+        <q-btn
+          v-if="!isReadOnly"
+          @click='save'
+          :title="t(changeDetected === 0 ? 'save_done' : (changeDetected < 0 ? 'saving' : 'save'))"
+          :icon="saveIcon"
+          :disable="changeDetected < 0"
+          color="grey-7"
+          flat
+          dense
+          round>
+        </q-btn>
       </div>
-      <div v-if="studyForm.description" class="row q-mb-md">
-        <div class="text-caption text-secondary col-12">
-          {{ studyForm.description }}
-        </div>
+      <div class="text-body2 text-secondary q-mb-sm">
+        <span v-html="t('study.form_hint')"/>
       </div>
-      <div class="row">
-        <div class="text-body2 text-secondary col-12">
-          <div>
-            <span v-html="t('study.form_hint')"/>
-          </div>
+      <div class="row q-mb-md">
+        <div class="col col-md-6 col-xs-12">
+          <q-list bordered separator class="q-mt-md">
+            <q-item>
+              <q-item-section style="max-width: 200px;">
+                <q-item-label side class="text-overline">{{ t('name') }}</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ studyForm.name }}</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item>
+              <q-item-section style="max-width: 200px;">
+                <q-item-label side class="text-overline">{{ t('description') }}</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ studyForm.description }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
         </div>
       </div>
     </div>
@@ -260,6 +281,7 @@ import { useFormUtils } from '../composables/useFormUtils'
 import FormItems from 'src/components/forms/FormItems.vue'
 import FormTranslations from 'src/components/forms/FormTranslations.vue'
 import FormRevisions from 'src/components/forms/FormRevisions.vue'
+import { settings } from 'src/boot/settings'
 
 const { t } = useI18n()
 

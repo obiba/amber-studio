@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md" :class="settings.theme.header2">
-      <q-breadcrumbs class="q-mt-sm">
+      <q-breadcrumbs>
         <q-breadcrumbs-el icon="home" to="/" />
         <q-breadcrumbs-el :label="t('studies.title')" />
       </q-breadcrumbs>
@@ -102,6 +102,7 @@
         v-else
         color="primary"
         icon="add"
+        size="sm"
         :label="t('studies.add_study_hint')"
         @click="createStudy()"
         class="q-mt-md q-ml-md" />
