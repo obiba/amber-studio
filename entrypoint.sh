@@ -10,7 +10,7 @@ COMMA=""
 for envrow in $(printenv); do
   IFS='=' read -r key value <<< "${envrow}"
   case "${key}" in
-    "AMBER_URL" | "RECAPTCHA_SITE_KEY")
+    "AMBER_URL" | "RECAPTCHA_SITE_KEY" | "PATH_PREFIX")
       echo -n "${COMMA}" >> "${ENV_PATH}"
       echo -n "${key}: '${value}'" >> "${ENV_PATH}"
       COMMA=","

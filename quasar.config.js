@@ -64,12 +64,14 @@ export default configure(function (ctx) {
         VERSION: version
       },
 
-      publicPath: process.env.PATH_PREFIX ? process.env.PATH_PREFIX : '/',
+      publicPath: '/',
       
       // https://v2.quasar.dev/quasar-cli-vite/handling-vite
       extendViteConf (viteConf) {
         const __dirname = fileURLToPath(new URL('.', import.meta.url))
-        
+
+        viteConf.base = './'
+
         if (!viteConf.resolve) {
           viteConf.resolve = {}
         }
