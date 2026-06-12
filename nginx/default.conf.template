@@ -13,7 +13,7 @@ server {
         sub_filter '"/assets/' '"${PATH_PREFIX}assets/';
         sub_filter "'/assets/" "'${PATH_PREFIX}assets/";
         sub_filter_once off;
-        sub_filter_types text/html application/javascript text/css;
+        sub_filter_types application/javascript text/css;
     }
 
     #error_page  404              /404.html;

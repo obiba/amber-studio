@@ -15,7 +15,8 @@ RUN yarn quasar build
 
 # production stage
 FROM nginx:alpine AS production-stage
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+RUN mkdir -p /etc/nginx/templates
+COPY ./nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build-stage /app/dist/spa /usr/share/nginx/html
 EXPOSE 80
 
