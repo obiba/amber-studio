@@ -16,7 +16,6 @@ import path from 'node:path'
 export default configure(function (ctx) {
   const packageJson = readFileSync('./package.json', 'utf8')
   const version = JSON.parse(packageJson).version || 0
-  const settingsJson = readFileSync('./settings.json', 'utf8')
 
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
@@ -26,6 +25,7 @@ export default configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
+      'settings',
       'axios',
       'feathersClient',
       'auth',
@@ -33,7 +33,6 @@ export default configure(function (ctx) {
       'vuelidate',
       'recaptcha',
       'errors',
-      'settings',
       'csv'
     ],
 
@@ -62,7 +61,6 @@ export default configure(function (ctx) {
 
       // Environment variables
       env: {
-        SETTINGS: ctx.dev ? settingsJson : (process.env.SETTINGS ? process.env.SETTINGS : settingsJson),
         VERSION: version
       },
 
