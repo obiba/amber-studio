@@ -31,19 +31,9 @@ fi
 export PATH_PREFIX
 envsubst '${PATH_PREFIX}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
-# settings initialization
-# backup the original file if it does not exist
-if [ ! -f /usr/share/nginx/html/settings.json.bak ]; then
-  cp /usr/share/nginx/html/settings.json /usr/share/nginx/html/settings.json.bak 2>/dev/null || true
-fi
-# copy /app/settings.json to /usr/share/nginx/html/settings.json if it exists
-if [ -f /app/settings.json ]; then
-  cp /app/settings.json /usr/share/nginx/html/settings.json
-else
-  # if the file does not exist, restore the backup if it exists
-  if [ -f /usr/share/nginx/html/settings.json.bak ]; then
-    cp /usr/share/nginx/html/settings.json.bak /usr/share/nginx/html/settings.json
-  fi
+# public files initialization
+if [ -d /app/public ]; then
+  cp -r /app/public/* /usr/share/nginx/html/
 fi
 
 # execute the web server
