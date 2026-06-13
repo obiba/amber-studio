@@ -1,7 +1,7 @@
 const appEnv = window.env
 const settings = {}
 
-const response = await fetch('/settings.json')
+const response = await fetch(`${appEnv.PATH_PREFIX}settings.json`)
 if (response.ok) {
   Object.assign(settings, await response.json())
 }
