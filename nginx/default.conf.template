@@ -10,8 +10,10 @@ server {
         try_files $uri /index.html;
 
         # Rewrite hardcoded asset paths to the runtime public path
-        sub_filter '"/assets/' '"${PATH_PREFIX}assets/';
-        sub_filter "'/assets/" "'${PATH_PREFIX}assets/";
+        sub_filter './assets/' '${PATH_PREFIX}assets/';
+        sub_filter './icons/' '${PATH_PREFIX}icons/';
+        sub_filter './favicon.ico' '${PATH_PREFIX}favicon.ico';
+        sub_filter './env.js' '${PATH_PREFIX}env.js';
         sub_filter_once off;
         sub_filter_types application/javascript text/css;
     }

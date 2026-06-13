@@ -24,6 +24,10 @@ echo "};" >> "${ENV_PATH}"
 
 # apply PATH_PREFIX to nginx template
 PATH_PREFIX=${PATH_PREFIX:-/}
+# make sure PATH_PREFIX ends with /
+if [[ "${PATH_PREFIX}" != */ ]]; then
+  PATH_PREFIX="${PATH_PREFIX}/"
+fi
 export PATH_PREFIX
 envsubst '${PATH_PREFIX}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
