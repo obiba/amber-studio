@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { LoadingBar } from 'quasar'
 
-const api = axios.create({ baseURL: process.env.API })
+const appEnv = window.env;
+const api = axios.create({ baseURL: appEnv.AMBER_URL })
 
 api.defaults.withCredentials = true
 

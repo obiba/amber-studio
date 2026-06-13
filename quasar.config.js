@@ -16,7 +16,6 @@ import path from 'node:path'
 export default configure(function (ctx) {
   const packageJson = readFileSync('./package.json', 'utf8')
   const version = JSON.parse(packageJson).version || 0
-  const settingsJson = readFileSync('./settings.json', 'utf8')
 
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
@@ -26,6 +25,7 @@ export default configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
+      'settings',
       'axios',
       'feathersClient',
       'auth',
@@ -33,15 +33,11 @@ export default configure(function (ctx) {
       'vuelidate',
       'recaptcha',
       'errors',
-      'settings',
       'csv'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: [
-      'app.scss',
-      'custom.scss'
-    ],
+    css: ['app.scss'],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
@@ -62,19 +58,17 @@ export default configure(function (ctx) {
 
       // Environment variables
       env: {
-        API: ctx.dev ? 'http://localhost:3030' : process.env.AMBER_URL,
-        RECAPTCHA_SITE_KEY: ctx.dev ? '6Lc3D34cAAAAANwhMFOH-yEB147CqspT-eBwF5-u' : process.env.RECAPTCHA_SITE_KEY,
-        SETTINGS: ctx.dev ? settingsJson : (process.env.SETTINGS ? process.env.SETTINGS : settingsJson),
-        REGISTER_ENABLED: ctx.dev ? 'true' : String(process.env.RECAPTCHA_SITE_KEY !== undefined),
         VERSION: version
       },
 
-      publicPath: process.env.PATH_PREFIX ? process.env.PATH_PREFIX : '/',
+      publicPath: '/',
       
       // https://v2.quasar.dev/quasar-cli-vite/handling-vite
       extendViteConf (viteConf) {
         const __dirname = fileURLToPath(new URL('.', import.meta.url))
-        
+
+        viteConf.base = './'
+
         if (!viteConf.resolve) {
           viteConf.resolve = {}
         }
