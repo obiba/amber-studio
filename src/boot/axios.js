@@ -2,7 +2,8 @@ import axios from 'axios'
 import { LoadingBar } from 'quasar'
 
 const appEnv = window.env;
-const api = axios.create({ baseURL: appEnv.AMBER_URL })
+const baseURL = appEnv.AMBER_URL
+const api = axios.create({ baseURL })
 
 api.defaults.withCredentials = true
 
@@ -34,4 +35,4 @@ api.interceptors.response.use(
   }
 )
 
-export { api, axios }
+export { api, axios, baseURL }
