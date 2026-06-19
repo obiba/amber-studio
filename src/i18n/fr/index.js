@@ -17,7 +17,8 @@ export default {
     email_otp: 'Ou envoyer le jeton temporaire à votre adresse courriel.',
     send_email_token: 'Envoyer le jeton',
     failed: 'Combinaison courriel/mot de passe incorrecte.',
-    failed_token: 'Jeton incorrect.'
+    failed_token: 'Jeton incorrect.',
+    continue_with: 'Ou continuer avec'
   },
   register: {
     title: 'Créer un compte',
@@ -730,5 +731,7 @@ export default {
   delimiter_hint: 'Caractère délimiteur de colonne',
   comma: 'Virgule',
   semicolon: 'Point-virgule',
-  tabulation: 'Tabulation'
+  tabulation: 'Tabulation',
+  github: 'GitHub',
+  google: 'Google',
 }

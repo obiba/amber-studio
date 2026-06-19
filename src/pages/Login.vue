@@ -81,7 +81,13 @@
                     <q-btn :label="t('cancel')" @click="onCancelToken" flat stretch class="text-bold q-ml-md" />
                   </div>
                 </q-form>
-
+              </q-card-section>
+              <q-card-section v-if="authProviders.length > 0" class="text-center q-pt-none">
+                <div class="text-subtitle q-mb-md">{{ t('login.continue_with') }}</div>
+                <template v-for="provider in authProviders" :key="provider">
+                  <q-btn :label="t(provider)" no-caps :href="`${baseURL}/oauth/${provider}?redirect=/login`" color="primary" class="q-mr-md">
+                  </q-btn>
+                </template>
               </q-card-section>
               <q-card-section>
                 <q-btn flat to="/forgot-password" dense no-caps class="text-bold">
@@ -118,6 +124,7 @@ import { LocalStorage, Notify, useQuasar, copyToClipboard } from 'quasar'
 import { useRouter } from 'vue-router'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
+import { baseURL } from '../boot/axios'
 import { useAuthStore } from 'src/stores/auth'
 
 import Banner from 'src/components/Banner.vue'
@@ -140,6 +147,7 @@ const qr = ref('')
 const withToken = ref(false)
 const method = ref('')
 const showPassword = ref(false)
+const authProviders = ref([])
 
 // Map locale codes to Quasar language objects
 const quasarLangMap = {
@@ -162,8 +170,30 @@ watch(() => authStore.user, (newUser) => {
 })
 
 // mounted
-onMounted(() => {
+onMounted(async () => {
+  const hash = new URLSearchParams(window.location.hash.substring(1))
+  const oauthToken = hash.get('access_token')
+  const oauthError = hash.get('error')
+
+  if (oauthToken || oauthError) {
+    window.history.replaceState(null, '', window.location.pathname)
+  }
+
+  if (oauthToken) {
+    try {
+      await authStore.authenticate({ strategy: 'jwt', accessToken: oauthToken })
+      return // watcher on authStore.user will redirect to '/'
+    } catch (err) {
+      Notify.create({ message: t('login.failed'), color: 'negative' })
+    }
+  } else if (oauthError) {
+    Notify.create({ message: t('login.failed'), color: 'negative' })
+  }
+
   LocalStorage.remove('feathers-jwt')
+  authStore.getOAuthProviders().then(resp => {
+    authProviders.value = resp.providers || []
+  })
 })
 
 // computed

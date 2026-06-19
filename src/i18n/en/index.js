@@ -17,7 +17,8 @@ export default {
     email_otp: 'Or send the temporary token to your email address.',
     send_email_token: 'Send token',
     failed: 'Incorrect email/password combination.',
-    failed_token: 'Incorrect token.'
+    failed_token: 'Incorrect token.',
+    continue_with: 'Or continue with'
   },
   register: {
     title: 'Register new membership',
@@ -726,5 +727,7 @@ export default {
   delimiter_hint: 'Delimiter used to separate the values.',
   comma: 'Comma',
   semicolon: 'Semicolon',
-  tabulation: 'Tabulation'
+  tabulation: 'Tabulation',
+  github: 'GitHub',
+  google: 'Google',
 }
