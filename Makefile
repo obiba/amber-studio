@@ -11,6 +11,9 @@ run:
 		-e PATH_PREFIX='/' \
 		$(image)
 
+push:
+	docker push $(image)
+
 clean:
 	docker rm $(docker ps -a -q --filter ancestor=$(image)) || true
 	docker rmi $(image) || true
