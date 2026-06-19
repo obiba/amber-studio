@@ -3,21 +3,23 @@
 #
 
 # develop stage
-FROM node:lts-alpine as develop-stage
+FROM node:lts-alpine AS develop-stage
 WORKDIR /app
 COPY package*.json ./
 COPY . .
 
 # build stage
-FROM develop-stage as build-stage
-ARG AMBER_URL
-ARG RECAPTCHA_SITE_KEY
+FROM develop-stage AS build-stage
 RUN yarn
 RUN yarn quasar build
 
 # production stage
-FROM nginx:alpine as production-stage
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+FROM nginx:alpine AS production-stage
+RUN mkdir -p /etc/nginx/templates
+COPY ./nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build-stage /app/dist/spa /usr/share/nginx/html
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+RUN apk add --no-cache bash
+COPY entrypoint.sh /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
