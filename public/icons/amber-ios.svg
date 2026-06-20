@@ -1,0 +1,11 @@
+<svg data-dc-tpl="77" width="512" height="512" viewBox="0 0 112 112">
+            <defs data-dc-tpl="78">
+              <linearGradient data-dc-tpl="79" id="amb" x1="0" y1="0" x2="0" y2="1">
+                <stop data-dc-tpl="80" offset="0" stop-color="#F2A93B"></stop>
+                <stop data-dc-tpl="81" offset="1" stop-color="#DD8A12"></stop>
+              </linearGradient>
+            </defs>
+            <rect data-dc-tpl="82" width="112" height="112" rx="26" fill="url(#amb)"></rect>
+            <path data-dc-tpl="83" d="M56 26 C 64 40 76 51 76 62 A 20 20 0 1 1 36 62 C 36 51 48 40 56 26 Z" fill="#FFFFFF" opacity="0.95"></path>
+            <circle data-dc-tpl="84" cx="56" cy="62.5" r="7.4" fill="#DD8A12"></circle>
+          </svg>
