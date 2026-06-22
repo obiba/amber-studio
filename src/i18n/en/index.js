@@ -672,6 +672,7 @@ export default {
     cc_by_nc_nd_40: 'Creative Commons BY NC ND 4.0',
     cc_cc0_10: 'Creative Commons CC0 1.0'
   },
+  access: 'Access',
   add: 'Add',
   update: 'Update',
   delete: 'Delete',
@@ -730,4 +731,6 @@ export default {
   tabulation: 'Tabulation',
   github: 'GitHub',
   google: 'Google',
+  study_design: 'Study design',
+  collected_data: 'Collected data',
 }

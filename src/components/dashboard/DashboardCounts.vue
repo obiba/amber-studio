@@ -1,86 +1,96 @@
 <template>
   <div class="q-mb-md">
-    <div v-if="items.length>0" class="row q-col-gutter-sm q-mb-md">
-      <div v-for="(item, index) in items" :key="index" class="col-sm-6 col-xs-12" :class="isAdministrator ? 'col-md-2' : 'col-md-3'">
-        <q-item :style="`background-color: ${item.color1}`" class="q-pa-none">
-          <q-item-section side :style="`background-color: ${item.color2}`"
-                          class=" q-pa-lg q-mr-none text-white">
-            <router-link v-if="item.link" class="text-white" :to="item.link">
-              <q-icon :name="item.icon" color="white" size="24px"></q-icon>
-            </router-link>
-            <q-icon v-else :name="item.icon" color="white" size="24px"></q-icon>
-          </q-item-section>
-          <q-item-section class=" q-pa-md q-ml-none text-white">
-            <q-item-label class="text-white text-h6 text-weight-bolder">
-              <router-link v-if="item.link" class="text-white" :to="item.link">{{ item.value }}</router-link>
-              <span v-else>{{ item.value }}</span>
-            </q-item-label>
-            <q-item-label>
-              <router-link v-if="item.link" class="text-white" :to="item.link">{{ t(item.title) }}</router-link>
-              <span v-else>{{ t(item.title) }}</span>
-            </q-item-label>
-          </q-item-section>
-        </q-item>
+    <q-item-label v-if="case_reports_aggregations.length>0" header class="text-uppercase q-pl-none">{{ t('study_design') }}</q-item-label>
+    <div v-if="case_reports_aggregations.length>0" class="items-grid-4 q-mb-md">
+      <div v-for="(item, index) in studyItems" :key="index">
+        <q-list bordered class="rounded-borders">
+          <q-item class="q-pa-none">
+            <q-item-section avatar>
+              <div class="q-ml-md q-pa-md bg-light-blue-1 rounded-borders">
+                <router-link v-if="item.link" :to="item.link">
+                  <q-icon :name="item.icon" color="light-blue" size="24px"></q-icon>
+                </router-link>
+                <q-icon v-else :name="item.icon" color="light-blue" size="24px"></q-icon>
+              </div>
+            </q-item-section>
+            <q-item-section class="q-py-md q-pr-md q-ml-none text-grey-9">
+              <q-item-label class="text-h4 text-weight-bolder">
+                <router-link v-if="item.link" class="text-grey-9" :to="item.link">{{ item.value }}</router-link>
+                <span v-else>{{ item.value }}</span>
+              </q-item-label>
+              <q-item-label>
+                <router-link v-if="item.link" class="text-grey-9" :to="item.link">{{ t(item.title) }}</router-link>
+                <span v-else>{{ t(item.title) }}</span>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </div>
     </div>
-    <div class="row q-col-gutter-sm q-mb-md">
-      <div v-if="case_reports_aggregations.length>0" class="col-md-6 col-sm-12 col-xs-12">
-        <div class="row q-col-gutter-sm q-mb-md">
-          <div v-for="(item, index) in caseReportItems" :key="index" class="col-md-6 col-sm-6 col-xs-12">
-            <q-item :style="`background-color: ${item.color1}`" class="q-pa-none">
-              <q-item-section side :style="`background-color: ${item.color2}`"
-                              class=" q-pa-lg q-mr-none text-white">
-                <router-link v-if="item.link" class="text-white" :to="item.link">
-                  <q-icon :name="item.icon" color="white" size="24px"></q-icon>
+    <q-item-label v-if="collectedDataItems.length > 0" header class="text-uppercase q-pl-none">{{ t('collected_data') }}</q-item-label>
+    <div v-if="collectedDataItems.length > 0" class="q-mb-md" :class="`items-grid-${collectedDataItems.length}`">
+      <div v-for="(item, index) in collectedDataItems" :key="index">
+        <q-list bordered class="rounded-borders">
+          <q-item class="q-pa-none">
+            <q-item-section avatar>
+              <div class="q-ml-md q-pa-md bg-light-blue-1 rounded-borders">
+                <router-link v-if="item.link" :to="item.link">
+                  <q-icon :name="item.icon" color="light-blue" size="24px"></q-icon>
                 </router-link>
-                <q-icon v-else :name="item.icon" color="white" size="24px"></q-icon>
-              </q-item-section>
-              <q-item-section class=" q-pa-md q-ml-none text-white">
-                <q-item-label class="text-white text-h6 text-weight-bolder">
-                  <router-link v-if="item.link" class="text-white" :to="item.link">{{ item.value }}</router-link>
-                  <span v-else>{{ item.value }}</span>
-                </q-item-label>
-                <q-item-label>
-                  <router-link v-if="item.link" class="text-white" :to="item.link">{{ t(item.title) }}</router-link>
-                  <span v-else>{{ t(item.title) }}</span>
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-          </div>
-        </div>
-        <records-chart
-          chartId="case-reports"
-          :title="t('chart.cumulated_case_reports')"
-          :aggregations="case_reports_aggregations"/>
+                <q-icon v-else :name="item.icon" color="light-blue" size="24px"></q-icon>
+              </div>
+            </q-item-section>
+            <q-item-section class="q-py-md q-pr-md q-ml-none text-grey-9">
+              <q-item-label class="text-h4 text-weight-bolder">
+                <router-link v-if="item.link" class="text-grey-9" :to="item.link">{{ item.value }}</router-link>
+                <span v-else>{{ item.value }}</span>
+              </q-item-label>
+              <q-item-label>
+                <router-link v-if="item.link" class="text-grey-9" :to="item.link">{{ t(item.title) }}</router-link>
+                <span v-else>{{ t(item.title) }}</span>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </div>
-      <div v-if="interviews_aggregations.length>0" class="col-md-6 col-sm-12 col-xs-12">
-        <div class="row q-col-gutter-sm q-mb-md">
-          <div v-for="(item, index) in interviewItems" :key="index" class="col-md-6 col-sm-6 col-xs-12">
-            <q-item :style="`background-color: ${item.color1}`" class="q-pa-none">
-              <q-item-section side :style="`background-color: ${item.color2}`"
-                              class=" q-pa-lg q-mr-none text-white">
-                <router-link v-if="item.link" class="text-white" :to="item.link">
-                  <q-icon :name="item.icon" color="white" size="24px"></q-icon>
+    </div>
+    <div v-if="collectedDataItems.length > 0" class="q-mb-md" :class="`items-grid-${collectedDataItems.length}`">
+      <records-chart
+        v-if="case_reports_aggregations.length>0"
+        chartId="case-reports"
+        :title="t('chart.cumulated_case_reports')"
+        :aggregations="case_reports_aggregations"/>
+      <records-chart
+        v-if="interviews_aggregations.length>0"
+        chartId="interviews"
+        :title="t('chart.cumulated_interviews')"
+        :aggregations="interviews_aggregations"/>
+    </div>
+    <q-item-label v-if="accessItems.length>0" header class="text-uppercase q-pl-none">{{ t('access') }}</q-item-label>
+    <div v-if="accessItems.length>0" class="items-grid-4 q-mb-md">
+      <div v-for="(item, index) in accessItems" :key="index">
+        <q-list bordered class="rounded-borders">
+          <q-item class="q-pa-none">
+            <q-item-section avatar>
+              <div class="q-ml-md q-pa-md bg-light-blue-1 rounded-borders">
+                <router-link v-if="item.link" :to="item.link">
+                  <q-icon :name="item.icon" color="light-blue" size="sm"></q-icon>
                 </router-link>
-                <q-icon v-else :name="item.icon" color="white" size="24px"></q-icon>
-              </q-item-section>
-              <q-item-section class=" q-pa-md q-ml-none text-white">
-                <q-item-label class="text-white text-h6 text-weight-bolder">
-                  <router-link v-if="item.link" class="text-white" :to="item.link">{{ item.value }}</router-link>
-                  <span v-else>{{ item.value }}</span>
-                </q-item-label>
-                <q-item-label>
-                  <router-link v-if="item.link" class="text-white" :to="item.link">{{ t(item.title) }}</router-link>
-                  <span v-else>{{ t(item.title) }}</span>
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-          </div>
-        </div>
-        <records-chart
-          chartId="interviews"
-          :title="t('chart.cumulated_interviews')"
-          :aggregations="interviews_aggregations"/>
+                <q-icon v-else :name="item.icon" color="light-blue" size="sm"></q-icon>
+              </div>
+            </q-item-section>
+            <q-item-section class="q-py-md q-pr-md q-ml-none text-grey-9">
+              <q-item-label class="text-h4 text-weight-bolder">
+                <router-link v-if="item.link" class="text-grey-9" :to="item.link">{{ item.value }}</router-link>
+                <span v-else>{{ item.value }}</span>
+              </q-item-label>
+              <q-item-label>
+                <router-link v-if="item.link" class="text-grey-9" :to="item.link">{{ t(item.title) }}</router-link>
+                <span v-else>{{ t(item.title) }}</span>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </div>
     </div>
   </div>
@@ -111,7 +121,7 @@ const interviews_aggregations = computed(() => {
   return props.counts && props.counts.interviews_agg ? props.counts.interviews_agg : []
 })
 
-const items = computed(() => {
+const accessItems = computed(() => {
   const cards = []
   if (isAdministrator.value) {
     if (props.counts.users !== undefined && props.counts.groups !== undefined) {
@@ -119,27 +129,26 @@ const items = computed(() => {
         title: 'users.title',
         icon: 'person',
         value: props.counts.users ? props.counts.users : '-',
-        color1: '#5064b5',
-        color2: '#3e51b5',
         link: '/users'
       },
       {
         title: 'groups.title',
         icon: 'people',
         value: props.counts.groups ? props.counts.groups : '-',
-        color1: '#5064b5',
-        color2: '#3e51b5',
         link: '/groups'
       })
     }
   }
+  return cards
+})
+
+const studyItems = computed(() => {
+  const cards = []
   if (props.counts.studies !== undefined) {
     cards.push({
       title: 'studies.title',
       icon: 'inventory',
       value: props.counts.studies ? props.counts.studies : '-',
-      color1: '#f37169',
-      color2: '#f34636',
       link: '/studies'
     })
   }
@@ -148,51 +157,62 @@ const items = computed(() => {
       {
         title: 'study.forms',
         icon: 'speaker_notes',
-        value: props.counts.forms ? props.counts.forms : '-',
-        color1: '#ea6a7f',
-        color2: '#ea4b64'
+        value: props.counts.forms ? props.counts.forms : '-'
       })
   }
-  return cards
-})
-
-const caseReportItems = computed(() => {
-  const cards = [
+  cards.push(
     {
       title: 'study.case_report_forms',
       icon: 'ballot',
-      value: props.counts.case_report_forms ? props.counts.case_report_forms : '-',
-      color1: '#a270b1',
-      color2: '#9f52b1'
-    },
-    {
-      title: 'study.case_reports',
-      icon: 'bar_chart',
-      value: props.counts.case_reports ? props.counts.case_reports : '-',
-      color1: '#a270b1',
-      color2: '#9f52b1'
-    }
-  ]
-  return cards
-})
+      value: props.counts.case_report_forms ? props.counts.case_report_forms : '-'
+    })
+  cards.push(
 
-const interviewItems = computed(() => {
-  const cards = [
     {
       title: 'study.interview_designs',
       icon: 'ballot',
-      value: props.counts.interview_designs ? props.counts.interview_designs : '-',
-      color1: '#a270b1',
-      color2: '#9f52b1'
-    },
+      value: props.counts.interview_designs ? props.counts.interview_designs : '-'
+    }
+    )
+  return cards
+})
+
+const collectedDataItems = computed(() => {
+  const cards = []
+  if (case_reports_aggregations.value.length > 0) {
+    cards.push(
+    {
+      title: 'study.case_reports',
+      icon: 'bar_chart',
+      value: props.counts.case_reports ? props.counts.case_reports : '-'
+    })
+  }
+  if (interviews_aggregations.value.length > 0) {
+    cards.push(
     {
       title: 'study.interviews',
       icon: 'bar_chart',
-      value: props.counts.interviews ? props.counts.interviews : '-',
-      color1: '#a270b1',
-      color2: '#9f52b1'
-    }
-  ]
+      value: props.counts.interviews ? props.counts.interviews : '-'
+    })
+  }
   return cards
 })
 </script>
+
+<style scoped>
+.items-grid-1 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+}
+.items-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.items-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+</style>

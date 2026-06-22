@@ -25,9 +25,8 @@
         {{ study.description }}
       </div>
       <div class="row q-col-gutter-lg q-mb-lg">
-        <div v-if="hasMetrics" class="col-8 col-sm-8 col-xs-12">
-          <q-item-label header class="text-uppercase q-pl-none">{{ t('study.metrics') }}</q-item-label>
-          <dashboard-counts v-if="!isGuest" :counts="counts"/>
+        <div v-if="hasMetrics && !isGuest" class="col-8 col-sm-8 col-xs-12">
+          <dashboard-counts :counts="counts"/>
         </div>
         <div v-if="myCampaigns.length" class="col-4 col-sm-4 col-xs-12">
           <q-item-label header class="text-uppercase q-pl-none">{{ t('study.my_campaigns') }}</q-item-label>
