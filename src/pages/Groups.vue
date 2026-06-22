@@ -7,7 +7,7 @@
       </q-breadcrumbs>
     </div>
     <q-separator/>
-
+    <div class="text-h5 q-ma-md">{{t('groups.title')}}</div>
     <q-table
         class="q-ma-md"
         flat

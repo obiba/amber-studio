@@ -7,7 +7,7 @@
       </q-breadcrumbs>
     </div>
     <q-separator/>
-
+    <div class="text-h5 q-ma-md">{{t('studies.title')}}</div>
     <div v-cloak>
       
           <q-table

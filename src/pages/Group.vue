@@ -8,7 +8,7 @@
       </q-breadcrumbs>
     </div>
     <q-separator/>
-
+    <div class="text-h5 q-ma-md">{{ group.name }}</div>
     <div class="q-ma-md">
       <div class="row">
         <div class="col-12 col-md-6 q-pa-sm">
