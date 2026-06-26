@@ -42,7 +42,7 @@ export const useInterviewStore = defineStore('interview', () => {
   })
 
   // Actions - Interviews
-  async function getInterviews(paginationOpts, study, interviewDesign, campaign, state, participantValid, filter, from, to) {
+  async function getInterviews (paginationOpts, study, interviewDesign, campaign, state, participantValid, filter, from, to) {
     try {
       const result = await interviewService.getInterviews(paginationOpts, study, interviewDesign, campaign, state, participantValid, filter, from, to)
       if (result) {
@@ -61,7 +61,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function updateInterview(interviewData, id, paginationOpts, study, form) {
+  async function updateInterview (interviewData, id, paginationOpts, study, form) {
     try {
       const result = await interviewService.updateInterview(interviewData, id)
       if (result) {
@@ -78,7 +78,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function deleteInterview(id, paginationOpts, study, form) {
+  async function deleteInterview (id, paginationOpts, study, form) {
     try {
       const result = await interviewService.deleteInterview(id)
       if (result) {
@@ -95,7 +95,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function deleteInterviews(ids, paginationOpts, study, form) {
+  async function deleteInterviews (ids, paginationOpts, study, form) {
     try {
       const result = await interviewService.deleteInterviews(ids)
       if (result) {
@@ -113,7 +113,7 @@ export const useInterviewStore = defineStore('interview', () => {
   }
 
   // Actions - Interview Designs
-  async function getInterviewDesigns(paginationOpts, study, filter) {
+  async function getInterviewDesigns (paginationOpts, study, filter) {
     try {
       const result = await interviewDesignService.getInterviewDesigns(paginationOpts, study, filter)
       if (result) {
@@ -132,7 +132,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function getInterviewDesign(id) {
+  async function getInterviewDesign (id) {
     try {
       const result = await interviewDesignService.getInterviewDesign(id)
       if (result) {
@@ -146,7 +146,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function createInterviewDesign(interviewDesignData, paginationOpts) {
+  async function createInterviewDesign (interviewDesignData, paginationOpts) {
     try {
       const result = await interviewDesignService.createInterviewDesign(interviewDesignData)
       if (result) {
@@ -167,7 +167,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function updateInterviewDesign(interviewDesignData, id, paginationOpts, notification = true) {
+  async function updateInterviewDesign (interviewDesignData, id, paginationOpts, notification = true) {
     const designId = id || interviewDesignData._id
     try {
       const result = await interviewDesignService.updateInterviewDesign(interviewDesignData, designId)
@@ -190,7 +190,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function deleteInterviewDesign(id, paginationOpts, study) {
+  async function deleteInterviewDesign (id, paginationOpts, study) {
     try {
       const result = await interviewDesignService.deleteInterviewDesign(id)
       if (result) {
@@ -207,7 +207,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function deleteInterviewDesigns(ids, paginationOpts, study) {
+  async function deleteInterviewDesigns (ids, paginationOpts, study) {
     try {
       const result = await interviewDesignService.deleteInterviewDesigns(ids)
       if (result) {
@@ -225,7 +225,7 @@ export const useInterviewStore = defineStore('interview', () => {
   }
 
   // Actions - Campaigns
-  async function getCampaigns(paginationOpts, interviewDesign, study, filter) {
+  async function getCampaigns (paginationOpts, interviewDesign, study, filter) {
     try {
       const result = await campaignService.getCampaigns(paginationOpts, interviewDesign, study, filter)
       if (result) {
@@ -244,7 +244,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function createCampaign(campaignData, paginationOpts, interviewDesign) {
+  async function createCampaign (campaignData, paginationOpts, interviewDesign) {
     try {
       const result = await campaignService.createCampaign(campaignData)
       if (result) {
@@ -265,7 +265,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function updateCampaign(campaignData, id, paginationOpts, interviewDesign) {
+  async function updateCampaign (campaignData, id, paginationOpts, interviewDesign) {
     const campaignId = id || campaignData._id
     try {
       const result = await campaignService.updateCampaign(campaignData, campaignId)
@@ -283,7 +283,7 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  async function deleteCampaign(id, paginationOpts, interviewDesign) {
+  async function deleteCampaign (id, paginationOpts, interviewDesign) {
     try {
       const result = await campaignService.deleteCampaign(id)
       if (result) {
@@ -301,15 +301,15 @@ export const useInterviewStore = defineStore('interview', () => {
   }
 
   // Pagination setters
-  function setInterviewPagination(opts) {
+  function setInterviewPagination (opts) {
     interviewPaginationOpts.value = opts
   }
 
-  function setInterviewDesignPagination(opts) {
+  function setInterviewDesignPagination (opts) {
     interviewDesignPaginationOpts.value = opts
   }
 
-  function setCampaignPagination(opts) {
+  function setCampaignPagination (opts) {
     campaignPaginationOpts.value = opts
   }
 

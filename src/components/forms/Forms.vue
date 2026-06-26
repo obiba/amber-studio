@@ -99,7 +99,7 @@
               :hint="t('required')"
             >
               <template v-slot:error>
-                <div v-for="error in v$.newStudyFormData.name.$errors">
+                <div v-for="error in v$.newStudyFormData.name.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -218,7 +218,6 @@ const route = useRoute()
 const { t } = useI18n()
 
 // Refs
-const tab = ref('definition')
 const selected = ref([])
 const filter = ref('')
 const newStudyFormData = ref({
@@ -252,7 +251,6 @@ const v$ = useVuelidate(rules, { newStudyFormData })
 
 // Computed
 const studyForms = computed(() => formStore.forms)
-const formPaginationOpts = computed(() => formStore.formPaginationOpts)
 
 const studyId = computed(() => route.params.id)
 

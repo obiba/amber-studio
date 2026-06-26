@@ -100,7 +100,7 @@
         </template>
       </q-table>
     </div>
-    
+
     <q-dialog v-model='showCreateGroup' persistent>
       <q-card>
         <q-card-section class='row items-center'>
@@ -115,7 +115,7 @@
               :hint="t('required')"
             >
               <template v-slot:error>
-                <div v-for="error in v$.name.$errors">
+                <div v-for="error in v$.name.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -234,10 +234,6 @@ const paginationOpts = ref({
   rowsPerPage: 10,
   rowsNumber: 10
 })
-const groupData = ref({
-  name: '',
-  description: ''
-})
 const newGroupData = ref({
   name: '',
   description: ''
@@ -297,18 +293,18 @@ const groups = computed(() => adminStore.groups)
 const disableCreateGroup = computed(() => v$.value.$invalid)
 
 // Methods
-function makeEllipsis(text, length) {
+function makeEllipsis (text, length) {
   if (text && text.length > length) {
     return text.substring(0, length) + ' ...'
   }
   return text
 }
 
-function setPagination() {
+function setPagination () {
   paginationOpts.value = adminStore.groupPaginationOpts
 }
 
-async function getTableGroups(requestProp) {
+async function getTableGroups (requestProp) {
   if (requestProp) {
     paginationOpts.value = requestProp.pagination
     adminStore.setGroupPagination(requestProp.pagination)
@@ -319,35 +315,35 @@ async function getTableGroups(requestProp) {
   paginationOpts.value.rowsNumber = adminStore.groupPaginationOpts.rowsNumber
 }
 
-function createGroup() {
+function createGroup () {
   newGroupData.value = {}
   showCreateGroup.value = true
   selectedGroup.value = undefined
 }
 
-function confirmDeleteGroup(group) {
+function confirmDeleteGroup (group) {
   showConfirmDeleteGroup.value = true
   selectedGroup.value = group
 }
 
-function confirmDeleteGroups() {
+function confirmDeleteGroups () {
   if (selected.value.length > 0) {
     showConfirmDeleteGroups.value = true
   }
 }
 
-async function saveGroup() {
+async function saveGroup () {
   v$.value.$reset()
   // create
   const createdData = { ...newGroupData.value }
   await adminStore.createGroup(createdData, paginationOpts.value)
 }
 
-function deleteGroup() {
+function deleteGroup () {
   adminStore.deleteGroup(selectedGroup.value._id, paginationOpts.value)
 }
 
-function deleteGroups() {
+function deleteGroups () {
   const ids = selected.value.map(u => u._id)
   adminStore.deleteGroups(ids, paginationOpts.value)
   selected.value = []

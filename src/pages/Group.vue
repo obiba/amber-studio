@@ -24,7 +24,7 @@
                     :hint="t('required')"
                   >
                 <template v-slot:error>
-                  <div v-for="error in v$.name.$errors">
+                  <div v-for="error in v$.name.$errors" :key="error.$uid">
                     {{error.$message}}
                   </div>
                 </template>
@@ -41,7 +41,7 @@
                 class='q-mb-sm'
               />
             </div>
-          </div>  
+          </div>
         </div>
 
         <div class="col-12 col-md-6 q-pa-sm">
@@ -140,25 +140,24 @@ const v$ = useVuelidate(rules, groupData)
 const filteredUsers = computed(() => adminStore.users)
 const group = computed(() => adminStore.group)
 const groupUsers = computed(() => adminStore.groupUsers)
-const currentGroup = computed(() => adminStore.group)
 const disableSaveGroup = computed(() => v$.value.$invalid)
 
 // Methods
-async function initData() {
+async function initData () {
   await adminStore.getGroup(route.params.id)
   groupData.value = { ...group.value }
   await adminStore.getGroupUsers(group.value)
   groupData.value.users = [...groupUsers.value]
 }
 
-async function saveGroup() {
+async function saveGroup () {
   v$.value.$reset()
   const toSave = { ...groupData.value }
   toSave.users = groupData.value.users.map(u => u._id)
   await adminStore.updateGroup(toSave)
 }
 
-function filterUserOptions(val, update, abort) {
+function filterUserOptions (val, update, abort) {
   const filter = val.trim()
   if (filter.length < 2) {
     // not enough type ahead
@@ -187,7 +186,7 @@ function filterUserOptions(val, update, abort) {
   })
 }
 
-function addUserOption(value) {
+function addUserOption (value) {
   // add value if not present
   if (groupData.value.users.filter(u => u.email === value.object.email).length === 0) {
     groupData.value.users.push(value.object)
@@ -196,7 +195,7 @@ function addUserOption(value) {
   selectedUserOptions.value = ''
 }
 
-function removeUser(user) {
+function removeUser (user) {
   groupData.value.users = groupData.value.users.filter(u => u.email !== user.email)
 }
 

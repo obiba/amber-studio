@@ -276,7 +276,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.campaignData.name.$errors">
+              <div v-for="error in v$.campaignData.name.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -383,7 +383,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.campaignData.name.$errors">
+              <div v-for="error in v$.campaignData.name.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -404,7 +404,7 @@
             lazy-rules
           >
             <template v-slot:error>
-              <div v-for="error in v$.campaignData.visitUrl.$errors">
+              <div v-for="error in v$.campaignData.visitUrl.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -419,7 +419,7 @@
             lazy-rules
           >
             <template v-slot:error>
-              <div v-for="error in v$.campaignData.completionUrl.$errors">
+              <div v-for="error in v$.campaignData.completionUrl.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -698,7 +698,6 @@ const { isReadOnly } = useAuth()
 
 // Refs
 const tab = ref('')
-const selected = ref([])
 const paginationOpts = ref({
   descending: true,
   page: 1,
@@ -789,7 +788,7 @@ const interviewStateFrequencies = computed(() => {
 })
 
 // Methods
-async function initCampaigns() {
+async function initCampaigns () {
   await interviewStore.getCampaigns(paginationOpts.value, interviewDesign.value._id)
   if (campaigns.value.length > 0) {
     tab.value = route.query.c
@@ -799,14 +798,14 @@ async function initCampaigns() {
   }
 }
 
-function getSubject(id, type) {
+function getSubject (id, type) {
   if (subjects.value && subjects.value.length > 0) {
     return subjects.value.find(s => s.type === type && s.id === id)
   }
   return { id: id, type: type, name: '?' }
 }
 
-function getSubjectOptions(type) {
+function getSubjectOptions (type) {
   return subjects.value.filter(s => s.type === type).map(s => {
     return {
       value: s.id,
@@ -815,7 +814,7 @@ function getSubjectOptions(type) {
   })
 }
 
-function getCampaignMetrics() {
+function getCampaignMetrics () {
   const name = tab.value
   const campaign = campaigns.value.find((cmp) => cmp.name === name)
   if (campaign) {
@@ -839,17 +838,17 @@ function getCampaignMetrics() {
   }
 }
 
-function onAddCampaign() {
+function onAddCampaign () {
   campaignData.value = {
     name: '',
     investigators: [],
     walkinParamsStr: '',
-    walkinAttributes: [],
+    walkinAttributes: []
   }
   showAddCampaign.value = true
 }
 
-function onEditCampaign(campaign) {
+function onEditCampaign (campaign) {
   campaignData.value = { ...campaign, walkinParamsStr: '', walkinAttributes: {} }
   campaignData.value.validFrom = campaignData.value.validFrom ? date.formatDate(campaignData.value.validFrom, 'YYYY-MM-DD') : null
   campaignData.value.validUntil = campaignData.value.validUntil ? date.formatDate(campaignData.value.validUntil, 'YYYY-MM-DD') : null
@@ -859,18 +858,18 @@ function onEditCampaign(campaign) {
   showEditCampaign.value = true
 }
 
-function deleteWalkInAttribute(idx) {
+function deleteWalkInAttribute (idx) {
   campaignData.value.walkinAttributes.splice(idx, 1)
 }
 
-function addWalkInAttribute() {
+function addWalkInAttribute () {
   campaignData.value.walkinAttributes.push({
     key: '',
     value: ''
   })
 }
 
-function deleteWalkInAttributes() {
+function deleteWalkInAttributes () {
   campaignData.value.walkinAttributes = [
     {
       key: '',
@@ -879,12 +878,12 @@ function deleteWalkInAttributes() {
   ]
 }
 
-function onConfirmDeleteCampaign(campaign) {
+function onConfirmDeleteCampaign (campaign) {
   campaignData.value = { ...campaign }
   showDeleteCampaign.value = true
 }
 
-function addCampaign() {
+function addCampaign () {
   const toSave = { ...campaignData.value }
   toSave.interviewDesign = interviewDesign.value._id
   interviewStore.createCampaign(
@@ -897,7 +896,7 @@ function addCampaign() {
   })
 }
 
-function editCampaign() {
+function editCampaign () {
   const toSave = { ...campaignData.value }
   toSave.walkInData = {}
   if (toSave.walkInEnabled) {
@@ -923,7 +922,7 @@ function editCampaign() {
   ).then(() => { tab.value = campaignData.value.name })
 }
 
-function removeCampaign() {
+function removeCampaign () {
   const idx = campaigns.value.map(campaign => campaign.name).indexOf(campaignData.value.name)
   const nextidx = idx === campaigns.value.length - 1 ? idx - 1 : idx + 1
   const nexttab = nextidx < 0 ? undefined : campaigns.value[nextidx].name
@@ -937,7 +936,7 @@ function removeCampaign() {
   })
 }
 
-function makeWalkInUrl(campaign) {
+function makeWalkInUrl (campaign) {
   if (campaign.visitUrl && campaign.walkInEnabled) {
     const baseUrl = campaign.visitUrl.replace(/\/$/, '')
     let queryParams = `campaign=${campaign._id}`
@@ -954,7 +953,7 @@ function makeWalkInUrl(campaign) {
   return campaign.visitUrl
 }
 
-function hasWalkInParameters(campaign) {
+function hasWalkInParameters (campaign) {
   // has any walk-in data with null values
   if (!campaign || !campaign.walkInData) return false
   if (Object.keys(campaign.walkInData).length === 0) return false
@@ -967,7 +966,7 @@ function hasWalkInParameters(campaign) {
   return false
 }
 
-function getWalkInParameters(campaign) {
+function getWalkInParameters (campaign) {
   if (!campaign || !campaign.walkInData) return []
   if (Object.keys(campaign.walkInData).length === 0) return []
   const params = []
@@ -979,7 +978,7 @@ function getWalkInParameters(campaign) {
   return params
 }
 
-function getWalkInAttributesArray(campaign) {
+function getWalkInAttributesArray (campaign) {
   if (!campaign || !campaign.walkInData) return []
   if (Object.keys(campaign.walkInData).length === 0) return []
   const attributes = []
@@ -991,7 +990,7 @@ function getWalkInAttributesArray(campaign) {
   return attributes
 }
 
-function onParticipantsTask(type) {
+function onParticipantsTask (type) {
   const campaign = campaigns.value.find((cmp) => cmp.name === tab.value)
   adminStore.createTask({
     type: type,

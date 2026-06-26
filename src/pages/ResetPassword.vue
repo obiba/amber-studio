@@ -90,7 +90,7 @@ const disableSubmit = computed(() => {
 })
 
 // methods
-async function resetPassword() {
+async function resetPassword () {
   const token = route.query.token
   if (!token) {
     Notify.create({

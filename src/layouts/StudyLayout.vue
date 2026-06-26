@@ -192,7 +192,7 @@ watch(locale, val => {
 // Drawer state
 const leftDrawerOpen = ref(false)
 
-function toggleLeftDrawer() {
+function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
@@ -224,11 +224,11 @@ const hasCaseReportService = computed(() => {
 const hasInterviewService = computed(() => {
   return study.value && (!study.value.services || study.value.services.length === 0 || study.value.services?.includes('interviews'))
 })
-function onLocaleSelection(opt) {
+function onLocaleSelection (opt) {
   locale.value = opt.value
 }
 
-function onLogout() {
+function onLogout () {
   logout()
 }
 
@@ -237,7 +237,7 @@ onMounted(() => {
   initStudyData()
 })
 
-async function initStudyData() {
+async function initStudyData () {
   await studyStore.getStudy(route.params.id)
 }
 </script>

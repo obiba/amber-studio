@@ -125,7 +125,7 @@
               :hint="t('required')"
             >
               <template v-slot:error>
-                <div v-for="error in v$.newStudyData.name.$errors">
+                <div v-for="error in v$.newStudyData.name.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -331,18 +331,18 @@ const servicesOptions = computed(() => [
 ])
 
 // methods
-function makeEllipsis(text, length) {
+function makeEllipsis (text, length) {
   if (text && text.length > length) {
     return text.substring(0, length) + ' ...'
   }
   return text
 }
 
-function setPagination() {
+function setPagination () {
   paginationOpts.value = { ...studyStore.studyPaginationOpts }
 }
 
-async function getTableStudies(requestProp) {
+async function getTableStudies (requestProp) {
   if (requestProp) {
     paginationOpts.value = { ...requestProp.pagination }
     studyStore.setStudyPagination(requestProp.pagination)
@@ -353,35 +353,35 @@ async function getTableStudies(requestProp) {
   paginationOpts.value.rowsNumber = studyStore.studyPaginationOpts.rowsNumber
 }
 
-function createStudy() {
+function createStudy () {
   newStudyData.value = { name: '', description: '', services: undefined }
   showCreateStudy.value = true
   selectedStudy.value = undefined
 }
 
-function confirmDeleteStudy(study) {
+function confirmDeleteStudy (study) {
   showConfirmDeleteStudy.value = true
   selectedStudy.value = study
 }
 
-function confirmDeleteStudies() {
+function confirmDeleteStudies () {
   if (selected.value.length > 0) {
     showConfirmDeleteStudies.value = true
   }
 }
 
-async function saveStudy() {
+async function saveStudy () {
   v$.value.$reset()
   // create
   const createdData = { ...newStudyData.value }
   studyStore.createStudy(createdData, paginationOpts.value)
 }
 
-function deleteStudy() {
+function deleteStudy () {
   studyStore.deleteStudy(selectedStudy.value._id, paginationOpts.value)
 }
 
-function deleteStudies() {
+function deleteStudies () {
   const ids = selected.value.map(u => u._id)
   studyStore.deleteStudies(ids, paginationOpts.value)
   selected.value = []

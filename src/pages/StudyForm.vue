@@ -86,20 +86,20 @@
         <q-tab-panel name="schema" class="q-pa-none">
 
           <div class="row q-ma-sm">
-            <q-btn 
-              @click='innerTab = "items"' 
-              :label="t('form.items')" 
+            <q-btn
+              @click='innerTab = "items"'
+              :label="t('form.items')"
               icon="category"
               size="sm"
-              color="teal" 
+              color="teal"
               :outline="innerTab !== 'items'" />
-            <q-btn 
-              @click='innerTab = "translations"' 
-              :label="t('form.translations')" 
+            <q-btn
+              @click='innerTab = "translations"'
+              :label="t('form.translations')"
               icon="translate"
               size="sm"
               color="teal"
-              :outline="innerTab !== 'translations'" 
+              :outline="innerTab !== 'translations'"
               class="on-right" />
               <q-space />
             <q-btn
@@ -170,7 +170,7 @@
               :error="v$.studyFormData.name.$error"
               :hint="t('required')">
               <template v-slot:error>
-              <div v-for="error in v$.studyFormData.name.$errors">
+              <div v-for="error in v$.studyFormData.name.$errors" :key="error.$uid">
                   {{error.$message}}
               </div>
               </template>
@@ -336,7 +336,7 @@ const saveIcon = computed(() => {
 })
 
 // methods
-async function initStudyFormData() {
+async function initStudyFormData () {
   await formStore.getForm(route.params.fid)
   studyFormData.value = JSON.parse(JSON.stringify(studyForm.value))
   generateIds(studyFormData.value.schema.items)
@@ -344,7 +344,7 @@ async function initStudyFormData() {
   await studyStore.getStudy(studyForm.value.study)
 }
 
-async function save(notification) {
+async function save (notification) {
   v$.value.$reset()
   changeDetected.value = -1
   originalSchemaStr.value = JSON.stringify(studyFormData.value.schema)
@@ -354,7 +354,7 @@ async function save(notification) {
   })
 }
 
-function onExport() {
+function onExport () {
   const data = JSON.parse(JSON.stringify(studyFormData.value.schema))
   delete data._id
   delete data.name
@@ -368,27 +368,27 @@ function onExport() {
   a.remove()
 }
 
-function onImport() {
+function onImport () {
   showImportSchema.value = true
   importSchemaFile.value = null
 }
 
-function onEdit() {
+function onEdit () {
   showEditDefinition.value = true
 }
 
-function onTag() {
+function onTag () {
   showTag.value = true
   publicationComment.value = null
 }
 
-function onReinstate() {
+function onReinstate () {
   studyFormData.value = JSON.parse(JSON.stringify(studyForm.value))
   originalSchemaStr.value = JSON.stringify(studyFormData.value.schema)
   reload.value++
 }
 
-function importSchema() {
+function importSchema () {
   if (importSchemaFile.value) {
     const reader = new FileReader()
     reader.readAsText(importSchemaFile.value, 'UTF-8')
@@ -406,7 +406,7 @@ function importSchema() {
   }
 }
 
-function tag() {
+function tag () {
   const toSave = {
     form: studyFormData.value._id,
     study: studyFormData.value.study

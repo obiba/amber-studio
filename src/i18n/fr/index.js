@@ -625,7 +625,7 @@ export default {
     campaign_with_walkin_participants: 'Auto-enregistrement',
     campaign_with_walkin_participants_hint: 'Permettre aux participants de s\'auto-enregistrer pour cette campagne.',
     campaign_walkin_url_parameters: 'Paramètres de l\'URL pour l\'auto-enregistrement',
-    campaign_walkin_url_parameters_hint: 'Paramètres de l\'URL Amber Visit à utiliser pour l\'auto-enregistrement (séparés par des virgules ou des espaces).', 
+    campaign_walkin_url_parameters_hint: 'Paramètres de l\'URL Amber Visit à utiliser pour l\'auto-enregistrement (séparés par des virgules ou des espaces).',
     campaign_walkin_participant_attributes: 'Attributs du participant auto-enregistré',
     campaign_walkin_participant_attributes_hint: 'Le profile du participant auto-enregistré peut être complété avec des attributs.',
     campaign_external_visit: 'URL de Amber Visit pour les participants externes',
@@ -742,5 +742,5 @@ export default {
   github: 'GitHub',
   google: 'Google',
   study_design: 'Conception d\'étude',
-  collected_data: 'Données collectées',
+  collected_data: 'Données collectées'
 }

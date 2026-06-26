@@ -138,7 +138,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.newStudyInterviewDesignData.name.$errors">
+              <div v-for="error in v$.newStudyInterviewDesignData.name.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -152,7 +152,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.newStudyInterviewDesignData.label.$errors">
+              <div v-for="error in v$.newStudyInterviewDesignData.label.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -220,7 +220,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.selectedStudyInterviewDesign.name.$errors">
+              <div v-for="error in v$.selectedStudyInterviewDesign.name.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -234,7 +234,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.selectedStudyInterviewDesign.label.$errors">
+              <div v-for="error in v$.selectedStudyInterviewDesign.label.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -368,7 +368,6 @@ const studyStore = useStudyStore()
 const { isReadOnly } = useAuth()
 
 // Refs
-const tab = ref('definition')
 const selected = ref([])
 const filter = ref('')
 const newStudyInterviewDesignData = ref({
@@ -499,7 +498,7 @@ const disableEditStudyInterviewDesign = computed(() => v$.value.selectedStudyInt
 const hasStudyInterviewDesigns = computed(() => studyInterviewDesigns.value && studyInterviewDesigns.value.length > 0)
 
 // Methods
-function onAdd() {
+function onAdd () {
   newStudyInterviewDesignData.value = {
     name: '',
     description: '',
@@ -513,7 +512,7 @@ function onAdd() {
   selectedStudyInterviewDesign.value = undefined
 }
 
-function onEdit(studyInterviewDesign) {
+function onEdit (studyInterviewDesign) {
   selectedStudyInterviewDesign.value = { ...studyInterviewDesign }
   selectedStudyInterviewDesign.value.permissions = {
     users: studyInterviewDesign.permissions && studyInterviewDesign.permissions.users ? studyInterviewDesign.permissions.users : [],
@@ -523,25 +522,25 @@ function onEdit(studyInterviewDesign) {
   showEditStudyInterviewDesign.value = true
 }
 
-function onConfirmDelete(studyInterviewDesign) {
+function onConfirmDelete (studyInterviewDesign) {
   showConfirmDeleteStudyInterviewDesign.value = true
   selectedStudyInterviewDesign.value = studyInterviewDesign
 }
 
-function onConfirmDeleteMultiple() {
+function onConfirmDeleteMultiple () {
   if (selected.value.length > 0) {
     showConfirmDeleteStudyInterviewDesigns.value = true
   }
 }
 
-function getSubject(id, type) {
+function getSubject (id, type) {
   if (subjects.value && subjects.value.length > 0) {
     return subjects.value.filter(s => s.type === type && s.id === id).pop()
   }
   return { id: id, type: type, name: '?' }
 }
 
-function getSubjectOptions(type) {
+function getSubjectOptions (type) {
   return subjects.value.filter(s => s.type === type).map(s => {
     return {
       value: s.id,
@@ -550,7 +549,7 @@ function getSubjectOptions(type) {
   })
 }
 
-async function getTableStudyInterviewDesigns(requestProp) {
+async function getTableStudyInterviewDesigns (requestProp) {
   if (requestProp) {
     paginationOpts.value = requestProp.pagination
     interviewStore.setInterviewDesignPagination(requestProp.pagination)
@@ -561,19 +560,19 @@ async function getTableStudyInterviewDesigns(requestProp) {
   paginationOpts.value.rowsNumber = interviewStore.interviewDesignPaginationOpts.rowsNumber
 }
 
-function setPagination() {
+function setPagination () {
   paginationOpts.value = interviewStore.interviewDesignPaginationOpts
 }
 
-function start(studyInterviewDesign) {
+function start (studyInterviewDesign) {
   setState(studyInterviewDesign, 'active')
 }
 
-function pause(studyInterviewDesign) {
+function pause (studyInterviewDesign) {
   setState(studyInterviewDesign, 'paused')
 }
 
-function setState(studyInterviewDesign, state) {
+function setState (studyInterviewDesign, state) {
   const toSave = { ...studyInterviewDesign }
   toSave.state = state
   interviewStore.updateInterviewDesign(
@@ -583,7 +582,7 @@ function setState(studyInterviewDesign, state) {
   )
 }
 
-function deleteStudyInterviewDesign() {
+function deleteStudyInterviewDesign () {
   interviewStore.deleteInterviewDesign(
     selectedStudyInterviewDesign.value._id,
     paginationOpts.value,
@@ -591,7 +590,7 @@ function deleteStudyInterviewDesign() {
   )
 }
 
-function deleteStudyInterviewDesigns() {
+function deleteStudyInterviewDesigns () {
   const ids = selected.value.map(u => u._id)
   interviewStore.deleteInterviewDesigns(
     ids,
@@ -601,7 +600,7 @@ function deleteStudyInterviewDesigns() {
   selected.value = []
 }
 
-async function saveStudyInterviewDesign(create) {
+async function saveStudyInterviewDesign (create) {
   v$.value.$reset()
   if (create) {
     const toSave = { ...newStudyInterviewDesignData.value }

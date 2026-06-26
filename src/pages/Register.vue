@@ -191,7 +191,7 @@ const rules = {
 const v$ = useVuelidate(rules, { formData })
 
 // recaptcha helper
-async function recaptcha() {
+async function recaptcha () {
   await recaptchaLoaded()
   const token = await executeRecaptcha('login')
   return token
@@ -228,7 +228,7 @@ const hasLocales = computed(() => {
 })
 
 // methods
-async function onSubmit() {
+async function onSubmit () {
   try {
     const token = await recaptcha()
     const data = { ...formData }

@@ -30,7 +30,7 @@
                       <q-icon name="fas fa-envelope" size="xs" />
                     </template>
                     <template v-slot:error>
-                      <div v-for="error in v$.resetEmail.$errors">
+                      <div v-for="error in v$.resetEmail.$errors" :key="error.$uid">
                         {{error.$message}}
                       </div>
                     </template>
@@ -92,7 +92,7 @@ const disableSubmit = computed(() => {
 })
 
 // methods
-async function forgotPassword() {
+async function forgotPassword () {
   try {
     await accountStore.forgotPassword(resetEmail.value)
     router.push('/login')

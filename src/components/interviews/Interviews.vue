@@ -374,8 +374,6 @@ const studyStore = useStudyStore()
 const { isReadOnly } = useAuth()
 
 // Refs
-const locale = ref('en')
-const tab = ref('definition')
 const selected = ref([])
 const filter = ref('')
 const interviewDesignFilter = ref('0')
@@ -555,12 +553,10 @@ const eligibleOptions = computed(() => [
   }
 ])
 
-const hasInterviews = computed(() => interviews.value && interviews.value.length > 0)
-
 const modelDataStr = computed(() => JSON.stringify(modelData.value, null, '  '))
 
 // Methods
-function onFilter() {
+function onFilter () {
   selected.value = []
   interviewStore.getInterviews(
     paginationOpts.value,
@@ -575,7 +571,7 @@ function onFilter() {
   )
 }
 
-function onExport(format) {
+function onExport (format) {
   let accept = 'application/json'
   if (format === 'csv') {
     accept = 'text/csv'
@@ -606,11 +602,7 @@ function onExport(format) {
     })
 }
 
-function onLocale(newLocale) {
-  locale.value = newLocale
-}
-
-function onShow(studyInterview) {
+function onShow (studyInterview) {
   showInterview.value = true
   selectedInterview.value = studyInterview
   modelData.value = {}
@@ -622,13 +614,13 @@ function onShow(studyInterview) {
   maximizedToggle.value = false
 }
 
-function onShowEditFillingDate(studyInterview) {
+function onShowEditFillingDate (studyInterview) {
   showEditFillingDate.value = true
   selectedInterview.value = studyInterview
   selectedFillingDate.value = studyInterview.fillingDate ? date.formatDate(studyInterview.fillingDate, 'YYYY-MM-DD') : null
 }
 
-function onEditFillingDate() {
+function onEditFillingDate () {
   interviewStore.updateInterview(
     { fillingDate: new Date(selectedFillingDate.value) },
     selectedInterview.value._id,
@@ -637,28 +629,18 @@ function onEditFillingDate() {
   )
 }
 
-function onSave() {
-  const updatedData = { ...modelData.value }
-  interviewStore.updateInterview(
-    { data: updatedData },
-    selectedInterview.value._id,
-    paginationOpts.value,
-    studyId.value
-  )
-}
-
-function onConfirmDelete(studyInterview) {
+function onConfirmDelete (studyInterview) {
   showConfirmDeleteInterview.value = true
   selectedInterview.value = studyInterview
 }
 
-function onConfirmDeleteMultiple() {
+function onConfirmDeleteMultiple () {
   if (selected.value.length > 0) {
     showConfirmDeleteInterviews.value = true
   }
 }
 
-function onReopen(studyInterview) {
+function onReopen (studyInterview) {
   interviewStore.updateInterview(
     { state: 'in_progress' },
     studyInterview._id,
@@ -667,7 +649,7 @@ function onReopen(studyInterview) {
   )
 }
 
-function onClearDate(name) {
+function onClearDate (name) {
   if (name === 'from') {
     fromDate.value = ''
   } else {
@@ -675,19 +657,15 @@ function onClearDate(name) {
   }
 }
 
-function getInterviewDesignName(id) {
+function getInterviewDesignName (id) {
   return interviewDesigns.value.filter(itwd => itwd._id === id).map(itwd => itwd.name).pop()
 }
 
-function getInterviewFullName(interview) {
+function getInterviewFullName (interview) {
   return interview.code
 }
 
-function getInterviewID(interview) {
-  return interview.data && interview.data._id ? interview.data._id : ''
-}
-
-async function getTableInterviews(requestProp) {
+async function getTableInterviews (requestProp) {
   if (requestProp) {
     paginationOpts.value = requestProp.pagination
     interviewStore.setInterviewPagination(requestProp.pagination)
@@ -718,11 +696,11 @@ async function getTableInterviews(requestProp) {
   paginationOpts.value.rowsNumber = interviewStore.interviewPaginationOpts.rowsNumber
 }
 
-function setPagination() {
+function setPagination () {
   paginationOpts.value = interviewStore.interviewPaginationOpts
 }
 
-function deleteInterview() {
+function deleteInterview () {
   interviewStore.deleteInterview(
     selectedInterview.value._id,
     paginationOpts.value,
@@ -730,7 +708,7 @@ function deleteInterview() {
   )
 }
 
-function deleteInterviews() {
+function deleteInterviews () {
   const ids = selected.value.map(u => u._id)
   interviewStore.deleteInterviews(
     ids,

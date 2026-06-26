@@ -223,11 +223,11 @@ const hasLocales = computed(() => {
 })
 
 // methods
-function onLocaleSelection(opt) {
+function onLocaleSelection (opt) {
   locale.value = opt.value
 }
 
-function makePayload() {
+function makePayload () {
   const payload = {
     strategy: 'local',
     email: email.value,
@@ -243,7 +243,7 @@ function makePayload() {
   return payload
 }
 
-function onCopySecret() {
+function onCopySecret () {
   copyToClipboard(secret.value).then(() => {
     Notify.create({
       message: t('login.secret_copied'),
@@ -252,7 +252,7 @@ function onCopySecret() {
   })
 }
 
-function onSubmit() {
+function onSubmit () {
   authStore
     .authenticate(makePayload())
     .then(response => {
@@ -283,12 +283,12 @@ function onSubmit() {
     })
 }
 
-function onEmailToken() {
+function onEmailToken () {
   method.value = 'otp'
   onSubmit()
 }
 
-function onCancelToken() {
+function onCancelToken () {
   secret.value = ''
   qr.value = ''
   withToken.value = false

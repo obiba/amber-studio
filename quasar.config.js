@@ -62,7 +62,7 @@ export default configure(function (ctx) {
       },
 
       publicPath: '/',
-      
+
       // https://v2.quasar.dev/quasar-cli-vite/handling-vite
       extendViteConf (viteConf) {
         const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -211,7 +211,7 @@ export default configure(function (ctx) {
     bex: {
       contentScripts: [
         'my-content-script'
-      ],
+      ]
 
       // extendBexScriptsConf (esbuildConf) {}
       // extendBexManifestJson (json) {}

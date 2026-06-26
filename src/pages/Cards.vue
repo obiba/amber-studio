@@ -34,25 +34,25 @@
 
         <basic-card></basic-card>
 
-        <card-item class="q-mt-lg" :name="profile_card_data.name" :des="profile_card_data.des"
-                   :avatar="profile_card_data.avatar"></card-item>
+        <card-item class="q-mt-lg" :name="profileCardData.name" :des="profileCardData.des"
+                   :avatar="profileCardData.avatar"></card-item>
 
-        <card-profile class="q-mt-lg" :name="profile_card_data.name" :des="profile_card_data.des"
-                      :avatar="profile_card_data.avatar"></card-profile>
+        <card-profile class="q-mt-lg" :name="profileCardData.name" :des="profileCardData.des"
+                      :avatar="profileCardData.avatar"></card-profile>
 
-        <card-profile-dark class="q-mt-lg" :name="profile_data.name" :des="profile_data.des"
-                           :text="profile_data.text"></card-profile-dark>
+        <card-profile-dark class="q-mt-lg" :name="profileData.name" :des="profileData.des"
+                           :text="profileData.text"></card-profile-dark>
       </div>
       <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12">
 
-        <card-company class="q-mt-lg" :background_image="background_img2"></card-company>
+        <card-company class="q-mt-lg" :background_image="backgroundImg2"></card-company>
 
         <basic-card class="q-mt-lg"></basic-card>
 
-        <card-company class="q-mt-lg" :background_image="background_img1"></card-company>
+        <card-company class="q-mt-lg" :background_image="backgroundImg1"></card-company>
 
-        <card-profile-dark class="q-mt-lg" :name="profile_data.name" :des="profile_data.des"
-                           :text="profile_data.text"></card-profile-dark>
+        <card-profile-dark class="q-mt-lg" :name="profileData.name" :des="profileData.des"
+                           :text="profileData.text"></card-profile-dark>
       </div>
     </div>
   </q-page>
@@ -70,20 +70,20 @@ const BasicCard = defineAsyncComponent(() => import('components/cards/CardBasic'
 
 const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 
-const profile_card_data = {
+const profileCardData = {
   name: 'Pratik Patel',
   des: 'Solutions Developer',
-  avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+  avatar: 'https://cdn.quasar.dev/img/boy-avatar.png'
 }
 
-const profile_data = {
+const profileData = {
   name: 'Pratik Patel',
   des: '--- Solution Developer, Pune',
   text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 }
 
-const background_img1 = 'linear-gradient(to top, #30cfd0 0%, #330867 100%)'
-const background_img2 = 'linear-gradient(87deg, rgb(45, 206, 137), rgb(45, 206, 204)) !important'
+const backgroundImg1 = 'linear-gradient(to top, #30cfd0 0%, #330867 100%)'
+const backgroundImg2 = 'linear-gradient(87deg, rgb(45, 206, 137), rgb(45, 206, 204)) !important'
 </script>
 
 <style scoped>

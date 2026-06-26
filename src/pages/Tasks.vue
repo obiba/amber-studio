@@ -325,18 +325,18 @@ const filteredSelectedTaskLogs = computed(() => {
 const disableCreateTask = computed(() => !newTaskData.value.type)
 
 // Methods
-function makeEllipsis(text, length) {
+function makeEllipsis (text, length) {
   if (text && text.length > length) {
     return text.substring(0, length) + ' ...'
   }
   return text
 }
 
-function setPagination() {
+function setPagination () {
   paginationOpts.value = adminStore.taskPaginationOpts
 }
 
-async function getTableTasks(requestProp) {
+async function getTableTasks (requestProp) {
   if (requestProp) {
     paginationOpts.value = requestProp.pagination
     adminStore.setTaskPagination(requestProp.pagination)
@@ -347,7 +347,7 @@ async function getTableTasks(requestProp) {
   paginationOpts.value.rowsNumber = adminStore.taskPaginationOpts.rowsNumber
 }
 
-function createTask() {
+function createTask () {
   newTaskData.value = {
     type: types[0]
   }
@@ -355,33 +355,33 @@ function createTask() {
   selectedTask.value = undefined
 }
 
-function confirmDeleteTask(task) {
+function confirmDeleteTask (task) {
   showConfirmDeleteTask.value = true
   selectedTask.value = task
 }
 
-function viewTask(task) {
+function viewTask (task) {
   selectedTask.value = task
   showViewTask.value = true
 }
 
-function confirmDeleteTasks() {
+function confirmDeleteTasks () {
   if (selected.value.length > 0) {
     showConfirmDeleteTasks.value = true
   }
 }
 
-async function saveTask() {
+async function saveTask () {
   // create
   const createdData = { ...newTaskData.value }
   await adminStore.createTask(createdData, paginationOpts.value)
 }
 
-function deleteTask() {
+function deleteTask () {
   adminStore.deleteTask(selectedTask.value._id, paginationOpts.value)
 }
 
-function deleteTasks() {
+function deleteTasks () {
   const ids = selected.value.map(u => u._id)
   adminStore.deleteTasks(ids, paginationOpts.value)
   selected.value = []

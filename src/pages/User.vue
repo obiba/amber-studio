@@ -25,7 +25,7 @@
               <q-icon name='fas fa-user' size='xs' />
             </template>
             <template v-slot:error>
-              <div v-for="error in v$.firstname.$errors">
+              <div v-for="error in v$.firstname.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -45,7 +45,7 @@
               <q-icon name='fas fa-user' size='xs' />
             </template>
             <template v-slot:error>
-              <div v-for="error in v$.lastname.$errors">
+              <div v-for="error in v$.lastname.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -257,7 +257,7 @@ const rolesOptions = computed(() => {
 })
 
 // Methods
-function copyUserProfile(user) {
+function copyUserProfile (user) {
   return {
     firstname: user.firstname,
     lastname: user.lastname,
@@ -268,22 +268,22 @@ function copyUserProfile(user) {
     language: user.language,
     role: user.role,
     totp2faRequired: user.totp2faRequired,
-    with2fa: user.with2fa !== false, // default to true if not set
+    with2fa: user.with2fa !== false // default to true if not set
   }
 }
 
-async function initData() {
+async function initData () {
   await adminStore.getUser(route.params.id)
   profileData.value = copyUserProfile(user.value)
 }
 
-async function saveUser() {
+async function saveUser () {
   v$.value.$reset()
   const toSave = { ...profileData.value }
   await adminStore.updateUser(toSave, user.value._id)
 }
 
-async function resetTotp2FA() {
+async function resetTotp2FA () {
   profileData.value.totp2faEnabled = false
   saveUser()
 }

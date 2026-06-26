@@ -24,7 +24,7 @@
               <q-icon name='fas fa-user' size='xs' />
             </template>
             <template v-slot:error>
-              <div v-for="error in v$.profileData.firstname.$errors">
+              <div v-for="error in v$.profileData.firstname.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -44,7 +44,7 @@
               <q-icon name='fas fa-user' size='xs' />
             </template>
             <template v-slot:error>
-              <div v-for="error in v$.profileData.lastname.$errors">
+              <div v-for="error in v$.profileData.lastname.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -219,7 +219,7 @@ const hasLocales = computed(() => {
 })
 
 // methods
-function copyUserProfile(userObj) {
+function copyUserProfile (userObj) {
   return {
     firstname: userObj.firstname,
     lastname: userObj.lastname,
@@ -232,12 +232,12 @@ function copyUserProfile(userObj) {
   }
 }
 
-async function initData() {
+async function initData () {
   await adminStore.getUser(user.value._id)
   profileData.value = copyUserProfile(currentUser.value)
 }
 
-async function saveUser() {
+async function saveUser () {
   v$.value.$reset()
   const toSave = { ...profileData.value }
   await accountStore.updateProfile(user.value._id, toSave)

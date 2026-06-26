@@ -44,7 +44,7 @@ export const useAdminStore = defineStore('admin', () => {
   })
 
   // User Actions
-  async function getUsers(paginationOpts, filter, roles) {
+  async function getUsers (paginationOpts, filter, roles) {
     try {
       const result = await userService.getUsers(paginationOpts, filter, roles)
       if (result) {
@@ -63,7 +63,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function getUser(id) {
+  async function getUser (id) {
     try {
       const result = await userService.getUser(id)
       if (result) {
@@ -77,7 +77,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function createUser(userData, paginationOpts) {
+  async function createUser (userData, paginationOpts) {
     try {
       const result = await userService.createUser(userData)
       if (result) {
@@ -94,7 +94,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function updateUser(userData, id, paginationOpts) {
+  async function updateUser (userData, id, paginationOpts) {
     const userId = id || userData._id
     try {
       const result = await userService.updateUser(userData, userId)
@@ -115,7 +115,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function deleteUser(id, paginationOpts) {
+  async function deleteUser (id, paginationOpts) {
     try {
       const result = await userService.deleteUser(id)
       if (result) {
@@ -132,7 +132,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function deleteUsers(ids, paginationOpts) {
+  async function deleteUsers (ids, paginationOpts) {
     try {
       const result = await userService.deleteUsers(ids)
       if (result) {
@@ -150,7 +150,7 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   // Group Actions
-  async function getGroups(paginationOpts, filter) {
+  async function getGroups (paginationOpts, filter) {
     try {
       const result = await groupService.getGroups(paginationOpts, filter)
       if (result) {
@@ -169,7 +169,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function getGroup(id) {
+  async function getGroup (id) {
     try {
       const result = await groupService.getGroup(id)
       if (result) {
@@ -186,7 +186,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function getGroupUsers(groupData) {
+  async function getGroupUsers (groupData) {
     if (groupData.users && groupData.users.length > 0) {
       try {
         const result = await userService.getUsersByIds(groupData.users)
@@ -204,7 +204,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function createGroup(groupData, paginationOpts) {
+  async function createGroup (groupData, paginationOpts) {
     try {
       const result = await groupService.createGroup(groupData)
       if (result) {
@@ -221,7 +221,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function updateGroup(groupData, id, paginationOpts) {
+  async function updateGroup (groupData, id, paginationOpts) {
     const groupId = id || groupData._id
     try {
       const result = await groupService.updateGroup(groupData, groupId)
@@ -242,7 +242,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function deleteGroup(id, paginationOpts) {
+  async function deleteGroup (id, paginationOpts) {
     try {
       const result = await groupService.deleteGroup(id)
       if (result) {
@@ -259,7 +259,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function deleteGroups(ids, paginationOpts) {
+  async function deleteGroups (ids, paginationOpts) {
     try {
       const result = await groupService.deleteGroups(ids)
       if (result) {
@@ -277,7 +277,7 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   // Task Actions
-  async function getTasks(paginationOpts, filter) {
+  async function getTasks (paginationOpts, filter) {
     try {
       const result = await taskService.getTasks(paginationOpts, filter)
       if (result) {
@@ -296,7 +296,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function createTask(taskData, paginationOpts) {
+  async function createTask (taskData, paginationOpts) {
     try {
       const result = await taskService.createTask(taskData)
       if (result) {
@@ -315,7 +315,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function deleteTask(id, paginationOpts) {
+  async function deleteTask (id, paginationOpts) {
     try {
       const result = await taskService.deleteTask(id)
       if (result) {
@@ -332,7 +332,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
 
-  async function deleteTasks(ids, paginationOpts) {
+  async function deleteTasks (ids, paginationOpts) {
     try {
       const result = await taskService.deleteTasks(ids)
       if (result) {
@@ -350,15 +350,15 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   // Pagination Setters
-  function setUserPagination(opts) {
+  function setUserPagination (opts) {
     userPaginationOpts.value = opts
   }
 
-  function setGroupPagination(opts) {
+  function setGroupPagination (opts) {
     groupPaginationOpts.value = opts
   }
 
-  function setTaskPagination(opts) {
+  function setTaskPagination (opts) {
     taskPaginationOpts.value = opts
   }
 

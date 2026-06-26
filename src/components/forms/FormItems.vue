@@ -446,10 +446,6 @@ function deleteItem (item) {
   }
 }
 
-function isItemSelected (item) {
-  return formItemSelected.value && formItemSelected.value.name === item.name
-}
-
 function findItemAndParent (id) {
   if (id === value.value.schema._id) {
     return {

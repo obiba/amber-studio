@@ -10,7 +10,7 @@ export const useAccountStore = defineStore('account', () => {
   // No state needed - all operations only
 
   // Actions
-  async function registerUser(formData) {
+  async function registerUser (formData) {
     const router = useRouter()
     try {
       const result = await userService.register(
@@ -49,7 +49,7 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  async function updateProfile(id, profileData) {
+  async function updateProfile (id, profileData) {
     try {
       const result = await userService.updateProfile(id, profileData)
       if (result) {
@@ -65,7 +65,7 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  async function forgotPassword(emailAddress) {
+  async function forgotPassword (emailAddress) {
     try {
       await userService.forgotPassword(emailAddress)
       Notify.create({
@@ -79,28 +79,24 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  async function resetPassword(token, password) {
+  async function resetPassword (token, password) {
     return userService.resetPassword(token, password)
   }
 
-  async function updatePassword(password, token) {
+  async function updatePassword (password, token) {
     const router = useRouter()
-    try {
-      const result = await userService.resetPassword(token, password)
-      if (result && result.status === 200) {
-        router.push('/account')
-        Notify.create({
-          message: t('success.reset_password'),
-          color: 'positive'
-        })
-      }
-      return result
-    } catch (err) {
-      throw err
+    const result = await userService.resetPassword(token, password)
+    if (result && result.status === 200) {
+      router.push('/account')
+      Notify.create({
+        message: t('success.reset_password'),
+        color: 'positive'
+      })
     }
+    return result
   }
 
-  async function updatePasswordFromProfile(email, oldPassword, newPassword) {
+  async function updatePasswordFromProfile (email, oldPassword, newPassword) {
     const authStore = useAuthStore()
     try {
       const result = await userService.updatePasswordFromProfile(
@@ -123,7 +119,7 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  async function updateIdentity(password, currentEmail, updatedEmail) {
+  async function updateIdentity (password, currentEmail, updatedEmail) {
     try {
       const result = await userService.updateIdentity(
         password,
@@ -143,7 +139,7 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  async function resendVerification(email) {
+  async function resendVerification (email) {
     try {
       const result = await userService.resendVerification(email)
       if (result && result.status >= 200 && result.status < 300) {

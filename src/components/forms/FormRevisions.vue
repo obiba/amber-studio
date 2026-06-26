@@ -298,7 +298,6 @@ const columns = [
 
 // Computed
 const formRevisions = computed(() => formStore.formRevisions)
-const formRevisionPaginationOpts = computed(() => formStore.formRevisionPaginationOpts)
 
 const locales = computed(() => {
   return Object.keys(selectedRevision.value.schema.i18n).filter(loc => locale.value !== loc)

@@ -52,7 +52,7 @@ const interviewDesigns = ref([])
 const myCampaigns = ref([])
 
 // methods
-function getCampaignLabel(campaign) {
+function getCampaignLabel (campaign) {
   return `${studies.value.find(std => std._id === campaign.study).name} / ${interviewDesigns.value.find(itwd => itwd._id === campaign.interviewDesign).name} / ${campaign.name}`
 }
 

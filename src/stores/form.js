@@ -30,7 +30,7 @@ export const useFormStore = defineStore('form', () => {
   })
 
   // Actions - Forms
-  async function getForms(paginationOpts, study, filter) {
+  async function getForms (paginationOpts, study, filter) {
     try {
       const result = await formService.getForms(paginationOpts, study, filter)
       if (result) {
@@ -49,7 +49,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  async function getForm(id) {
+  async function getForm (id) {
     try {
       const result = await formService.getForm(id)
       if (result) {
@@ -63,7 +63,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  async function createForm(formData, paginationOpts, study) {
+  async function createForm (formData, paginationOpts, study) {
     try {
       const result = await formService.createForm(formData)
       if (result) {
@@ -85,7 +85,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  async function updateForm(formData, id, notification, paginationOpts, study) {
+  async function updateForm (formData, id, notification, paginationOpts, study) {
     const formId = id || formData._id
     try {
       const result = await formService.updateForm(formData, formId)
@@ -109,7 +109,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  async function deleteForm(id, paginationOpts, study) {
+  async function deleteForm (id, paginationOpts, study) {
     try {
       const result = await formService.deleteForm(id)
       if (result) {
@@ -129,7 +129,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  async function deleteForms(ids, paginationOpts, study) {
+  async function deleteForms (ids, paginationOpts, study) {
     try {
       const result = await formService.deleteForms(ids)
       if (result) {
@@ -150,7 +150,7 @@ export const useFormStore = defineStore('form', () => {
   }
 
   // Actions - Form Revisions
-  async function getFormRevisions(paginationOpts, form, filter) {
+  async function getFormRevisions (paginationOpts, form, filter) {
     try {
       const result = await formRevisionService.getFormRevisions(paginationOpts, form, filter)
       if (result) {
@@ -169,7 +169,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  async function createFormRevision(formRevisionData) {
+  async function createFormRevision (formRevisionData) {
     try {
       const result = await formRevisionService.createFormRevision(formRevisionData)
       if (result) {
@@ -185,7 +185,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  async function deleteFormRevision(id, paginationOpts, form) {
+  async function deleteFormRevision (id, paginationOpts, form) {
     try {
       const result = await formRevisionService.deleteFormRevision(id)
       if (result) {
@@ -205,7 +205,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  async function deleteFormRevisions(ids, paginationOpts, form) {
+  async function deleteFormRevisions (ids, paginationOpts, form) {
     try {
       const result = await formRevisionService.deleteFormRevisions(ids)
       if (result) {
@@ -226,11 +226,11 @@ export const useFormStore = defineStore('form', () => {
   }
 
   // Pagination Helpers
-  function setFormPagination(opts) {
+  function setFormPagination (opts) {
     formPaginationOpts.value = opts
   }
 
-  function setFormRevisionPagination(opts) {
+  function setFormRevisionPagination (opts) {
     formRevisionPaginationOpts.value = opts
   }
 

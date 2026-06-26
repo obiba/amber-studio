@@ -211,7 +211,7 @@
             :hint="t('interview.step_name_hint')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.stepData.name.$errors">
+              <div v-for="error in v$.stepData.name.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -225,7 +225,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.stepData.label.$errors">
+              <div v-for="error in v$.stepData.label.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -332,10 +332,10 @@ const revisionOptions = ref([])
 const forms = computed(() => formStore.forms)
 
 const value = computed({
-  get() {
+  get () {
     return props.modelValue
   },
-  set(val) {
+  set (val) {
     emit('update:modelValue', val)
   }
 })
@@ -369,13 +369,13 @@ const rules = computed(() => ({
       required,
       minLength: minLength(2),
       maxLength: maxLength(30),
-      nameUnique(val) {
+      nameUnique (val) {
         if (steps.value) {
           return !steps.value.find(step => step.name === val)
         }
         return true
       },
-      nameReserved(val) {
+      nameReserved (val) {
         return val !== 'participant'
       }
     },
@@ -390,7 +390,7 @@ const rules = computed(() => ({
 const v$ = useVuelidate(rules, { stepData })
 
 // Methods
-function updateRevisionOptions(form) {
+function updateRevisionOptions (form) {
   formRevisionService.getFormRevisionsDigest(studyId.value, form)
     .then((response) => {
       revisionOptions.value = response.data ? response.data.map(rev => {
@@ -402,11 +402,11 @@ function updateRevisionOptions(form) {
     })
 }
 
-function isStepActive(step) {
+function isStepActive (step) {
   return selected.value?.name === step.name
 }
 
-function onStepSelection(step) {
+function onStepSelection (step) {
   if (selected.value?.name === step.name) {
     selected.value = null
   } else {
@@ -414,11 +414,11 @@ function onStepSelection(step) {
   }
 }
 
-function onConfirmDeleteStep() {
+function onConfirmDeleteStep () {
   showConfirmDeleteStep.value = true
 }
 
-function onAddStep() {
+function onAddStep () {
   stepData.value = {
     name: '',
     description: ''
@@ -426,11 +426,11 @@ function onAddStep() {
   showAddStep.value = true
 }
 
-function addStep() {
+function addStep () {
   value.value.steps.push(stepData.value)
 }
 
-function moveUpStep() {
+function moveUpStep () {
   const idx = value.value.steps.indexOf(selected.value)
   if (idx > 0) {
     value.value.steps.splice(idx, 1)
@@ -438,7 +438,7 @@ function moveUpStep() {
   }
 }
 
-function moveDownStep() {
+function moveDownStep () {
   const idx = value.value.steps.indexOf(selected.value)
   if (idx < value.value.steps.length) {
     value.value.steps.splice(idx, 1)
@@ -446,7 +446,7 @@ function moveDownStep() {
   }
 }
 
-function deleteStep() {
+function deleteStep () {
   const idx = value.value.steps.indexOf(selected.value)
   value.value.steps = value.value.steps.filter(step => step.name !== selected.value.name)
   selected.value = value.value.steps.length === 0 ? null : (idx === value.value.steps.length ? value.value.steps[idx - 1] : value.value.steps[idx])

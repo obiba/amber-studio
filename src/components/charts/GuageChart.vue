@@ -44,10 +44,10 @@ const options = {
     }]
   }]
 }
-let guage_chart = null
+let gaugeChart = null
 
-function SaveImage() {
-  const linkSource = guage_chart.getDataURL()
+function SaveImage () {
+  const linkSource = gaugeChart.getDataURL()
   const downloadLink = document.createElement('a')
   document.body.appendChild(downloadLink)
   downloadLink.href = linkSource
@@ -56,17 +56,17 @@ function SaveImage() {
   downloadLink.click()
 }
 
-function init() {
+function init () {
   const guageChart = document.getElementById('guageChart')
   echarts.dispose(guageChart)
   const theme = model.value ? 'dark' : 'light'
-  guage_chart = echarts.init(guageChart, theme)
-  guage_chart.setOption(options)
+  gaugeChart = echarts.init(guageChart, theme)
+  gaugeChart.setOption(options)
 }
 
-function onResize() {
-  if (guage_chart) {
-    guage_chart.resize()
+function onResize () {
+  if (gaugeChart) {
+    gaugeChart.resize()
   }
 }
 

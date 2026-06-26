@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/auth'
  * Auth helpers composable
  * Replaces AuthMixin functionality
  */
-export function useAuth() {
+export function useAuth () {
   const authStore = useAuthStore()
 
   // User reference
@@ -13,19 +13,19 @@ export function useAuth() {
   const userEmail = computed(() => authStore.userEmail)
 
   // Role checks
-  const isAdministrator = computed(() => 
+  const isAdministrator = computed(() =>
     authStore.user?.role === 'administrator'
   )
 
-  const isManager = computed(() => 
+  const isManager = computed(() =>
     authStore.user?.role === 'manager'
   )
 
-  const isInterviewer = computed(() => 
+  const isInterviewer = computed(() =>
     authStore.user?.role === 'interviewer'
   )
 
-  const isGuest = computed(() => 
+  const isGuest = computed(() =>
     !authStore.user || authStore.user?.role === 'guest'
   )
 

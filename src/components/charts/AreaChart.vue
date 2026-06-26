@@ -32,13 +32,13 @@ const options = {
   },
   legend: {
     data: ['Email marketing', 'Affiliate advertising', 'Video advertising', 'Direct access', 'Search engine'],
-    bottom: 0,
+    bottom: 0
   },
   grid: {
     left: '3%',
     right: '4%',
     bottom: '10%',
-    top:'5%',
+    top: '5%',
     containLabel: true
   },
   xAxis: [
@@ -110,19 +110,19 @@ const options = {
     }
   ]
 }
-let area_chart = null
+let areaChart = null
 
-function init() {
-  const areaChart = document.getElementById('areaChart')
-  echarts.dispose(areaChart)
+function init () {
+  const el = document.getElementById('areaChart')
+  echarts.dispose(el)
   const theme = model.value ? 'dark' : 'light'
-  area_chart = echarts.init(areaChart, theme)
-  area_chart.setOption(options)
+  areaChart = echarts.init(el, theme)
+  areaChart.setOption(options)
 }
 
-function onResize() {
-  if (area_chart) {
-    area_chart.resize()
+function onResize () {
+  if (areaChart) {
+    areaChart.resize()
   }
 }
 

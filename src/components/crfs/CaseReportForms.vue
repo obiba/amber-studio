@@ -143,7 +143,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.newStudyCaseReportFormData.name.$errors">
+              <div v-for="error in v$.newStudyCaseReportFormData.name.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>
@@ -235,7 +235,7 @@
             :hint="t('required')"
           >
             <template v-slot:error>
-              <div v-for="error in v$.selectedStudyCaseReportForm.name.$errors">
+              <div v-for="error in v$.selectedStudyCaseReportForm.name.$errors" :key="error.$uid">
                 {{error.$message}}
               </div>
             </template>

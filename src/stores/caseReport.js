@@ -31,7 +31,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
   })
 
   // Actions - Case Reports
-  async function getCaseReports(paginationOpts, study, form, caseReportForm, filter, from, to) {
+  async function getCaseReports (paginationOpts, study, form, caseReportForm, filter, from, to) {
     try {
       const result = await caseReportService.getCaseReports(
         paginationOpts,
@@ -58,7 +58,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
     }
   }
 
-  async function updateCaseReport(caseReportData, id, paginationOpts, study, form) {
+  async function updateCaseReport (caseReportData, id, paginationOpts, study, form) {
     try {
       const result = await caseReportService.updateCaseReport(caseReportData, id)
       if (result) {
@@ -75,7 +75,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
     }
   }
 
-  async function deleteCaseReport(id, paginationOpts, study, form) {
+  async function deleteCaseReport (id, paginationOpts, study, form) {
     try {
       const result = await caseReportService.deleteCaseReport(id)
       if (result) {
@@ -92,7 +92,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
     }
   }
 
-  async function deleteCaseReports(ids, paginationOpts, study, form) {
+  async function deleteCaseReports (ids, paginationOpts, study, form) {
     try {
       const result = await caseReportService.deleteCaseReports(ids)
       if (result) {
@@ -110,7 +110,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
   }
 
   // Actions - Case Report Forms
-  async function getCaseReportForms(paginationOpts, study, filter) {
+  async function getCaseReportForms (paginationOpts, study, filter) {
     try {
       const result = await caseReportFormService.getCaseReportForms(
         paginationOpts,
@@ -133,7 +133,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
     }
   }
 
-  async function createCaseReportForm(caseReportFormData, paginationOpts) {
+  async function createCaseReportForm (caseReportFormData, paginationOpts) {
     try {
       const result = await caseReportFormService.createCaseReportForm(caseReportFormData)
       if (result) {
@@ -155,7 +155,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
     }
   }
 
-  async function updateCaseReportForm(caseReportFormData, id, paginationOpts) {
+  async function updateCaseReportForm (caseReportFormData, id, paginationOpts) {
     const formId = id || caseReportFormData._id
     try {
       const result = await caseReportFormService.updateCaseReportForm(caseReportFormData, formId)
@@ -177,7 +177,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
     }
   }
 
-  async function deleteCaseReportForm(id, paginationOpts, study) {
+  async function deleteCaseReportForm (id, paginationOpts, study) {
     try {
       const result = await caseReportFormService.deleteCaseReportForm(id)
       if (result) {
@@ -194,7 +194,7 @@ export const useCaseReportStore = defineStore('caseReport', () => {
     }
   }
 
-  async function deleteCaseReportForms(ids, paginationOpts, study) {
+  async function deleteCaseReportForms (ids, paginationOpts, study) {
     try {
       const result = await caseReportFormService.deleteCaseReportForms(ids)
       if (result) {
@@ -212,11 +212,11 @@ export const useCaseReportStore = defineStore('caseReport', () => {
   }
 
   // Pagination setters
-  function setCaseReportPagination(opts) {
+  function setCaseReportPagination (opts) {
     caseReportPaginationOpts.value = opts
   }
 
-  function setCaseReportFormPagination(opts) {
+  function setCaseReportFormPagination (opts) {
     caseReportFormPaginationOpts.value = opts
   }
 

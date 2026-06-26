@@ -7,6 +7,10 @@ module.exports = {
   parserOptions: {
     parser: '@babel/eslint-parser',
     requireConfigFile: false,
+    babelOptions: {
+      configFile: false,
+      babelrc: false
+    },
     ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
     sourceType: 'module' // Allows for the use of imports
   },
@@ -49,7 +53,12 @@ module.exports = {
     __QUASAR_SSR_PWA__: 'readonly',
     process: 'readonly',
     Capacitor: 'readonly',
-    chrome: 'readonly'
+    chrome: 'readonly',
+    defineProps: 'readonly',
+    defineEmits: 'readonly',
+    defineExpose: 'readonly',
+    defineOptions: 'readonly',
+    withDefaults: 'readonly'
   },
 
   // add your custom rules here

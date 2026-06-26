@@ -340,7 +340,6 @@ const formStore = useFormStore()
 const remountCounter = ref(0)
 const showTab = ref('form')
 const locale = ref('en')
-const tab = ref('definition')
 const selected = ref([])
 const filter = ref('')
 const caseReportFormFilter = ref('0')
@@ -445,7 +444,6 @@ const formOptions = computed(() => {
   return opts
 })
 
-const hasCaseReports = computed(() => caseReports.value && caseReports.value.length > 0)
 const modelDataStr = computed(() => JSON.stringify(modelData.value, null, '  '))
 
 const formRevisionLocales = computed(() => {
@@ -457,7 +455,7 @@ const formRevisionBlitzarSchema = computed(() => {
 })
 
 // Methods
-function onFilter() {
+function onFilter () {
   selected.value = []
   caseReportStore.getCaseReports(
     paginationOpts.value,
@@ -470,7 +468,7 @@ function onFilter() {
   )
 }
 
-function onExport(format) {
+function onExport (format) {
   let accept = 'application/json'
   if (format === 'csv') {
     accept = 'text/csv'
@@ -500,11 +498,11 @@ function onExport(format) {
     })
 }
 
-function onLocale(newLocale) {
+function onLocale (newLocale) {
   locale.value = newLocale
 }
 
-function onShow(studyCaseReport) {
+function onShow (studyCaseReport) {
   showCaseReport.value = true
   selectedCaseReport.value = studyCaseReport
   modelData.value = {}
@@ -518,7 +516,7 @@ function onShow(studyCaseReport) {
     })
 }
 
-function onSave() {
+function onSave () {
   const updatedData = { ...modelData.value }
   caseReportStore.updateCaseReport(
     { data: updatedData },
@@ -528,18 +526,18 @@ function onSave() {
   )
 }
 
-function onConfirmDelete(studyCaseReport) {
+function onConfirmDelete (studyCaseReport) {
   showConfirmDeleteCaseReport.value = true
   selectedCaseReport.value = studyCaseReport
 }
 
-function onConfirmDeleteMultiple() {
+function onConfirmDeleteMultiple () {
   if (selected.value.length > 0) {
     showConfirmDeleteCaseReports.value = true
   }
 }
 
-function onClearDate(name) {
+function onClearDate (name) {
   if (name === 'from') {
     fromDate.value = ''
   } else {
@@ -547,23 +545,23 @@ function onClearDate(name) {
   }
 }
 
-function getCaseReportFormName(crfId) {
+function getCaseReportFormName (crfId) {
   return caseReportForms.value.filter(crf => crf._id === crfId).map(crf => crf.name).pop()
 }
 
-function getFormName(formId) {
+function getFormName (formId) {
   return forms.value.filter(form => form._id === formId).map(form => form.name).pop()
 }
 
-function getCaseReportFullName(caseReport) {
+function getCaseReportFullName (caseReport) {
   return getCaseReportID(caseReport) + ':' + getCaseReportFormName(caseReport.caseReportForm) + ':' + (caseReport.revision ? caseReport.revision : t('study.latest_revision'))
 }
 
-function getCaseReportID(caseReport) {
+function getCaseReportID (caseReport) {
   return caseReport.data && caseReport.data._id ? caseReport.data._id : ''
 }
 
-async function getTableCaseReports(requestProp) {
+async function getTableCaseReports (requestProp) {
   if (requestProp) {
     paginationOpts.value = requestProp.pagination
     caseReportStore.setCaseReportPagination(requestProp.pagination)
@@ -574,11 +572,11 @@ async function getTableCaseReports(requestProp) {
   paginationOpts.value.rowsNumber = caseReportStore.caseReportPaginationOpts.rowsNumber
 }
 
-function setPagination() {
+function setPagination () {
   paginationOpts.value = caseReportStore.caseReportPaginationOpts
 }
 
-function deleteCaseReport() {
+function deleteCaseReport () {
   caseReportStore.deleteCaseReport(
     selectedCaseReport.value._id,
     paginationOpts.value,
@@ -586,7 +584,7 @@ function deleteCaseReport() {
   )
 }
 
-function deleteCaseReports() {
+function deleteCaseReports () {
   const ids = selected.value.map(u => u._id)
   caseReportStore.deleteCaseReports(
     ids,

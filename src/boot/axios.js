@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { LoadingBar } from 'quasar'
 
-const appEnv = window.env;
+const appEnv = window.env
 const baseURL = appEnv.AMBER_URL
 const api = axios.create({ baseURL })
 

@@ -33,7 +33,7 @@ const options = {
   },
   legend: {
     data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
-    bottom: 10,
+    bottom: 10
   },
   grid: {
     left: '3%',
@@ -181,19 +181,19 @@ const options = {
     }
   ]
 }
-let line_chart = null
+let lineChart = null
 
-function init() {
-  const lineChart = document.getElementById('lineChart')
-  echarts.dispose(lineChart)
+function init () {
+  const el = document.getElementById('lineChart')
+  echarts.dispose(el)
   const theme = model.value ? 'dark' : 'light'
-  line_chart = echarts.init(lineChart, theme)
-  line_chart.setOption(options)
+  lineChart = echarts.init(el, theme)
+  lineChart.setOption(options)
 }
 
-function onResize() {
-  if (line_chart) {
-    line_chart.resize()
+function onResize () {
+  if (lineChart) {
+    lineChart.resize()
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="q-mb-md">
-    <q-item-label v-if="case_reports_aggregations.length>0" header class="text-uppercase q-pl-none">{{ t('study_design') }}</q-item-label>
-    <div v-if="case_reports_aggregations.length>0" class="items-grid-4 q-mb-md">
+    <q-item-label v-if="caseReportsAggregations.length>0" header class="text-uppercase q-pl-none">{{ t('study_design') }}</q-item-label>
+    <div v-if="caseReportsAggregations.length>0" class="items-grid-4 q-mb-md">
       <div v-for="(item, index) in studyItems" :key="index">
         <q-list bordered class="rounded-borders">
           <q-item class="q-pa-none">
@@ -56,15 +56,15 @@
     </div>
     <div v-if="collectedDataItems.length > 0" class="q-mb-md" :class="`items-grid-${collectedDataItems.length}`">
       <records-chart
-        v-if="case_reports_aggregations.length>0"
+        v-if="caseReportsAggregations.length>0"
         chartId="case-reports"
         :title="t('chart.cumulated_case_reports')"
-        :aggregations="case_reports_aggregations"/>
+        :aggregations="caseReportsAggregations"/>
       <records-chart
-        v-if="interviews_aggregations.length>0"
+        v-if="interviewsAggregations.length>0"
         chartId="interviews"
         :title="t('chart.cumulated_interviews')"
-        :aggregations="interviews_aggregations"/>
+        :aggregations="interviewsAggregations"/>
     </div>
     <q-item-label v-if="accessItems.length>0" header class="text-uppercase q-pl-none">{{ t('access') }}</q-item-label>
     <div v-if="accessItems.length>0" class="items-grid-4 q-mb-md">
@@ -113,11 +113,11 @@ const props = defineProps({
 
 const { isAdministrator } = useAuth()
 
-const case_reports_aggregations = computed(() => {
+const caseReportsAggregations = computed(() => {
   return props.counts && props.counts.case_reports_agg ? props.counts.case_reports_agg : []
 })
 
-const interviews_aggregations = computed(() => {
+const interviewsAggregations = computed(() => {
   return props.counts && props.counts.interviews_agg ? props.counts.interviews_agg : []
 })
 
@@ -173,27 +173,27 @@ const studyItems = computed(() => {
       icon: 'ballot',
       value: props.counts.interview_designs ? props.counts.interview_designs : '-'
     }
-    )
+  )
   return cards
 })
 
 const collectedDataItems = computed(() => {
   const cards = []
-  if (case_reports_aggregations.value.length > 0) {
+  if (caseReportsAggregations.value.length > 0) {
     cards.push(
-    {
-      title: 'study.case_reports',
-      icon: 'bar_chart',
-      value: props.counts.case_reports ? props.counts.case_reports : '-'
-    })
+      {
+        title: 'study.case_reports',
+        icon: 'bar_chart',
+        value: props.counts.case_reports ? props.counts.case_reports : '-'
+      })
   }
-  if (interviews_aggregations.value.length > 0) {
+  if (interviewsAggregations.value.length > 0) {
     cards.push(
-    {
-      title: 'study.interviews',
-      icon: 'bar_chart',
-      value: props.counts.interviews ? props.counts.interviews : '-'
-    })
+      {
+        title: 'study.interviews',
+        icon: 'bar_chart',
+        value: props.counts.interviews ? props.counts.interviews : '-'
+      })
   }
   return cards
 })

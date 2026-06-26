@@ -730,11 +730,11 @@ const eligibleOptions = computed(() => [
 ])
 
 // Methods
-function onFilter() {
+function onFilter () {
   tableRef.value.requestServerInteraction()
 }
 
-function updateTableParticipants() {
+function updateTableParticipants () {
   selected.value = []
   const valid = eligibleFilter.value === '0' ? undefined : eligibleFilter.value === 'true'
   participantService.getParticipants(paginationOpts.value, props.campaign._id, filter.value, valid)
@@ -745,7 +745,7 @@ function updateTableParticipants() {
     .catch(err => handleError(err))
 }
 
-async function getTableParticipants(requestProp) {
+async function getTableParticipants (requestProp) {
   if (requestProp) {
     paginationOpts.value = requestProp.pagination
     await updateTableParticipants()
@@ -754,18 +754,18 @@ async function getTableParticipants(requestProp) {
   }
 }
 
-function deleteAttribute(idx) {
+function deleteAttribute (idx) {
   participantData.value.attributes.splice(idx, 1)
 }
 
-function addAttribute() {
+function addAttribute () {
   participantData.value.attributes.push({
     key: '',
     value: ''
   })
 }
 
-function deleteAttributes() {
+function deleteAttributes () {
   participantData.value.attributes = [
     {
       key: '',
@@ -774,7 +774,7 @@ function deleteAttributes() {
   ]
 }
 
-function asParticipantData(attributes) {
+function asParticipantData (attributes) {
   const data = {}
   attributes
     .filter(attribute => attribute.key !== undefined && attribute.key.trim() !== '')
@@ -784,7 +784,7 @@ function asParticipantData(attributes) {
   return data
 }
 
-function asParticipantAttributes(data) {
+function asParticipantAttributes (data) {
   const attributes = []
   for (const key in data) {
     attributes.push({
@@ -795,7 +795,7 @@ function asParticipantAttributes(data) {
   return attributes
 }
 
-function addParticipant() {
+function addParticipant () {
   participantData.value.data = asParticipantData(participantData.value.attributes)
   delete participantData.value.data.attributes
   if (addMode.value === 'single') {
@@ -829,7 +829,7 @@ function addParticipant() {
   }
 }
 
-function handleError(err) {
+function handleError (err) {
   if (err.code === 400) {
     errorHandler.onError(err, err.message)
   } else {
@@ -837,7 +837,7 @@ function handleError(err) {
   }
 }
 
-function editParticipant() {
+function editParticipant () {
   participantData.value.data = asParticipantData(participantData.value.attributes)
   delete participantData.value.data.attributes
   participantService.patchParticipant(participantData.value)
@@ -852,7 +852,7 @@ function editParticipant() {
     .catch(err => handleError(err))
 }
 
-function resetPassword(participant) {
+function resetPassword (participant) {
   participantData.value = {
     _id: participant._id,
     password: null
@@ -869,7 +869,7 @@ function resetPassword(participant) {
     .catch(err => handleError(err))
 }
 
-function doActivateParticipant(participant, activated) {
+function doActivateParticipant (participant, activated) {
   participantData.value = {
     _id: participant._id,
     activated: activated
@@ -886,15 +886,15 @@ function doActivateParticipant(participant, activated) {
     .catch(err => handleError(err))
 }
 
-function activateParticipant(participant) {
+function activateParticipant (participant) {
   doActivateParticipant(participant, true)
 }
 
-function pauseParticipant(participant) {
+function pauseParticipant (participant) {
   doActivateParticipant(participant, false)
 }
 
-function deleteParticipant() {
+function deleteParticipant () {
   participantService.deleteParticipant(participantData.value._id)
     .then(() => {
       Notify.create({
@@ -907,7 +907,7 @@ function deleteParticipant() {
     .catch(err => handleError(err))
 }
 
-function deleteParticipants() {
+function deleteParticipants () {
   participantService.deleteParticipants(selected.value.map(p => p._id))
     .then(() => {
       Notify.create({
@@ -920,7 +920,7 @@ function deleteParticipants() {
     .catch(err => handleError(err))
 }
 
-function importParticipants() {
+function importParticipants () {
   const knownHeaders = ['identifier', 'validFrom', 'validUntil', 'activated']
   const campaignId = props.campaign._id
   // const delim = participantsFile.value.name.endsWith('.tsv') ? '\t' : ','
@@ -979,7 +979,7 @@ function importParticipants() {
   })
 }
 
-function onAddParticipant() {
+function onAddParticipant () {
   participantData.value = {
     identifier: null,
     validFrom: null,
@@ -997,12 +997,12 @@ function onAddParticipant() {
   showAddParticipant.value = true
 }
 
-function onImport() {
+function onImport () {
   participantsFile.value = null
   showImportParticipants.value = true
 }
 
-function onExport(format) {
+function onExport (format) {
   let accept = 'application/json'
   if (format === 'csv') {
     accept = 'text/csv'
@@ -1031,7 +1031,7 @@ function onExport(format) {
     })
 }
 
-function toParticipantData(participant) {
+function toParticipantData (participant) {
   participantData.value = { ...participant }
   participantData.value.validFrom = participantData.value.validFrom ? date.formatDate(participantData.value.validFrom, 'YYYY-MM-DD') : null
   participantData.value.validUntil = participantData.value.validUntil ? date.formatDate(participantData.value.validUntil, 'YYYY-MM-DD') : null
@@ -1045,7 +1045,7 @@ function toParticipantData(participant) {
   delete participantData.value.lastSeen
 }
 
-function onEdit(participant) {
+function onEdit (participant) {
   toParticipantData(participant)
   participantData.value._id = participant._id
   participantData.value.attributes = asParticipantAttributes(participantData.value.data)
@@ -1053,7 +1053,7 @@ function onEdit(participant) {
   showEditParticipant.value = true
 }
 
-function onView(participant) {
+function onView (participant) {
   toParticipantData(participant)
   // remove internal fields or fields that are already in the columns
   delete participantData.value.validFrom
@@ -1061,12 +1061,12 @@ function onView(participant) {
   showViewParticipant.value = true
 }
 
-function onConfirmDelete(participant) {
+function onConfirmDelete (participant) {
   participantData.value = { ...participant }
   showConfirmDeleteParticipant.value = true
 }
 
-function onConfirmDeleteMultiple() {
+function onConfirmDeleteMultiple () {
   showConfirmDeleteParticipants.value = true
 }
 

@@ -67,20 +67,20 @@
     <div class="q-ma-md" v-if="!isReadOnly">
       <div class="text-h6 q-mb-md">{{ t('interview.design') }}</div>
         <div class="row q-ma-sm">
-          <q-btn 
-            @click='innerTab = "steps"' 
-            :label="t('interview.steps')" 
+          <q-btn
+            @click='innerTab = "steps"'
+            :label="t('interview.steps')"
             icon="category"
             size="sm"
-            color="teal" 
+            color="teal"
             :outline="innerTab !== 'steps'" />
-          <q-btn 
-            @click='innerTab = "translations"' 
-            :label="t('form.translations')" 
+          <q-btn
+            @click='innerTab = "translations"'
+            :label="t('form.translations')"
             icon="translate"
             size="sm"
             color="teal"
-            :outline="innerTab !== 'translations'" 
+            :outline="innerTab !== 'translations'"
             class="on-right" />
         </div>
         <q-tab-panels
@@ -114,7 +114,7 @@
               :error="v$.interviewDesignData.name.$error"
               :hint="t('required')">
               <template v-slot:error>
-              <div v-for="error in v$.interviewDesignData.name.$errors">
+              <div v-for="error in v$.interviewDesignData.name.$errors" :key="error.$uid">
                   {{error.$message}}
               </div>
               </template>
@@ -128,7 +128,7 @@
               :hint="t('required')"
             >
               <template v-slot:error>
-                <div v-for="error in v$.interviewDesignData.label.$errors">
+                <div v-for="error in v$.interviewDesignData.label.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -200,13 +200,6 @@ const { isReadOnly } = useAuth()
 
 // data
 const innerTab = ref('steps')
-const selected = ref([])
-const reload = ref(0)
-const paginationOpts = ref({
-  descending: true,
-  page: 1,
-  rowsPerPage: 10
-})
 const saveIntervalId = ref(null)
 const changeDetected = ref(0)
 const showEditDefinition = ref(false)
@@ -231,9 +224,7 @@ const rules = {
 const v$ = useVuelidate(rules, { interviewDesignData })
 
 // computed
-const study = computed(() => studyStore.study)
 const interviewDesign = computed(() => interviewStore.interviewDesign)
-const studyId = computed(() => route.params.id)
 const disableSave = computed(() => v$.value.interviewDesignData.$invalid)
 const saveIcon = computed(() => {
   if (changeDetected.value < 0) {
@@ -246,28 +237,24 @@ const saveIcon = computed(() => {
 })
 
 // methods
-function asReference() {
-  return { steps: interviewDesignData.value.steps, i18n: interviewDesignData.value.i18n }
-}
-
-function initOriginalInterviewDesign() {
+function initOriginalInterviewDesign () {
   originalInterviewDesign.steps = JSON.parse(JSON.stringify(interviewDesignData.value.steps))
   originalInterviewDesign.i18n = interviewDesignData.value.i18n ? JSON.parse(JSON.stringify(interviewDesignData.value.i18n)) : undefined
 }
 
-async function initStudyInterviewDesignData() {
+async function initStudyInterviewDesignData () {
   await interviewStore.getInterviewDesign(route.params.itwid)
   interviewDesignData.value = JSON.parse(JSON.stringify(interviewDesign.value))
   initOriginalInterviewDesign()
   await studyStore.getStudy(interviewDesign.value.study)
 }
 
-function hasInterviewDesignChanged() {
+function hasInterviewDesignChanged () {
   return JSON.stringify(originalInterviewDesign.steps) !== JSON.stringify(interviewDesignData.value.steps) ||
     JSON.stringify(originalInterviewDesign.i18n) !== JSON.stringify(interviewDesignData.value.i18n)
 }
 
-async function save(notification, interviewDesignArg) {
+async function save (notification, interviewDesignArg) {
   v$.value.$reset()
   changeDetected.value = -1
   const toSave = interviewDesignArg || toRaw(interviewDesignData.value)
@@ -277,7 +264,7 @@ async function save(notification, interviewDesignArg) {
   })
 }
 
-function onEdit() {
+function onEdit () {
   showEditDefinition.value = true
 }
 

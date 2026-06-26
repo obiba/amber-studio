@@ -119,7 +119,7 @@
                   :hint="t('required')"
                 >
               <template v-slot:error>
-                <div v-for="error in v$.studyData.name.$errors">
+                <div v-for="error in v$.studyData.name.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -204,7 +204,7 @@ const hasInterviewService = computed(() => {
 })
 
 // methods
-function getCampaignLabel(campaign) {
+function getCampaignLabel (campaign) {
   return `${interviewDesigns.value.find(itwd => itwd._id === campaign.interviewDesign).name} / ${campaign.name}`
 }
 
@@ -272,12 +272,12 @@ const servicesOptions = computed(() => [
 
 // Methods
 
-function onEdit() {
+function onEdit () {
   studyData.value = JSON.parse(JSON.stringify(study.value))
   showEditDefinition.value = true
 }
 
-async function save() {
+async function save () {
   v$.value.$reset()
   const toSave = { ...studyData.value }
   studyStore.updateStudy(toSave)

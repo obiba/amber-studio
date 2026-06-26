@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
   const userRole = computed(() => user.value?.role || 'guest')
 
   // Actions
-  async function authenticate(credentials) {
+  async function authenticate (credentials) {
     try {
       const response = await feathersClient.reAuthenticate()
       await responseHandler(response)
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function responseHandler(response) {
+  async function responseHandler (response) {
     if (response && response.user) {
       user.value = response.user
       accessToken.value = response.accessToken
@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function logout() {
+  async function logout () {
     try {
       await feathersClient.logout()
     } finally {
@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function reAuthenticate() {
+  async function reAuthenticate () {
     try {
       const response = await feathersClient.reAuthenticate()
       await responseHandler(response)
@@ -63,7 +63,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function getOAuthProviders() {
+  async function getOAuthProviders () {
     const response = await api.get('/auth/providers')
     return response.data
   }

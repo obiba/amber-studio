@@ -54,7 +54,7 @@ const { t } = useI18n({ useScope: 'global' })
 const success = ref(undefined)
 
 // methods
-async function verifyAccount() {
+async function verifyAccount () {
   const token = route.query.token
   let result
   if (token) {

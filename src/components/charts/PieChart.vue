@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 import * as echarts from 'echarts'
 
 const props = defineProps({
@@ -34,7 +34,7 @@ const props = defineProps({
 
 let chart = null
 
-function init() {
+function init () {
   const elem = document.getElementById(props.chartId)
   chart = echarts.init(elem)
 
@@ -73,7 +73,7 @@ function init() {
   chart.setOption(option)
 }
 
-function onResize() {
+function onResize () {
   if (chart) {
     chart.resize()
   }

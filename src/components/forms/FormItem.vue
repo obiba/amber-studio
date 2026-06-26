@@ -223,11 +223,7 @@ const tab = ref('design')
 const modelData = ref({})
 const showEditModelData = ref(false)
 const modelDataStrEdit = ref('')
-const optionsFile = ref(null)
 const optionsCount = ref(5)
-const imageFile = ref(null)
-const areasFile = ref(null)
-const areasCount = ref(5)
 const locale = ref(i18nLocale.value)
 const maximizedToggle = ref(false)
 
@@ -282,10 +278,6 @@ const isArray = computed(() => {
 
 const hasPlaceholder = computed(() => {
   return ['text', 'textarea'].includes(props.modelValue.type)
-})
-
-const hasDescriptionClass = computed(() => {
-  return !['section', 'group'].includes(props.modelValue.type)
 })
 
 const hasPopup = computed(() => {

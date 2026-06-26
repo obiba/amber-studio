@@ -203,7 +203,7 @@ watch(locale, val => {
 // Drawer state
 const leftDrawerOpen = ref(false)
 
-function toggleLeftDrawer() {
+function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
@@ -227,11 +227,11 @@ const hasLocales = computed(() => locales.length > 1)
 const userName = computed(() => userEmail.value.split('@')[0])
 
 // Methods
-function onLocaleSelection(opt) {
+function onLocaleSelection (opt) {
   locale.value = opt.value
 }
 
-function onLogout() {
+function onLogout () {
   logout()
 }
 </script>

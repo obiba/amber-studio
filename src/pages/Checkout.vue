@@ -19,49 +19,49 @@
             <div class="row">
               <div class="col-6">
                 <q-item>
-                  <q-input dense outlined class="full-width" v-model="address_detail.first_name" label="First Name *"/>
+                  <q-input dense outlined class="full-width" v-model="addressDetail.first_name" label="First Name *"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-input dense outlined class="full-width" v-model="address_detail.last_name" label="Last Name *"/>
+                  <q-input dense outlined class="full-width" v-model="addressDetail.last_name" label="Last Name *"/>
                 </q-item>
               </div>
               <div class="col-12">
                 <q-item>
-                  <q-input dense autogrow outlined v-model="address_detail.address_line_1" class="full-width"
-                           label="Address line 1 *"/>
+                  <q-input dense autogrow outlined v-model="addressDetail.address_line_1" class="full-width"
+                           label="Address line 1 *"/>
                 </q-item>
               </div>
               <div class="col-12">
                 <q-item>
-                  <q-input dense autogrow outlined v-model="address_detail.address_line_2" class="full-width"
-                           label="Address line 2 *"/>
+                  <q-input dense autogrow outlined v-model="addressDetail.address_line_2" class="full-width"
+                           label="Address line 2 *"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-input dense outlined class="full-width" v-model="address_detail.city" label="City *"/>
+                  <q-input dense outlined class="full-width" v-model="addressDetail.city" label="City *"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-input dense outlined class="full-width" v-model="address_detail.state" label="State"/>
+                  <q-input dense outlined class="full-width" v-model="addressDetail.state" label="State"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-input dense outlined class="full-width" v-model="address_detail.zip_code" label="Zip Code"/>
+                  <q-input dense outlined class="full-width" v-model="addressDetail.zip_code" label="Zip Code"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-input dense outlined class="full-width" v-model="address_detail.country" label="Country *"/>
+                  <q-input dense outlined class="full-width" v-model="addressDetail.country" label="Country *"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-checkbox dense outlined class="full-width" v-model="address_detail.checkbox"
+                  <q-checkbox dense outlined class="full-width" v-model="addressDetail.checkbox"
                               label="Use this address for payment details"/>
                 </q-item>
               </div>
@@ -84,29 +84,29 @@
             <div class="row">
               <div class="col-6">
                 <q-item>
-                  <q-input dense outlined class="full-width" v-model="card_detail.name" label="Name on Card*"/>
+                  <q-input dense outlined class="full-width" v-model="cardDetail.name" label="Name on Card*"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-input dense outlined class="full-width" v-model="address_detail.card_number"
+                  <q-input dense outlined class="full-width" v-model="addressDetail.card_number"
                            label="Card Number *"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-input dense autogrow outlined v-model="address_detail.expiry_date" class="full-width"
+                  <q-input dense autogrow outlined v-model="addressDetail.expiry_date" class="full-width"
                            label="Expiry Date *"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-input dense autogrow outlined v-model="address_detail.cvv" class="full-width" label="CVV *"/>
+                  <q-input dense autogrow outlined v-model="addressDetail.cvv" class="full-width" label="CVV *"/>
                 </q-item>
               </div>
               <div class="col-6">
                 <q-item>
-                  <q-checkbox dense outlined class="full-width" v-model="address_detail.checkbox"
+                  <q-checkbox dense outlined class="full-width" v-model="addressDetail.checkbox"
                               label="Remember credit card details for next time"/>
                 </q-item>
               </div>
@@ -206,7 +206,6 @@
                   <div class="text-subtitle1 q-mb-xs">Expiry date - 04/2012</div>
                 </q-card-section>
 
-
               </q-card-section>
             </q-card>
 
@@ -298,8 +297,8 @@
 import { ref } from 'vue'
 
 const step = ref(1)
-const address_detail = ref({})
-const card_detail = ref({})
+const addressDetail = ref({})
+const cardDetail = ref({})
 </script>
 
 <style scoped>

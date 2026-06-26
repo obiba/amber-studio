@@ -19,7 +19,7 @@ export const useStudyStore = defineStore('study', () => {
   })
 
   // Actions
-  async function getStudies(paginationOpts, filter) {
+  async function getStudies (paginationOpts, filter) {
     try {
       const result = await studyService.getStudies(paginationOpts, filter)
       if (result) {
@@ -38,7 +38,7 @@ export const useStudyStore = defineStore('study', () => {
     }
   }
 
-  async function getStudy(id) {
+  async function getStudy (id) {
     try {
       const result = await studyService.getStudy(id)
       if (result) {
@@ -52,7 +52,7 @@ export const useStudyStore = defineStore('study', () => {
     }
   }
 
-  async function createStudy(studyData, paginationOpts) {
+  async function createStudy (studyData, paginationOpts) {
     try {
       const result = await studyService.createStudy(studyData)
       if (result) {
@@ -69,7 +69,7 @@ export const useStudyStore = defineStore('study', () => {
     }
   }
 
-  async function updateStudy(studyData, id, paginationOpts) {
+  async function updateStudy (studyData, id, paginationOpts) {
     const studyId = id || studyData._id
     try {
       const result = await studyService.updateStudy(studyData, studyId)
@@ -90,7 +90,7 @@ export const useStudyStore = defineStore('study', () => {
     }
   }
 
-  async function deleteStudy(id, paginationOpts) {
+  async function deleteStudy (id, paginationOpts) {
     try {
       const result = await studyService.deleteStudy(id)
       if (result) {
@@ -111,7 +111,7 @@ export const useStudyStore = defineStore('study', () => {
     }
   }
 
-  async function deleteStudies(ids, paginationOpts) {
+  async function deleteStudies (ids, paginationOpts) {
     try {
       const result = await studyService.deleteStudies(ids)
       if (result) {
@@ -132,7 +132,7 @@ export const useStudyStore = defineStore('study', () => {
     }
   }
 
-  function setStudyPagination(opts) {
+  function setStudyPagination (opts) {
     studyPaginationOpts.value = opts
   }
 

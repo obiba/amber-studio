@@ -161,7 +161,7 @@
               :hint="t('required')"
             >
               <template v-slot:error>
-                <div v-for="error in v$.newTranslationData.key.$errors">
+                <div v-for="error in v$.newTranslationData.key.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -384,10 +384,10 @@ const v$ = useVuelidate(rules, { newTranslationData })
 
 // Computed
 const value = computed({
-  get() {
+  get () {
     return props.modelValue
   },
-  set(val) {
+  set (val) {
     emit('update:modelValue', val)
   }
 })
@@ -435,7 +435,7 @@ const allLocales = computed(() => {
 })
 
 // Methods
-function initRows() {
+function initRows () {
   // read i18n object and make rows
   if (value.value && value.value) {
     if (value.value.i18n) {
@@ -461,7 +461,7 @@ function initRows() {
   }
 }
 
-function mergeObservedKeys() {
+function mergeObservedKeys () {
   // read items texts and merge/append to rows
   if (value.value) {
     let obsKeys = []
@@ -480,7 +480,7 @@ function mergeObservedKeys() {
   onRowEdit()
 }
 
-function appendObservedKeys(steps, keys) {
+function appendObservedKeys (steps, keys) {
   const obsKeys = keys
   const addObsKey = (key) => {
     if (key && key.trim().length > 0 && !key.includes('.') && !obsKeys.includes(key)) {
@@ -498,7 +498,7 @@ function appendObservedKeys(steps, keys) {
   return obsKeys
 }
 
-function onExport(format) {
+function onExport (format) {
   let accept = 'application/json'
   if (format === 'csv') {
     accept = 'text/csv'
@@ -527,11 +527,11 @@ function onExport(format) {
     })
 }
 
-function keyExists(key) {
+function keyExists (key) {
   return rows.value.map(row => row.key).includes(key)
 }
 
-function onRowEdit() {
+function onRowEdit () {
   // do not know whether there was a change but update i18n anyway
   const toSave = { ...value.value }
   if (!toSave.i18n) {
@@ -551,12 +551,12 @@ function onRowEdit() {
   value.value = toSave
 }
 
-function onAddTranslation() {
+function onAddTranslation () {
   newTranslationData.value = {}
   showAddTranslation.value = true
 }
 
-function onToggleFormLocale(locale) {
+function onToggleFormLocale (locale) {
   if (value.value.i18n[locale]) {
     localeToDelete.value = locale
     showConfirmDeleteLocale.value = true
@@ -569,7 +569,7 @@ function onToggleFormLocale(locale) {
   }
 }
 
-function addTranslation() {
+function addTranslation () {
   if (!keyExists(newTranslationData.value.key)) {
     rows.value.push({ key: newTranslationData.value.key })
     onRowEdit()
@@ -581,12 +581,12 @@ function addTranslation() {
   }
 }
 
-function onImportTranslations() {
+function onImportTranslations () {
   translationsFile.value = null
   showImportTranslations.value = true
 }
 
-function importTranslations() {
+function importTranslations () {
   const toSave = value.value
   const delim = translationsFile.value.name.endsWith('.tsv') ? '\t' : ','
   proxy.$papa.parse(translationsFile.value, {
@@ -620,32 +620,32 @@ function importTranslations() {
   })
 }
 
-function onConfirmClean() {
+function onConfirmClean () {
   showConfirmClean.value = true
 }
 
-function cleanKeys() {
+function cleanKeys () {
   // TODO
 }
 
-function onConfirmMergeObservedKeys() {
+function onConfirmMergeObservedKeys () {
   showConfirmMerge.value = true
 }
 
-function onConfirmDeleteMultiple() {
+function onConfirmDeleteMultiple () {
   if (selected.value.length > 0) {
     showConfirmDelete.value = true
   }
 }
 
-function deleteSelected() {
+function deleteSelected () {
   const selectedKeys = selected.value.map(row => row.key)
   rows.value = rows.value.filter(row => !selectedKeys.includes(row.key))
   selected.value = []
   onRowEdit()
 }
 
-function deleteLocale() {
+function deleteLocale () {
   if (localeToDelete.value) {
     delete value.value.i18n[localeToDelete.value]
     rows.value.forEach(row => {

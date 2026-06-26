@@ -181,7 +181,7 @@
                 <q-icon name='fas fa-user' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.firstname.$errors">
+                <div v-for="error in v$.firstname.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -201,7 +201,7 @@
                 <q-icon name='fas fa-user' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.lastname.$errors">
+                <div v-for="error in v$.lastname.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -222,7 +222,7 @@
                 <q-icon name='fas fa-envelope' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.email.$errors">
+                <div v-for="error in v$.email.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -244,7 +244,7 @@
                 <q-icon name='fas fa-lock' size='xs' />
               </template>
               <template v-slot:error>
-                <div v-for="error in v$.password.$errors">
+                <div v-for="error in v$.password.$errors" :key="error.$uid">
                   {{error.$message}}
                 </div>
               </template>
@@ -444,7 +444,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, email } from '../boot/vuelidate'
@@ -467,7 +467,6 @@ const roles = ['guest', 'interviewer', 'manager', 'administrator', 'inactive']
 const allGroupsOptions = ref([])
 const groupsOptions = ref([])
 const selectedUser = ref({})
-const showEditUser = ref(false)
 const showCreateUser = ref(false)
 const showConfirmDeleteUser = ref(false)
 const showConfirmDeleteUsers = ref(false)
@@ -586,7 +585,6 @@ const rules = {
 const v$ = useVuelidate(rules, newProfileData)
 
 // Watch rolesFilter
-import { watch } from 'vue'
 watch(rolesFilter, () => {
   getTableUsers()
 })
@@ -620,7 +618,7 @@ const rolesOptions = computed(() => {
 })
 
 // Methods
-async function initGroups() {
+async function initGroups () {
   await adminStore.getGroups({
     rowsPerPage: 0,
     page: 1,
@@ -637,11 +635,11 @@ async function initGroups() {
   groupsOptions.value = allGroupsOptions.value
 }
 
-function setPagination() {
+function setPagination () {
   paginationOpts.value = adminStore.userPaginationOpts
 }
 
-async function getTableUsers(requestProp) {
+async function getTableUsers (requestProp) {
   if (requestProp) {
     paginationOpts.value = requestProp.pagination
     adminStore.setUserPagination(requestProp.pagination)
@@ -652,7 +650,7 @@ async function getTableUsers(requestProp) {
   paginationOpts.value.rowsNumber = adminStore.userPaginationOpts.rowsNumber
 }
 
-function createUser() {
+function createUser () {
   newProfileData.value = {
     language: locales[0],
     role: 'guest'
@@ -661,50 +659,50 @@ function createUser() {
   selectedUser.value = undefined
 }
 
-function confirmDeleteUser(user) {
+function confirmDeleteUser (user) {
   showConfirmDeleteUser.value = true
   selectedUser.value = user
 }
 
-function confirmDeleteUsers() {
+function confirmDeleteUsers () {
   if (selected.value.length > 0) {
     showConfirmDeleteUsers.value = true
   }
 }
 
-function confirmGroupUsers() {
+function confirmGroupUsers () {
   selectedGroup.value = null
   if (selected.value.length > 0) {
     showConfirmGroupUsers.value = true
   }
 }
 
-function resendEmailVerification(emailAddr) {
+function resendEmailVerification (emailAddr) {
   accountStore.resendVerification(emailAddr)
 }
 
-async function saveUser() {
+async function saveUser () {
   v$.value.$reset()
   // create
   const userData = { ...newProfileData.value }
   await adminStore.createUser(userData, paginationOpts.value)
 }
 
-function resetPassword(emailAddr) {
+function resetPassword (emailAddr) {
   accountStore.forgotPassword(emailAddr)
 }
 
-function deleteUser() {
+function deleteUser () {
   adminStore.deleteUser(selectedUser.value._id, paginationOpts.value)
 }
 
-function deleteUsers() {
+function deleteUsers () {
   const ids = selected.value.map(u => u._id)
   adminStore.deleteUsers(ids, paginationOpts.value)
   selected.value = []
 }
 
-function groupUsers() {
+function groupUsers () {
   const toSave = { ...selectedGroup.value.object }
   toSave.users = [...selectedGroup.value.object.users]
   if (!toSave.users || toSave.users.length === 0) {
@@ -715,7 +713,7 @@ function groupUsers() {
   adminStore.updateGroup(toSave)
 }
 
-function copyUserProfile(user) {
+function copyUserProfile (user) {
   return {
     firstname: user.firstname,
     lastname: user.lastname,
@@ -728,19 +726,19 @@ function copyUserProfile(user) {
   }
 }
 
-async function activeateUser(user) {
+async function activeateUser (user) {
   const profileData = copyUserProfile(user)
   profileData.role = 'guest'
   await adminStore.updateUser(profileData, user._id, paginationOpts.value)
 }
 
-async function deactiveateUser(user) {
+async function deactiveateUser (user) {
   const profileData = copyUserProfile(user)
   profileData.role = 'inactive'
   await adminStore.updateUser(profileData, user._id, paginationOpts.value)
 }
 
-function filterGroupsOptions(val, update) {
+function filterGroupsOptions (val, update) {
   update(() => {
     if (val === '') {
       groupsOptions.value = allGroupsOptions.value

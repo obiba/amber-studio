@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { feathersClient, makeServicePlugin, BaseModel } from '../../boot/feathersClient'
 
 class User extends BaseModel {

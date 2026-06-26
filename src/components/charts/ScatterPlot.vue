@@ -31,7 +31,7 @@ const options = {
     scale: true
   },
   grid: {
-    bottom: '15%',
+    bottom: '15%'
   },
   series: [{
     name: '1990',
@@ -66,19 +66,19 @@ const options = {
     }
   }]
 }
-let scatter_chart = null
+let scatterChart = null
 
-function init() {
-  const scatterChart = document.getElementById('scatterChart')
-  echarts.dispose(scatterChart)
+function init () {
+  const el = document.getElementById('scatterChart')
+  echarts.dispose(el)
   const theme = model.value ? 'dark' : 'light'
-  scatter_chart = echarts.init(scatterChart, theme)
-  scatter_chart.setOption(options)
+  scatterChart = echarts.init(el, theme)
+  scatterChart.setOption(options)
 }
 
-function onResize() {
-  if (scatter_chart) {
-    scatter_chart.resize()
+function onResize () {
+  if (scatterChart) {
+    scatterChart.resize()
   }
 }
 

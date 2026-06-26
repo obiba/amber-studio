@@ -50,10 +50,10 @@ const options = {
     { type: 'bar' }
   ]
 }
-let bar_chart = null
+let barChart = null
 
-function SaveImage() {
-  const linkSource = bar_chart.getDataURL()
+function SaveImage () {
+  const linkSource = barChart.getDataURL()
   const downloadLink = document.createElement('a')
   document.body.appendChild(downloadLink)
   downloadLink.href = linkSource
@@ -62,15 +62,15 @@ function SaveImage() {
   downloadLink.click()
 }
 
-function init() {
-  const barChart = document.getElementById('barChart')
-  bar_chart = echarts.init(barChart, 'light')
-  bar_chart.setOption(options)
+function init () {
+  const el = document.getElementById('barChart')
+  barChart = echarts.init(el, 'light')
+  barChart.setOption(options)
 }
 
-function onResize() {
-  if (bar_chart) {
-    bar_chart.resize()
+function onResize () {
+  if (barChart) {
+    barChart.resize()
   }
 }
 

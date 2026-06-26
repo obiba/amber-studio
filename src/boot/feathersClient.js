@@ -5,7 +5,7 @@ import auth from '@feathersjs/authentication-client'
 import { iff, discard } from 'feathers-hooks-common'
 import { axios } from './axios'
 
-const appEnv = window.env;
+const appEnv = window.env
 const restClient = rest(appEnv.AMBER_URL)
 
 const feathersClient = feathers()
