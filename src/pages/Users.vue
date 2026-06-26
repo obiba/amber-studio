@@ -7,157 +7,161 @@
       </q-breadcrumbs>
     </div>
     <q-separator/>
-    <div class="text-h5 q-ma-md">{{t('users.title')}}</div>
-    <q-table
-        class="q-ma-md"
-        flat
-        :rows='users'
-        :columns='columns'
-        :filter='filter'
-        row-key='email'
-        selection="multiple"
-        v-model:selected="selected"
-        v-model:pagination='paginationOpts'
-        @request='getTableUsers'
-      >
-        <template v-slot:top>
-        <q-btn
-          color="primary"
-          icon="add"
-          :title="t('users.add_user_hint')"
-          @click="createUser()"
-          size="sm"
-          class="q-mr-md" />
-        <q-btn
-          class="q-mr-md"
+    <div class="q-pa-md">
+      <div class="text-h5 q-mb-sm">{{t('users.title')}}</div>
+      <div class="text-body2 text-secondary q-mb-md">
+        <span v-html="t('users.hint')"/>
+      </div>
+      <q-table
           flat
-          round
-          color="black"
-          icon="groups"
-          :disable="selected.length === 0"
-          :title="t('users.group_users_hint')"
-          size="sm"
-          @click="confirmGroupUsers()" />
-        <q-btn
-          class="q-mr-md"
-          flat
-          round
-          color="negative"
-          icon="delete_outline"
-          :disable="selected.length === 0"
-          :title="t('users.delete_users_hint')"
-          size="sm"
-          @click="confirmDeleteUsers()" />
-        <q-space />
-        <q-select
-          flat
-          dense
-          v-model="rolesFilter"
-          multiple
-          emit-value
-          :options="rolesOptions"
-          use-chips
-          clearable
-          :label="t('users.roles_filter')"
-          style="min-width: 250px"
-          class="q-mr-md"
-          @change="getTableUsers"
-        />
-        <q-input
-          dense
-          debounce="300"
-          v-model="filter"
-          :placeholder="t('search')"
-          :title="t('users.search_hint')">
-          <template v-slot:append>
-            <q-icon name="search"/>
-          </template>
-        </q-input>
-      </template>
-      <template v-slot:body-cell-name='props'>
-        <q-td :props='props'>
-          {{ props.row.firstname }} {{ props.row.lastname }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-email='props'>
-        <q-td :props='props'>
-          <router-link :to="'/user/' + props.row._id">{{ props.row.email }}</router-link>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-role='props'>
-        <q-td>
-          {{ t('roles.' + props.row.role) }}
-        </q-td>
-      </template>
-      <template v-slot:body-cell-action='props'>
-        <q-td :props='props'>
+          :rows='users'
+          :columns='columns'
+          :filter='filter'
+          row-key='email'
+          selection="multiple"
+          v-model:selected="selected"
+          v-model:pagination='paginationOpts'
+          @request='getTableUsers'
+        >
+          <template v-slot:top>
           <q-btn
-            color="secondary"
-            size="12px"
+            color="primary"
+            icon="add"
+            :title="t('users.add_user_hint')"
+            @click="createUser()"
+            size="sm"
+            class="q-mr-md" />
+          <q-btn
+            class="q-mr-md"
+            flat
+            round
+            color="black"
+            icon="groups"
+            :disable="selected.length === 0"
+            :title="t('users.group_users_hint')"
+            size="sm"
+            @click="confirmGroupUsers()" />
+          <q-btn
+            class="q-mr-md"
+            flat
+            round
+            color="negative"
+            icon="delete_outline"
+            :disable="selected.length === 0"
+            :title="t('users.delete_users_hint')"
+            size="sm"
+            @click="confirmDeleteUsers()" />
+          <q-space />
+          <q-select
             flat
             dense
-            round
-            :title="t('users.edit_user_hint')"
-            icon='edit'
-            :to="'/user/' + props.row._id">
-          </q-btn>
-          <q-btn
-            v-if='!props.row.isVerified'
-            color="secondary"
-            size="12px"
-            flat
+            v-model="rolesFilter"
+            multiple
+            emit-value
+            :options="rolesOptions"
+            use-chips
+            clearable
+            :label="t('users.roles_filter')"
+            style="min-width: 250px"
+            class="q-mr-md"
+            @change="getTableUsers"
+          />
+          <q-input
             dense
-            round
-            :title="t('users.resend_email_hint')"
-            icon='send'
-            @click='resendEmailVerification(props.row.email)'>
-          </q-btn>
-          <q-btn
-            v-if='props.row.isVerified'
-            color="secondary"
-            size="12px"
-            flat
-            dense
-            round
-            :title="t('users.reset_password_hint')"
-            icon='replay'
-            @click='resetPassword(props.row.email)'>
-          </q-btn>
-          <q-btn
-            v-if='props.row.role === "inactive"'
-            color="secondary"
-            size="12px"
-            flat
-            dense
-            round
-            :title="t('users.activate_user_hint')"
-            icon='play_arrow'
-            @click='activeateUser(props.row)'>
-          </q-btn>
-          <q-btn
-            v-if='!(props.row.role === "inactive")'
-            color="secondary"
-            size="12px"
-            flat
-            dense
-            round
-            :title="t('users.deactivate_user_hint')"
-            icon='pause'
-            @click='deactiveateUser(props.row)'>
-          </q-btn>
-          <q-btn
-            color="secondary"
-            size="12px"
-            flat
-            dense
-            round
-            :title="t('users.delete_user_hint')"
-            icon='delete'
-            @click='confirmDeleteUser(props.row)'>
-          </q-btn>
-        </q-td>
-      </template>
-    </q-table>
+            debounce="300"
+            v-model="filter"
+            :placeholder="t('search')"
+            :title="t('users.search_hint')">
+            <template v-slot:append>
+              <q-icon name="search"/>
+            </template>
+          </q-input>
+        </template>
+        <template v-slot:body-cell-name='props'>
+          <q-td :props='props'>
+            {{ props.row.firstname }} {{ props.row.lastname }}
+          </q-td>
+        </template>
+        <template v-slot:body-cell-email='props'>
+          <q-td :props='props'>
+            <router-link :to="'/user/' + props.row._id">{{ props.row.email }}</router-link>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-role='props'>
+          <q-td>
+            {{ t('roles.' + props.row.role) }}
+          </q-td>
+        </template>
+        <template v-slot:body-cell-action='props'>
+          <q-td :props='props'>
+            <q-btn
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('users.edit_user_hint')"
+              icon='edit'
+              :to="'/user/' + props.row._id">
+            </q-btn>
+            <q-btn
+              v-if='!props.row.isVerified'
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('users.resend_email_hint')"
+              icon='send'
+              @click='resendEmailVerification(props.row.email)'>
+            </q-btn>
+            <q-btn
+              v-if='props.row.isVerified'
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('users.reset_password_hint')"
+              icon='replay'
+              @click='resetPassword(props.row.email)'>
+            </q-btn>
+            <q-btn
+              v-if='props.row.role === "inactive"'
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('users.activate_user_hint')"
+              icon='play_arrow'
+              @click='activeateUser(props.row)'>
+            </q-btn>
+            <q-btn
+              v-if='!(props.row.role === "inactive")'
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('users.deactivate_user_hint')"
+              icon='pause'
+              @click='deactiveateUser(props.row)'>
+            </q-btn>
+            <q-btn
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('users.delete_user_hint')"
+              icon='delete'
+              @click='confirmDeleteUser(props.row)'>
+            </q-btn>
+          </q-td>
+        </template>
+      </q-table>
+    </div>
 
     <q-dialog v-model='showCreateUser' persistent>
       <q-card>

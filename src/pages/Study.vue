@@ -20,9 +20,31 @@
     <q-separator/>
 
     <div class="q-ma-md">
-      <div class="text-h5 q-mb-md">{{t('main.dashboard')}}</div>
-      <div v-if="study.description" class="text-caption text-secondary">
-        {{ study.description }}
+      <div class="text-h5 q-mb-sm">{{t('main.dashboard')}}</div>
+      <div class="text-body2 text-secondary">
+        <span v-html="t('study.dashboard_hint')"/>
+      </div>
+      <div class="row q-mb-md">
+        <div class="col col-md-6 col-xs-12">
+          <q-list bordered separator class="q-mt-md">
+            <q-item>
+              <q-item-section style="max-width: 200px;">
+                <q-item-label side class="text-overline">{{ t('name') }}</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ study.name }}</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item>
+              <q-item-section style="max-width: 200px;">
+                <q-item-label side class="text-overline">{{ t('description') }}</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ study.description }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
       </div>
       <div class="row q-col-gutter-lg q-mb-lg">
         <div v-if="hasMetrics && !isGuest" class="col-8 col-sm-8 col-xs-12">

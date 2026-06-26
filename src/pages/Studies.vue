@@ -7,11 +7,13 @@
       </q-breadcrumbs>
     </div>
     <q-separator/>
-    <div class="text-h5 q-ma-md">{{t('studies.title')}}</div>
+    <div class="q-ma-md">
+    <div class="text-h5 q-mb-sm">{{t('studies.title')}}</div>
+    <div class="text-body2 text-secondary q-mb-md">
+      <span v-html="t('study.hint')"/>
+    </div>
     <div v-cloak>
-      
           <q-table
-            class="q-ma-md"
             v-if="studies && studies.length > 0"
             flat
             :rows="studies"
@@ -106,6 +108,7 @@
         :label="t('studies.add_study_hint')"
         @click="createStudy()"
         class="q-mt-md q-ml-md" />
+    </div>
     </div>
 
     <q-dialog v-model='showCreateStudy' persistent>

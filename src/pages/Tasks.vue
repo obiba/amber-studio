@@ -7,95 +7,99 @@
       </q-breadcrumbs>
     </div>
     <q-separator/>
-    <div class="text-h5 q-ma-md">{{t('tasks.title')}}</div>
-    <q-table
-        class="q-ma-md"
-        flat
-        :rows='tasks'
-        :columns='columns'
-        :filter='filter'
-        row-key='_id'
-        selection="multiple"
-        v-model:selected="selected"
-        v-model:pagination='paginationOpts'
-        @request='getTableTasks'
-      >
-      <template v-slot:top>
-        <q-btn
-          color="primary"
-          icon="add"
-          :title="t('tasks.add_task_hint')"
-          size="sm"
-          @click="createTask()"
-          class="q-mr-md" />
-        <q-btn
-          class="q-mr-md"
+    <div class="q-pa-md">
+      <div class="text-h5 q-mb-sm">{{t('tasks.title')}}</div>
+      <div class="text-body2 text-secondary q-mb-md">
+        <span v-html="t('tasks.hint')"/>
+      </div>
+      <q-table
           flat
-          round
-          color="negative"
-          icon="delete_outline"
-          size="sm"
-          :disable="selected.length === 0"
-          :title="t('tasks.delete_tasks_hint')"
-          @click="confirmDeleteTasks()" />
-        <q-space />
-        <q-input
-          dense
-          debounce="300"
-          v-model="filter"
-          :placeholder="t('search')"
-          :title="t('tasks.search_hint')">
-          <template v-slot:append>
-            <q-icon name="search"/>
-          </template>
-        </q-input>
-      </template>
-      <template v-slot:body-cell-name='props'>
-        <q-td :props='props'>
-          <router-link :to="'/task/' + props.row._id">{{ props.row.name }}</router-link>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-description='props'>
-        <q-td :props='props'>
-          <div style="white-space: normal">
-            {{ makeEllipsis(props.row.description, 100) }}
-          </div>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-members='props'>
-        <q-td :props='props'>
-          <q-badge v-if="props.row.users.length>0" color="info">
-            {{ props.row.users.length }}
-          </q-badge>
-          <span v-else>0</span>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-action='props'>
-        <q-td :props='props'>
+          :rows='tasks'
+          :columns='columns'
+          :filter='filter'
+          row-key='_id'
+          selection="multiple"
+          v-model:selected="selected"
+          v-model:pagination='paginationOpts'
+          @request='getTableTasks'
+        >
+        <template v-slot:top>
           <q-btn
-            v-if="props.row.logs && props.row.logs.length > 0"
-            color="secondary"
-            size="12px"
-            flat
-            dense
-            round
-            :title="t('tasks.view_task_hint')"
-            icon='visibility'
-            @click='viewTask(props.row)'>
-          </q-btn>
+            color="primary"
+            icon="add"
+            :title="t('tasks.add_task_hint')"
+            size="sm"
+            @click="createTask()"
+            class="q-mr-md" />
           <q-btn
-            color="secondary"
-            size="12px"
+            class="q-mr-md"
             flat
-            dense
             round
-            :title="t('tasks.delete_task_hint')"
-            icon='delete'
-            @click='confirmDeleteTask(props.row)'>
-          </q-btn>
-        </q-td>
-      </template>
-    </q-table>
+            color="negative"
+            icon="delete_outline"
+            size="sm"
+            :disable="selected.length === 0"
+            :title="t('tasks.delete_tasks_hint')"
+            @click="confirmDeleteTasks()" />
+          <q-space />
+          <q-input
+            dense
+            debounce="300"
+            v-model="filter"
+            :placeholder="t('search')"
+            :title="t('tasks.search_hint')">
+            <template v-slot:append>
+              <q-icon name="search"/>
+            </template>
+          </q-input>
+        </template>
+        <template v-slot:body-cell-name='props'>
+          <q-td :props='props'>
+            <router-link :to="'/task/' + props.row._id">{{ props.row.name }}</router-link>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-description='props'>
+          <q-td :props='props'>
+            <div style="white-space: normal">
+              {{ makeEllipsis(props.row.description, 100) }}
+            </div>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-members='props'>
+          <q-td :props='props'>
+            <q-badge v-if="props.row.users.length>0" color="info">
+              {{ props.row.users.length }}
+            </q-badge>
+            <span v-else>0</span>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-action='props'>
+          <q-td :props='props'>
+            <q-btn
+              v-if="props.row.logs && props.row.logs.length > 0"
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('tasks.view_task_hint')"
+              icon='visibility'
+              @click='viewTask(props.row)'>
+            </q-btn>
+            <q-btn
+              color="secondary"
+              size="12px"
+              flat
+              dense
+              round
+              :title="t('tasks.delete_task_hint')"
+              icon='delete'
+              @click='confirmDeleteTask(props.row)'>
+            </q-btn>
+          </q-td>
+        </template>
+      </q-table>
+    </div>
 
     <q-dialog v-model='showCreateTask'>
       <q-card style="width: 400px;">

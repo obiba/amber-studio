@@ -50,6 +50,7 @@ export default {
   },
   users: {
     title: 'Users',
+    hint: 'Users are the people who can access the system. Each user has a role which defines what they can do in the system. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/administration/users.html" target="_blank">Users administration documentation</a>.',
     edit_user_hint: 'Edit user',
     resend_email_hint: 'Resend verification email',
     reset_password_hint: 'Reset password',
@@ -71,6 +72,7 @@ export default {
   },
   groups: {
     title: 'Groups',
+    hint: 'Groups are used to manage users. A group is a set of users which can be granted access to a study or a case report form. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/administration/groups.html" target="_blank">Groups administration documentation</a>.',
     edit_group_hint: 'Edit group',
     add_group_hint: 'Add a new group',
     delete_groups: 'Delete Groups',
@@ -87,6 +89,7 @@ export default {
   },
   tasks: {
     title: 'Tasks',
+    hint: 'Tasks are the background jobs which are executed by the system. Each task has a type, a state and an optional error message. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/administration/tasks.html" target="_blank">Tasks administration documentation</a>.',
     add_task_hint: 'Add a new task',
     delete_tasks: 'Delete Tasks',
     delete_tasks_hint: 'Delete selected tasks',
@@ -112,6 +115,7 @@ export default {
   },
   studies: {
     title: 'Studies',
+    hint: 'Studies are designed to collect data through case report forms and interviews. A study is made of a set of forms, a set of interview designs and a set of data collection campaigns. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/studies.html" target="_blank">Study documentation</a> and the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/" target="_blank">Study cookbook</a>.',
     edit_study_hint: 'Edit study',
     add_study_hint: 'Add a new study',
     delete_studies_hint: 'Delete selected studies',
@@ -121,7 +125,9 @@ export default {
     search_hint: 'Search by name or description'
   },
   study: {
+    hint: 'Studies are designed to collect data through case report forms and interviews. A study is made of a set of forms, a set of interview designs and a set of data collection campaigns. See the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/studies.html" target="_blank">Study documentation</a> and the <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/" target="_blank">Study cookbook</a>.',
     dashboard: 'Study Dashboard',
+    dashboard_hint: 'Overview of the study with collected case reports and interviews.',
     my_campaigns: 'My Campaigns',
     metrics: 'Metrics',
     design: 'Design',
@@ -252,6 +258,7 @@ export default {
     my_profile: 'My profile',
     logout: 'Sign out',
     dashboard: 'Dashboard',
+    dashboard_hint: 'Overview of the designed studies with collected case reports and interviews.',
     content: 'Content',
     administration: 'Administration',
     settings: 'Settings',

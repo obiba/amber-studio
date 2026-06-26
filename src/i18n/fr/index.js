@@ -50,6 +50,7 @@ export default {
   },
   users: {
     title: 'Utilisateurs',
+    hint: 'Les utilisateurs sont les personnes qui peuvent accéder au système. Chaque utilisateur a un rôle qui définit ce qu\'il peut faire dans le système. Voir la <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/administration/users.html" target="_blank">documentation d\'administration des utilisateurs</a>.',
     edit_user_hint: 'Éditer l\'utilisateur',
     resend_email_hint: 'Renvoyer le courriel de vérification',
     reset_password_hint: 'Réinitialiser le mot de passe',
@@ -71,6 +72,7 @@ export default {
   },
   groups: {
     title: 'Groupes',
+    hint: 'Les groupes sont utilisés pour gérer les utilisateurs. Un groupe est un ensemble d\'utilisateurs qui peuvent se voir accorder l\'accès à une étude ou à un formulaire de rapport de cas. Voir la <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/administration/groups.html" target="_blank">documentation d\'administration des groupes</a>.',
     edit_group_hint: 'Éditer le groupe',
     add_group_hint: 'Ajouter un nouveau groupe',
     delete_groups: 'Supprimer',
@@ -87,6 +89,7 @@ export default {
   },
   tasks: {
     title: 'Tâches',
+    hint: 'Les tâches sont les travaux en arrière-plan qui sont exécutés par le système. Chaque tâche a un type, un état et un message d\'erreur éventuel. Voir la <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/administration/tasks.html" target="_blank">documentation d\'administration des tâches</a>.',
     add_task_hint: 'Ajouter une tâche',
     delete_tasks: 'Supprimer les tâches',
     delete_tasks_hint: 'Supprimer les tâches sélectionnées',
@@ -121,7 +124,9 @@ export default {
     search_hint: 'Chercher par nom ou description'
   },
   study: {
+    hint: 'Les études sont conçues pour collecter des données via des formulaires de rapports de cas et des entretiens. Une étude est constituée d’un ensemble de formulaires, d’un ensemble de conceptions d’entretiens et d’un ensemble de campagnes de collecte de données. Voir la <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/content/studies.html" target="_blank">documentation sur les études</a> et le <a href="https://amberdoc.obiba.org/en/latest/studio-user-guide/cookbook/" target="_blank">livre de recettes sur les études</a>.',
     dashboard: 'Tableau de bord de l\'étude',
+    dashboard_hint: 'Aperçu de l\'étude avec les rapports de cas collectés et les entrevues.',
     my_campaigns: 'Mes campagnes d\'entrevues',
     metrics: 'Métriques',
     design: 'Conception',
@@ -252,6 +257,7 @@ export default {
     my_profile: 'Mon profile',
     logout: 'Déconnexion',
     dashboard: 'Tableau de bord',
+    dashboard_hint: 'Aperçu des études conçues avec les rapports de cas collectés et les entrevues.',
     content: 'Contenu',
     administration: 'Administration',
     settings: 'Paramètres',

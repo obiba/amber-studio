@@ -1,6 +1,9 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="text-h5 q-mb-md">{{t('main.dashboard')}}</div>
+    <div class="text-h5 q-mb-sm">{{t('main.dashboard')}}</div>
+    <div class="text-body2 text-secondary q-mb-md">
+      <span v-html="t('main.dashboard_hint')"/>
+    </div>
     <div class="row q-col-gutter-lg q-mb-lg">
       <div v-if="!isGuest" class="col-8 col-sm-8 col-xs-12">
         <dashboard-counts :counts="counts"/>
