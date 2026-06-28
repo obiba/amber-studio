@@ -398,6 +398,7 @@ export default {
     preview_data_hint: 'Données telles que collectées par cette prévue. Vous pouvez les modifier afin que les conditions basées sur des données extérieures s\'appliquent (typiquement des données d\'un autre formulaire ou celles du participant). Le format JSON est attendu.',
     preview_data_clear: 'Effacer',
     preview_data_edit: 'Éditer',
+    preview_print: 'Imprimer',
     definition: 'Définition',
     data: 'Données',
     settings: 'Paramètres',

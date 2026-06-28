@@ -399,6 +399,7 @@ export default {
     preview_data_hint: 'Data as collected by this preview. You can modify it so that the conditions based on external data apply (typically other form or participant specific data). JSON format is expected.',
     preview_data_clear: 'Clear',
     preview_data_edit: 'Edit',
+    preview_print: 'Print',
     definition: 'Definition',
     data: 'Data',
     settings: 'Settings',

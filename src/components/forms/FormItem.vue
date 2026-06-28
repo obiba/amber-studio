@@ -71,6 +71,12 @@
                 </q-item>
               </q-list>
             </q-btn-dropdown>
+            <q-btn
+              icon="print"
+              flat
+              size="sm"
+              :label="t('form.preview_print')"
+              @click="onPrint()"/>
           </q-card-section>
           <q-separator/>
           <q-card-section v-if="isRoot">
@@ -84,6 +90,14 @@
             </div>
           </q-card-section>
         </q-card>
+        <!-- Off-screen area rendered for printing only (excludes _id field) -->
+        <div ref="printArea" style="position: absolute; left: -9999px; top: 0; width: 800px; overflow: hidden;">
+          <div v-if="isRoot">
+            <div class="text-h6">{{ tr(modelValue.label) }}</div>
+            <div v-html="md(tr(modelValue.description))"/>
+          </div>
+          <BlitzForm :key='remountCounter' :schema='blitzarPrintSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
+        </div>
         <q-card class="q-mt-md" v-if="isVariable">
           <q-card-section class="bg-grey-3">
             <q-btn
@@ -218,6 +232,7 @@ const types = [
 ]
 
 // Refs
+const printArea = ref(null)
 const remountCounter = ref(0)
 const tab = ref('design')
 const modelData = ref({})
@@ -409,6 +424,15 @@ const blitzarSchema = computed(() => {
   return makeBlitzarQuasarSchemaForm(schema, { locale: locale.value, debug: true })
 })
 
+const blitzarPrintSchema = computed(() => {
+  const items = isRoot.value ? [...value.value.items] : [value.value]
+  const schema = {
+    items: items,
+    i18n: props.i18n ? props.i18n : {}
+  }
+  return makeBlitzarQuasarSchemaForm(schema, { locale: locale.value, debug: true })
+})
+
 // Watch
 watch(() => props.modelValue, () => {
   emit('update:modelValue', props.modelValue)
@@ -483,6 +507,25 @@ function md (text) {
 
 function onLocale (newLocale) {
   locale.value = newLocale
+}
+
+function onPrint () {
+  const printWindow = window.open('', '_blank')
+  if (!printWindow) return
+  const doc = printWindow.document
+  doc.title = tr(props.modelValue?.label) || 'Print'
+  document.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => {
+    doc.head.appendChild(el.cloneNode(true))
+  })
+  if (printArea.value) {
+    const clone = printArea.value.cloneNode(true)
+    clone.removeAttribute('style')
+    doc.body.appendChild(clone)
+  }
+  setTimeout(() => {
+    printWindow.print()
+    printWindow.close()
+  }, 500)
 }
 
 function editModelData () {
