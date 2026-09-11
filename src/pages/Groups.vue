@@ -215,7 +215,7 @@ import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
-import { useAdminStore } from 'src/stores/admin'
+import { useAdminStore } from '@/stores/admin'
 
 const { t } = useI18n()
 const adminStore = useAdminStore()

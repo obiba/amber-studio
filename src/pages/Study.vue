@@ -172,10 +172,10 @@ import useVuelidate from '@vuelidate/core'
 import { settings } from '../boot/settings'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
-import { useStudyStore } from 'src/stores/study'
-import { useAuth } from 'src/composables/useAuth'
+import { useStudyStore } from '@/stores/study'
+import { useAuth } from '@/composables/useAuth'
 import { required, minLength, maxLength } from '../boot/vuelidate'
-import DashboardCounts from 'src/components/dashboard/DashboardCounts.vue'
+import DashboardCounts from '@/components/dashboard/DashboardCounts.vue'
 
 const { t } = useI18n()
 

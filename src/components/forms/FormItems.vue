@@ -175,9 +175,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAuth } from 'src/composables/useAuth'
-import { useFormUtils } from 'src/composables/useFormUtils'
-import FormItem from 'src/components/forms/FormItem.vue'
+import { useAuth } from '@/composables/useAuth'
+import { useFormUtils } from '@/composables/useFormUtils'
+import FormItem from '@/components/forms/FormItem.vue'
 
 const { t } = useI18n()
 

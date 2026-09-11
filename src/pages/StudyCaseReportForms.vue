@@ -24,9 +24,9 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import CaseReportForms from 'src/components/crfs/CaseReportForms.vue'
-import { useStudyStore } from 'src/stores/study'
-import { settings } from 'src/boot/settings'
+import CaseReportForms from '@/components/crfs/CaseReportForms.vue'
+import { useStudyStore } from '@/stores/study'
+import { settings } from '@/boot/settings'
 
 const studyStore = useStudyStore()
 const { t } = useI18n()

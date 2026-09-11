@@ -308,8 +308,8 @@ import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { formRevisionService } from '../../services/form'
-import { useFormStore } from 'src/stores/form'
-import { useAuth } from 'src/composables/useAuth'
+import { useFormStore } from '@/stores/form'
+import { useAuth } from '@/composables/useAuth'
 
 const { t } = useI18n()
 

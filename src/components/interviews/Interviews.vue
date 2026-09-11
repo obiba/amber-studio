@@ -363,9 +363,9 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { interviewService } from '../../services/interview'
 import { date, Notify } from 'quasar'
-import { useInterviewStore } from 'src/stores/interview'
-import { useStudyStore } from 'src/stores/study'
-import { useAuth } from 'src/composables/useAuth'
+import { useInterviewStore } from '@/stores/interview'
+import { useStudyStore } from '@/stores/study'
+import { useAuth } from '@/composables/useAuth'
 
 const { t } = useI18n()
 const route = useRoute()

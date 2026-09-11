@@ -124,9 +124,9 @@ import { useRouter } from 'vue-router'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
 import { baseURL } from '../boot/axios'
-import { useAuthStore } from 'src/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 
-import Banner from 'src/components/Banner.vue'
+import Banner from '@/components/Banner.vue'
 
 // Import Quasar language files statically
 import langEnUS from 'quasar/lang/en-US'

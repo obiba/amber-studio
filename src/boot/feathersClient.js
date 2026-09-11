@@ -1,4 +1,4 @@
-import { boot } from 'quasar/wrappers'
+import { defineBoot } from '#q-app'
 import feathers from '@feathersjs/feathers'
 import rest from '@feathersjs/rest-client'
 import auth from '@feathersjs/authentication-client'
@@ -27,7 +27,7 @@ const feathersClient = feathers()
     }
   })
 
-export default boot(({ app }) => {
+export default defineBoot(({ app }) => {
   // Feathers client is available globally through imports
 })
 

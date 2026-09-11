@@ -38,8 +38,8 @@ import { useI18n } from 'vue-i18n'
 import { metricsService } from '../services/utils'
 import { interviewDesignService, campaignService } from '../services/interview'
 import studyService from '../services/study'
-import { useAuth } from 'src/composables/useAuth'
-import DashboardCounts from 'src/components/dashboard/DashboardCounts.vue'
+import { useAuth } from '@/composables/useAuth'
+import DashboardCounts from '@/components/dashboard/DashboardCounts.vue'
 
 const { t } = useI18n()
 

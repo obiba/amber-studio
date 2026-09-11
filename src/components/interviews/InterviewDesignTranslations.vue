@@ -339,7 +339,7 @@ import { locales } from '../../boot/i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { Notify } from 'quasar'
-import { useAuth } from 'src/composables/useAuth'
+import { useAuth } from '@/composables/useAuth'
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])

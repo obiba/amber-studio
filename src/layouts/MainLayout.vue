@@ -178,7 +178,7 @@ import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
-import amberMark from 'src/assets/amber-mark-negative.svg'
+import amberMark from '@/assets/amber-mark-negative.svg'
 import { useAuth } from '../composables/useAuth'
 
 // Import Quasar language files statically

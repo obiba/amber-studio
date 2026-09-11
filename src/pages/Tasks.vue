@@ -230,7 +230,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { settings } from '../boot/settings'
 import { date } from 'quasar'
-import { useAdminStore } from 'src/stores/admin'
+import { useAdminStore } from '@/stores/admin'
 
 const { t } = useI18n()
 const adminStore = useAdminStore()

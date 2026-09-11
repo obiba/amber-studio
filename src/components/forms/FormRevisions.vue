@@ -233,8 +233,8 @@ import { ref, computed, onMounted } from 'vue'
 import { date } from 'quasar'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
-import { useFormStore } from 'src/stores/form'
-import { useAuth } from 'src/composables/useAuth'
+import { useFormStore } from '@/stores/form'
+import { useAuth } from '@/composables/useAuth'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps(['form'])

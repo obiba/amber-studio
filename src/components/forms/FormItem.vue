@@ -161,7 +161,7 @@ import { marked } from 'marked'
 import { BlitzForm } from '@blitzar/form'
 import { makeBlitzarQuasarSchemaForm, makeSchemaFormTr } from '@obiba/quasar-ui-amber'
 import { settings } from '../../boot/settings'
-import { useAuth } from 'src/composables/useAuth'
+import { useAuth } from '@/composables/useAuth'
 import { useI18n } from 'vue-i18n'
 
 import AutocompleteItem from './items/AutocompleteItem.vue'

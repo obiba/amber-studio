@@ -24,9 +24,9 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import Forms from 'src/components/forms/Forms.vue'
-import { useStudyStore } from 'src/stores/study'
-import { settings } from 'src/boot/settings'
+import Forms from '@/components/forms/Forms.vue'
+import { useStudyStore } from '@/stores/study'
+import { settings } from '@/boot/settings'
 
 const studyStore = useStudyStore()
 const { t } = useI18n()

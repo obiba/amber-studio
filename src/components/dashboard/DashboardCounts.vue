@@ -99,8 +99,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAuth } from 'src/composables/useAuth'
-import RecordsChart from 'src/components/dashboard/RecordsChart.vue'
+import { useAuth } from '@/composables/useAuth'
+import RecordsChart from '@/components/dashboard/RecordsChart.vue'
 
 const { t } = useI18n()
 
