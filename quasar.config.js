@@ -37,12 +37,15 @@ export default configure(function (ctx) {
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: ['app.scss'],
+    css: [
+      '~@fontsource-variable/sora/index.css',
+      '~@fontsource-variable/instrument-sans/index.css',
+      'app.scss'
+    ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       'fontawesome-v7',
-      'roboto-font', // optional, you are not bound to it
       'material-icons' // optional, you are not bound to it
     ],
 

@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated :class="settings.theme.header">
+    <q-header :class="settings.theme.header">
       <q-toolbar>
         <q-btn
           flat
@@ -10,7 +10,8 @@
           icon="menu"
           aria-label="Menu"
         />
-        <q-btn flat to="/" no-caps size="lg">
+        <q-btn flat to="/" no-caps size="lg" class="brand-title">
+          <img :src="amberMark" alt="" class="brand-mark q-mr-sm" />
           {{t('main.brand')}}
         </q-btn>
         <q-space/>
@@ -177,6 +178,7 @@ import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
+import amberMark from 'src/assets/amber-mark-negative.svg'
 import { useAuth } from '../composables/useAuth'
 
 // Import Quasar language files statically
