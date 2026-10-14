@@ -1,4 +1,20 @@
-/* app global css */
+/* app global css, OBiBa design system */
+.text-h1,
+.text-h2,
+.text-h3,
+.text-h4,
+.text-h5,
+.text-h6,
+.brand-title {
+  font-family: 'Sora Variable', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.q-header .brand-mark {
+  height: 28px;
+  width: 28px;
+}
 
 /* @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap'); */
 
@@ -22,10 +38,10 @@ p:last-of-type {
 
 .q-table {
   th {
-    background-color: $blue-grey-1;
+    background-color: #f2f7f6;
   }
   tr:nth-child(even) {
-    background-color: $grey-2;
+    background-color: #f2f7f6;
   }
   tr:nth-child(odd) {
     background-color: white;
@@ -33,7 +49,7 @@ p:last-of-type {
 }
 
 .bg-base {
-  background: #e9ecef;
+  background: #f2f7f6;
   /*background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);*/
 }
 
@@ -51,7 +67,7 @@ pre {
 }
 
 .q-tree__node--selected {
-  background-color: #eeeeee;
+  background-color: #f2f7f6;
   border-radius: 0;
 }
 

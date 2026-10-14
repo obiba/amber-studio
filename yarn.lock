@@ -913,6 +913,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/instrument-sans@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource-variable/instrument-sans@npm:5.3.0"
+  checksum: 10c0/3ac38a4cfa518820350e594c5216c6900c0c39d7b4355f5a07652f012a565f99a6569a35b58ef32c911620fb5e808b0ba08cada6f1c949ea2448ee3c0fd6a87c
+  languageName: node
+  linkType: hard
+
+"@fontsource-variable/sora@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource-variable/sora@npm:5.3.0"
+  checksum: 10c0/ae64e9769813dd5c42a981fe2a230f81d99ef056ea63b2879bd8ab0f1c4313f506b8e6d994d3aa7b86e596c72e5079f8781a111de92ffa28011d41a59c468789
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.5.0":
   version: 0.5.0
   resolution: "@humanwhocodes/config-array@npm:0.5.0"
@@ -3231,6 +3245,8 @@ __metadata:
     "@feathersjs/commons": "npm:^5.0.33"
     "@feathersjs/feathers": "npm:^5.0.33"
     "@feathersjs/rest-client": "npm:^5.0.33"
+    "@fontsource-variable/instrument-sans": "npm:^5.3.0"
+    "@fontsource-variable/sora": "npm:^5.3.0"
     "@obiba/quasar-app-extension-amber": "npm:1.2.0"
     "@quasar/app-vite": "npm:^2.0.0"
     "@quasar/cli": "npm:^2.4.1"
