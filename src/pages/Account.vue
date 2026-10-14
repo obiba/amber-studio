@@ -139,9 +139,9 @@ import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
-import { useAuthStore } from 'src/stores/auth'
-import { useAccountStore } from 'src/stores/account'
-import { useAdminStore } from 'src/stores/admin'
+import { useAuthStore } from '@/stores/auth'
+import { useAccountStore } from '@/stores/account'
+import { useAdminStore } from '@/stores/admin'
 
 const { t } = useI18n({ useScope: 'global' })
 const authStore = useAuthStore()

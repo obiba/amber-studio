@@ -56,9 +56,9 @@ import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, strongPassword } from '../boot/vuelidate'
 import { Notify } from 'quasar'
 import { settings } from '../boot/settings'
-import { useAccountStore } from 'src/stores/account'
+import { useAccountStore } from '@/stores/account'
 
-import Banner from 'src/components/Banner.vue'
+import Banner from '@/components/Banner.vue'
 
 const router = useRouter()
 const route = useRoute()

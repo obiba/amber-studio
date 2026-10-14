@@ -542,7 +542,7 @@
 import { ref, computed, onMounted, getCurrentInstance } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { date, Notify } from 'quasar'
-import { useAuth } from 'src/composables/useAuth'
+import { useAuth } from '@/composables/useAuth'
 import { participantService } from '../../services/interview'
 import { errorHandler } from '../../boot/errors'
 

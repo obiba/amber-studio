@@ -357,9 +357,9 @@ import useVuelidate from '@vuelidate/core'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
-import { useInterviewStore } from 'src/stores/interview'
-import { useStudyStore } from 'src/stores/study'
-import { useAuth } from 'src/composables/useAuth'
+import { useInterviewStore } from '@/stores/interview'
+import { useStudyStore } from '@/stores/study'
+import { useAuth } from '@/composables/useAuth'
 
 const { t } = useI18n()
 const route = useRoute()

@@ -6,7 +6,7 @@ if (response.ok) {
   Object.assign(settings, await response.json())
 }
 
-settings.version = process.env.VERSION
+settings.version = import.meta.env.VERSION
 settings.register_enabled = appEnv.RECAPTCHA_SITE_KEY !== undefined
 
 export { settings }

@@ -61,12 +61,12 @@
 <script setup>
 import { defineAsyncComponent } from 'vue'
 
-const CardItem = defineAsyncComponent(() => import('components/cards/CardItem'))
-const CardCafe = defineAsyncComponent(() => import('components/cards/CardCafe'))
-const CardCompany = defineAsyncComponent(() => import('components/cards/CardCompany'))
-const CardProfileDark = defineAsyncComponent(() => import('components/cards/CardProfileDark'))
-const CardProfile = defineAsyncComponent(() => import('components/cards/CardProfile'))
-const BasicCard = defineAsyncComponent(() => import('components/cards/CardBasic'))
+const CardItem = defineAsyncComponent(() => import('@/components/cards/CardItem'))
+const CardCafe = defineAsyncComponent(() => import('@/components/cards/CardCafe'))
+const CardCompany = defineAsyncComponent(() => import('@/components/cards/CardCompany'))
+const CardProfileDark = defineAsyncComponent(() => import('@/components/cards/CardProfileDark'))
+const CardProfile = defineAsyncComponent(() => import('@/components/cards/CardProfile'))
+const BasicCard = defineAsyncComponent(() => import('@/components/cards/CardBasic'))
 
 const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 

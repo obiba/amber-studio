@@ -65,9 +65,9 @@ import { useI18n } from 'vue-i18n'
 import { required, email } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
 import useVuelidate from '@vuelidate/core'
-import { useAccountStore } from 'src/stores/account'
+import { useAccountStore } from '@/stores/account'
 
-import Banner from 'src/components/Banner.vue'
+import Banner from '@/components/Banner.vue'
 
 const { t } = useI18n()
 

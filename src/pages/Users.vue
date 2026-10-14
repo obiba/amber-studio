@@ -451,8 +451,8 @@ import { required, minLength, maxLength, email } from '../boot/vuelidate'
 import { date } from 'quasar'
 import { locales } from '../boot/i18n'
 import { settings } from '../boot/settings'
-import { useAdminStore } from 'src/stores/admin'
-import { useAccountStore } from 'src/stores/account'
+import { useAdminStore } from '@/stores/admin'
+import { useAccountStore } from '@/stores/account'
 
 const { t } = useI18n()
 const adminStore = useAdminStore()

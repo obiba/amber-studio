@@ -338,7 +338,7 @@ import { locales } from '../../boot/i18n'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { Notify } from 'quasar'
-import { useAuth } from 'src/composables/useAuth'
+import { useAuth } from '@/composables/useAuth'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps(['modelValue'])

@@ -5,10 +5,14 @@
   "productName": "Amber Studio",
   "author": "Yannick Marcon <yannick.marcon@obiba.org>",
   "license": "MIT",
+  "type": "module",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "postinstall": "quasar prepare"
   },
   "dependencies": {
     "@blitzar/form": "git+https://github.com/obiba/blitzar.git#tag=v1.0.13-obiba&workspace=packages/form",
@@ -22,8 +26,8 @@
     "@feathersjs/rest-client": "^5.0.33",
     "@fontsource-variable/instrument-sans": "^5.3.0",
     "@fontsource-variable/sora": "^5.3.0",
-    "@quasar/app-vite": "^2.0.0",
-    "@quasar/cli": "^2.4.1",
+    "@obiba/quasar-ui-amber": "^1.1.6",
+    "@quasar/cli": "^5.0.8",
     "@quasar/extras": "^1.17.0",
     "@vuelidate/core": "^2.0.0-alpha.32",
     "@vuelidate/validators": "^2.0.0-alpha.25",
@@ -34,20 +38,20 @@
     "feathers-pinia": "^4.5.4",
     "marked": "^9.1.1",
     "merge-anything": "^5.0.2",
-    "pinia": "^2.1.7",
-    "quasar": "2.19.3",
+    "pinia": "^3.0.4",
+    "quasar": "^2.32.2",
     "secure-ls": "^1.2.6",
     "uuid": "^14.0.0",
     "vue": "^3.5.11",
     "vue-i18n": "^9.1.7",
     "vue-papa-parse": "^3.1.0",
     "vue-recaptcha-v3": "^2.0.1",
-    "vue-router": "^4.0.0",
+    "vue-router": "^5.3.1",
     "vuedraggable": "^4.0.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
-    "@obiba/quasar-app-extension-amber": "1.2.0",
+    "@quasar/app-vite": "^3.8.3",
     "autoprefixer": "^10.5.0",
     "eslint": "^7.14.0",
     "eslint-config-standard": "^16.0.2",
@@ -71,7 +75,7 @@
     "last 5 Opera versions"
   ],
   "engines": {
-    "node": ">= 12.22.1",
+    "node": "^24 || ^22.22.0",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
   },

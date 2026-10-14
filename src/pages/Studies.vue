@@ -236,8 +236,8 @@ import { date } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import { settings } from '../boot/settings'
-import { useStudyStore } from 'src/stores/study'
-import { useAuth } from 'src/composables/useAuth'
+import { useStudyStore } from '@/stores/study'
+import { useAuth } from '@/composables/useAuth'
 
 const { t } = useI18n()
 const studyStore = useStudyStore()
