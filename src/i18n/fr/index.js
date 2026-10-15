@@ -371,6 +371,19 @@ export default {
     delete_tasks: 'Tâches supprimées avec succès.'
   },
   form: {
+    convert: {
+      action: 'Convertir',
+      action_hint: 'Convertir le formulaire vers le nouveau moteur de formulaires',
+      title: 'Conversion vers le nouveau moteur de formulaires',
+      hint: 'Remplissez les deux formulaires pour vérifier qu\'ils collectent les mêmes données. Appliquer la conversion remplace le brouillon du formulaire ; les révisions publiées ne sont pas modifiées.',
+      no_diagnostics: 'Le formulaire a été converti sans avertissement.',
+      legacy: 'Formulaire actuel',
+      converted: 'Formulaire converti',
+      copy_data: 'Copier les données vers le formulaire converti',
+      same_data: 'Les deux formulaires ont les mêmes données.',
+      different_data: 'Les formulaires ont des données différentes.',
+      apply: 'Appliquer la conversion'
+    },
     tr_add: 'Ajouter une traduction',
     tr_add_key: 'Ajouter une clé de traduction',
     tr_merge_items: 'Ajouter les clés de traduction des éléments',

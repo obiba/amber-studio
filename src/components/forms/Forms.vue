@@ -368,9 +368,13 @@ async function saveStudyForm () {
       console.error(evt)
     }
   } else {
+    // a new form is in the JSON Forms format
     toSave.schema = {
       label: toSave.name,
-      description: toSave.description
+      description: toSave.description,
+      schema: { type: 'object', properties: {} },
+      uischema: { type: 'VerticalLayout', elements: [] },
+      translations: {}
     }
     formStore.createForm(toSave, paginationOpts.value, studyId.value)
   }

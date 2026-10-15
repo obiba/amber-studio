@@ -37,6 +37,15 @@ Environment variable when running the app in production:
 
 * Override Docker's file `/app/settings.json` file to apply your own CSS classes or add some translations.
 
+### Form conversion dry run
+
+The forms in the legacy format can be converted to the new form engine (the *Convert* action of a form). To size this work, the forms of a database export are converted and their diagnostics reported, without changing anything:
+
+```bash
+mongoexport --uri mongodb://localhost:27017/amber --collection forms --jsonArray --out forms.json
+node scripts/convert-dry-run.js forms.json
+```
+
 ## License
 
 [MIT](https://mit-license.org/)

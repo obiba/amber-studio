@@ -36,6 +36,11 @@ p:last-of-type {
   padding: 1em 0 1em 0;
 }
 
+// the form builder panels keep the default padding
+.q-json-form-builder .q-tab-panel {
+  padding: 16px;
+}
+
 .q-table {
   th {
     background-color: #f2f7f6;
