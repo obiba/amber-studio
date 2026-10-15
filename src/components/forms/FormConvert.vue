@@ -9,6 +9,9 @@
         <q-btn :label="t('form.convert.apply')" color="primary" :disable="!result" @click="onApply" />
       </q-card-section>
       <q-separator />
+      <q-card-section v-if="error">
+        <q-banner dense class="bg-red-1 text-negative">{{ error }}</q-banner>
+      </q-card-section>
       <q-card-section v-if="result">
         <div class="text-body2 text-secondary q-mb-sm" v-html="t('form.convert.hint')" />
         <q-banner v-if="result.diagnostics.length === 0" dense class="bg-green-1 text-positive">
@@ -73,6 +76,7 @@ const emit = defineEmits(['update:modelValue', 'convert'])
 const { t, locale: appLocale } = useI18n({ useScope: 'global' })
 
 const result = ref(null)
+const error = ref(null)
 const legacyData = ref({})
 const jsonData = ref({})
 const remountCounter = ref(0)
@@ -95,7 +99,14 @@ const sameData = computed(() => legacyDataStr.value === jsonDataStr.value)
 
 watch(show, (value) => {
   if (!value) return
-  result.value = convertForm(JSON.parse(JSON.stringify(props.schema)))
+  try {
+    result.value = convertForm(JSON.parse(JSON.stringify(props.schema)))
+  } catch (e) {
+    result.value = null
+    error.value = e.message
+    return
+  }
+  error.value = null
   legacyData.value = {}
   jsonData.value = {}
   if (!locales.value.includes(locale.value) && locales.value.length > 0) locale.value = locales.value[0]

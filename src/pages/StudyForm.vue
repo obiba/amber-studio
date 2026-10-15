@@ -169,7 +169,7 @@
               <form-items v-else :key="reload" v-model="studyFormData" />
             </q-tab-panel>
 
-            <q-tab-panel name="translations">
+            <q-tab-panel v-if="!isJson" name="translations">
               <form-translations :key="reload" v-model="studyFormData" />
             </q-tab-panel>
           </q-tab-panels>
@@ -294,7 +294,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRaw, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, toRaw, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
@@ -363,6 +363,8 @@ const builderModel = computed({
     Object.assign(studyFormData.value.schema, val)
   }
 })
+// the sub-tabs differ between the formats (import, reinstate or conversion)
+watch(isJson, () => { innerTab.value = 'items' })
 const disableImportSchema = computed(() => importSchemaFile.value === null)
 const disableTag = computed(() => changeDetected.value !== 0)
 const disableSave = computed(() => v$.value.studyFormData.$invalid)
@@ -449,7 +451,6 @@ function importSchema () {
 
 function onConvert (schema) {
   studyFormData.value.schema = schema
-  innerTab.value = 'items'
   save(true).then(() => onReinstate())
 }
 
