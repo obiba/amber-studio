@@ -226,7 +226,7 @@
                 </q-list>
               </q-btn-dropdown>
               <q-separator  class="q-mt-md"/>
-              <BlitzForm :key='remountCounter' :schema='formRevisionBlitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
+              <AmberForm :key='remountCounter' :schema='selectedFormRevision.schema' v-model='modelData' :locale='locale' debug/>
             </q-tab-panel>
 
             <q-tab-panel name="data" class="q-pl-none q-pr-none">
@@ -326,8 +326,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useCaseReportStore } from '@/stores/caseReport'
 import { useStudyStore } from '@/stores/study'
 import { useFormStore } from '@/stores/form'
-import { BlitzForm } from '@blitzar/form'
-import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
+import { AmberForm } from '@obiba/quasar-ui-amber'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -447,11 +446,7 @@ const formOptions = computed(() => {
 const modelDataStr = computed(() => JSON.stringify(modelData.value, null, '  '))
 
 const formRevisionLocales = computed(() => {
-  return Object.keys(selectedFormRevision.value.schema.i18n).filter(loc => locale.value !== loc)
-})
-
-const formRevisionBlitzarSchema = computed(() => {
-  return makeBlitzarQuasarSchemaForm(selectedFormRevision.value.schema, { locale: locale.value, debug: true })
+  return Object.keys(selectedFormRevision.value.schema.i18n || selectedFormRevision.value.schema.translations || {}).filter(loc => locale.value !== loc)
 })
 
 // Methods

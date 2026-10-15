@@ -121,7 +121,7 @@
               </q-btn-dropdown>
               <q-separator  class="q-mt-md"/>
               <q-scroll-area style="height: 400px" class="q-pt-md">
-                <BlitzForm :key='remountCounter' :schema='blitzarSchema' v-model='modelData' :columnCount='1' gridGap='32px'/>
+                <AmberForm :key='remountCounter' :schema='selectedRevision.schema' v-model='modelData' :locale='locale' apply-defaults debug/>
               </q-scroll-area>
             </q-tab-panel>
 
@@ -231,8 +231,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { date } from 'quasar'
-import { BlitzForm } from '@blitzar/form'
-import { makeBlitzarQuasarSchemaForm } from '@obiba/quasar-ui-amber'
+import { AmberForm } from '@obiba/quasar-ui-amber'
 import { useFormStore } from '@/stores/form'
 import { useAuth } from '@/composables/useAuth'
 import { useI18n } from 'vue-i18n'
@@ -300,11 +299,7 @@ const columns = [
 const formRevisions = computed(() => formStore.formRevisions)
 
 const locales = computed(() => {
-  return Object.keys(selectedRevision.value.schema.i18n).filter(loc => locale.value !== loc)
-})
-
-const blitzarSchema = computed(() => {
-  return makeBlitzarQuasarSchemaForm(selectedRevision.value.schema, { locale: locale.value, debug: true })
+  return Object.keys(selectedRevision.value.schema.i18n || selectedRevision.value.schema.translations || {}).filter(loc => locale.value !== loc)
 })
 
 const modelDataStr = computed(() => {

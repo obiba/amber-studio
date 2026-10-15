@@ -372,6 +372,19 @@ export default {
     delete_tasks: 'Tasks successfully deleted.'
   },
   form: {
+    convert: {
+      action: 'Convert',
+      action_hint: 'Convert the form to the new form engine',
+      title: 'Convert to the new form engine',
+      hint: 'Fill in both forms to check that they collect the same data. Applying the conversion replaces the form draft; the published revisions are not changed.',
+      no_diagnostics: 'The form was converted without warnings.',
+      legacy: 'Current form',
+      converted: 'Converted form',
+      copy_data: 'Copy data to the converted form',
+      same_data: 'Both forms have the same data.',
+      different_data: 'The forms have different data.',
+      apply: 'Apply conversion'
+    },
     tr_add: 'Add translation',
     tr_add_key: 'Add a translation key',
     tr_merge_items: 'Merge with items translation keys',

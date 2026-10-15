@@ -87,6 +87,15 @@
 
           <div class="row q-ma-sm">
             <q-btn
+              v-if="isJson"
+              @click='innerTab = "settings"'
+              :label="t('form.settings')"
+              icon="tune"
+              size="sm"
+              color="teal"
+              :outline="innerTab !== 'settings'"
+              class="q-mr-sm" />
+            <q-btn
               @click='innerTab = "items"'
               :label="t('form.items')"
               icon="category"
@@ -94,6 +103,7 @@
               color="teal"
               :outline="innerTab !== 'items'" />
             <q-btn
+              v-if="!isJson"
               @click='innerTab = "translations"'
               :label="t('form.translations')"
               icon="translate"
@@ -102,6 +112,14 @@
               :outline="innerTab !== 'translations'"
               class="on-right" />
               <q-space />
+            <q-btn
+              v-if="!isJson && !isReadOnly"
+              @click='showConvert = true'
+              :label="t('form.convert.action')"
+              :title="t('form.convert.action_hint')"
+              icon="auto_fix_high"
+              flat
+              size="sm" />
             <q-btn
               @click='onExport'
               :label="t('export')"
@@ -142,11 +160,16 @@
           <q-tab-panels
             v-model="innerTab"
           >
-            <q-tab-panel name="items" style="padding: 0;">
-              <form-items :key="reload" v-model="studyFormData" />
+            <q-tab-panel v-if="isJson" name="settings" style="padding: 0;">
+              <form-settings :key="reload" v-model="studyFormData.schema" />
             </q-tab-panel>
 
-            <q-tab-panel name="translations">
+            <q-tab-panel name="items" style="padding: 0;">
+              <q-json-form-builder v-if="isJson" :key="reload" v-model="builderModel" no-caps no-import no-export class="q-mt-md" />
+              <form-items v-else :key="reload" v-model="studyFormData" />
+            </q-tab-panel>
+
+            <q-tab-panel v-if="!isJson" name="translations">
               <form-translations :key="reload" v-model="studyFormData" />
             </q-tab-panel>
           </q-tab-panels>
@@ -234,6 +257,8 @@
       </q-card>
     </q-dialog>
 
+    <form-convert v-if="!isJson && studyFormData.schema" v-model="showConvert" :schema="studyFormData.schema" @convert="onConvert" />
+
     <q-dialog v-model='showTag' persistent>
       <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 400px'">
         <q-card-section class="row items-center">
@@ -269,7 +294,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRaw, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, toRaw, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
@@ -281,6 +306,10 @@ import { useFormUtils } from '../composables/useFormUtils'
 import FormItems from '@/components/forms/FormItems.vue'
 import FormTranslations from '@/components/forms/FormTranslations.vue'
 import FormRevisions from '@/components/forms/FormRevisions.vue'
+import FormSettings from '@/components/forms/FormSettings.vue'
+import FormConvert from '@/components/forms/FormConvert.vue'
+import { QJsonFormBuilder } from '@obiba/quasar-ui-json-form/builder'
+import { isJsonForm } from '@obiba/quasar-ui-amber'
 import { settings } from '@/boot/settings'
 
 const { t } = useI18n()
@@ -301,6 +330,7 @@ const changeDetected = ref(0)
 const showEditDefinition = ref(false)
 const showImportSchema = ref(false)
 const showTag = ref(false)
+const showConvert = ref(false)
 const publicationComment = ref(null)
 const studyFormData = ref({})
 const originalSchemaStr = ref(null)
@@ -322,6 +352,19 @@ const v$ = useVuelidate(rules, { studyFormData })
 
 // computed
 const studyId = computed(() => route.params.id)
+const isJson = computed(() => isJsonForm(studyFormData.value.schema))
+// the part of a JSON Forms schema edited by the builder, next to the form-level settings
+const builderModel = computed({
+  get () {
+    const { schema, uischema, translations } = studyFormData.value.schema
+    return { schema, uischema, translations }
+  },
+  set (val) {
+    Object.assign(studyFormData.value.schema, val)
+  }
+})
+// the sub-tabs differ between the formats (import, reinstate or conversion)
+watch(isJson, () => { innerTab.value = 'items' })
 const disableImportSchema = computed(() => importSchemaFile.value === null)
 const disableTag = computed(() => changeDetected.value !== 0)
 const disableSave = computed(() => v$.value.studyFormData.$invalid)
@@ -404,6 +447,11 @@ function importSchema () {
       console.error(evt)
     }
   }
+}
+
+function onConvert (schema) {
+  studyFormData.value.schema = schema
+  save(true).then(() => onReinstate())
 }
 
 function tag () {
