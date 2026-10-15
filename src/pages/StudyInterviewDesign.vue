@@ -82,16 +82,30 @@
             color="teal"
             :outline="innerTab !== 'translations'"
             class="on-right" />
+          <q-space />
+          <q-btn
+            @click='onExport'
+            :label="t('export')"
+            icon="file_download"
+            flat
+            size="sm" />
+          <q-btn
+            @click='onImport'
+            :label="t('import')"
+            icon="file_upload"
+            flat
+            size="sm" />
         </div>
+        <q-separator/>
         <q-tab-panels
           v-model="innerTab"
         >
           <q-tab-panel name="steps" class="q-pa-none">
-            <interview-design-steps v-model="interviewDesignData"/>
+            <interview-design-steps :key="reload" v-model="interviewDesignData"/>
           </q-tab-panel>
 
           <q-tab-panel name="translations">
-            <interview-design-translations v-model="interviewDesignData"/>
+            <interview-design-translations :key="reload" v-model="interviewDesignData"/>
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -174,6 +188,26 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model='showImport' persistent>
+      <q-card :style="$q.screen.lt.sm ? 'min-width: 200px' : 'min-width: 500px'">
+        <q-card-section>
+          <interview-design-import v-model="imported" />
+        </q-card-section>
+        <q-separator />
+        <q-card-actions align="right" class="bg-grey-3">
+          <q-btn :label="t('cancel')" flat v-close-popup />
+          <q-btn
+            @click='importDesign'
+            :disable='!imported'
+            :label="t('import')"
+            type='submit'
+            color='primary'
+            v-close-popup
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </q-page>
 </template>
 
@@ -185,7 +219,9 @@ import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '../boot/vuelidate'
 import InterviewDesignSteps from '@/components/interviews/InterviewDesignSteps.vue'
 import InterviewDesignTranslations from '@/components/interviews/InterviewDesignTranslations.vue'
+import InterviewDesignImport from '@/components/interviews/InterviewDesignImport.vue'
 import Campaigns from '@/components/interviews/Campaigns.vue'
+import { exportInterviewDesign } from '@/utils/interviewDesign'
 import { useInterviewStore } from '@/stores/interview'
 import { useStudyStore } from '@/stores/study'
 import { useAuth } from '@/composables/useAuth'
@@ -203,6 +239,9 @@ const innerTab = ref('steps')
 const saveIntervalId = ref(null)
 const changeDetected = ref(0)
 const showEditDefinition = ref(false)
+const showImport = ref(false)
+const imported = ref(undefined)
+const reload = ref(0)
 const interviewDesignData = ref({})
 const originalInterviewDesign = reactive({ steps: [], i18n: {} })
 
@@ -266,6 +305,27 @@ async function save (notification, interviewDesignArg) {
 
 function onEdit () {
   showEditDefinition.value = true
+}
+
+function onExport () {
+  exportInterviewDesign(interviewDesignData.value)
+}
+
+function onImport () {
+  showImport.value = true
+}
+
+function importDesign () {
+  // name, label and description are kept, the design content is replaced
+  interviewDesignData.value = {
+    ...interviewDesignData.value,
+    interviewer_instructions: imported.value.interviewer_instructions,
+    participant_instructions: imported.value.participant_instructions,
+    steps: imported.value.steps,
+    i18n: imported.value.i18n
+  }
+  reload.value++
+  save(true)
 }
 
 // mounted

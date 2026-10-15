@@ -82,6 +82,16 @@
             @click='onEdit(props.row)'>
           </q-btn>
           <q-btn
+            color="secondary"
+            size="12px"
+            flat
+            dense
+            round
+            :title="t('study.export_interview_design_hint')"
+            icon="file_download"
+            @click='onExport(props.row)'>
+          </q-btn>
+          <q-btn
             v-if="props.row.state === 'paused'"
             color="secondary"
             size="12px"
@@ -163,6 +173,7 @@
             autogrow
             lazy-rules
           />
+          <interview-design-import v-model="imported" class="q-mt-md" />
         </q-card-section>
         <q-card-section>
           <q-toggle
@@ -357,6 +368,8 @@ import useVuelidate from '@vuelidate/core'
 import { date } from 'quasar'
 import { required, minLength, maxLength } from '../../boot/vuelidate'
 import { subjectsService } from '../../services/utils'
+import { exportInterviewDesign } from '../../utils/interviewDesign'
+import InterviewDesignImport from './InterviewDesignImport.vue'
 import { useInterviewStore } from '@/stores/interview'
 import { useStudyStore } from '@/stores/study'
 import { useAuth } from '@/composables/useAuth'
@@ -387,6 +400,7 @@ const paginationOpts = ref({
   rowsNumber: 10
 })
 const subjects = ref([])
+const imported = ref(undefined)
 
 // Vuelidate
 const rules = {
@@ -493,7 +507,8 @@ const columns = computed(() => {
 const userSubjectOptions = computed(() => getSubjectOptions('user'))
 const groupSubjectOptions = computed(() => getSubjectOptions('group'))
 
-const disableCreateStudyInterviewDesign = computed(() => v$.value.newStudyInterviewDesignData.$invalid)
+const disableCreateStudyInterviewDesign = computed(() => v$.value.newStudyInterviewDesignData.$invalid ||
+  imported.value === null)
 const disableEditStudyInterviewDesign = computed(() => v$.value.selectedStudyInterviewDesign.$invalid)
 const hasStudyInterviewDesigns = computed(() => studyInterviewDesigns.value && studyInterviewDesigns.value.length > 0)
 
@@ -510,6 +525,10 @@ function onAdd () {
   }
   showCreateStudyInterviewDesign.value = true
   selectedStudyInterviewDesign.value = undefined
+}
+
+function onExport (studyInterviewDesign) {
+  exportInterviewDesign(studyInterviewDesign)
 }
 
 function onEdit (studyInterviewDesign) {
@@ -605,6 +624,12 @@ async function saveStudyInterviewDesign (create) {
   if (create) {
     const toSave = { ...newStudyInterviewDesignData.value }
     toSave.study = studyId.value
+    if (imported.value) {
+      toSave.interviewer_instructions = imported.value.interviewer_instructions
+      toSave.participant_instructions = imported.value.participant_instructions
+      toSave.steps = imported.value.steps
+      toSave.i18n = imported.value.i18n
+    }
     if (toSave.restrictedAccess) {
       // empty permissions means it is not a restricted access
       if (toSave.permissions.users.length === 0 && toSave.permissions.groups.length === 0) {
@@ -640,6 +665,14 @@ async function saveStudyInterviewDesign (create) {
 }
 
 // Watchers
+watch(imported, (design) => {
+  if (!design) return
+  const data = newStudyInterviewDesignData.value
+  data.name = data.name || design.name
+  data.label = data.label || design.label
+  data.description = data.description || design.description
+})
+
 watch(study, () => {
   getTableStudyInterviewDesigns()
 })
